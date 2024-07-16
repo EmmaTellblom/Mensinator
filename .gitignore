@@ -1,0 +1,109 @@
+# Android Studio
+.idea
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+
+# Gradle
+/build
+.gradle/
+/out
+/buildSrc/build
+/buildSrc/.gradle
+/.gradle
+**/build/
+/!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+*.class
+*.jar
+*.war
+*.ear
+
+# IntelliJ
+out/
+*.ipr
+*.iws
+*.bak
+*.swp
+
+# Personal configuration files
+.idea/misc.xml
+.idea/modules.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/gradle.xml
+.idea/libraries
+.idea/tasks.xml
+.idea/workspace.xml
+.idea/tasks
+.idea/assetWizardSettings.xml
+.idea/codeStyles
+.idea/caches
+.idea/inspectionProfiles
+.idea/jsLibraryMappings.xml
+.idea/encodings.xml
+.idea/dataSources
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/sqlDialects.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# APKs
+*.apk
+*.ap_
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# Proguard
+proguard/
+
+# Logs
+*.log
+
+# Android-specific files
+crashlytics-build.properties
+fabric.properties
+
+# Local configuration files
+local.properties
+
+# Java Template
+*.zip
+*.tar.gz
+
+# External native build folder generated in Android Studio 2.2 and later
+.externalNativeBuild
+
+# NDK
+.cxx
+.ndk
+
+# Auto-generated files by Android Studio
+captures/
+output.json
+
+# Keystore files
+*.jks
+*.keystore
+
+# User-specific configurations
+.idea/*
+
+# Kotlin Multiplatform specific
+cinterop/
