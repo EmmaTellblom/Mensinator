@@ -46,6 +46,7 @@ object DatabaseUtils {
 
         createAppSettingsGroup(db)
         createAppSettings(db)
+        createOvulationStructure(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -84,6 +85,22 @@ object DatabaseUtils {
                 ('symptom_color', 'Symptom Color', 'Black', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
                 ('reminder_days', 'Days Before Reminder', '0', 2)
+        """)
+    }
+
+    fun createOvulationStructure(db: SQLiteDatabase){
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS ovulations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                date TEXT
+            )
+            """
+        )
+
+        db.execSQL("""
+            INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id) VALUES
+                ('ovulation_color', 'Ovulation Color', 'Blue', '1'),
+                ('expected_ovulation_color', 'Expected Ovulation Color', 'Magenta', '1')
         """)
     }
 }

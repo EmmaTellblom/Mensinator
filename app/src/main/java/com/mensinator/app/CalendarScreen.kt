@@ -36,10 +36,14 @@ fun CalendarScreen() {
     val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
     val periodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
     val symptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
+    val ovulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
     var averageCycleLength by remember { mutableDoubleStateOf(0.0) }
     var averagePeriodLength by remember { mutableDoubleStateOf(0.0) }
     var nextPeriodStart by remember { mutableStateOf("Not enough data") }
     var periodCount by remember { mutableIntStateOf(0) }
+    var ovulationCount by remember { mutableIntStateOf(0) }
+    var averageOvulationCycleLength by remember { mutableDoubleStateOf(0.0) }
+    var nextPredictedOvulation by remember { mutableStateOf<String?>(null) }
     var showSymptomsDialog by remember { mutableStateOf(false) }
     var symptoms by remember { mutableStateOf(emptyList<Symptom>()) }
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }  // Track the selected date for the SymptomsDialog
@@ -48,18 +52,23 @@ fun CalendarScreen() {
     var showFAQDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showExportImportDialog by remember { mutableStateOf(false) }
+    var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
 
     val periodColorSetting = dbHelper.getSettingByKey("period_color")
     val selectedColorSetting = dbHelper.getSettingByKey("selected_color")
     val selectedPeriodColorSetting = dbHelper.getSettingByKey("period_selection_color")
     val symptomColorSetting = dbHelper.getSettingByKey("symptom_color")
     val nextPeriodColorSetting = dbHelper.getSettingByKey("expected_period_color")
+    val ovulationColorSetting = dbHelper.getSettingByKey("ovulation_color")
+    val nextOvulationColorSetting = dbHelper.getSettingByKey("expected_ovulation_color")
 
     val periodColor = periodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Red
     val selectedColor = selectedColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.LightGray
     val symptomColor = symptomColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Black
     val nextPeriodColor = nextPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Yellow
     val selectedPeriodColor = selectedPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.DarkGray
+    val ovulationColor = ovulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Blue
+    val nextOvulationColor = nextOvulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Magenta
 
     // Fetch symptoms from the database
     LaunchedEffect(Unit) {
@@ -119,6 +128,39 @@ fun CalendarScreen() {
         }
 
         periodCount = dbHelper.getPeriodCount()
+        ovulationCount = dbHelper.getOvulationCount()
+
+//        // Ovulation statistics
+//        val ovulationDatesList = dbHelper.getAllOvulationDates()
+//        lastOvulationDate = ovulationDatesList.lastOrNull()
+//        ovulationCount = ovulationDatesList.size
+//
+//        averageOvulationCycleLength = dbHelper.calculateAverageOvulationCycleLength(ovulationDatesList)
+//        nextPredictedOvulation = dbHelper.getNextPredictedOvulationDate(lastOvulationDate, averageOvulationCycleLength)?.toString()
+
+        // Ovulation statistics
+        val ovulationDatesList = dbHelper.getAllOvulationDates()
+        lastOvulationDate = ovulationDatesList.lastOrNull()
+        ovulationCount = ovulationDatesList.size
+
+        // Calculate the average days between the last 4 ovulations
+        val ovulationIntervals = mutableListOf<Long>()
+        val lastFourOvulations = ovulationDatesList.takeLast(4)
+        for (i in 1 until lastFourOvulations.size) {
+            val interval = lastFourOvulations[i].toEpochDay() - lastFourOvulations[i - 1].toEpochDay()
+            ovulationIntervals.add(interval)
+        }
+        val averageOvulationInterval = if (ovulationIntervals.isNotEmpty()) ovulationIntervals.average() else 0.0
+
+        // Predict the next ovulation date
+        nextPredictedOvulation = if (lastOvulationDate != null && averageOvulationInterval > 0) {
+            val nextOvulationDate = lastOvulationDate!!.plusDays(averageOvulationInterval.toLong())
+            nextOvulationDate.toString()
+        } else {
+            "Not enough data"
+        }
+
+        Log.d("CalendarScreen", "Average Ovulation Interval: $averageOvulationInterval days")
     }
 
     // Function to refresh symptom dates
@@ -126,17 +168,25 @@ fun CalendarScreen() {
         val year = currentMonth.value.year
         val month = currentMonth.value.monthValue
         symptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
-        Log.d("CalendarScreen", "Symptom dates for $year-$month: ${symptomDates.value}")  // Added log for debugging
+    }
+    fun refreshOvulationDates() {
+        val year = currentMonth.value.year
+        val month = currentMonth.value.monthValue
+        val dates = dbHelper.getOvulationDatesForMonth(year, month)  // Rename to `dates`
+        ovulationDates.value = dates
     }
 
     // Update button state based on selected dates
     val isSymptomsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
+    val isOvulationButtonEnabled by remember { derivedStateOf { selectedDates.value.size == 1 } }
+    val isPeriodsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
 
     LaunchedEffect(currentMonth.value) {
         val year = currentMonth.value.year
         val month = currentMonth.value.monthValue
         periodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
         symptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
+        ovulationDates.value = dbHelper.getOvulationDatesForMonth(year, month)
         Log.d("CalendarScreen", "Symptom dates for $year-$month: ${symptomDates.value}")
         updateStatistics()
     }
@@ -192,6 +242,7 @@ fun CalendarScreen() {
                         val isSelected = dayDate in selectedDates.value
                         val hasExistingDate = dayDate in periodDates.value
                         val hasSymptomDate = dayDate in symptomDates.value
+                        val hasOvulationDate = dayDate in ovulationDates.value
 
                         Box(
                             modifier = Modifier
@@ -209,6 +260,8 @@ fun CalendarScreen() {
                             val backgroundColor = when {
                                 hasExistingDate && isSelected -> selectedPeriodColor
                                 hasExistingDate -> periodColor
+                                hasOvulationDate && isSelected -> selectedPeriodColor
+                                hasOvulationDate -> ovulationColor
                                 isSelected -> selectedColor
                                 else -> Color.Transparent
                             }
@@ -234,6 +287,21 @@ fun CalendarScreen() {
                                     modifier = Modifier
                                         .size(32.dp)
                                         .background(nextPeriodColor, CircleShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = dayOfMonth.toString(),
+                                        color = Color.Black,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+
+                            if (dayDate.toString() == nextPredictedOvulation) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(32.dp)
+                                        .background(nextOvulationColor, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -307,6 +375,7 @@ fun CalendarScreen() {
                     Toast.makeText(context, "Changes saved successfully", Toast.LENGTH_SHORT).show()
                 }
             },
+            enabled = isPeriodsButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
@@ -330,6 +399,32 @@ fun CalendarScreen() {
         ) {
             Text(text = "Symptoms")
         }
+
+        //ovulation starts here
+        Button(
+            onClick = {
+                if(selectedDates.value.size > 1){
+                    Toast.makeText(context, "Only one day can be ovulation!", Toast.LENGTH_SHORT).show()
+                }
+                else if(selectedDates.value.size == 1){
+                    val date = selectedDates.value.first()
+                    dbHelper.updateOvulationDate(date)
+                    refreshOvulationDates()
+                    Toast.makeText(context, "Ovulation saved successfully", Toast.LENGTH_SHORT).show()
+                }
+                else{
+                    Toast.makeText(context, "No date selected for ovulation", Toast.LENGTH_SHORT).show()
+                }
+                selectedDates.value = emptySet()
+            },
+            enabled = isOvulationButtonEnabled,  // Set the state of the Ovulation button
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            Text(text = "Ovulation")
+        }
+        //ovulation ends here
 
         // Show the SymptomsDialog
         if (showSymptomsDialog && selectedDate != null) {
@@ -376,6 +471,10 @@ fun CalendarScreen() {
                 averagePeriodLength = averagePeriodLength,
                 nextPeriodStart = nextPeriodStart,
                 periodCount = periodCount,
+                ovulationCount = ovulationCount,
+                averageOvulationCycleLength = averageOvulationCycleLength,
+                lastOvulationDate = lastOvulationDate,
+                nextPredictedOvulation = nextPredictedOvulation,
                 onDismissRequest = { showStatisticsDialog = false }
             )
         }

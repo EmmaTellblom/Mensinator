@@ -18,6 +18,10 @@ fun StatisticsDialog(
     averagePeriodLength: Double,
     nextPeriodStart: String,
     periodCount: Int,
+    ovulationCount: Int,
+    averageOvulationCycleLength: Double,
+    lastOvulationDate: LocalDate?,
+    nextPredictedOvulation: String?,
     onDismissRequest: () -> Unit
 ) {
     AlertDialog(
@@ -45,6 +49,21 @@ fun StatisticsDialog(
                     } else {
                         "Next assumed period: $nextPeriodStart"
                     },
+                    fontSize = 16.sp
+                )
+                // Ovulation statistics
+                Text(
+                    text = "\nNumber of ovulation tracked: $ovulationCount",
+                    fontSize = 16.sp
+                )
+//                Text(
+//                    text = "Average ovulation cycle length: ${"%.1f".format(averageOvulationCycleLength)} days",
+//                    fontSize = 16.sp
+//                )
+                Text(
+                    text = nextPredictedOvulation?.let {
+                        "Next predicted ovulation date: $it"
+                    } ?: "Not enough data to predict next ovulation",
                     fontSize = 16.sp
                 )
             }

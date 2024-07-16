@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.time.LocalDate
-import com.mensinator.app.DatabaseUtils
 
 /*
 This file contains functions to get/set data into the database
@@ -17,7 +16,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 5
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -56,6 +55,10 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             db.execSQL("DROP TABLE IF EXISTS $TABLE_APP_SETTINGS")
             DatabaseUtils.createAppSettingsGroup(db)
             DatabaseUtils.createAppSettings(db)
+        }
+
+        if(oldVersion < 5){
+            DatabaseUtils.createOvulationStructure(db)
         }
     }
 
@@ -513,5 +516,155 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return setting
     }
 
+    fun updateOvulationDate(date: LocalDate) {
+        val db = writableDatabase
 
+        // Convert LocalDate to String for SQLite compatibility
+        val dateString = date.toString()
+
+        // Check if the date already exists in the database
+        val cursor = db.rawQuery("SELECT * FROM OVULATIONS WHERE date = ?", arrayOf(dateString))
+
+        if (cursor.moveToFirst()) {
+            // Date exists, delete it
+            db.delete("OVULATIONS", "date = ?", arrayOf(dateString))
+        } else {
+            // Date does not exist, insert it
+            val contentValues = ContentValues().apply {
+                put("date", dateString)
+            }
+            db.insert("OVULATIONS", null, contentValues)
+        }
+
+        cursor.close()
+        db.close()
+    }
+
+    fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
+        val dates = mutableSetOf<LocalDate>()
+        val db = readableDatabase
+
+        // Query the database for dates in the specified month and year
+        val cursor = db.query(
+            "ovulations", // Table name
+            arrayOf("date"), // Column name
+            "strftime('%Y', date) = ? AND strftime('%m', date) = ?",
+            arrayOf(year.toString(), month.toString().padStart(2, '0')),
+            null, null, null
+        )
+
+        try {
+            // Get the column index for the date
+            val dateIndex = cursor.getColumnIndex("date")
+
+            if (dateIndex != -1) {
+                while (cursor.moveToNext()) {
+                    val dateStr = cursor.getString(dateIndex)
+                    try {
+                        val date = LocalDate.parse(dateStr)
+                        // Add the date to the set of dates
+                        dates.add(date)
+                        Log.d("TAG", "Fetched date $date from ovulations")
+                    } catch (e: Exception) {
+                        Log.e("TAG", "Failed to parse date string: $dateStr", e)
+                    }
+                }
+            } else {
+                Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Error querying for ovulation dates", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+
+        return dates
+    }
+
+    fun getAllOvulationDates(): List<LocalDate> {
+        val dates = mutableListOf<LocalDate>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT date FROM Ovulations", null)
+
+        try {
+            val dateIndex = cursor.getColumnIndex("date")
+            if (dateIndex != -1) {
+                while (cursor.moveToNext()) {
+                    val dateStr = cursor.getString(dateIndex)
+                    val date = LocalDate.parse(dateStr)
+                    dates.add(date)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Database", "Error reading ovulation dates", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+
+        return dates
+    }
+
+
+    fun getOvulationCount(): Int {
+        val db = readableDatabase
+        val countQuery = "SELECT COUNT(DISTINCT DATE) FROM OVULATIONS"
+        val cursor = db.rawQuery(countQuery, null)
+        var count = 0
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+        cursor.close()
+        db.close()
+        return count
+    }
+
+    fun calculateAverageOvulationCycleLength(ovulationDates: List<LocalDate>): Double {
+        if (ovulationDates.size < 2) return 0.0
+        val cycleLengths = ovulationDates.zipWithNext { a, b -> b.toEpochDay() - a.toEpochDay() }
+        return cycleLengths.average()
+    }
+
+    //fun getLastOvulationDate(): LocalDate? {
+        // Query to get the most recent ovulation date
+    //}
+
+    fun getNextPredictedOvulationDate(lastOvulationDate: LocalDate?, averageCycleLength: Double): LocalDate? {
+        return lastOvulationDate?.plusDays(averageCycleLength.toLong())
+    }
+
+    // Function to calculate the average luteal phase length
+    fun calculateAverageLutealPhaseLength(ovulationDates: List<LocalDate>, periodDates: List<LocalDate>): Double {
+        val lutealLengths = mutableListOf<Long>()
+        for (i in 0 until ovulationDates.size - 1) {
+            val ovulationDate = ovulationDates[i]
+            val nextPeriodDate = periodDates.find { it.isAfter(ovulationDate) } ?: continue
+            val lutealLength = nextPeriodDate.toEpochDay() - ovulationDate.toEpochDay()
+            lutealLengths.add(lutealLength)
+        }
+        return if (lutealLengths.isNotEmpty()) lutealLengths.average() else 14.0  // Default value if not enough data
+    }
+
+    // Function to calculate the next ovulation date considering the variable luteal phase length
+    fun getNextOvulationDateWithVariableLutealPhase(lastOvulationDate: LocalDate, averageLutealPhaseLength: Double, averageCycleLength: Double): LocalDate {
+        val daysToNextOvulation = (averageCycleLength - averageLutealPhaseLength).toLong()
+        return lastOvulationDate.plusDays(daysToNextOvulation)
+    }
+
+    fun calculateAverageFollicularPhaseLength(periodDates: List<LocalDate>, ovulationDates: List<LocalDate>): Double {
+        val follicularLengths = mutableListOf<Long>()
+        for (i in 0 until ovulationDates.size) {
+            val ovulationDate = ovulationDates[i]
+            val periodStartDate = periodDates.findLast { it.isBefore(ovulationDate) || it.isEqual(ovulationDate) } ?: continue
+            val follicularLength = ovulationDate.toEpochDay() - periodStartDate.toEpochDay()
+            follicularLengths.add(follicularLength)
+        }
+        return if (follicularLengths.isNotEmpty()) follicularLengths.average() else 14.0  // Default value if not enough data
+    }
+
+    // Function to calculate the next ovulation date considering the average follicular phase length
+    fun getNextOvulationDateUsingFollicularPhase(startOfLastPeriod: LocalDate, averageFollicularPhaseLength: Double): LocalDate {
+        return startOfLastPeriod.plusDays(averageFollicularPhaseLength.toLong())
+    }
 }
