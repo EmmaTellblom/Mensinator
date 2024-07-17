@@ -124,110 +124,111 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return dates
     }
 
-    fun findOrCreatePeriodId(date: LocalDate): Int {
-        val db = readableDatabase
-        val dateStr = date.toString()
-
-        // Check if the date already has a period ID
-        val cursor = db.query(
-            TABLE_PERIODS,
-            arrayOf(COLUMN_PERIOD_ID),
-            "$COLUMN_DATE = ?",
-            arrayOf(dateStr),
-            null, null, null
-        )
-
-        var periodId = 1  // Default period ID
-
-        if (cursor != null) {
-            try {
-                val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
-
-                if (periodIdIndex != -1 && cursor.moveToFirst()) {
-                    periodId = cursor.getInt(periodIdIndex)
-                    Log.d(TAG, "Found existing periodId $periodId for date $date")
-                } else {
-                    // Find the period ID of adjacent dates
-                    val previousDate = date.minusDays(1)
-                    val nextDate = date.plusDays(1)
-
-                    val periodIds = mutableSetOf<Int>()
-
-                    // Check the previous date for period ID
-                    val prevCursor = db.query(
-                        TABLE_PERIODS,
-                        arrayOf(COLUMN_PERIOD_ID),
-                        "$COLUMN_DATE = ?",
-                        arrayOf(previousDate.toString()),
-                        null, null, null
-                    )
-
-                    if (prevCursor != null) {
-                        try {
-                            val prevPeriodIdIndex = prevCursor.getColumnIndex(COLUMN_PERIOD_ID)
-                            if (prevPeriodIdIndex != -1 && prevCursor.moveToFirst()) {
-                                val prevPeriodId = prevCursor.getInt(prevPeriodIdIndex)
-                                periodIds.add(prevPeriodId)
-                            }
-                        } finally {
-                            prevCursor.close()
-                        }
-                    }
-
-                    // Check the next date for period ID
-                    val nextCursor = db.query(
-                        TABLE_PERIODS,
-                        arrayOf(COLUMN_PERIOD_ID),
-                        "$COLUMN_DATE = ?",
-                        arrayOf(nextDate.toString()),
-                        null, null, null
-                    )
-
-                    if (nextCursor != null) {
-                        try {
-                            val nextPeriodIdIndex = nextCursor.getColumnIndex(COLUMN_PERIOD_ID)
-                            if (nextPeriodIdIndex != -1 && nextCursor.moveToFirst()) {
-                                val nextPeriodId = nextCursor.getInt(nextPeriodIdIndex)
-                                periodIds.add(nextPeriodId)
-                            }
-                        } finally {
-                            nextCursor.close()
-                        }
-                    }
-
-                    // Check if there are existing periods to merge with
-                    if (periodIds.isNotEmpty()) {
-                        periodId =
-                            periodIds.first()  // Use the first found period ID (assume dates are adjacent)
-                        Log.d(TAG, "Reusing existing periodId $periodId for date $date")
-                    } else {
-                        // Find the highest period ID and increment it
-                        val maxPeriodIdCursor = db.rawQuery(
-                            "SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS",
-                            null
-                        )
-
-                        if (maxPeriodIdCursor.moveToFirst()) {
-                            periodId = (maxPeriodIdCursor.getInt(0) ?: 0) + 1
-                            Log.d(
-                                TAG,
-                                "No adjacent periodId found for date $date. Created new periodId $periodId"
-                            )
-                        }
-
-                        maxPeriodIdCursor.close()
-                    }
-                }
-            } finally {
-                cursor.close()
-            }
-        } else {
-            Log.e(TAG, "Cursor is null while querying for periodId")
-        }
-
-        db.close()
-        return periodId
-    }
+    // This is an old function and should be deleted soon 240717
+//    fun findOrCreatePeriodId(date: LocalDate): Int {
+//        val db = readableDatabase
+//        val dateStr = date.toString()
+//
+//        // Check if the date already has a period ID
+//        val cursor = db.query(
+//            TABLE_PERIODS,
+//            arrayOf(COLUMN_PERIOD_ID),
+//            "$COLUMN_DATE = ?",
+//            arrayOf(dateStr),
+//            null, null, null
+//        )
+//
+//        var periodId = 1  // Default period ID
+//
+//        if (cursor != null) {
+//            try {
+//                val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
+//
+//                if (periodIdIndex != -1 && cursor.moveToFirst()) {
+//                    periodId = cursor.getInt(periodIdIndex)
+//                    Log.d(TAG, "Found existing periodId $periodId for date $date")
+//                } else {
+//                    // Find the period ID of adjacent dates
+//                    val previousDate = date.minusDays(1)
+//                    val nextDate = date.plusDays(1)
+//
+//                    val periodIds = mutableSetOf<Int>()
+//
+//                    // Check the previous date for period ID
+//                    val prevCursor = db.query(
+//                        TABLE_PERIODS,
+//                        arrayOf(COLUMN_PERIOD_ID),
+//                        "$COLUMN_DATE = ?",
+//                        arrayOf(previousDate.toString()),
+//                        null, null, null
+//                    )
+//
+//                    if (prevCursor != null) {
+//                        try {
+//                            val prevPeriodIdIndex = prevCursor.getColumnIndex(COLUMN_PERIOD_ID)
+//                            if (prevPeriodIdIndex != -1 && prevCursor.moveToFirst()) {
+//                                val prevPeriodId = prevCursor.getInt(prevPeriodIdIndex)
+//                                periodIds.add(prevPeriodId)
+//                            }
+//                        } finally {
+//                            prevCursor.close()
+//                        }
+//                    }
+//
+//                    // Check the next date for period ID
+//                    val nextCursor = db.query(
+//                        TABLE_PERIODS,
+//                        arrayOf(COLUMN_PERIOD_ID),
+//                        "$COLUMN_DATE = ?",
+//                        arrayOf(nextDate.toString()),
+//                        null, null, null
+//                    )
+//
+//                    if (nextCursor != null) {
+//                        try {
+//                            val nextPeriodIdIndex = nextCursor.getColumnIndex(COLUMN_PERIOD_ID)
+//                            if (nextPeriodIdIndex != -1 && nextCursor.moveToFirst()) {
+//                                val nextPeriodId = nextCursor.getInt(nextPeriodIdIndex)
+//                                periodIds.add(nextPeriodId)
+//                            }
+//                        } finally {
+//                            nextCursor.close()
+//                        }
+//                    }
+//
+//                    // Check if there are existing periods to merge with
+//                    if (periodIds.isNotEmpty()) {
+//                        periodId =
+//                            periodIds.first()  // Use the first found period ID (assume dates are adjacent)
+//                        Log.d(TAG, "Reusing existing periodId $periodId for date $date")
+//                    } else {
+//                        // Find the highest period ID and increment it
+//                        val maxPeriodIdCursor = db.rawQuery(
+//                            "SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS",
+//                            null
+//                        )
+//
+//                        if (maxPeriodIdCursor.moveToFirst()) {
+//                            periodId = (maxPeriodIdCursor.getInt(0) ?: 0) + 1
+//                            Log.d(
+//                                TAG,
+//                                "No adjacent periodId found for date $date. Created new periodId $periodId"
+//                            )
+//                        }
+//
+//                        maxPeriodIdCursor.close()
+//                    }
+//                }
+//            } finally {
+//                cursor.close()
+//            }
+//        } else {
+//            Log.e(TAG, "Cursor is null while querying for periodId")
+//        }
+//
+//        db.close()
+//        return periodId
+//    }
 
     fun getAllPeriodDates(): Map<LocalDate, Int> {
         val dates = mutableMapOf<LocalDate, Int>()
@@ -619,4 +620,57 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
         return count
     }
+
+    fun newFindOrCreatePeriodID(date: LocalDate): Int {
+        val db = readableDatabase
+        val dateStr = date.toString()
+        var periodId = 1
+
+        // Query to check the current date and adjacent dates
+        val query = """
+        SELECT DISTINCT PERIOD_ID FROM PERIODS WHERE DATE = ? OR DATE BETWEEN ? AND ?
+    """
+        val args = arrayOf(dateStr, date.minusDays(1).toString(), date.plusDays(1).toString())
+        val cursor = db.rawQuery(query, args)
+
+        if (cursor != null) {
+            try {
+                if (cursor.count > 1) {
+                    cursor.moveToFirst()
+                    val primaryPeriodID = cursor.getInt(0)
+                    cursor.moveToNext()
+                    val secondaryPeriodID = cursor.getInt(0)
+
+                    // Merge periods
+                    val updateQuery = "UPDATE PERIODS SET PERIOD_ID = ? WHERE PERIOD_ID = ?"
+                    val updateArgs = arrayOf(primaryPeriodID.toString(), secondaryPeriodID.toString())
+                    db.execSQL(updateQuery, updateArgs)
+
+                    periodId = primaryPeriodID
+                    Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
+                } else if (cursor.count == 1) {
+                    cursor.moveToFirst()
+                    periodId = cursor.getInt(0)
+                    Log.d(TAG, "Found existing periodId $periodId for date $date")
+                } else {
+                    // Create a new period ID
+                    val maxPeriodIdCursor = db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
+                    if (maxPeriodIdCursor.moveToFirst()) {
+                        val maxPeriodId = if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
+                        periodId = maxPeriodId + 1
+                        Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
+                    }
+                    maxPeriodIdCursor.close()
+                }
+            } finally {
+                cursor.close()
+            }
+        } else {
+            Log.e(TAG, "Cursor is null while querying for periodId")
+        }
+
+        db.close()
+        return periodId
+    }
+
 }

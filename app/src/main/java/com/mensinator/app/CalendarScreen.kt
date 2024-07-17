@@ -365,7 +365,7 @@ fun CalendarScreen() {
                             dbHelper.removeDateFromPeriod(date)
                             Log.d("CalendarScreen", "Removed date $date")
                         } else {
-                            val periodId = dbHelper.findOrCreatePeriodId(date)
+                            val periodId = dbHelper.newFindOrCreatePeriodID(date)
                             dbHelper.addDateToPeriod(date, periodId)
                             Log.d("CalendarScreen", "Added date $date with periodId $periodId")
                         }
