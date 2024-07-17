@@ -64,15 +64,24 @@ fun FAQDialog(
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Statistics: Click the 'Burger menu' and select statistics.",
+                    text = "• Ovulation: Select a single date and click the ovulation button. To remove, select date and press button again.",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
                     text = "• Statistics: Click the 'Burger menu' and select statistics.",
                     style = MaterialTheme.typography.bodyMedium
                 )
+                Text(
+                    text = "• Import/Export: Click the 'Import/Export' button to import or export your data. This is a MUST when moving the data to a new device!",
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
-
+                Text(
+                    text = "• Calculations: " +
+                            "\nPeriods are calculated according to average cycle length and period length." +
+                            "\nOvulation is calculated according to average ovulation cycle length.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Text(
                     text = "Features Coming Soon:",
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
