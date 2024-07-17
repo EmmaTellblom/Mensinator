@@ -139,7 +139,7 @@ fun CalendarScreen() {
 //        nextPredictedOvulation = dbHelper.getNextPredictedOvulationDate(lastOvulationDate, averageOvulationCycleLength)?.toString()
 
         // Ovulation statistics
-        val ovulationDatesList = dbHelper.getAllOvulationDates()
+        val ovulationDatesList = dbHelper.getAllOvulationDates().sorted()
         lastOvulationDate = ovulationDatesList.lastOrNull()
         ovulationCount = ovulationDatesList.size
 
@@ -149,6 +149,7 @@ fun CalendarScreen() {
         for (i in 1 until lastFourOvulations.size) {
             val interval = lastFourOvulations[i].toEpochDay() - lastFourOvulations[i - 1].toEpochDay()
             ovulationIntervals.add(interval)
+            Log.d("CalendarScreen", "Interval between ${lastFourOvulations[i]} and ${lastFourOvulations[i - 1]}: $interval days")  // Add logging for each interval
         }
         val averageOvulationInterval = if (ovulationIntervals.isNotEmpty()) ovulationIntervals.average() else 0.0
 
@@ -163,6 +164,7 @@ fun CalendarScreen() {
         Log.d("CalendarScreen", "Average Ovulation Interval: $averageOvulationInterval days")
     }
 
+
     // Function to refresh symptom dates
     fun refreshSymptomDates() {
         val year = currentMonth.value.year
@@ -172,8 +174,9 @@ fun CalendarScreen() {
     fun refreshOvulationDates() {
         val year = currentMonth.value.year
         val month = currentMonth.value.monthValue
-        val dates = dbHelper.getOvulationDatesForMonth(year, month)  // Rename to `dates`
-        ovulationDates.value = dates
+        val dates = dbHelper.getOvulationDatesForMonth(year, month).sorted()  // Rename to `dates`
+        ovulationDates.value = dates.toSet()
+        //ovulationDates.value = dates
     }
 
     // Update button state based on selected dates
@@ -198,7 +201,8 @@ fun CalendarScreen() {
             .fillMaxSize()
             .padding(16.dp)
             .systemBarsPadding()
-    ) {
+    )
+    {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
@@ -277,7 +281,10 @@ fun CalendarScreen() {
                                 Box(
                                     modifier = Modifier
                                         .size(8.dp)  // Size of the small bubble
-                                        .background(symptomColor, CircleShape)  // Black bubble for dates with symptoms
+                                        .background(
+                                            symptomColor,
+                                            CircleShape
+                                        )  // Black bubble for dates with symptoms
                                         .align(Alignment.TopEnd)
                                 )
                             }
