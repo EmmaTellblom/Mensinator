@@ -210,7 +210,7 @@ fun CalendarScreen() {
                 Text(text = "Previous")
             }
             Text(
-                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentMonth.value.year}",
+                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${currentMonth.value.year}",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
