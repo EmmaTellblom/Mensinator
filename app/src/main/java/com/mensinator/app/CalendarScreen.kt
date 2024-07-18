@@ -130,14 +130,6 @@ fun CalendarScreen() {
         periodCount = dbHelper.getPeriodCount()
         ovulationCount = dbHelper.getOvulationCount()
 
-//        // Ovulation statistics
-//        val ovulationDatesList = dbHelper.getAllOvulationDates()
-//        lastOvulationDate = ovulationDatesList.lastOrNull()
-//        ovulationCount = ovulationDatesList.size
-//
-//        averageOvulationCycleLength = dbHelper.calculateAverageOvulationCycleLength(ovulationDatesList)
-//        nextPredictedOvulation = dbHelper.getNextPredictedOvulationDate(lastOvulationDate, averageOvulationCycleLength)?.toString()
-
         // Ovulation statistics
         val ovulationDatesList = dbHelper.getAllOvulationDates().sorted()
         lastOvulationDate = ovulationDatesList.lastOrNull()
@@ -152,6 +144,7 @@ fun CalendarScreen() {
             Log.d("CalendarScreen", "Interval between ${lastFourOvulations[i]} and ${lastFourOvulations[i - 1]}: $interval days")  // Add logging for each interval
         }
         val averageOvulationInterval = if (ovulationIntervals.isNotEmpty()) ovulationIntervals.average() else 0.0
+        averageOvulationCycleLength = averageOvulationInterval
 
         // Predict the next ovulation date
         nextPredictedOvulation = if (lastOvulationDate != null && averageOvulationInterval > 0) {
@@ -480,7 +473,6 @@ fun CalendarScreen() {
                 periodCount = periodCount,
                 ovulationCount = ovulationCount,
                 averageOvulationCycleLength = averageOvulationCycleLength,
-                lastOvulationDate = lastOvulationDate,
                 nextPredictedOvulation = nextPredictedOvulation,
                 onDismissRequest = { showStatisticsDialog = false }
             )
