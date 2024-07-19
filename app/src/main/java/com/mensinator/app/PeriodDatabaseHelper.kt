@@ -673,4 +673,53 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return periodId
     }
 
+    fun getFirstLatestPeriodDate(date: LocalDate): LocalDate? {
+        val db = readableDatabase
+        var firstLatestDate: LocalDate? = null
+
+        val query = """
+        SELECT date, period_id
+        FROM periods
+        WHERE period_id = (
+            SELECT period_id
+            FROM periods
+            WHERE date <= ?
+            ORDER BY date DESC
+            LIMIT 1
+        )
+        ORDER BY date ASC
+        LIMIT 1
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        if (cursor.moveToFirst()) {
+            firstLatestDate = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow("date")))
+        }
+
+        cursor.close()
+        db.close()
+
+        return firstLatestDate
+    }
+
+    fun getOldestPeriodDate(): LocalDate?{
+        val db = readableDatabase
+        var oldestPeriodDate: LocalDate? = null
+
+        val query = """
+           SELECT DATE FROM PERIODS ORDER BY DATE ASC LIMIT 1 
+        """
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            oldestPeriodDate = LocalDate.parse(cursor.getString(0))
+        }
+
+        cursor.close()
+        db.close()
+        return oldestPeriodDate
+    }
+
+
 }

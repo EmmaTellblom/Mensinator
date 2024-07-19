@@ -21,6 +21,7 @@ import androidx.core.graphics.toColorInt
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 
@@ -53,6 +54,9 @@ fun CalendarScreen() {
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showExportImportDialog by remember { mutableStateOf(false) }
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
+
+    var cycleNumber: Int
+    val oldestPeriodDate = dbHelper.getOldestPeriodDate()
 
     val periodColorSetting = dbHelper.getSettingByKey("period_color")
     val selectedColorSetting = dbHelper.getSettingByKey("selected_color")
@@ -135,13 +139,13 @@ fun CalendarScreen() {
         lastOvulationDate = ovulationDatesList.lastOrNull()
         ovulationCount = ovulationDatesList.size
 
-        // Calculate the average days between the last 4 ovulations
+        // Calculate the average days between the last 4 ovulation
         val ovulationIntervals = mutableListOf<Long>()
-        val lastFourOvulations = ovulationDatesList.takeLast(4)
-        for (i in 1 until lastFourOvulations.size) {
-            val interval = lastFourOvulations[i].toEpochDay() - lastFourOvulations[i - 1].toEpochDay()
+        val lastFourOvulation = ovulationDatesList.takeLast(4)
+        for (i in 1 until lastFourOvulation.size) {
+            val interval = lastFourOvulation[i].toEpochDay() - lastFourOvulation[i - 1].toEpochDay()
             ovulationIntervals.add(interval)
-            Log.d("CalendarScreen", "Interval between ${lastFourOvulations[i]} and ${lastFourOvulations[i - 1]}: $interval days")  // Add logging for each interval
+            Log.d("CalendarScreen", "Interval between ${lastFourOvulation[i]} and ${lastFourOvulation[i - 1]}: $interval days")  // Add logging for each interval
         }
         val averageOvulationInterval = if (ovulationIntervals.isNotEmpty()) ovulationIntervals.average() else 0.0
         averageOvulationCycleLength = averageOvulationInterval
@@ -247,9 +251,9 @@ fun CalendarScreen() {
                                 .padding(8.dp)
                                 .clickable {
                                     if (isSelected) {
-                                        selectedDates.value = selectedDates.value - dayDate
+                                        selectedDates.value -= dayDate
                                     } else {
-                                        selectedDates.value = selectedDates.value + dayDate
+                                        selectedDates.value += dayDate
                                     }
                                 },
                             contentAlignment = Alignment.Center
@@ -268,6 +272,7 @@ fun CalendarScreen() {
                                     .size(32.dp)
                                     .background(backgroundColor, CircleShape)
                             )
+
 
                             // Symptom indicator in the top right corner
                             if (hasSymptomDate) {
@@ -317,7 +322,7 @@ fun CalendarScreen() {
                                 Box(
                                     modifier = Modifier
                                         .size(32.dp)
-                                        .border(2.dp, Color.Black, CircleShape)
+                                        .border(1.dp, Color.Black, CircleShape)
                                         .background(Color.Transparent, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -338,6 +343,41 @@ fun CalendarScreen() {
                                         .background(Color.Transparent)
                                 )
                             }
+
+                        if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
+                            val firstLastPeriodDate = dbHelper.getFirstLatestPeriodDate(dayDate)
+                            Log.d("CalendarScreen","FirstLastPeriodDate for $dayDate: $firstLastPeriodDate")
+                            if (firstLastPeriodDate != null) {
+                                // Calculate the number of days between the firstLastPeriodDate and dayDate
+                                cycleNumber = ChronoUnit.DAYS.between(firstLastPeriodDate, dayDate).toInt() + 1
+                                Log.d("CalendarScreen","CycleNumber for $dayDate: $cycleNumber")
+
+                                // Render UI elements based on cycleNumber or other logic
+                                Box(
+                                    modifier = Modifier
+                                        .size(13.dp)
+                                        .background(
+                                            Color.White,
+                                            CircleShape
+                                        )
+                                        .align(Alignment.TopStart)
+                                ) {
+                                    Text(
+                                        text = cycleNumber.toString(),
+                                        style = androidx.compose.ui.text.TextStyle(
+                                            color = Color.Black,
+                                            fontSize = 7.sp,
+                                            textAlign = TextAlign.Center
+                                        ),
+                                        modifier = Modifier.padding(2.dp)
+                                    )
+                                }
+                            }
+
+
+                        }
+
+
                         }
                     } else {
                         Spacer(modifier = Modifier.weight(1f))
@@ -508,3 +548,4 @@ fun CalendarScreen() {
         )
     }
 }
+
