@@ -366,7 +366,7 @@ fun CalendarScreen() {
                                         text = cycleNumber.toString(),
                                         style = androidx.compose.ui.text.TextStyle(
                                             color = Color.Black,
-                                            fontSize = 7.sp,
+                                            fontSize = 6.sp,
                                             textAlign = TextAlign.Center
                                         ),
                                         modifier = Modifier.padding(2.dp)
