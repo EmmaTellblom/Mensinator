@@ -469,9 +469,10 @@ fun CalendarScreen() {
 
         // Show the SymptomsDialog
         if (showSymptomsDialog && selectedDate != null) {
+            val activeSymptoms = dbHelper.getAllActiveSymptoms()
             SymptomsDialog(
                 date = selectedDate!!,  // Pass the selected date to the SymptomsDialog
-                symptoms = symptoms,
+                symptoms = activeSymptoms,
                 dbHelper = dbHelper,
                 onSave = { selectedSymptoms ->
                     val selectedSymptomIds = selectedSymptoms.map { it.id }
