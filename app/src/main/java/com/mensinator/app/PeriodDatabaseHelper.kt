@@ -355,23 +355,23 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         // Query the database for dates in the specified month and year
         val cursor = db.query(
-            TABLE_SYMPTOM_DATE,
-            arrayOf(COLUMN_SYMPTOM_DATE),
-            "strftime('%Y', $COLUMN_SYMPTOM_DATE) = ? AND strftime('%m', $COLUMN_SYMPTOM_DATE) = ?",
+            "$TABLE_SYMPTOM_DATE AS sd INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID",
+            arrayOf("sd.$COLUMN_SYMPTOM_DATE"),
+            "strftime('%Y', sd.$COLUMN_SYMPTOM_DATE) = ? AND strftime('%m', sd.$COLUMN_SYMPTOM_DATE) = ? AND s.$COLUMN_SYMPTOM_ACTIVE = 1",
             arrayOf(year.toString(), month.toString().padStart(2, '0')),
             null, null, null
         )
 
         try {
             // Get the column index for the date
-            val dateIndex = cursor.getColumnIndex(COLUMN_SYMPTOM_DATE)
+            val dateIndex = cursor.getColumnIndex("sd.$COLUMN_SYMPTOM_DATE")
 
             if (dateIndex != -1) {
                 while (cursor.moveToNext()) {
                     val dateStr = cursor.getString(dateIndex)
                     try {
                         val date = LocalDate.parse(dateStr)
-                        // Add the date to the set of dates with symptoms
+                        // Add the date to the set of dates with active symptoms
                         dates.add(date)
                         Log.d(TAG, "Fetched date $date from $TABLE_SYMPTOM_DATE")
                     } catch (e: Exception) {
@@ -390,6 +390,49 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         return dates
     }
+
+
+//    fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
+//        val dates = mutableSetOf<LocalDate>()
+//        val db = readableDatabase
+//
+//        // Query the database for dates in the specified month and year
+//        val cursor = db.query(
+//            TABLE_SYMPTOM_DATE,
+//            arrayOf(COLUMN_SYMPTOM_DATE),
+//            "strftime('%Y', $COLUMN_SYMPTOM_DATE) = ? AND strftime('%m', $COLUMN_SYMPTOM_DATE) = ?",
+//            arrayOf(year.toString(), month.toString().padStart(2, '0')),
+//            null, null, null
+//        )
+//
+//        try {
+//            // Get the column index for the date
+//            val dateIndex = cursor.getColumnIndex(COLUMN_SYMPTOM_DATE)
+//
+//            if (dateIndex != -1) {
+//                while (cursor.moveToNext()) {
+//                    val dateStr = cursor.getString(dateIndex)
+//                    try {
+//                        val date = LocalDate.parse(dateStr)
+//                        // Add the date to the set of dates with symptoms
+//                        dates.add(date)
+//                        Log.d(TAG, "Fetched date $date from $TABLE_SYMPTOM_DATE")
+//                    } catch (e: Exception) {
+//                        Log.e(TAG, "Failed to parse date string: $dateStr", e)
+//                    }
+//                }
+//            } else {
+//                Log.e(TAG, "Column index is invalid: dateIndex=$dateIndex")
+//            }
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Error querying for symptom dates", e)
+//        } finally {
+//            cursor.close()
+//            db.close()
+//        }
+//
+//        return dates
+//    }
 
 
     fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
@@ -455,14 +498,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         db.close()
         return symptoms
-    }
-
-    fun inactivateSymptoms(symptomId: List<Int>){
-        val db = readableDatabase
-        db.execSQL("""
-            UPDATE TABLE_$TABLE_SYMPTOMS SET $COLUMN_SYMPTOM_ACTIVE = $COLUMN_ID = ?
-        """)
-        arrayOf(symptomId)
     }
 
     fun getAllSettings(): List<Setting> {
