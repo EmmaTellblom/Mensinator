@@ -22,21 +22,22 @@ import androidx.compose.ui.unit.dp
 fun FAQDialog(
     onDismissRequest: () -> Unit // Callback to handle the close action
 ) {
+    val scrollState = rememberScrollState()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val maxHeight = screenHeight * 0.60f
 
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },  // Call the dismiss callback when dialog is dismissed
+        onDismissRequest = onDismissRequest,  // Call the dismiss callback when dialog is dismissed
         title = {
             Text(text = "Frequently Asked Questions")
         },
         text = {
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())  // Add vertical scrolling capability
                     .padding(16.dp)  // Padding around the text content
                     .fillMaxWidth()
-                    .heightIn(max = maxHeight)
+                    .heightIn(max = maxHeight)  // Limit height to the maxHeight
+                    .verticalScroll(scrollState)  // Add vertical scrolling capability
             ) {
                 // User Manual Header
                 Text(
@@ -87,9 +88,8 @@ fun FAQDialog(
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "• Reminder for upcoming period. (The button is added but not functional now in the settings)\n" +
-                            "• Ability to inactivate symptoms (Button added but not functional now in the menu)\n" +
-                            "• New user interface (when Im in the mood).\n" +
+                    text = "• Reminder for upcoming period to the toolbar. (This is shown in settings but not implemented )\n" +
+                            "• New user interface (when I'm in the mood).\n" +
                             "• Other small UI improvements",
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -102,7 +102,11 @@ fun FAQDialog(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have **no access to it whatsoever**.\nWe value your privacy and do not save or share any personal information.",
+                    text = "We are two women who were tired of selling our data to big corporations. " +
+                            "Our app stores all your data locally on your device and we have **no access to it whatsoever**.\n" +
+                            "We value your privacy and do not save or share any personal information." +
+                            "Since launching this app we have grown and now have our own Discord-server with people who are passionate about this app and want to help us out!"+
+                            "\nJoin us on Discord here: https://discord.gg/nHkb5SeH",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
@@ -114,7 +118,7 @@ fun FAQDialog(
                 )
                 Text(
                     text = "• This is a hobby-project and not intended for medical use. We are simply doing this for our own needs." +
-                            "But we do welcome ideas and requests, send us an email if you have any questions\n" +
+                            "But we do welcome ideas and requests, join us on Discord or send us an email:\n" +
                             "mensinator.app@gmail.com",
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -122,10 +126,13 @@ fun FAQDialog(
         },
         confirmButton = {
             Button(
-                onClick = { onDismissRequest() }  // Call the dismiss callback when the button is clicked
+                onClick = onDismissRequest  // Call the dismiss callback when the button is clicked
             ) {
                 Text("Close")
             }
         },
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = maxHeight) // Ensure the AlertDialog height respects the max height
     )
 }
