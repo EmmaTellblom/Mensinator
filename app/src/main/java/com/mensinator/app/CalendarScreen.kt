@@ -344,14 +344,18 @@ fun CalendarScreen() {
                                         .background(Color.Transparent)
                                 )
                             }
-
+                    if(oldestPeriodDate != null) {
                         if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
                             val firstLastPeriodDate = dbHelper.getFirstLatestPeriodDate(dayDate)
-                            Log.d("CalendarScreen","FirstLastPeriodDate for $dayDate: $firstLastPeriodDate")
+                            Log.d(
+                                "CalendarScreen",
+                                "FirstLastPeriodDate for $dayDate: $firstLastPeriodDate"
+                            )
                             if (firstLastPeriodDate != null) {
                                 // Calculate the number of days between the firstLastPeriodDate and dayDate
-                                cycleNumber = ChronoUnit.DAYS.between(firstLastPeriodDate, dayDate).toInt() + 1
-                                Log.d("CalendarScreen","CycleNumber for $dayDate: $cycleNumber")
+                                cycleNumber = ChronoUnit.DAYS.between(firstLastPeriodDate, dayDate)
+                                    .toInt() + 1
+                                Log.d("CalendarScreen", "CycleNumber for $dayDate: $cycleNumber")
 
                                 // Render UI elements based on cycleNumber or other logic
                                 Box(
@@ -376,8 +380,8 @@ fun CalendarScreen() {
                             }
 
 
-                        }
-
+                        }//HÄR SLUTAR IFEN
+                    }
 
                         }
                     } else {
