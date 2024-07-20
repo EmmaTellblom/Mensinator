@@ -35,11 +35,23 @@ fun ExportImportDialog(
             val inputStream = context.contentResolver.openInputStream(it)
             val file = File(ExportImport().getDefaultImportFilePath(context))
             val outputStream = FileOutputStream(file)
-            inputStream?.copyTo(outputStream)
-            inputStream?.close()
-            outputStream.close()
-            importPath.value = file.absolutePath
-            onImportClick(importPath.value)
+            try {
+                inputStream?.copyTo(outputStream)
+                importPath.value = file.absolutePath
+                // Call the import function
+                onImportClick(importPath.value)
+                // Show success toast
+                Toast.makeText(context, "File was imported successfully", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                // Show error toast
+                Toast.makeText(context, "Failed to import file", Toast.LENGTH_SHORT).show()
+            } finally {
+                // Clean up
+                inputStream?.close()
+                outputStream.close()
+            }
+            // Dismiss the dialog after importing
+            onDismissRequest()
         }
     }
 
