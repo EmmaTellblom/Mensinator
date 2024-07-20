@@ -302,7 +302,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
+            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
@@ -310,7 +310,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
                     val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
-                    symptoms.add(Symptom(symptomId, symptomName))
+                    val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
+                    symptoms.add(Symptom(symptomId, symptomName, symptomActive))
                 } while (it.moveToNext())
             }
         }
@@ -321,7 +322,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME FROM $TABLE_SYMPTOMS"
+            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE FROM $TABLE_SYMPTOMS ORDER BY $COLUMN_SYMPTOM_NAME"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
@@ -329,7 +330,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
                     val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
-                    symptoms.add(Symptom(symptomId, symptomName))
+                    val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
+                    symptoms.add(Symptom(symptomId, symptomName, symptomActive))
                 } while (it.moveToNext())
             }
         }
@@ -490,8 +492,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val rowsUpdated = db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
         return rowsUpdated > 0
     }
-
-
 
     fun getSettingByKey(key: String): Setting? {
         val db = readableDatabase
@@ -721,5 +721,29 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return oldestPeriodDate
     }
 
+    fun updateSymptom(id: Int, active: Int) {
+        val db = writableDatabase
+
+        // Ensure that active is either 0 or 1
+        val newActiveStatus = if (active in 0..1) active else throw IllegalArgumentException("Active status must be 0 or 1")
+
+        val contentValues = ContentValues().apply {
+            put("active", newActiveStatus)
+        }
+
+        // Update the symptom with the given ID
+        val rowsAffected = db.update(
+            "symptoms", // Table name
+            contentValues,
+            "id = ?", // WHERE clause
+            arrayOf(id.toString()) // WHERE arguments
+        )
+
+        if (rowsAffected == 0) {
+            throw IllegalStateException("No symptom found with ID: $id")
+        }
+
+        db.close()
+    }
 
 }

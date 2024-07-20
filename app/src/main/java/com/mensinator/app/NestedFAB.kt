@@ -28,7 +28,8 @@ fun NestedFAB(
     onStatisticsClick: () -> Unit,
     onFAQClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onExportImportClick: () -> Unit
+    onExportImportClick: () -> Unit,
+    onManageSymptomsClick: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     var showFAQDialog by remember { mutableStateOf(false) }
@@ -115,6 +116,7 @@ fun NestedFAB(
                     }
                     FloatingActionButton(
                         onClick = {
+                            onManageSymptomsClick()
                             // Handle the Symptoms click
                             expanded = false
                         },

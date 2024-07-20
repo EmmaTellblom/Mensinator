@@ -53,6 +53,7 @@ fun CalendarScreen() {
     var showFAQDialog by remember { mutableStateOf(false) }
     var showSettingsDialog by remember { mutableStateOf(false) }
     var showExportImportDialog by remember { mutableStateOf(false) }
+    var showManageSymptomsDialog by remember { mutableStateOf(false) }
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
 
     var cycleNumber: Int
@@ -531,6 +532,13 @@ fun CalendarScreen() {
             )
         }
 
+        if(showManageSymptomsDialog){
+            ManageSymptom(
+                onDismissRequest = { showManageSymptomsDialog = false }
+            )
+
+        }
+
         Spacer(modifier = Modifier.weight(1f))
         NestedFAB(
             onStatisticsClick = {
@@ -544,6 +552,9 @@ fun CalendarScreen() {
             },
             onExportImportClick = {
                 showExportImportDialog = true
+            },
+            onManageSymptomsClick = {
+                showManageSymptomsDialog = true
             }
         )
     }
