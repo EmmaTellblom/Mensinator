@@ -51,6 +51,7 @@ fun NestedFAB(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
+                .padding(16.dp)
                 .align(Alignment.BottomEnd) // Align to bottom-right corner
         ) {
             Icon(
@@ -64,6 +65,7 @@ fun NestedFAB(
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
+                    .padding(16.dp)
             ) {
                 Column(
                     modifier = Modifier

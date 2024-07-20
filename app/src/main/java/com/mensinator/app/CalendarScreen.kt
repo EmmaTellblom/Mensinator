@@ -541,23 +541,24 @@ fun CalendarScreen() {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        NestedFAB(
-            onStatisticsClick = {
-                showStatisticsDialog = true
-            },
-            onFAQClick = {
-                showFAQDialog = true
-            },
-            onSettingsClick = {
-                showSettingsDialog = true
-            },
-            onExportImportClick = {
-                showExportImportDialog = true
-            },
-            onManageSymptomsClick = {
-                showManageSymptomsDialog = true
-            }
-        )
+
     }
+    NestedFAB(
+        onStatisticsClick = {
+            showStatisticsDialog = true
+        },
+        onFAQClick = {
+            showFAQDialog = true
+        },
+        onSettingsClick = {
+            showSettingsDialog = true
+        },
+        onExportImportClick = {
+            showExportImportDialog = true
+        },
+        onManageSymptomsClick = {
+            showManageSymptomsDialog = true
+        }
+    )
 }
 
