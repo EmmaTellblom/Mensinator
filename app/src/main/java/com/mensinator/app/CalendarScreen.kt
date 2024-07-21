@@ -174,7 +174,7 @@ fun CalendarScreen() {
         val month = currentMonth.value.monthValue
         val dates = dbHelper.getOvulationDatesForMonth(year, month).sorted()  // Rename to `dates`
         ovulationDates.value = dates.toSet()
-        //ovulationDates.value = dates
+        updateStatistics()
     }
 
     // Update button state based on selected dates
