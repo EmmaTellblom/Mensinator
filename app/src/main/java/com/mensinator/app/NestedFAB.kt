@@ -52,7 +52,8 @@ fun NestedFAB(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
             modifier = Modifier
-                .padding(16.dp)
+                //.padding(16.dp)
+                .offset(x = (-16).dp, y = (0).dp)
                 .align(Alignment.BottomEnd) // Align to bottom-right corner
                 .navigationBarsPadding()
         ) {
