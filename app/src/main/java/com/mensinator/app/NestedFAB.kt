@@ -2,7 +2,10 @@ package com.mensinator.app
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -53,6 +56,7 @@ fun NestedFAB(
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.BottomEnd) // Align to bottom-right corner
+                .navigationBarsPadding()
         ) {
             Icon(
                 imageVector = Icons.Filled.Menu,
@@ -69,7 +73,7 @@ fun NestedFAB(
             ) {
                 Column(
                     modifier = Modifier
-                        .offset(y = (-70).dp)
+                        .offset(y = (-80).dp)
                 ) {
                     FloatingActionButton(
                         onClick = {
