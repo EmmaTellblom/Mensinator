@@ -279,7 +279,9 @@ fun CalendarScreen() {
                             if (hasSymptomDate) {
                                 Box(
                                     modifier = Modifier
-                                        .size(8.dp)  // Size of the small bubble
+                                        //.padding(16.dp)
+                                        .offset(x = (-8).dp, y = (0).dp)
+                                        .size(6.dp)  // Size of the small bubble
                                         .background(
                                             symptomColor,
                                             CircleShape
@@ -360,10 +362,10 @@ fun CalendarScreen() {
                                 // Render UI elements based on cycleNumber or other logic
                                 Box(
                                     modifier = Modifier
-                                        .size(17.dp)
+                                        .size(18.dp)
                                         .background(
-                                            Color.White,
-                                            CircleShape
+                                            Color.Transparent,
+                                            //CircleShape
                                         )
                                         .align(Alignment.TopStart)
                                 ) {
@@ -371,7 +373,7 @@ fun CalendarScreen() {
                                         text = cycleNumber.toString(),
                                         style = androidx.compose.ui.text.TextStyle(
                                             color = Color.Black,
-                                            fontSize = 7.sp,
+                                            fontSize = 8.sp,
                                             textAlign = TextAlign.Left
                                         ),
                                         modifier = Modifier.padding(2.dp)
@@ -425,7 +427,7 @@ fun CalendarScreen() {
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = "Add or remove dates")
+            Text(text = "Period")
         }
 
         Button(
