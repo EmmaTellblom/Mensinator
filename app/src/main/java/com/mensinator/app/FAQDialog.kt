@@ -101,7 +101,7 @@ fun FAQDialog(
                             "Our app stores all your data locally on your device and we have **no access to it whatsoever**.\n" +
                             "We value your privacy and do not save or share any personal information." +
                             "Since launching this app we have grown and now have our own Discord-server with people who are passionate about this app and want to help us out!"+
-                            "\nJoin us on Discord here: https://discord.gg/nHkb5SeH",
+                            "\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
