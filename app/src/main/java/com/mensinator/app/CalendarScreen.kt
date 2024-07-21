@@ -249,7 +249,7 @@ fun CalendarScreen() {
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(8.dp)
+                                //.padding(8.dp)
                                 .clickable {
                                     if (isSelected) {
                                         selectedDates.value -= dayDate
@@ -360,7 +360,7 @@ fun CalendarScreen() {
                                 // Render UI elements based on cycleNumber or other logic
                                 Box(
                                     modifier = Modifier
-                                        .size(13.dp)
+                                        .size(17.dp)
                                         .background(
                                             Color.White,
                                             CircleShape
@@ -371,8 +371,8 @@ fun CalendarScreen() {
                                         text = cycleNumber.toString(),
                                         style = androidx.compose.ui.text.TextStyle(
                                             color = Color.Black,
-                                            fontSize = 6.sp,
-                                            textAlign = TextAlign.Center
+                                            fontSize = 7.sp,
+                                            textAlign = TextAlign.Left
                                         ),
                                         modifier = Modifier.padding(2.dp)
                                     )
