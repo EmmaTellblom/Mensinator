@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -14,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -23,8 +21,6 @@ fun FAQDialog(
     onDismissRequest: () -> Unit // Callback to handle the close action
 ) {
     val scrollState = rememberScrollState()
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val maxHeight = screenHeight * 0.60f
 
     AlertDialog(
         onDismissRequest = onDismissRequest,  // Call the dismiss callback when dialog is dismissed
@@ -36,7 +32,7 @@ fun FAQDialog(
                 modifier = Modifier
                     .padding(16.dp)  // Padding around the text content
                     .fillMaxWidth()
-                    .heightIn(max = maxHeight)  // Limit height to the maxHeight
+                    //.heightIn(max = maxHeight)  // Limit height to the maxHeight
                     .verticalScroll(scrollState)  // Add vertical scrolling capability
             ) {
                 // User Manual Header
@@ -133,6 +129,6 @@ fun FAQDialog(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(max = maxHeight) // Ensure the AlertDialog height respects the max height
+
     )
 }
