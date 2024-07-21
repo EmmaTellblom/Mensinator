@@ -32,7 +32,6 @@ fun FAQDialog(
                 modifier = Modifier
                     .padding(16.dp)  // Padding around the text content
                     .fillMaxWidth()
-                    //.heightIn(max = maxHeight)  // Limit height to the maxHeight
                     .verticalScroll(scrollState)  // Add vertical scrolling capability
             ) {
                 // User Manual Header
