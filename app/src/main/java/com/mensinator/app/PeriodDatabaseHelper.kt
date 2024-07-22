@@ -583,7 +583,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get the previous period start date from given input date
-    fun getFirstLatestPeriodDate(date: LocalDate): LocalDate? {
+    fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate? {
         val db = readableDatabase
         var firstLatestDate: LocalDate? = null
 
@@ -661,7 +661,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     // This function is used to get the luteal length of a cycle.
     // Date input should only be ovulation date
     // To be used with setting for calculating periods according to ovulation
-    fun getLutealLength(date: LocalDate): Int {
+    fun getLutealLengthForPeriod(date: LocalDate): Int {
         var lutealLength = 0
         val db = readableDatabase
         val query = """
@@ -726,5 +726,40 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
         return ovulationDate
     }
+
+    fun getLatestXPeriodStart(number: Int): List<LocalDate> {
+        val dateList = mutableListOf<LocalDate>()
+        val db = readableDatabase
+        val numberOfPeriods = number + 1 // Include the current ongoing period if applicable
+
+        val query = """
+        SELECT period_id, MIN(date) AS date
+        FROM periods
+        WHERE period_id IN (
+            SELECT DISTINCT period_id
+            FROM periods
+            ORDER BY date DESC
+            LIMIT ?
+        )
+        GROUP BY period_id
+        ORDER BY date DESC
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(numberOfPeriods.toString()))
+
+        if (cursor.moveToFirst()) {
+            do {
+                val dateString = cursor.getString(1) // Get the date from the second column
+                val date = LocalDate.parse(dateString)
+                dateList.add(date)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return dateList
+    }
+
 
 }

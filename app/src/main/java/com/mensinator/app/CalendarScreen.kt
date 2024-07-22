@@ -348,7 +348,7 @@ fun CalendarScreen() {
                             }
                     if(oldestPeriodDate != null) {
                         if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
-                            val firstLastPeriodDate = dbHelper.getFirstLatestPeriodDate(dayDate)
+                            val firstLastPeriodDate = dbHelper.getFirstPreviousPeriodDate(dayDate)
                             Log.d(
                                 "CalendarScreen",
                                 "FirstLastPeriodDate for $dayDate: $firstLastPeriodDate"
