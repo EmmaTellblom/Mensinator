@@ -678,4 +678,53 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return lutealLength
     }
 
+    // This function is used to get the latest X ovulation dates from the database
+    // using input number to be more flexible
+    fun getLatestXOvulations(number: Int): List<LocalDate> {
+        val ovulationDates = mutableListOf<LocalDate>()
+        val db = readableDatabase
+        // only include ovulations that has a period coming afterwards
+        val query = """
+        SELECT o.DATE
+        FROM OVULATIONS o
+        JOIN PERIODS p ON p.DATE > o.DATE
+        GROUP BY o.DATE
+        ORDER BY o.DATE DESC
+        LIMIT ?
+    """
+        val cursor = db.rawQuery(query, arrayOf(number.toString()))
+
+        if (cursor.moveToFirst()) {
+            do {
+                // Assuming the DATE column is stored as a string in the format yyyy-MM-dd
+                val dateString = cursor.getString(0)
+                val date = LocalDate.parse(dateString)
+                ovulationDates.add(date)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return ovulationDates
+    }
+
+    fun getLastOvulation(): LocalDate? {
+        val db = readableDatabase
+        val query = """
+        SELECT DATE FROM OVULATIONS ORDER BY DATE DESC LIMIT 1
+    """
+
+        val cursor = db.rawQuery(query, null)
+        var ovulationDate: LocalDate? = null
+
+        if (cursor.moveToFirst()) {
+            val dateString = cursor.getString(0)
+            ovulationDate = LocalDate.parse(dateString)
+        }
+
+        cursor.close()
+        db.close()
+        return ovulationDate
+    }
+
 }
