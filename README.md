@@ -28,9 +28,11 @@ Mensinator is perfect for anyone seeking a straightforward and private period tr
 
 ## Getting Started
 To get started with Mensinator, simply download the app from the Google Play Store, and start tracking your menstrual cycle with ease and privacy.
+**https://play.google.com/store/apps/details?id=com.mensinator.app**
 
 ## Contributing
-We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss your proposed changes. You are also welcome to join our Discord to discuss further or simply to chat with us!
+Join us here; **https://discord.gg/tHA2k3bFRN**
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
