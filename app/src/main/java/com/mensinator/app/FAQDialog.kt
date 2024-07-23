@@ -75,11 +75,13 @@ fun FAQDialog(
                 Text(
                     text = "• Calculations: " +
                             "\nPeriods are calculated according to average cycle length and period length." +
+                            "\nPeriods _can_ be calculated using average luteal phase. The calculations will then look at the last 5 cycles" +
+                            " to make an average lutal phase and use that to calculate the period. This is activated in the settings" +
                             "\nOvulation is calculated according to average ovulation cycle length.",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "Features Coming Soon:",
+                    text = "\nFeatures Coming Soon:",
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
@@ -101,7 +103,7 @@ fun FAQDialog(
                             "Our app stores all your data locally on your device and we have **no access to it whatsoever**.\n" +
                             "We value your privacy and do not save or share any personal information." +
                             "Since launching this app we have grown and now have our own Discord-server with people who are passionate about this app and want to help us out!"+
-                            "\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN",
+                            "\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN",
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections

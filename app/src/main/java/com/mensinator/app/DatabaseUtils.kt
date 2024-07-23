@@ -47,6 +47,7 @@ object DatabaseUtils {
         createAppSettingsGroup(db)
         createAppSettings(db)
         createOvulationStructure(db)
+        insertLutealSetting(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -84,7 +85,8 @@ object DatabaseUtils {
                 ('period_selection_color', 'Period Selection Color', 'DarkGray', 1),
                 ('symptom_color', 'Symptom Color', 'Black', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
-                ('reminder_days', 'Days Before Reminder', '0', 2)
+                ('reminder_days', 'Days Before Reminder', '0', 2),
+                ('luteal_calculation ', 'Luteal Phase Calculation', '0', 3)
         """)
     }
 
@@ -101,6 +103,13 @@ object DatabaseUtils {
             INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id) VALUES
                 ('ovulation_color', 'Ovulation Color', 'Blue', '1'),
                 ('expected_ovulation_color', 'Expected Ovulation Color', 'Magenta', '1')
+        """)
+    }
+
+    fun insertLutealSetting(db: SQLiteDatabase){
+        db.execSQL("""
+            INSERT INTO APP_SETTINGS(setting_key, setting_label, setting_value, group_label_id) VALUES
+                ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
     }
 }

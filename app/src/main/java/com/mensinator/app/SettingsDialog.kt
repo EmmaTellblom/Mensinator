@@ -85,7 +85,7 @@ fun SettingsDialog(
                                 ) {
                                     Text(
                                         text = setting.label,
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         modifier = Modifier.weight(1f).alignByBaseline() // Align by baseline
                                     )
                                     Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
@@ -135,7 +135,7 @@ fun SettingsDialog(
                                 ) {
                                     Text(
                                         text = setting.label,
-                                        fontSize = 16.sp,
+                                        fontSize = 14.sp,
                                         modifier = Modifier.weight(1f).alignByBaseline() // Align by baseline
                                     )
                                     Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
@@ -165,12 +165,37 @@ fun SettingsDialog(
                         }
                         else -> {
                             // Default case for other groups
+                            Text(
+                                text = "Other settings",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(vertical = 8.dp)
+                            )
                             settingsInGroup.forEach { setting ->
-                                Text(
-                                    text = "${setting.label}: ${setting.value}",
-                                    fontSize = 16.sp,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
+                                var isChecked by remember { mutableStateOf(setting.value == "1") }
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = setting.label,
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    Switch(
+                                        checked = isChecked,
+                                        onCheckedChange = { newValue ->
+                                            isChecked = newValue
+                                            savedSettings = savedSettings.map {
+                                                if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
+                                            }
+                                        }
+                                    )
+                                }
                             }
                         }
                     }

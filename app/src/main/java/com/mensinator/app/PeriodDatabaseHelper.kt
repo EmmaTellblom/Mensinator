@@ -16,7 +16,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 6
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -61,6 +61,10 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         if(oldVersion < 5){
             DatabaseUtils.createOvulationStructure(db)
+        }
+
+        if(oldVersion < 6){
+            DatabaseUtils.insertLutealSetting(db)
         }
     }
 
@@ -109,7 +113,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val periodId = cursor.getInt(periodIdIndex)
                         val date = LocalDate.parse(dateStr)
                         dates[date] = periodId
-                        Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
+//                        Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
                     }
                 } else {
                     Log.e(
@@ -154,7 +158,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val periodId = cursor.getInt(periodIdIndex)
                         val date = LocalDate.parse(dateStr)
                         dates[date] = periodId
-                        Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
+                        //Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
                     }
                 } else {
                     Log.e(
@@ -260,18 +264,22 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
 
-        // Query the database for dates in the specified month and year
-        val cursor = db.query(
-            "$TABLE_SYMPTOM_DATE AS sd INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID",
-            arrayOf("sd.$COLUMN_SYMPTOM_DATE"),
-            "strftime('%Y', sd.$COLUMN_SYMPTOM_DATE) = ? AND strftime('%m', sd.$COLUMN_SYMPTOM_DATE) = ? AND s.$COLUMN_SYMPTOM_ACTIVE = 1",
-            arrayOf(year.toString(), month.toString().padStart(2, '0')),
-            null, null, null
-        )
+        // Define the raw SQL query
+        val query = """
+        SELECT sd.symptom_date
+        FROM $TABLE_SYMPTOM_DATE AS sd
+        INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID
+        WHERE strftime('%Y', sd.symptom_date) = ? 
+        AND strftime('%m', sd.symptom_date) = ? 
+        AND s.$COLUMN_SYMPTOM_ACTIVE = 1
+    """
+
+        // Execute the query with the provided parameters
+        val cursor = db.rawQuery(query, arrayOf(year.toString(), month.toString().padStart(2, '0')))
 
         try {
             // Get the column index for the date
-            val dateIndex = cursor.getColumnIndex("sd.$COLUMN_SYMPTOM_DATE")
+            val dateIndex = cursor.getColumnIndex("symptom_date")
 
             if (dateIndex != -1) {
                 while (cursor.moveToNext()) {
@@ -280,7 +288,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val date = LocalDate.parse(dateStr)
                         // Add the date to the set of dates with active symptoms
                         dates.add(date)
-                        Log.d(TAG, "Fetched date $date from $TABLE_SYMPTOM_DATE")
+                        // Log the fetched date
+                        //Log.d(TAG, "Fetched date $date from $TABLE_SYMPTOM_DATE")
                     } catch (e: Exception) {
                         Log.e(TAG, "Failed to parse date string: $dateStr", e)
                     }
@@ -416,6 +425,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         } else {
             null
         }
+
         cursor.close()
         return setting
     }
@@ -470,7 +480,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val date = LocalDate.parse(dateStr)
                         // Add the date to the set of dates
                         dates.add(date)
-                        Log.d("TAG", "Fetched date $date from ovulations")
+//                        Log.d("TAG", "Fetched date $date from ovulations")
                     } catch (e: Exception) {
                         Log.e("TAG", "Failed to parse date string: $dateStr", e)
                     }
@@ -742,7 +752,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             LIMIT ?
         )
         GROUP BY period_id
-        ORDER BY date DESC
+        ORDER BY date ASC
     """
 
         val cursor = db.rawQuery(query, arrayOf(numberOfPeriods.toString()))
