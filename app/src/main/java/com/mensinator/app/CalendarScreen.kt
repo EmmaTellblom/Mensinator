@@ -154,7 +154,7 @@ fun CalendarScreen() {
             Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
 
         } else {
-            if(lastOvulationDate.toString()>firstLastPeriodDate.toString()){
+            if(lastOvulationDate.toString()>firstLastPeriodDate.toString() && (nextPredictedOvulation != "Not enough data" && nextPeriodStartCalculated != "Not enough data")){
                 Log.d("CalendarScreen", "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString())
                 Log.d("CalendarScreen", "Will calculate according to next expected period")
                 val growthDays = calcHelper.averageFollicalGrowthInDays(5)
@@ -164,7 +164,7 @@ fun CalendarScreen() {
             else{
                 val test = "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString()
                 Log.d("CalendarScreen", "Here is test: $test")
-                nextPredictedOvulation = "Not enough data 123"
+                nextPredictedOvulation = "Not enough data"
             }
 
         }
