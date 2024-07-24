@@ -147,7 +147,6 @@ fun CalendarScreen() {
         lastOvulationDate = ovulationDatesList.lastOrNull()
         ovulationCount = ovulationDatesList.size
 
-        //TODO: Look at this, why isnt it updating?
         // Predict the next ovulation date
         if (lastOvulationDate != null && periodCount >= 1 && (lastOvulationDate.toString()<firstLastPeriodDate.toString())) {
             val growthDays = calcHelper.averageFollicalGrowthInDays(5)
