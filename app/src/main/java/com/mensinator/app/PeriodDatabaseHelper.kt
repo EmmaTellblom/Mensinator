@@ -80,9 +80,9 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
         if (rowsUpdated == 0) {
             db.insert(TABLE_PERIODS, null, values)
-            Log.d(TAG, "Inserted date $date with periodId $periodId into $TABLE_PERIODS")
+            //Log.d(TAG, "Inserted date $date with periodId $periodId into $TABLE_PERIODS")
         } else {
-            Log.d(TAG, "Updated date $date with periodId $periodId in $TABLE_PERIODS")
+            //Log.d(TAG, "Updated date $date with periodId $periodId in $TABLE_PERIODS")
         }
         db.close()
     }
@@ -198,9 +198,9 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val whereArgs = arrayOf(date.toString())
         val rowsDeleted = db.delete(TABLE_PERIODS, whereClause, whereArgs)
         if (rowsDeleted > 0) {
-            Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
+            //Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
         } else {
-            Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
+            //Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
         }
         db.close()
     }
@@ -389,7 +389,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         cursor.close()
 
         val noSettings = settings.count()
-        Log.d(TAG, "Found $noSettings in the database")
+        //Log.d(TAG, "Found $noSettings in the database")
 
         return settings
     }
@@ -566,18 +566,18 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     db.execSQL(updateQuery, updateArgs)
 
                     periodId = primaryPeriodID
-                    Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
+                    //Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
                 } else if (cursor.count == 1) {
                     cursor.moveToFirst()
                     periodId = cursor.getInt(0)
-                    Log.d(TAG, "Found existing periodId $periodId for date $date")
+                    //Log.d(TAG, "Found existing periodId $periodId for date $date")
                 } else {
                     // Create a new period ID
                     val maxPeriodIdCursor = db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
                     if (maxPeriodIdCursor.moveToFirst()) {
                         val maxPeriodId = if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
                         periodId = maxPeriodId + 1
-                        Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
+                        //Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
                     }
                     maxPeriodIdCursor.close()
                 }
@@ -673,18 +673,9 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     // To be used with setting for calculating periods according to ovulation
     fun getLutealLengthForPeriod(date: LocalDate): Int {
         var lutealLength = 0
-        val db = readableDatabase
-        val query = """
-        SELECT DATE FROM PERIODS WHERE DATE < ? ORDER BY DATE DESC LIMIT 1
-    """
-        val cursor = db.rawQuery(query, arrayOf(date.toString()))
-
-        if (cursor.moveToFirst()) {
-            val previousPeriodDate = LocalDate.parse(cursor.getString(0))
-            lutealLength = java.time.temporal.ChronoUnit.DAYS.between(previousPeriodDate, date).toInt()
-        }
-
-        cursor.close()
+        val firstNextPeriodDate = getFirstNextPeriodDate(date)
+        lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+        Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
         return lutealLength
     }
 
@@ -769,5 +760,30 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
 
         return dateList
+    }
+
+    fun getFirstNextPeriodDate(date: LocalDate): LocalDate? {
+        val db = readableDatabase
+        var firstNextDate: LocalDate? = null
+
+        // Query to get the first period date that is greater than the provided date
+        val query = """
+        SELECT date
+        FROM periods
+        WHERE date > ?
+        ORDER BY date ASC
+        LIMIT 1
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        if (cursor.moveToFirst()) {
+            firstNextDate = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow("date")))
+        }
+
+        cursor.close()
+        db.close()
+
+        return firstNextDate
     }
 }

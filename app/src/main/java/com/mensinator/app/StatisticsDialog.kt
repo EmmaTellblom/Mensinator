@@ -7,10 +7,14 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
+
+
 
 @Composable
 fun StatisticsDialog(
@@ -20,9 +24,13 @@ fun StatisticsDialog(
     periodCount: Int,
     ovulationCount: Int,
     //averageOvulationCycleLength: Double,
+    growthDays: String,
     nextPredictedOvulation: String?,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val dbHelper = remember { PeriodDatabaseHelper(context) }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -55,16 +63,22 @@ fun StatisticsDialog(
                     text = "\nNumber of ovulation tracked: $ovulationCount",
                     fontSize = 16.sp
                 )
-//                Text(
-//                    text = "Average ovulation cycle length: ${"%.1f".format(averageOvulationCycleLength)} days",
-//                    fontSize = 16.sp
-//                )
+                Text(
+                    text = "Average ovulation day: $growthDays",
+                    fontSize = 16.sp
+                )
                 Text(
                     text = nextPredictedOvulation?.let {
                         "Next predicted ovulation date: $it"
                     } ?: "Not enough data to predict next ovulation",
                     fontSize = 16.sp
                 )
+//                val avgLutealLength = dbHelper.getAverageLutealLength()
+//                Text(
+//                    text = "Average luteal phase length: $avgLutealLength", //TODO
+//
+//                    fontSize = 16.sp
+//                )
             }
         },
         confirmButton = {

@@ -53,6 +53,7 @@ fun CalendarScreen() {
     var showExportImportDialog by remember { mutableStateOf(false) }
     var showManageSymptomsDialog by remember { mutableStateOf(false) }
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
+    var growthDays by remember { mutableStateOf("0") }
 
     var cycleNumber: Int
     val oldestPeriodDate = dbHelper.getOldestPeriodDate()
@@ -131,7 +132,7 @@ fun CalendarScreen() {
             averagePeriodLength = if (periodLengths.isNotEmpty()) periodLengths.average() else 0.0
             // Calculate the next period, input is setting on how to calculate next period
             nextPeriodStartCalculated = calcHelper.calculateNextPeriod(lutealPeriodCalculationValue)
-            Log.d("CalendarScreen", "Next period start: $nextPeriodStartCalculated")
+            //Log.d("CalendarScreen", "Next period start: $nextPeriodStartCalculated")
 
         } else {
             averageCycleLength = 0.0
@@ -149,21 +150,23 @@ fun CalendarScreen() {
 
         // Predict the next ovulation date
         if (lastOvulationDate != null && periodCount >= 1 && (lastOvulationDate.toString()<firstLastPeriodDate.toString())) {
-            val growthDays = calcHelper.averageFollicalGrowthInDays(5)
+            growthDays = calcHelper.averageFollicalGrowthInDays(5)
             nextPredictedOvulation = firstLastPeriodDate?.plusDays(growthDays.toLong()).toString()
-            Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
+            //Log.d("CalendarScreen", "Growth days in statistics 1: $growthDays")
+            //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
 
         } else {
             if(lastOvulationDate.toString()>firstLastPeriodDate.toString() && (nextPredictedOvulation != "Not enough data" && nextPeriodStartCalculated != "Not enough data")){
-                Log.d("CalendarScreen", "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString())
-                Log.d("CalendarScreen", "Will calculate according to next expected period")
-                val growthDays = calcHelper.averageFollicalGrowthInDays(5)
+                //Log.d("CalendarScreen", "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString())
+                //Log.d("CalendarScreen", "Will calculate according to next expected period")
+                growthDays = calcHelper.averageFollicalGrowthInDays(5)
+                //Log.d("CalendarScreen", "Growth days in statistics 2: $growthDays")
                 nextPredictedOvulation = LocalDate.parse(nextPeriodStartCalculated).plusDays(growthDays.toLong()).toString()
-                Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
+                //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
             }
             else{
                 val test = "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString()
-                Log.d("CalendarScreen", "Here is test: $test")
+                //Log.d("CalendarScreen", "Here is test: $test")
                 nextPredictedOvulation = "Not enough data"
             }
 
@@ -410,11 +413,11 @@ fun CalendarScreen() {
                     for (date in selectedDates.value) {
                         if (date in periodDates.value) {
                             dbHelper.removeDateFromPeriod(date)
-                            Log.d("CalendarScreen", "Removed date $date")
+                            //Log.d("CalendarScreen", "Removed date $date")
                         } else {
                             val periodId = dbHelper.newFindOrCreatePeriodID(date)
                             dbHelper.addDateToPeriod(date, periodId)
-                            Log.d("CalendarScreen", "Added date $date with periodId $periodId")
+                            //Log.d("CalendarScreen", "Added date $date with periodId $periodId")
                         }
                     }
 
@@ -423,7 +426,7 @@ fun CalendarScreen() {
                     val year = currentMonth.value.year
                     val month = currentMonth.value.monthValue
                     periodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
-                    Log.d("CalendarScreen", "Refreshed period dates for $year-$month")
+                    //Log.d("CalendarScreen", "Refreshed period dates for $year-$month")
 
 
                     // Calculate the first day of the next month
@@ -474,6 +477,7 @@ fun CalendarScreen() {
                     val date = selectedDates.value.first()
                     dbHelper.updateOvulationDate(date)
                     refreshOvulationDates()
+
                     Toast.makeText(context, "Ovulation saved successfully", Toast.LENGTH_SHORT).show()
                 }
                 else{
@@ -539,6 +543,7 @@ fun CalendarScreen() {
                 periodCount = periodCount,
                 ovulationCount = ovulationCount,
                 //averageOvulationCycleLength = averageOvulationCycleLength,
+                growthDays = growthDays,
                 nextPredictedOvulation = nextPredictedOvulation,
                 onDismissRequest = { showStatisticsDialog = false }
             )

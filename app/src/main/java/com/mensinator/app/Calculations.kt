@@ -46,13 +46,16 @@ class Calculations (context: Context){
         }
 
         var lutealLength = 0
+        Log.d("TAG", "Ovulation dates: $ovulationDates")
         for (date in ovulationDates) {
-            lutealLength += dbHelper.getLutealLengthForPeriod(date)
+            val test = dbHelper.getLutealLengthForPeriod(date)
+            lutealLength += test
+            Log.d("TAG", "Luteal for date $date: $test")
         }
 
         // Calculate average luteal length
         val averageLutealLength = lutealLength / ovulationDates.size
-        Log.d("TAG", "Average luteal length: $averageLutealLength")
+        Log.d("TAG", "Average luteal length calc: $averageLutealLength")
 
         // Get the last ovulation date
         val lastOvulation = dbHelper.getLastOvulation()
@@ -63,11 +66,22 @@ class Calculations (context: Context){
             Log.d("TAG", "Ovulation is null")
             return "Not enough data"
         }
-        val nextExpectedPeriod = lastOvulation.plusDays(averageLutealLength.toLong()).toString()
-        Log.d("TAG", "Test: $nextExpectedPeriod")
-        // Calculate the expected period date
-        //return lastOvulation.plusDays(averageLutealLength.toLong())
-        return nextExpectedPeriod
+        val periodDates = dbHelper.getLatestXPeriodStart(1) //This always returns no+1 period dates
+        if(!periodDates.isEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
+            //There is a period start date after last ovulation date
+            //We need to recalculate according to next calculated ovulation
+            val avgGrowthRate = averageFollicalGrowthInDays(5)
+            val expectedOvulation = periodDates.last().plusDays(avgGrowthRate.toInt().toLong())
+            val nextExpectedPeriod = expectedOvulation.plusDays(averageLutealLength.toLong()).toString()
+            Log.d("TAG", "Calculating according to calculated ovulation: $nextExpectedPeriod")
+            return nextExpectedPeriod
+        }
+        else{
+            val nextExpectedPeriod = lastOvulation.plusDays(averageLutealLength.toLong()).toString()
+            Log.d("TAG", "Next expected period: $nextExpectedPeriod")
+            // Calculate the expected period date
+            return nextExpectedPeriod
+        }
     }
 
     //Returns average no of days from first last period to ovulation for passed 5 periods

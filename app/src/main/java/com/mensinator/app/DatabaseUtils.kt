@@ -47,7 +47,6 @@ object DatabaseUtils {
         createAppSettingsGroup(db)
         createAppSettings(db)
         createOvulationStructure(db)
-        insertLutealSetting(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
