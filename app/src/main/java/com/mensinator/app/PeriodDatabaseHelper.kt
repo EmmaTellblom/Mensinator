@@ -771,5 +771,24 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return dateList
     }
 
+    fun getLastPeriod(): LocalDate? {
+        val db = readableDatabase
+        val query = """
+        SELECT DATE FROM PERIODS ORDER BY DATE DESC LIMIT 1
+    """
+
+        val cursor = db.rawQuery(query, null)
+        var periodDate: LocalDate? = null
+
+        if (cursor.moveToFirst()) {
+            val dateString = cursor.getString(0)
+            periodDate = LocalDate.parse(dateString)
+        }
+
+        cursor.close()
+        db.close()
+        return periodDate
+    }
+
 
 }

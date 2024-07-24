@@ -19,7 +19,7 @@ fun StatisticsDialog(
     nextPeriodStart: String,
     periodCount: Int,
     ovulationCount: Int,
-    averageOvulationCycleLength: Double,
+    //averageOvulationCycleLength: Double,
     nextPredictedOvulation: String?,
     onDismissRequest: () -> Unit
 ) {
@@ -55,10 +55,10 @@ fun StatisticsDialog(
                     text = "\nNumber of ovulation tracked: $ovulationCount",
                     fontSize = 16.sp
                 )
-                Text(
-                    text = "Average ovulation cycle length: ${"%.1f".format(averageOvulationCycleLength)} days",
-                    fontSize = 16.sp
-                )
+//                Text(
+//                    text = "Average ovulation cycle length: ${"%.1f".format(averageOvulationCycleLength)} days",
+//                    fontSize = 16.sp
+//                )
                 Text(
                     text = nextPredictedOvulation?.let {
                         "Next predicted ovulation date: $it"

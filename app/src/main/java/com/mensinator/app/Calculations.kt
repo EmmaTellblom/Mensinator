@@ -2,6 +2,7 @@ package com.mensinator.app
 
 import android.content.Context
 import android.util.Log
+import kotlin.math.roundToInt
 
 
 class Calculations (private val context: Context){
@@ -67,5 +68,26 @@ class Calculations (private val context: Context){
         // Calculate the expected period date
         //return lastOvulation.plusDays(averageLutealLength.toLong())
         return nextExpectedPeriod
+    }
+
+    //Returns average no of days from first last period to ovulation for passed 5 periods
+    fun averageFollicalGrowthInDays(noOvulations: Int): String {
+        val ovulationDates = dbHelper.getLatestXOvulations(noOvulations)
+        if (ovulationDates.isEmpty()) {
+            // Return a meaningful message or handle the case where no ovulations are available
+            return "Not enough data"
+        } else {
+            val growthRate = mutableListOf<Int>()
+            for (d in ovulationDates) {
+                val firstDatePreviousPeriod = dbHelper.getFirstPreviousPeriodDate(d)
+                if (firstDatePreviousPeriod != null) {
+                    growthRate.add(d.toEpochDay().toInt() - firstDatePreviousPeriod.toEpochDay().toInt())
+                }
+            }
+            if (growthRate.isEmpty()) {
+                return "Not enough data"
+            }
+            return growthRate.average().roundToInt().toString()
+        }
     }
 }
