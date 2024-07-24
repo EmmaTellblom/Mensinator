@@ -5,7 +5,7 @@ import android.util.Log
 import kotlin.math.roundToInt
 
 
-class Calculations (private val context: Context){
+class Calculations (context: Context){
     private val dbHelper = PeriodDatabaseHelper(context)
 
     fun calculateNextPeriod(advanced: Int): String {
@@ -35,7 +35,7 @@ class Calculations (private val context: Context){
         return expectedPeriodDate
     }
 
-    fun advancedNextPeriod(noOvulations: Int): String {
+    private fun advancedNextPeriod(noOvulations: Int): String {
         // Get the list of the latest ovulation dates
         val ovulationDates = dbHelper.getLatestXOvulations(noOvulations)
         //Log.d("TAG", "Ovulation dates: $ovulationDates")
