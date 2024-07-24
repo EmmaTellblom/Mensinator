@@ -86,7 +86,7 @@ object DatabaseUtils {
                 ('symptom_color', 'Symptom Color', 'Black', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
                 ('reminder_days', 'Days Before Reminder', '0', 2),
-                ('luteal_calculation ', 'Luteal Phase Calculation', '0', 3)
+                ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
     }
 
