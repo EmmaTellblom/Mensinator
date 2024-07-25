@@ -29,9 +29,11 @@ class Calculations (context: Context){
             }
             // Calculate the average cycle length
             val averageLength = cycleLengths.average()
+            Log.d("TAG", "Average cycle length Basic: $averageLength")
+            Log.d("TAG", "Last period date to add days to: ${listPeriodDates.last()}")
             expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong()).toString()
         }
-
+        Log.d("TAG", "Expected period date Basic: $expectedPeriodDate")
         return expectedPeriodDate
     }
 
@@ -67,20 +69,20 @@ class Calculations (context: Context){
             return "Not enough data"
         }
         val periodDates = dbHelper.getLatestXPeriodStart(1) //This always returns no+1 period dates
-        if(!periodDates.isEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
+        if(periodDates.isNotEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
             //There is a period start date after last ovulation date
             //We need to recalculate according to next calculated ovulation
             val avgGrowthRate = averageFollicalGrowthInDays(5)
             val expectedOvulation = periodDates.last().plusDays(avgGrowthRate.toInt().toLong())
-            val nextExpectedPeriod = expectedOvulation.plusDays(averageLutealLength.toLong()).toString()
-            Log.d("TAG", "Calculating according to calculated ovulation: $nextExpectedPeriod")
-            return nextExpectedPeriod
+            val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong()).toString()
+            Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
+            return expectedPeriodDate
         }
         else{
-            val nextExpectedPeriod = lastOvulation.plusDays(averageLutealLength.toLong()).toString()
-            Log.d("TAG", "Next expected period: $nextExpectedPeriod")
+            val expectedPeriodDate = lastOvulation.plusDays(averageLutealLength.toLong()).toString()
+            Log.d("TAG", "Next expected period: $expectedPeriodDate")
             // Calculate the expected period date
-            return nextExpectedPeriod
+            return expectedPeriodDate
         }
     }
 
