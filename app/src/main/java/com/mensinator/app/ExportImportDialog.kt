@@ -1,5 +1,6 @@
 package com.mensinator.app
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +46,7 @@ fun ExportImportDialog(
             } catch (e: Exception) {
                 // Show error toast
                 Toast.makeText(context, "Failed to import file", Toast.LENGTH_SHORT).show()
+                Log.d("ExportImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
             } finally {
                 // Clean up
                 inputStream?.close()

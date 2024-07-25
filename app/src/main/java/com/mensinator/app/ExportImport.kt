@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.icu.text.SimpleDateFormat
 import android.os.Environment
+import android.util.Log
 import org.json.JSONObject
 import org.json.JSONArray
 import java.io.File
@@ -81,6 +82,11 @@ class ExportImport {
         exportData.put("symptom_date", cursorToJsonArray(symptomDatesCursor))
         symptomDatesCursor.close()
 
+        // Export symptom_date table
+        val ovulationsCursor = db.query("ovulations", null, null, null, null, null, null)
+        exportData.put("ovulations", cursorToJsonArray(ovulationsCursor))
+        ovulationsCursor.close()
+
         // Write JSON data to file
         val file = File(filePath)
         val fileOutputStream = FileOutputStream(file)
@@ -124,11 +130,26 @@ class ExportImport {
             // Import periods table
             importJsonArrayToTable(db, "periods", importData.getJSONArray("periods"))
 
-            // Import symptoms table
-            importJsonArrayToTable(db, "symptoms", importData.getJSONArray("symptoms"))
+            // Check if "symptoms" key exists and import if present
+            if (importData.has("symptoms")) {
+                importJsonArrayToTable(db, "symptoms", importData.getJSONArray("symptoms"))
+            } else {
+                Log.d("Import", "No symptoms data found in the file.")
+            }
 
-            // Import symptom_date table
-            importJsonArrayToTable(db, "symptom_date", importData.getJSONArray("symptom_date"))
+            // Check if "symptom_date" key exists and import if present
+            if (importData.has("symptom_date")) {
+                importJsonArrayToTable(db, "symptom_date", importData.getJSONArray("symptom_date"))
+            } else {
+                Log.d("Import", "No symptom_date data found in the file.")
+            }
+
+            // Check if "ovulations" key exists and import if present
+            if (importData.has("ovulations")) {
+                importJsonArrayToTable(db, "ovulations", importData.getJSONArray("ovulations"))
+            } else {
+                Log.d("Import", "No ovulations data found in the file.")
+            }
 
             db.setTransactionSuccessful()
         } finally {

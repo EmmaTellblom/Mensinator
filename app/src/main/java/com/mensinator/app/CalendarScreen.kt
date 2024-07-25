@@ -1,6 +1,5 @@
 package com.mensinator.app
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -161,11 +160,13 @@ fun CalendarScreen() {
                 //Log.d("CalendarScreen", "Will calculate according to next expected period")
                 growthDays = calcHelper.averageFollicalGrowthInDays(5)
                 //Log.d("CalendarScreen", "Growth days in statistics 2: $growthDays")
-                nextPredictedOvulation = LocalDate.parse(nextPeriodStartCalculated).plusDays(growthDays.toLong()).toString()
+                if(nextPeriodStartCalculated!="Not enough data"){
+                    nextPredictedOvulation = LocalDate.parse(nextPeriodStartCalculated).plusDays(growthDays.toLong()).toString()
+                }
                 //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
             }
             else{
-                val test = "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString()
+                //val test = "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString()
                 //Log.d("CalendarScreen", "Here is test: $test")
                 nextPredictedOvulation = "Not enough data"
             }
