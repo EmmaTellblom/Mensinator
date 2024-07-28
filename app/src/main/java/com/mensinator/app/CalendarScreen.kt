@@ -52,7 +52,7 @@ fun CalendarScreen() {
     var showExportImportDialog by remember { mutableStateOf(false) }
     var showManageSymptomsDialog by remember { mutableStateOf(false) }
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
-    var growthDays by remember { mutableStateOf("0") }
+    var follicleGrowthDays by remember { mutableStateOf("0") }
 
     var cycleNumber: Int
     val oldestPeriodDate = dbHelper.getOldestPeriodDate()
@@ -65,9 +65,12 @@ fun CalendarScreen() {
     val ovulationColorSetting = dbHelper.getSettingByKey("ovulation_color")
     val nextOvulationColorSetting = dbHelper.getSettingByKey("expected_ovulation_color")
 
+    // Variables used for predicting/calculating luteal, period and ovulation dates
     val lutealPeriodCalculation = dbHelper.getSettingByKey("luteal_period_calculation")
     var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
-    var nextPredictedOvulation by remember { mutableStateOf("Not enough data") }
+    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
+
+    // The first date of previous period
     var firstLastPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
 
     val periodColor = periodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Red
@@ -148,27 +151,29 @@ fun CalendarScreen() {
         ovulationCount = ovulationDatesList.size
 
         // Predict the next ovulation date
+        //Make sure there is at least one period and one ovulation date
+        //Make sure the last ovulation date is before the first last period date
         if (lastOvulationDate != null && periodCount >= 1 && (lastOvulationDate.toString()<firstLastPeriodDate.toString())) {
-            growthDays = calcHelper.averageFollicalGrowthInDays(5)
-            nextPredictedOvulation = firstLastPeriodDate?.plusDays(growthDays.toLong()).toString()
-            //Log.d("CalendarScreen", "Growth days in statistics 1: $growthDays")
+            follicleGrowthDays = calcHelper.averageFollicalGrowthInDays(5)
+            nextOvulationCalculated = firstLastPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
+            //Log.d("CalendarScreen", "Growth days in statistics 1: $follicleGrowthDays")
             //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
 
-        } else {
-            if(lastOvulationDate.toString()>firstLastPeriodDate.toString() && (nextPredictedOvulation != "Not enough data" && nextPeriodStartCalculated != "Not enough data")){
+        } else { //If Ovulation is after first last period date and prediction exists for Ovulation and Period
+            if(lastOvulationDate.toString()>firstLastPeriodDate.toString() && (nextOvulationCalculated != "Not enough data" && nextPeriodStartCalculated != "Not enough data")){
                 //Log.d("CalendarScreen", "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString())
                 //Log.d("CalendarScreen", "Will calculate according to next expected period")
-                growthDays = calcHelper.averageFollicalGrowthInDays(5)
+                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays(5)
                 //Log.d("CalendarScreen", "Growth days in statistics 2: $growthDays")
                 if(nextPeriodStartCalculated!="Not enough data"){
-                    nextPredictedOvulation = LocalDate.parse(nextPeriodStartCalculated).plusDays(growthDays.toLong()).toString()
+                    nextOvulationCalculated = LocalDate.parse(nextPeriodStartCalculated).plusDays(follicleGrowthDays.toLong()).toString()
                 }
                 //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
             }
             else{
                 //val test = "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString()
                 //Log.d("CalendarScreen", "Here is test: $test")
-                nextPredictedOvulation = "Not enough data"
+                nextOvulationCalculated = "Not enough data"
             }
 
         }
@@ -196,6 +201,8 @@ fun CalendarScreen() {
     val isOvulationButtonEnabled by remember { derivedStateOf { selectedDates.value.size == 1 } }
     val isPeriodsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
 
+
+    // Here is where the calendar is generated
     LaunchedEffect(currentMonth.value) {
         val year = currentMonth.value.year
         val month = currentMonth.value.monthValue
@@ -272,7 +279,7 @@ fun CalendarScreen() {
                                     }
                                 },
                             contentAlignment = Alignment.Center
-                        ) {
+                        ) { // Colors for 'special' dates
                             val backgroundColor = when {
                                 hasExistingDate && isSelected -> selectedPeriodColor
                                 hasExistingDate -> periodColor
@@ -303,7 +310,7 @@ fun CalendarScreen() {
                                         .align(Alignment.TopEnd)
                                 )
                             }
-
+                            // If date is a period date
                             if (dayDate.toString().trim() == nextPeriodStartCalculated.trim() && !hasExistingDate) {
                                 Box(
                                     modifier = Modifier
@@ -318,8 +325,8 @@ fun CalendarScreen() {
                                     )
                                 }
                             }
-
-                            if (dayDate.toString() == nextPredictedOvulation && !hasOvulationDate) {
+                            // If date is predicted ovulation date (and not an ovulation by user)
+                            if (dayDate.toString() == nextOvulationCalculated && !hasOvulationDate) {
 
                                 Box(
                                     modifier = Modifier
@@ -351,7 +358,7 @@ fun CalendarScreen() {
                                         textAlign = TextAlign.Center
                                     )
                                 }
-                            } else {
+                            } else { // Regular dates
                                 Text(
                                     text = dayOfMonth.toString(),
                                     color = Color.Black,
@@ -361,6 +368,7 @@ fun CalendarScreen() {
                                         .background(Color.Transparent)
                                 )
                             }
+                    // Here is cycle numbers
                     if(oldestPeriodDate != null) {
                         if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
                             firstLastPeriodDate = dbHelper.getFirstPreviousPeriodDate(dayDate)
@@ -536,6 +544,8 @@ fun CalendarScreen() {
         }
 
         // Show the StatisticsDialog
+        //TODO: We should remove this and let the statistics be calculated in the statistics file
+        //TODO: using functions from the database helper
         if (showStatisticsDialog) {
             StatisticsDialog(
                 averageCycleLength = averageCycleLength,
@@ -544,8 +554,8 @@ fun CalendarScreen() {
                 periodCount = periodCount,
                 ovulationCount = ovulationCount,
                 //averageOvulationCycleLength = averageOvulationCycleLength,
-                growthDays = growthDays,
-                nextPredictedOvulation = nextPredictedOvulation,
+                growthDays = follicleGrowthDays,
+                nextPredictedOvulation = nextOvulationCalculated,
                 onDismissRequest = { showStatisticsDialog = false }
             )
         }
@@ -572,7 +582,7 @@ fun CalendarScreen() {
 
         Spacer(modifier = Modifier.weight(1f))
 
-    }
+    } // Here is the menu (FAB) right bottom corner
     NestedFAB(
         onStatisticsClick = {
             showStatisticsDialog = true
