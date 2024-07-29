@@ -47,6 +47,7 @@ object DatabaseUtils {
         createAppSettingsGroup(db)
         createAppSettings(db)
         createOvulationStructure(db)
+        databaseVersion7(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -109,6 +110,52 @@ object DatabaseUtils {
         db.execSQL("""
             INSERT INTO APP_SETTINGS(setting_key, setting_label, setting_value, group_label_id) VALUES
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
+        """)
+    }
+
+    fun databaseVersion7 (db: SQLiteDatabase) {
+
+        // Update the app_settings to handle which type of setting it is
+        // LI == List
+        // NO == Number
+        // SW == Switch
+        db.execSQL("""
+            ALTER TABLE app_settings ADD COLUMN setting_type TEXT
+        """)
+        db.execSQL("""
+            UPDATE app_settings SET setting_type = 'LI' WHERE group_label_id = '1'
+        """)
+        db.execSQL("""
+            UPDATE app_settings SET setting_type = 'NO' WHERE group_label_id = '2'
+        """)
+        db.execSQL("""
+            UPDATE app_settings SET setting_type = 'SW' WHERE group_label_id = '3'
+        """)
+
+        // Insert new row for cycle history
+        // This will allow the user to fine tune how many cycles back should be used for prediction
+        // NO because its going to be a number
+        db.execSQL("""
+            INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
+            VALUES
+            ('period_history','Period history','5','3','NO'),
+            ('ovulation_history','Ovulation history','5','3','NO')
+        """)
+
+        // Add color to the symptoms table
+        db.execSQL("""
+            ALTER TABLE symptoms ADD COLUMN color TEXT DEFAULT 'Black'
+        """)
+        // Set all colors to black
+        db.execSQL("""
+            UPDATE symptoms SET color = 'Black'
+        """)
+
+        db.execSQL("""
+            INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
+            VALUES (
+            'cycle_numbers_show','Show cycle numbers','1','3','SW'
+            )
         """)
     }
 }

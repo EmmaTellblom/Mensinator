@@ -65,6 +65,9 @@ fun CalendarScreen() {
     val ovulationColorSetting = dbHelper.getSettingByKey("ovulation_color")
     val nextOvulationColorSetting = dbHelper.getSettingByKey("expected_ovulation_color")
 
+    val showCycleNumbersSetting = dbHelper.getSettingByKey("cycle_numbers_show")
+    val showCycleNumbersSettingValue = showCycleNumbersSetting?.value?.toIntOrNull() ?: 1
+
     // Variables used for predicting/calculating luteal, period and ovulation dates
     val lutealPeriodCalculation = dbHelper.getSettingByKey("luteal_period_calculation")
     var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
@@ -369,7 +372,7 @@ fun CalendarScreen() {
                                 )
                             }
                     // Here is cycle numbers
-                    if(oldestPeriodDate != null) {
+                    if(oldestPeriodDate != null && showCycleNumbersSettingValue == 1) {
                         if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
                             firstLastPeriodDate = dbHelper.getFirstPreviousPeriodDate(dayDate)
                             if (firstLastPeriodDate != null) {

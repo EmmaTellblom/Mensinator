@@ -16,7 +16,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 6
+        private const val DATABASE_VERSION = 7
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -65,6 +65,10 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         if(oldVersion < 6){
             DatabaseUtils.insertLutealSetting(db)
+        }
+
+        if(oldVersion < 7){
+            DatabaseUtils.databaseVersion7(db)
         }
     }
 
@@ -198,9 +202,9 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val whereArgs = arrayOf(date.toString())
         val rowsDeleted = db.delete(TABLE_PERIODS, whereClause, whereArgs)
         if (rowsDeleted > 0) {
-            //Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
+            Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
         } else {
-            //Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
+            Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
         }
         db.close()
     }
@@ -387,9 +391,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             settings.add(Setting(key, value, label, groupId))
         }
         cursor.close()
-
-        val noSettings = settings.count()
-        //Log.d(TAG, "Found $noSettings in the database")
 
         return settings
     }
@@ -672,9 +673,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     // Date input should only be ovulation date
     // To be used with setting for calculating periods according to ovulation
     fun getLutealLengthForPeriod(date: LocalDate): Int {
-        var lutealLength = 0
         val firstNextPeriodDate = getFirstNextPeriodDate(date)
-        lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+        val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
         Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
         return lutealLength
     }
