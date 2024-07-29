@@ -4,5 +4,6 @@ data class Setting(
     val key: String,
     val value: String,
     val label: String,
-    val groupId: Int
+    val groupId: Int,
+    val type: String
 )

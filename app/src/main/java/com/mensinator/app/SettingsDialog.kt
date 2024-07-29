@@ -65,6 +65,7 @@ fun SettingsDialog(
                     when (groupId) {
                         1 -> {
                             // Colors group header
+                            // Colors are always of type LI
                             Text(
                                 text = "Colors",
                                 fontSize = 18.sp,
@@ -115,6 +116,7 @@ fun SettingsDialog(
                         }
                         2 -> {
                             // Reminders group header
+                            // Reminders are always of type LI
                             Text(
                                 text = "Reminders",
                                 fontSize = 18.sp,
@@ -165,6 +167,7 @@ fun SettingsDialog(
                         }
                         else -> {
                             // Default case for other groups
+                            // Other settings are either LI or SW
                             Text(
                                 text = "Other settings",
                                 fontSize = 18.sp,
@@ -186,15 +189,43 @@ fun SettingsDialog(
                                         fontSize = 14.sp,
                                         modifier = Modifier.weight(1f)
                                     )
-                                    Switch(
-                                        checked = isChecked,
-                                        onCheckedChange = { newValue ->
-                                            isChecked = newValue
-                                            savedSettings = savedSettings.map {
-                                                if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
+                                    if(setting.type == "SW") {
+                                        Switch(
+                                            checked = isChecked,
+                                            onCheckedChange = { newValue ->
+                                                isChecked = newValue
+                                                savedSettings = savedSettings.map {
+                                                    if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
+                                                }
+                                            }
+                                        )
+                                    }
+                                    else if(setting.type == "NO"){
+                                        Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
+                                            var expanded by remember { mutableStateOf(false) }
+                                            var selectedReminder by remember { mutableStateOf(setting.value) }
+                                            TextButton(onClick = { expanded = !expanded }) {
+                                                Text(selectedReminder)
+                                            }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { expanded = false }
+                                            ) {
+                                                predefinedReminders.forEach { reminder ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(reminder) },
+                                                        onClick = {
+                                                            selectedReminder = reminder
+                                                            savedSettings = savedSettings.map {
+                                                                if (it.key == setting.key) it.copy(value = selectedReminder) else it
+                                                            }
+                                                            expanded = false
+                                                        }
+                                                    )
+                                                }
                                             }
                                         }
-                                    )
+                                    }
                                 }
                             }
                         }

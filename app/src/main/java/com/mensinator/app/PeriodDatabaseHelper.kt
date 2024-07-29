@@ -388,7 +388,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             val value = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_VALUE))
             val label = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_LABEL))
             val groupId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SETTING_GROUP_ID))
-            settings.add(Setting(key, value, label, groupId))
+            val type = cursor.getString(cursor.getColumnIndexOrThrow("setting_type"))
+            settings.add(Setting(key, value, label, groupId, type))
         }
         cursor.close()
 
@@ -422,7 +423,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             val value = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_VALUE))
             val label = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_LABEL))
             val groupId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SETTING_GROUP_ID))
-            Setting(key, value, label, groupId)
+            val type = cursor.getString(cursor.getColumnIndexOrThrow("setting_type"))
+            Setting(key, value, label, groupId, type)
         } else {
             null
         }

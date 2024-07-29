@@ -8,19 +8,18 @@ import kotlin.math.roundToInt
 class Calculations (context: Context){
     private val dbHelper = PeriodDatabaseHelper(context)
 
-    fun calculateNextPeriod(advanced: Int): String {
+    fun calculateNextPeriod(advanced: Int, periodHistory: Int, ovulationHistory: Int): String {
         val expectedPeriodDate: String
 
         if(advanced==1){
-            //go to advanced calculation using 5 latest ovulations
+            //go to advanced calculation using X latest ovulations (set by user in settings)
             Log.d("TAG", "Advanced calculation")
-            //expectedPeriodDate = advancedNextPeriod(5)
-            expectedPeriodDate = advancedNextPeriod(5)
+            expectedPeriodDate = advancedNextPeriod(ovulationHistory)
         } else{
             Log.d("TAG", "Basic calculation")
             //do basic calculation here
-            //Use 5 latest periodstartdates (will return list of 6)
-            val listPeriodDates = dbHelper.getLatestXPeriodStart(5)
+            //Use X latest periodstartdates (will return list of X+1)
+            val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
             // Calculate the cycle lengths between consecutive periods
             val cycleLengths = mutableListOf<Long>()
             for (i in 0 until listPeriodDates.size - 1) {
@@ -68,11 +67,11 @@ class Calculations (context: Context){
             Log.d("TAG", "Ovulation is null")
             return "Not enough data"
         }
-        val periodDates = dbHelper.getLatestXPeriodStart(1) //This always returns no+1 period dates
+        val periodDates = dbHelper.getLatestXPeriodStart(noOvulations) //This always returns no+1 period dates
         if(periodDates.isNotEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
             //There is a period start date after last ovulation date
             //We need to recalculate according to next calculated ovulation
-            val avgGrowthRate = averageFollicalGrowthInDays(5)
+            val avgGrowthRate = averageFollicalGrowthInDays(noOvulations)
             val expectedOvulation = periodDates.last().plusDays(avgGrowthRate.toInt().toLong())
             val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong()).toString()
             Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
@@ -86,7 +85,7 @@ class Calculations (context: Context){
         }
     }
 
-    //Returns average no of days from first last period to ovulation for passed 5 periods
+    //Returns average no of days from first last period to ovulation for passed X periods
     fun averageFollicalGrowthInDays(noOvulations: Int): String {
         val ovulationDates = dbHelper.getLatestXOvulations(noOvulations)
         if (ovulationDates.isEmpty()) {
