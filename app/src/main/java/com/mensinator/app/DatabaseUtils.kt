@@ -83,7 +83,6 @@ object DatabaseUtils {
                 ('period_color', 'Period Color', 'Red', 1),
                 ('selection_color', 'Selection Color', 'Grey', 1),
                 ('period_selection_color', 'Period Selection Color', 'DarkGray', 1),
-                ('symptom_color', 'Symptom Color', 'Black', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
                 ('reminder_days', 'Days Before Reminder', '0', 2),
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
@@ -156,6 +155,11 @@ object DatabaseUtils {
             VALUES (
             'cycle_numbers_show','Show cycle numbers','1','3','SW'
             )
+        """)
+
+        // Fixed symptom colors, so we can remove setting for symptom indicator
+        db.execSQL("""
+            DELETE FROM app_settings WHERE setting_key = 'symptom_color'
         """)
     }
 }

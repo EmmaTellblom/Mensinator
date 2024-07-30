@@ -1,5 +1,6 @@
 package com.mensinator.app
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -60,7 +61,7 @@ fun CalendarScreen() {
     val periodColorSetting = dbHelper.getSettingByKey("period_color")
     val selectedColorSetting = dbHelper.getSettingByKey("selected_color")
     val selectedPeriodColorSetting = dbHelper.getSettingByKey("period_selection_color")
-    val symptomColorSetting = dbHelper.getSettingByKey("symptom_color")
+    //val symptomColorSetting = dbHelper.getSettingByKey("symptom_color")
     val nextPeriodColorSetting = dbHelper.getSettingByKey("expected_period_color")
     val ovulationColorSetting = dbHelper.getSettingByKey("ovulation_color")
     val nextOvulationColorSetting = dbHelper.getSettingByKey("expected_ovulation_color")
@@ -83,13 +84,27 @@ fun CalendarScreen() {
 
     val periodColor = periodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Red
     val selectedColor = selectedColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.LightGray
-    val symptomColor = symptomColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Black
+    //val symptomColor = symptomColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Black
     val nextPeriodColor = nextPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Yellow
     val selectedPeriodColor = selectedPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.DarkGray
     val ovulationColor = ovulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Blue
     val nextOvulationColor = nextOvulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Magenta
     val lutealPeriodCalculationValue = lutealPeriodCalculation?.value?.toIntOrNull() ?: 0
-    //Log.d("CalendarScreen", "Luteal period calculation value: $lutealPeriodCalculationValue")
+
+    var symptomColor: Color
+
+    val colorMap = mapOf(
+        "Red" to Color.Red,
+        "Green" to Color.Green,
+        "Blue" to Color.Blue,
+        "Yellow" to Color.Yellow,
+        "Cyan" to Color.Cyan,
+        "Magenta" to Color.Magenta,
+        "Black" to Color.Black,
+        "White" to Color.White,
+        "Dark Gray" to Color.DarkGray,
+        "Light Gray" to Color.LightGray
+    )
 
     // Fetch symptoms from the database
     LaunchedEffect(Unit) {
@@ -306,18 +321,34 @@ fun CalendarScreen() {
 
 
                             // Symptom indicator in the top right corner
+
                             if (hasSymptomDate) {
+                                val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
+                                Log.d("CalendarScreen", "Symptom colors for $dayDate: $noSymptomsForDay")
+
+                                if(noSymptomsForDay.size == 1){
+                                    val colorName = noSymptomsForDay[0]
+                                    symptomColor = colorMap[colorName] ?: Color.Black
+                                }
+                                else{
+                                    // Display a grey circle if multiple symptoms
+                                    symptomColor = Color.Gray
+
+                                }
+
                                 Box(
                                     modifier = Modifier
                                         //.padding(16.dp)
                                         .offset(x = (-8).dp, y = (0).dp)
-                                        .size(6.dp)  // Size of the small bubble
+                                        .size(8.dp)  // Size of the small bubble
+                                        .border(1.dp, Color.Black, CircleShape)
                                         .background(
                                             symptomColor,
                                             CircleShape
-                                        )  // Black bubble for dates with symptoms
+                                        )
                                         .align(Alignment.TopEnd)
                                 )
+
                             }
                             // If date is a period date
                             if (dayDate.toString().trim() == nextPeriodStartCalculated.trim() && !hasExistingDate) {
@@ -610,4 +641,3 @@ fun CalendarScreen() {
         }
     )
 }
-

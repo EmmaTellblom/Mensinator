@@ -380,6 +380,32 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return symptoms
     }
 
+    fun getSymptomColorForDate(date: LocalDate): List<String> {
+        val db = readableDatabase
+        val query = """
+        SELECT s.color
+        FROM symptoms s
+        INNER JOIN symptom_date sd ON s.id = sd.symptom_id
+        WHERE sd.symptom_date = ?
+    """
+
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+        val symptomColors = mutableListOf<String>()
+
+        // Iterate over all rows in the cursor
+        if (cursor.moveToFirst()) {
+            do {
+                val color = cursor.getString(cursor.getColumnIndexOrThrow("color"))
+                symptomColors.add(color)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return symptomColors
+    }
+
     //This function is used to get all settings from the database
     fun getAllSettings(): List<Setting> {
         val settings = mutableListOf<Setting>()
