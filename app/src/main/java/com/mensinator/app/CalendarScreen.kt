@@ -82,29 +82,32 @@ fun CalendarScreen() {
     // The first date of previous period
     var firstLastPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
 
-    val periodColor = periodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Red
-    val selectedColor = selectedColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.LightGray
-    //val symptomColor = symptomColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Black
-    val nextPeriodColor = nextPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Yellow
-    val selectedPeriodColor = selectedPeriodColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.DarkGray
-    val ovulationColor = ovulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Blue
-    val nextOvulationColor = nextOvulationColorSetting?.value?.let { Color(it.toColorInt()) } ?: Color.Magenta
+    val colorMap = mapOf(
+        "Red" to Color(0xFFEF5350),        // Softer red
+        "Green" to Color(0xFF66BB6A),      // Softer green
+        "Blue" to Color(0xFF42A5F5),       // Softer blue
+        "Yellow" to Color(0xFFFFEB3B),     // Softer yellow
+        "Cyan" to Color(0xFF4DD0E1),       // Softer cyan
+        "Magenta" to Color(0xFFAB47BC),    // Softer magenta
+        "Black" to Color(0xFF212121),      // Softer black (dark gray)
+        "White" to Color(0xFFF5F5F5),      // Softer white (light gray)
+        "DarkGray" to Color(0xFF616161),   // Softer dark gray
+        "LightGray" to Color(0xFFBDBDBD)  // Softer light gray
+    )
+
+    // Colors for days in calendar
+    val periodColor = periodColorSetting?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
+    val selectedColor = selectedColorSetting?.value?.let { colorMap[it] } ?: colorMap["LightGray"]!!
+    val nextPeriodColor = nextPeriodColorSetting?.value?.let { colorMap[it] } ?: colorMap["Yellow"]!!
+    val selectedPeriodColor = selectedPeriodColorSetting?.value?.let { colorMap[it] } ?: colorMap["DarkGray"]!!
+    val ovulationColor = ovulationColorSetting?.value?.let { colorMap[it] } ?: colorMap["Blue"]!!
+    val nextOvulationColor = nextOvulationColorSetting?.value?.let { colorMap[it] } ?: colorMap["Magenta"]!!
+
     val lutealPeriodCalculationValue = lutealPeriodCalculation?.value?.toIntOrNull() ?: 0
 
     var symptomColor: Color
 
-    val colorMap = mapOf(
-        "Red" to Color.Red,
-        "Green" to Color.Green,
-        "Blue" to Color.Blue,
-        "Yellow" to Color.Yellow,
-        "Cyan" to Color.Cyan,
-        "Magenta" to Color.Magenta,
-        "Black" to Color.Black,
-        "White" to Color.White,
-        "Dark Gray" to Color.DarkGray,
-        "Light Gray" to Color.LightGray
-    )
+
 
     // Fetch symptoms from the database
     LaunchedEffect(Unit) {
