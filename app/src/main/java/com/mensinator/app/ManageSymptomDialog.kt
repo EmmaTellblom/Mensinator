@@ -120,7 +120,7 @@ fun ManageSymptom(
             Button(onClick = {
                 // Save settings to the database
                 savedSymptoms.forEach { symptom ->
-                    dbHelper.updateSymptom(symptom.id, symptom.active)
+                    dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
                 }
                 onDismissRequest()  // Close the dialog
             }) {

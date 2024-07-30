@@ -648,7 +648,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used for updating symptom active status
-    fun updateSymptom(id: Int, active: Int) {
+    fun updateSymptom(id: Int, active: Int, color: String) {
         val db = writableDatabase
 
         // Ensure that active is either 0 or 1
@@ -656,6 +656,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         val contentValues = ContentValues().apply {
             put("active", newActiveStatus)
+            put("color", color)
         }
 
         // Update the symptom with the given ID
