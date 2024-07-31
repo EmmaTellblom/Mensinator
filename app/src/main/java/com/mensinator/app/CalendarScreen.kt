@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -58,10 +57,10 @@ fun CalendarScreen() {
     var cycleNumber: Int
     val oldestPeriodDate = dbHelper.getOldestPeriodDate()
 
+    // app_settings from the database
     val periodColorSetting = dbHelper.getSettingByKey("period_color")
     val selectedColorSetting = dbHelper.getSettingByKey("selected_color")
     val selectedPeriodColorSetting = dbHelper.getSettingByKey("period_selection_color")
-    //val symptomColorSetting = dbHelper.getSettingByKey("symptom_color")
     val nextPeriodColorSetting = dbHelper.getSettingByKey("expected_period_color")
     val ovulationColorSetting = dbHelper.getSettingByKey("ovulation_color")
     val nextOvulationColorSetting = dbHelper.getSettingByKey("expected_ovulation_color")
@@ -74,8 +73,12 @@ fun CalendarScreen() {
     val ovulationHistoryNumber = dbHelper.getSettingByKey("ovulation_history")
     val ovulationHistoryNumberValue = ovulationHistoryNumber?.value?.toIntOrNull() ?: 5
 
+    val reminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
+
     // Variables used for predicting/calculating luteal, period and ovulation dates
     val lutealPeriodCalculation = dbHelper.getSettingByKey("luteal_period_calculation")
+
+    // Variables which will contain predicted dates for period and ovulation
     var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
     var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
 
@@ -102,11 +105,9 @@ fun CalendarScreen() {
     val selectedPeriodColor = selectedPeriodColorSetting?.value?.let { colorMap[it] } ?: colorMap["DarkGray"]!!
     val ovulationColor = ovulationColorSetting?.value?.let { colorMap[it] } ?: colorMap["Blue"]!!
     val nextOvulationColor = nextOvulationColorSetting?.value?.let { colorMap[it] } ?: colorMap["Magenta"]!!
-
-    val lutealPeriodCalculationValue = lutealPeriodCalculation?.value?.toIntOrNull() ?: 0
-
     var symptomColor: Color
 
+    val lutealPeriodCalculationValue = lutealPeriodCalculation?.value?.toIntOrNull() ?: 0
 
 
     // Fetch symptoms from the database
@@ -114,7 +115,9 @@ fun CalendarScreen() {
         symptoms = dbHelper.getAllActiveSymptoms()
     }
 
-    // Function to update statistics
+    // Function to update statistics. Previously statistics were on main screen.
+    // We should probably move this ?
+    // TODO: We should remove this and let the statistics be calculated in statisticsdialog?
     fun updateStatistics() {
         val allDates = dbHelper.getAllPeriodDates()
         val dates = allDates.keys.sorted()
@@ -644,3 +647,8 @@ fun CalendarScreen() {
         }
     )
 }
+
+
+// TODO: Function that schedules alarm for notification
+// When a new nextPeriodDateCalculated is made, old alarm should be removed (if in the future)
+// We should call this function each time period or ovulation is made (because that changes the date)

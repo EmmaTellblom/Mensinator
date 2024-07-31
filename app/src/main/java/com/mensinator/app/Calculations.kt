@@ -105,4 +105,23 @@ class Calculations (context: Context){
             return growthRate.average().roundToInt().toString()
         }
     }
+
+    // TODO finish this
+    fun averageCycleLength(periodHistory: Int): Double{
+        var cycleLength = 0.0
+
+        return cycleLength
+    }
+
+    fun averagePeriodLength(periodHistory: Int): Double{
+        var periodLength = 0.0
+
+        return periodLength
+    }
+
+    fun averageLutealLength(ovulationHistory: Int): Double{
+        var lutealLength = 0.0
+
+        return lutealLength
+    }
 }
