@@ -3,6 +3,8 @@ package com.mensinator.app
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -31,13 +33,20 @@ fun StatisticsDialog(
     val ovulationCount = dbHelper.getOvulationCount()
     val averagePeriodLength = calcHelper.averagePeriodLength()
 
+    val scrollState = rememberScrollState()
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
             Text(text = "Statistics")
         },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)  // Padding around the text content
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)  // Add vertical scrolling capability
+            ) {
                 Text(
                     text = "Number of periods tracked: $periodCount",
                     fontSize = 16.sp
@@ -60,7 +69,7 @@ fun StatisticsDialog(
                 )
                 // Ovulation statistics
                 Text(
-                    text = "\nNumber of ovulation tracked: $ovulationCount",
+                    text = "\nNumber of ovulations tracked: $ovulationCount",
                     fontSize = 16.sp
                 )
                 Text(
@@ -87,7 +96,7 @@ fun StatisticsDialog(
             }
         },
         modifier = Modifier
-            .padding(16.dp)
+            //.padding(16.dp)
             .fillMaxWidth()
     )
 }

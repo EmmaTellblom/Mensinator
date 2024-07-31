@@ -822,7 +822,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     fun getNoOfDatesInPeriod(date: LocalDate): Int {
         val db = readableDatabase
         val query = """
-            SELECT COUNT(DATE) FROM PERIODS WHERE periodid in (SELECT periodid FROM PERIODS WHERE date = ?)
+            SELECT COUNT(DATE) FROM PERIODS WHERE period_id in (SELECT period_id FROM PERIODS WHERE date = ?)
         """
         val cursor = db.rawQuery(query, arrayOf(date.toString()))
         var count = 0
