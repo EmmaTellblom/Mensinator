@@ -22,7 +22,11 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
-
+import android.content.Context
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import java.time.ZoneId
+import java.util.concurrent.TimeUnit
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -494,6 +498,10 @@ fun CalendarScreen() {
                     firstLastPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
                     updateStatistics()
+                    // Schedule notification for reminder
+                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data"){
+                        sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
+                    }
                     Toast.makeText(context, "Changes saved successfully", Toast.LENGTH_SHORT).show()
                 }
             },
@@ -540,6 +548,11 @@ fun CalendarScreen() {
                 }
                 selectedDates.value = emptySet()
                 updateStatistics()
+
+                // Schedule notification for reminder
+                if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data"){
+                    sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
+                }
             },
             enabled = isOvulationButtonEnabled,  // Set the state of the Ovulation button
             modifier = Modifier
@@ -650,5 +663,30 @@ fun CalendarScreen() {
 
 
 // TODO: Function that schedules alarm for notification
-// When a new nextPeriodDateCalculated is made, old alarm should be removed (if in the future)
+// When a new nextPeriodDateCalculated is made, old alarm should be removed
 // We should call this function each time period or ovulation is made (because that changes the date)
+fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
+    val reminderDate = periodDate.plusDays(daysForReminding.toLong())
+    val delayMillis = reminderDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - System.currentTimeMillis()
+
+    Log.d("CalendarScreen", "Reminder time: $delayMillis")
+
+    // Create a tag for the notification work request
+    val notificationTag = "period_reminder_notification"
+
+    // Get the WorkManager instance
+    val workManager = WorkManager.getInstance(context)
+
+    // Cancel existing work requests with the same tag
+    workManager.cancelAllWorkByTag(notificationTag)
+
+    // Create a work request to send the notification
+    val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+        .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
+        .addTag(notificationTag) // Tag the work request
+        .build()
+
+    // Enqueue the work request
+    workManager.enqueue(workRequest)
+    Log.d("CalendarScreen", "Work request enqueued with delay: $delayMillis")
+}

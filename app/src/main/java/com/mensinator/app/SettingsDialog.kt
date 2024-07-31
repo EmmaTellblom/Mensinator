@@ -1,5 +1,9 @@
 package com.mensinator.app
 
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,21 +17,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
+import androidx.core.app.NotificationManagerCompat
 
 @Composable
 fun SettingsDialog(
     onDismissRequest: () -> Unit
 ) {
+    Log.d("SettingsDialog", "SettingsDialog recomposed")
+
     val context = LocalContext.current
-    val dbHelper = remember { PeriodDatabaseHelper(context) } // Use remember to avoid reinitialization
+    val activity = LocalContext.current as? androidx.activity.ComponentActivity
+    val dbHelper = remember { PeriodDatabaseHelper(context) }
 
     // Fetch current settings from the database
-    val settings by remember { mutableStateOf(dbHelper.getAllSettings()) } // Get all settings once
+    val settings by remember { mutableStateOf(dbHelper.getAllSettings()) }
 
     // State to hold the settings to be saved
     var savedSettings by remember { mutableStateOf(settings) }
 
-    // Predefined list of colors
+    // Predefined lists
     val predefinedColors = listOf(
         "Red" to Color.Red,
         "Green" to Color.Green,
@@ -41,13 +49,10 @@ fun SettingsDialog(
         "Light Gray" to Color.LightGray
     )
 
-    // Predefined list of reminders
     val predefinedReminders = (0..10).map { it.toString() }
 
-    // Group settings by COLUMN_SETTING_GROUP_ID
     val groupedSettings = savedSettings.groupBy { it.groupId }
 
-    // Create a scrollable column for the dialog content
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -58,14 +63,11 @@ fun SettingsDialog(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())  // Make the column scrollable
+                    .verticalScroll(rememberScrollState())
             ) {
-                // Iterate through groups to display appropriate content
                 groupedSettings.forEach { (groupId, settingsInGroup) ->
                     when (groupId) {
                         1 -> {
-                            // Colors group header
-                            // Colors are always of type LI
                             Text(
                                 text = "Colors",
                                 fontSize = 18.sp,
@@ -82,14 +84,14 @@ fun SettingsDialog(
                                         .fillMaxWidth()
                                         .padding(vertical = 4.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically // Align items vertically
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         text = setting.label,
                                         fontSize = 14.sp,
-                                        modifier = Modifier.weight(1f).alignByBaseline() // Align by baseline
+                                        modifier = Modifier.weight(1f).alignByBaseline()
                                     )
-                                    Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
+                                    Box(modifier = Modifier.alignByBaseline()) {
                                         TextButton(onClick = { expanded = !expanded }) {
                                             Text(selectedColorName)
                                         }
@@ -115,8 +117,6 @@ fun SettingsDialog(
                             }
                         }
                         2 -> {
-                            // Reminders group header
-                            // Reminders are always of type LI
                             Text(
                                 text = "Reminders",
                                 fontSize = 18.sp,
@@ -133,14 +133,14 @@ fun SettingsDialog(
                                         .fillMaxWidth()
                                         .padding(vertical = 4.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically // Align items vertically
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
                                         text = setting.label,
                                         fontSize = 14.sp,
-                                        modifier = Modifier.weight(1f).alignByBaseline() // Align by baseline
+                                        modifier = Modifier.weight(1f).alignByBaseline()
                                     )
-                                    Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
+                                    Box(modifier = Modifier.alignByBaseline()) {
                                         TextButton(onClick = { expanded = !expanded }) {
                                             Text(selectedReminder)
                                         }
@@ -166,8 +166,6 @@ fun SettingsDialog(
                             }
                         }
                         else -> {
-                            // Default case for other groups
-                            // Other settings are either LI or SW
                             Text(
                                 text = "Other settings",
                                 fontSize = 18.sp,
@@ -189,7 +187,7 @@ fun SettingsDialog(
                                         fontSize = 14.sp,
                                         modifier = Modifier.weight(1f)
                                     )
-                                    if(setting.type == "SW") {
+                                    if (setting.type == "SW") {
                                         Switch(
                                             checked = isChecked,
                                             onCheckedChange = { newValue ->
@@ -199,9 +197,8 @@ fun SettingsDialog(
                                                 }
                                             }
                                         )
-                                    }
-                                    else if(setting.type == "NO"){
-                                        Box(modifier = Modifier.alignByBaseline()) { // Align by baseline
+                                    } else if (setting.type == "NO") {
+                                        Box(modifier = Modifier.alignByBaseline()) {
                                             var expanded by remember { mutableStateOf(false) }
                                             var selectedReminder by remember { mutableStateOf(setting.value) }
                                             TextButton(onClick = { expanded = !expanded }) {
@@ -235,11 +232,22 @@ fun SettingsDialog(
         },
         confirmButton = {
             Button(onClick = {
-                // Save settings to the database
+                Log.d("SettingsDialog", "Save button clicked")
+
                 savedSettings.forEach { setting ->
                     dbHelper.updateSetting(setting.key, setting.value)
+                    Log.d("SettingsDialog", "Updated setting ${setting.key} to ${setting.value}")
+                    if (setting.key == "reminder_days" && setting.value.toInt() > 0) {
+                        Log.d("SettingsDialog", "Reminder days set and value > 0")
+                        if (activity != null) {
+                            if (!areNotificationsEnabled(context)) {
+                                Log.d("SettingsDialog", "Notifications are not enabled")
+                                openNotificationSettings(context)
+                            }
+                        }
+                    }
                 }
-                onDismissRequest()  // Close the dialog
+                onDismissRequest()
             }) {
                 Text("Save")
             }
@@ -249,7 +257,19 @@ fun SettingsDialog(
                 Text("Close")
             }
         },
-        // To adjust the width of the AlertDialog based on screen size
-        modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f) // Adjust width to 90% of screen width
+        modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f)
     )
+}
+
+fun areNotificationsEnabled(context: Context): Boolean {
+    val notificationManager = NotificationManagerCompat.from(context)
+    return notificationManager.areNotificationsEnabled()
+}
+
+fun openNotificationSettings(context: Context) {
+    val intent = Intent().apply {
+        action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+    }
+    context.startActivity(intent)
 }
