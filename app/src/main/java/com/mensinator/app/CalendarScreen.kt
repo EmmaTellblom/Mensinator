@@ -656,10 +656,6 @@ fun CalendarScreen() {
     )
 }
 
-
-// TODO: Function that schedules alarm for notification
-// When a new nextPeriodDateCalculated is made, old alarm should be removed
-// We should call this function each time period or ovulation is made (because that changes the date)
 fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
     val reminderDate = periodDate.plusDays(daysForReminding.toLong())
     val delayMillis = reminderDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - System.currentTimeMillis()
