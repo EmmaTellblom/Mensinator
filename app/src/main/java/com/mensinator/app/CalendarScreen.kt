@@ -74,13 +74,12 @@ fun CalendarScreen() {
 
     val periodHistoryNumber = dbHelper.getSettingByKey("period_history")
     val periodHistoryNumberValue = periodHistoryNumber?.value?.toIntOrNull() ?: 5
-    val ovulationHistoryNumber = dbHelper.getSettingByKey("ovulation_history")
-    val ovulationHistoryNumberValue = ovulationHistoryNumber?.value?.toIntOrNull() ?: 5
+
 
     val reminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
 
     // Variables used for predicting/calculating luteal, period and ovulation dates
-    val lutealPeriodCalculation = dbHelper.getSettingByKey("luteal_period_calculation")
+    val lutealPeriodCalculation = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
 
     // Variables which will contain predicted dates for period and ovulation
     var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
@@ -111,7 +110,7 @@ fun CalendarScreen() {
     val nextOvulationColor = nextOvulationColorSetting?.value?.let { colorMap[it] } ?: colorMap["Magenta"]!!
     var symptomColor: Color
 
-    val lutealPeriodCalculationValue = lutealPeriodCalculation?.value?.toIntOrNull() ?: 0
+
 
 
     // Fetch symptoms from the database
@@ -133,6 +132,7 @@ fun CalendarScreen() {
             var periodEndDate: LocalDate? = null
 
             //Calculate average cycle length for last X periods (set in settings)
+            // TODO REMOVE periodHistoryNumberValue
             val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistoryNumberValue)
             val cycleLengths = mutableListOf<Long>()
             for (i in 0 until listPeriodDates.size - 1) {
@@ -166,7 +166,7 @@ fun CalendarScreen() {
 
             averagePeriodLength = if (periodLengths.isNotEmpty()) periodLengths.average() else 0.0
             // Calculate the next period, input is setting on how to calculate next period
-            nextPeriodStartCalculated = calcHelper.calculateNextPeriod(lutealPeriodCalculationValue, periodHistoryNumberValue, ovulationHistoryNumberValue)
+            nextPeriodStartCalculated = calcHelper.calculateNextPeriod(lutealPeriodCalculation)
             //Log.d("CalendarScreen", "Next period start: $nextPeriodStartCalculated")
 
         } else {
@@ -188,7 +188,7 @@ fun CalendarScreen() {
         //Make sure the last ovulation date is before the first last period date
         if (lastOvulationDate != null && periodCount >= 1 && (lastOvulationDate.toString()<firstLastPeriodDate.toString())) {
             // Calculate the expected ovulation date using the number of cycles from the settings
-            follicleGrowthDays = calcHelper.averageFollicalGrowthInDays(ovulationHistoryNumberValue)
+            follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
             nextOvulationCalculated = firstLastPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
             //Log.d("CalendarScreen", "Growth days in statistics 1: $follicleGrowthDays")
             //Log.d("CalendarScreen", "Next predicted ovulation: $nextPredictedOvulation")
@@ -197,7 +197,7 @@ fun CalendarScreen() {
             if(lastOvulationDate.toString()>firstLastPeriodDate.toString() && (nextOvulationCalculated != "Not enough data" && nextPeriodStartCalculated != "Not enough data")){
                 //Log.d("CalendarScreen", "Last ovulationdate: " + lastOvulationDate.toString() + " FirstLastPeriodDate: " + firstLastPeriodDate.toString())
                 //Log.d("CalendarScreen", "Will calculate according to next expected period")
-                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays(ovulationHistoryNumberValue)
+                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
                 //Log.d("CalendarScreen", "Growth days in statistics 2: $growthDays")
                 if(nextPeriodStartCalculated!="Not enough data"){
                     nextOvulationCalculated = LocalDate.parse(nextPeriodStartCalculated).plusDays(follicleGrowthDays.toLong()).toString()
@@ -499,7 +499,7 @@ fun CalendarScreen() {
 
                     updateStatistics()
                     // Schedule notification for reminder
-                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data"){
+                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString()){
                         sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
                     }
                     Toast.makeText(context, "Changes saved successfully", Toast.LENGTH_SHORT).show()
@@ -550,7 +550,7 @@ fun CalendarScreen() {
                 updateStatistics()
 
                 // Schedule notification for reminder
-                if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data"){
+                if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString()){
                     sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
                 }
             },
@@ -607,14 +607,9 @@ fun CalendarScreen() {
         //TODO: using functions from the database helper
         if (showStatisticsDialog) {
             StatisticsDialog(
-                averageCycleLength = averageCycleLength,
-                averagePeriodLength = averagePeriodLength,
-                nextPeriodStart = nextPeriodStartCalculated,
-                periodCount = periodCount,
-                ovulationCount = ovulationCount,
-                //averageOvulationCycleLength = averageOvulationCycleLength,
-                growthDays = follicleGrowthDays,
-                nextPredictedOvulation = nextOvulationCalculated,
+                nextPeriodStart = nextPeriodStartCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar
+                follicleGrowthDays = follicleGrowthDays, // TODO REMOVE!
+                nextPredictedOvulation = nextOvulationCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar
                 onDismissRequest = { showStatisticsDialog = false }
             )
         }

@@ -18,18 +18,18 @@ import java.time.LocalDate
 
 @Composable
 fun StatisticsDialog(
-    averageCycleLength: Double,
-    averagePeriodLength: Double,
-    nextPeriodStart: String,
-    periodCount: Int,
-    ovulationCount: Int,
-    //averageOvulationCycleLength: Double,
-    growthDays: String,
-    nextPredictedOvulation: String?,
+    nextPeriodStart: String, // This actually needs to be calculated in CalendarScreen due to the calendar
+    follicleGrowthDays: String,
+    nextPredictedOvulation: String?, // This actually needs to be calculated in CalendarScreen due to the calendar
     onDismissRequest: () -> Unit,
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }
+    val calcHelper = remember { Calculations(context) }
+    val averageCycleLength = calcHelper.averageCycleLength()
+    val periodCount = dbHelper.getPeriodCount()
+    val ovulationCount = dbHelper.getOvulationCount()
+    val averagePeriodLength = calcHelper.averagePeriodLength()
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -64,7 +64,7 @@ fun StatisticsDialog(
                     fontSize = 16.sp
                 )
                 Text(
-                    text = "Average ovulation day: $growthDays",
+                    text = "Average ovulation day: $follicleGrowthDays",
                     fontSize = 16.sp
                 )
                 Text(

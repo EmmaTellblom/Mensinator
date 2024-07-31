@@ -703,6 +703,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     // This function is used to get the luteal length of a cycle.
     // Date input should only be ovulation date
     // To be used with setting for calculating periods according to ovulation
+    // TODO MOVE TO CALCULATIONS AND DELETE
     fun getLutealLengthForPeriod(date: LocalDate): Int {
         val firstNextPeriodDate = getFirstNextPeriodDate(date)
         val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
@@ -816,5 +817,21 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
 
         return firstNextDate
+    }
+
+    fun getNoOfDatesInPeriod(date: LocalDate): Int {
+        val db = readableDatabase
+        val query = """
+            SELECT COUNT(DATE) FROM PERIODS WHERE periodid in (SELECT periodid FROM PERIODS WHERE date = ?)
+        """
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+        var count = 0
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+
+        cursor.close()
+        db.close()
+        return count
     }
 }
