@@ -570,11 +570,23 @@ fun CalendarScreen() {
             )
         }
 
-        if(showManageSymptomsDialog){
-            ManageSymptom(
-                onDismissRequest = { showManageSymptomsDialog = false }
-            )
+//        if(showManageSymptomsDialog){
+//            ManageSymptom(
+//                onDismissRequest = { showManageSymptomsDialog = false }
+//            )
+//
+//        }
 
+        // Display ManageSymptom dialog
+        if (showManageSymptomsDialog) {
+            ManageSymptom(
+                onDismissRequest = { showManageSymptomsDialog = false },
+                onSave = {
+                    // Refresh symptoms when saving
+                    refreshSymptomDates()
+                    Log.d("TAG", "Saved clicked on ManageSymptoms")
+                }
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))

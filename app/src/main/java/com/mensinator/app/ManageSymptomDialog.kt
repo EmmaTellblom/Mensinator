@@ -30,7 +30,8 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun ManageSymptom(
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onSave: () -> Unit
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }
@@ -122,6 +123,7 @@ fun ManageSymptom(
                 savedSymptoms.forEach { symptom ->
                     dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
                 }
+                onSave()
                 onDismissRequest()  // Close the dialog
             }) {
                 Text("Save")
