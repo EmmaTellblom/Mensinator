@@ -2,6 +2,7 @@ package com.mensinator.app
 
 import android.content.Context
 import android.util.Log
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 // TODO REMOVE noPeriods+noOvulations USE GLOBAL VARIABLES INSTEAD
@@ -10,11 +11,12 @@ class Calculations (context: Context){
     private val dbHelper = PeriodDatabaseHelper(context)
     private val periodHistory = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
     private val ovulationHistory = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
+    private val lutealCalculation = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
 
-    fun calculateNextPeriod(advanced: Int): String {
+    fun calculateNextPeriod(): String {
         val expectedPeriodDate: String
 
-        if(advanced==1){
+        if(lutealCalculation==1){
             //go to advanced calculation using X latest ovulations (set by user in settings)
             Log.d("TAG", "Advanced calculation")
             expectedPeriodDate = advancedNextPeriod()
@@ -41,20 +43,20 @@ class Calculations (context: Context){
 
     private fun advancedNextPeriod(): String {
         // Get the list of the latest ovulation dates
-        val ovulationDates = dbHelper.getLatestXOvulations(ovulationHistory)
+        val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(ovulationHistory)
         //Log.d("TAG", "Ovulation dates: $ovulationDates")
         if (ovulationDates.isEmpty()) {
             // Return null or handle the case where no ovulations are available
-            Log.d("TAG", "No ovulationdates are empty")
+            Log.d("TAG", "Ovulationdates are empty")
             return "Not enough data"
         }
 
         var lutealLength = 0
         Log.d("TAG", "Ovulation dates: $ovulationDates")
         for (date in ovulationDates) {
-            val test = dbHelper.getLutealLengthForPeriod(date)
-            lutealLength += test
-            Log.d("TAG", "Luteal for date $date: $test")
+            val lutealDay = getLutealLengthForPeriod(date)
+            lutealLength += lutealDay
+            Log.d("TAG", "Luteal for date $date: $lutealDay")
         }
 
         // Calculate average luteal length
@@ -90,7 +92,7 @@ class Calculations (context: Context){
 
     //Returns average no of days from first last period to ovulation for passed X periods
     fun averageFollicalGrowthInDays(): String {
-        val ovulationDates = dbHelper.getLatestXOvulations(ovulationHistory)
+        val ovulationDates = dbHelper.getXLatestOvulationsDates(ovulationHistory)
         if (ovulationDates.isEmpty()) {
             // Return a meaningful message or handle the case where no ovulations are available
             return "Not enough data"
@@ -167,7 +169,7 @@ class Calculations (context: Context){
         val lutealLengths = mutableListOf<Long>()
 
         // Get the list of ovulation dates
-        val ovulationDates = dbHelper.getLatestXOvulations(ovulationHistory)
+        val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(ovulationHistory)
 
         // Iterate through each ovulation date
         for (ovulationDate in ovulationDates) {
@@ -184,5 +186,15 @@ class Calculations (context: Context){
         }
         // Return average of no of luteal lengths
         return lutealLengths.average()
+    }
+
+    // This function is used to get the luteal length of a cycle.
+    // Date input should only be ovulation date
+    // To be used with setting for calculating periods according to ovulation
+    fun getLutealLengthForPeriod(date: LocalDate): Int {
+        val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
+        val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+        Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
+        return lutealLength
     }
 }

@@ -84,9 +84,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
         if (rowsUpdated == 0) {
             db.insert(TABLE_PERIODS, null, values)
-            //Log.d(TAG, "Inserted date $date with periodId $periodId into $TABLE_PERIODS")
-        } else {
-            //Log.d(TAG, "Updated date $date with periodId $periodId in $TABLE_PERIODS")
         }
         db.close()
     }
@@ -117,52 +114,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val periodId = cursor.getInt(periodIdIndex)
                         val date = LocalDate.parse(dateStr)
                         dates[date] = periodId
-//                        Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
-                    }
-                } else {
-                    Log.e(
-                        TAG,
-                        "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
-                    )
-                }
-            } finally {
-                cursor.close()
-            }
-        } else {
-            Log.e(TAG, "Cursor is null while querying for dates")
-        }
-
-        db.close()
-        return dates
-    }
-
-    // This function is used to get all period dates from the database
-    //We should look at removing this because its not efficient
-    //TODO: Rebuild Statistics in CalendarScreen so we can remove this function
-    fun getAllPeriodDates(): Map<LocalDate, Int> {
-        val dates = mutableMapOf<LocalDate, Int>()
-        val db = readableDatabase
-
-        // Query the database for all dates
-        val cursor = db.query(
-            TABLE_PERIODS,
-            arrayOf(COLUMN_DATE, COLUMN_PERIOD_ID),
-            null, null, null, null, null
-        )
-
-        if (cursor != null) {
-            try {
-                // Get column indices
-                val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
-                val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
-
-                if (dateIndex != -1 && periodIdIndex != -1) {
-                    while (cursor.moveToNext()) {
-                        val dateStr = cursor.getString(dateIndex)
-                        val periodId = cursor.getInt(periodIdIndex)
-                        val date = LocalDate.parse(dateStr)
-                        dates[date] = periodId
-                        //Log.d(TAG, "Fetched date $date with periodId $periodId from $TABLE_PERIODS")
                     }
                 } else {
                     Log.e(
@@ -294,8 +245,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val date = LocalDate.parse(dateStr)
                         // Add the date to the set of dates with active symptoms
                         dates.add(date)
-                        // Log the fetched date
-                        //Log.d(TAG, "Fetched date $date from $TABLE_SYMPTOM_DATE")
                     } catch (e: Exception) {
                         Log.e(TAG, "Failed to parse date string: $dateStr", e)
                     }
@@ -511,7 +460,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                         val date = LocalDate.parse(dateStr)
                         // Add the date to the set of dates
                         dates.add(date)
-//                        Log.d("TAG", "Fetched date $date from ovulations")
                     } catch (e: Exception) {
                         Log.e("TAG", "Failed to parse date string: $dateStr", e)
                     }
@@ -521,32 +469,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             }
         } catch (e: Exception) {
             Log.e("TAG", "Error querying for ovulation dates", e)
-        } finally {
-            cursor.close()
-            db.close()
-        }
-
-        return dates
-    }
-
-    //This function is used to get all ovulation dates from the database
-    //TODO: Re-write statistics ans then remove this function
-    fun getAllOvulationDates(): List<LocalDate> {
-        val dates = mutableListOf<LocalDate>()
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT date FROM Ovulations", null)
-
-        try {
-            val dateIndex = cursor.getColumnIndex("date")
-            if (dateIndex != -1) {
-                while (cursor.moveToNext()) {
-                    val dateStr = cursor.getString(dateIndex)
-                    val date = LocalDate.parse(dateStr)
-                    dates.add(date)
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("Database", "Error reading ovulation dates", e)
         } finally {
             cursor.close()
             db.close()
@@ -673,6 +595,26 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return oldestPeriodDate
     }
 
+    //This function is to get the oldest period date in the database
+    fun getNewestOvulationDate(): LocalDate?{
+        val db = readableDatabase
+        var newestOvulationDate: LocalDate? = null
+
+        val query = """
+           SELECT DATE FROM OVULATIONS ORDER BY DATE DESC LIMIT 1 
+        """
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor.moveToFirst()) {
+            newestOvulationDate = LocalDate.parse(cursor.getString(0))
+        }
+
+        cursor.close()
+        db.close()
+        return newestOvulationDate
+    }
+
+
     //This function is used for updating symptom active status
     fun updateSymptom(id: Int, active: Int, color: String) {
         val db = writableDatabase
@@ -700,20 +642,9 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
     }
 
-    // This function is used to get the luteal length of a cycle.
-    // Date input should only be ovulation date
-    // To be used with setting for calculating periods according to ovulation
-    // TODO MOVE TO CALCULATIONS AND DELETE
-    fun getLutealLengthForPeriod(date: LocalDate): Int {
-        val firstNextPeriodDate = getFirstNextPeriodDate(date)
-        val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
-        Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
-        return lutealLength
-    }
-
-    // This function is used to get the latest X ovulation dates from the database
-    // using input number to be more flexible
-    fun getLatestXOvulations(number: Int): List<LocalDate> {
+    // This function is used to get the latest X ovulation dates where they are followed by a period
+    // Used for calculations
+    fun getLatestXOvulationsWithPeriod(number: Int): List<LocalDate> {
         val ovulationDates = mutableListOf<LocalDate>()
         val db = readableDatabase
         // only include ovulations that has a period coming afterwards
@@ -833,5 +764,24 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         cursor.close()
         db.close()
         return count
+    }
+
+    fun getXLatestOvulationsDates(number: Int): List<LocalDate> {
+        val db = readableDatabase
+        val ovulationDates = mutableListOf<LocalDate>()
+        val query = """
+            SELECT DATE FROM OVULATIONS ORDER BY DATE DESC LIMIT ?
+        """
+        val cursor = db.rawQuery(query, arrayOf(number.toString()))
+        if (cursor.moveToFirst()) {
+            do {
+                val dateString = cursor.getString(0)
+                val date = LocalDate.parse(dateString)
+                ovulationDates.add(date)
+            }while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+        return ovulationDates
     }
 }

@@ -32,6 +32,7 @@ fun StatisticsDialog(
     val periodCount = dbHelper.getPeriodCount()
     val ovulationCount = dbHelper.getOvulationCount()
     val averagePeriodLength = calcHelper.averagePeriodLength()
+    val avgLutealLength = calcHelper.averageLutealLength()
 
     val scrollState = rememberScrollState()
 
@@ -82,12 +83,11 @@ fun StatisticsDialog(
                     } ?: "Not enough data to predict next ovulation",
                     fontSize = 16.sp
                 )
-//                val avgLutealLength = dbHelper.getAverageLutealLength()
-//                Text(
-//                    text = "Average luteal phase length: $avgLutealLength", //TODO
-//
-//                    fontSize = 16.sp
-//                )
+
+                Text(
+                    text = "Average luteal phase length: ${"%.1f".format(avgLutealLength)} days",
+                    fontSize = 16.sp
+                )
             }
         },
         confirmButton = {
