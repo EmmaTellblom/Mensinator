@@ -245,6 +245,8 @@ fun CalendarScreen() {
                         val hasPeriodDate = dayDate in periodDates.value
                         val hasSymptomDate = dayDate in symptomDates.value
                         val hasOvulationDate = dayDate in ovulationDates.value
+                        val hasOvulationDateCalculated = dayDate.toString() == nextOvulationCalculated
+                        val hasPeriodDateCalculated = dayDate.toString() == nextPeriodStartCalculated
 
                         Box(
                             modifier = Modifier
@@ -258,51 +260,9 @@ fun CalendarScreen() {
                                     }
                                 },
                             contentAlignment = Alignment.Center
-                        ) { // Colors for 'special' dates
-                            val backgroundColor = when {
-                                hasPeriodDate && isSelected -> selectedPeriodColor
-                                hasPeriodDate -> periodColor
-                                hasOvulationDate && isSelected -> selectedPeriodColor
-                                hasOvulationDate -> ovulationColor
-                                isSelected -> selectedColor
-                                else -> Color.Transparent
-                            }
+                        ) {
 
-                            Box(
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .background(backgroundColor, CircleShape)
-                            )
-
-                            // Symptom indicator in the top right corner
-                            if (hasSymptomDate) {
-                                val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
-                                Log.d("CalendarScreen", "Symptom colors for $dayDate: $noSymptomsForDay")
-
-                                if(noSymptomsForDay.size == 1){
-                                    val colorName = noSymptomsForDay[0]
-                                    symptomColor = colorMap[colorName] ?: Color.Black
-                                }
-                                else{
-                                    // Display a grey circle if multiple symptoms
-                                    symptomColor = Color.Gray
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        //.padding(16.dp)
-                                        .offset(x = (-8).dp, y = (0).dp)
-                                        .size(8.dp)  // Size of the small bubble
-                                        .border(1.dp, Color.Black, CircleShape)
-                                        .background(
-                                            symptomColor,
-                                            CircleShape
-                                        )
-                                        .align(Alignment.TopEnd)
-                                )
-
-                            }
-                            // If date is a period date
+                            // If date is a calculated period date
                             if (dayDate.toString().trim() == nextPeriodStartCalculated.trim() && !hasPeriodDate) {
                                 Box(
                                     modifier = Modifier
@@ -317,7 +277,7 @@ fun CalendarScreen() {
                                     )
                                 }
                             }
-                            // If date is predicted ovulation date (and not an ovulation by user)
+                            // If date is a calculated ovulation date (and not an ovulation by user)
                             if (dayDate.toString() == nextOvulationCalculated && !hasOvulationDate) {
                                 Box(
                                     modifier = Modifier
@@ -331,6 +291,50 @@ fun CalendarScreen() {
                                         textAlign = TextAlign.Center
                                     )
                                 }
+                            }
+
+                            val backgroundColor = when {
+                                hasPeriodDateCalculated && isSelected -> selectedPeriodColor
+                                hasOvulationDateCalculated && isSelected -> selectedPeriodColor
+                                hasPeriodDate && isSelected -> selectedPeriodColor
+                                hasOvulationDate && isSelected -> selectedPeriodColor
+                                hasPeriodDate -> periodColor
+                                hasOvulationDate -> ovulationColor
+                                isSelected -> selectedColor
+                                else -> Color.Transparent
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .background(backgroundColor, CircleShape)
+                            )
+
+                            // Symptom indicator in the top right corner
+                            if (hasSymptomDate) {
+                                val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
+
+                                if(noSymptomsForDay.size == 1){
+                                    val colorName = noSymptomsForDay[0]
+                                    symptomColor = colorMap[colorName] ?: Color.Black
+                                }
+                                else{
+                                    // Display a grey circle if multiple symptoms
+                                    symptomColor = Color.Gray
+                                }
+
+                                Box(
+                                    modifier = Modifier
+                                        .offset(x = (-8).dp, y = (0).dp)
+                                        .size(8.dp)  // Size of the small bubble
+                                        .border(1.dp, Color.Black, CircleShape)
+                                        .background(
+                                            symptomColor,
+                                            CircleShape
+                                        )
+                                        .align(Alignment.TopEnd)
+                                )
+
                             }
 
                             // Mark today's date with a black border and bold font
@@ -359,6 +363,7 @@ fun CalendarScreen() {
                                         .background(Color.Transparent)
                                 )
                             }
+
                     // Here is cycle numbers
                     if(oldestPeriodDate != null && showCycleNumbersSetting == 1) {
                         if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
@@ -367,7 +372,6 @@ fun CalendarScreen() {
                                 // Calculate the number of days between the firstLastPeriodDate and dayDate
                                 cycleNumber = ChronoUnit.DAYS.between(previousFirstPeriodDate, dayDate)
                                     .toInt() + 1
-                                //Log.d("CalendarScreen", "CycleNumber for $dayDate: $cycleNumber")
 
                                 // Render UI elements based on cycleNumber or other logic
                                 Box(
@@ -435,10 +439,10 @@ fun CalendarScreen() {
                     previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
                     updateCalculations()
+
                     // Schedule notification for reminder
                     // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
                     // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
-
                     if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString())
                     {
                         sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
