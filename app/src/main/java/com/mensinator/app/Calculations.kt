@@ -183,6 +183,10 @@ class Calculations (context: Context){
                 // Add the result to the list
                 lutealLengths.add(daysBetween)
             }
+            else{
+                Log.d("TAG", "Next period date is null")
+                return 0.0
+            }
         }
         // Return average of no of luteal lengths
         return lutealLengths.average()
@@ -193,8 +197,14 @@ class Calculations (context: Context){
     // To be used with setting for calculating periods according to ovulation
     fun getLutealLengthForPeriod(date: LocalDate): Int {
         val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
-        val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
-        Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
-        return lutealLength
+        if(firstNextPeriodDate != null){
+            val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+            Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
+            return lutealLength
+        }
+        else{
+            return 0
+        }
+
     }
 }
