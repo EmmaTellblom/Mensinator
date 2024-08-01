@@ -25,7 +25,10 @@ import java.util.Locale
 import android.content.Context
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 /*
@@ -433,7 +436,11 @@ fun CalendarScreen() {
 
                     updateCalculations()
                     // Schedule notification for reminder
-                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString()){
+                    // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
+                    // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
+
+                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString())
+                    {
                         sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
                     }
                     Toast.makeText(context, "Changes saved successfully", Toast.LENGTH_SHORT).show()
@@ -591,10 +598,35 @@ fun CalendarScreen() {
 // Function to create a notification for upcoming periods
 // used if reminderDays > 0
 fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
-    val reminderDate = periodDate.plusDays(daysForReminding.toLong())
-    val delayMillis = reminderDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli() - System.currentTimeMillis()
+    // Calculate the notification date (periodDate - daysForReminding)
+    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
 
-    Log.d("CalendarScreen", "Reminder time: $delayMillis")
+    // Check if the notification date is in the past
+    if (notificationDate.isBefore(LocalDate.now())) {
+        Log.d("CalendarScreen", "Notification not scheduled because the reminder date is in the past")
+        return
+    }
+
+    // Convert the LocalDate to a timestamp (milliseconds since epoch)
+    val notificationTimeMillis = notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    val currentTimeMillis = System.currentTimeMillis()
+
+    // Calculate the delay in milliseconds
+    val delayMillis = notificationTimeMillis - currentTimeMillis
+
+    // Handle negative delay
+    if (delayMillis < 0) {
+        Log.d("CalendarScreen", "Notification not scheduled because the calculated delay is negative")
+        return
+    }
+
+    // Convert delayMillis to the scheduled date and time - This is for troubleshooting the notification
+    val futureInstant = Instant.ofEpochMilli(currentTimeMillis + delayMillis)
+    val futureDateTime = LocalDateTime.ofInstant(futureInstant, ZoneId.systemDefault())
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formattedDateTime = futureDateTime.format(formatter)
+
+    Log.d("CalendarScreen", "Notification is scheduled to be sent at: $formattedDateTime")
 
     // Create a tag for the notification work request
     val notificationTag = "period_reminder_notification"
