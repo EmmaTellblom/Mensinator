@@ -12,7 +12,7 @@ import java.time.LocalDate
 
 @Composable
 fun SymptomsDialog(
-    date: LocalDate,
+    date: LocalDate, // last selected date from the calendar
     symptoms: List<Symptom>,
     dbHelper: PeriodDatabaseHelper,
     onSave: (List<Symptom>) -> Unit,
