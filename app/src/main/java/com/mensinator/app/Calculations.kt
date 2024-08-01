@@ -33,8 +33,8 @@ class Calculations (context: Context){
             }
             // Calculate the average cycle length
             val averageLength = cycleLengths.average()
-            Log.d("TAG", "Average cycle length Basic: $averageLength")
-            Log.d("TAG", "Last period date to add days to: ${listPeriodDates.last()}")
+            //Log.d("TAG", "Average cycle length Basic: $averageLength")
+            //Log.d("TAG", "Last period date to add days to: ${listPeriodDates.last()}")
             expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong()).toString()
         }
         Log.d("TAG", "Expected period date Basic: $expectedPeriodDate")
