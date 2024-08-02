@@ -570,14 +570,6 @@ fun CalendarScreen() {
             )
         }
 
-//        if(showManageSymptomsDialog){
-//            ManageSymptom(
-//                onDismissRequest = { showManageSymptomsDialog = false }
-//            )
-//
-//        }
-
-        // Display ManageSymptom dialog
         if (showManageSymptomsDialog) {
             ManageSymptom(
                 onDismissRequest = { showManageSymptomsDialog = false },
