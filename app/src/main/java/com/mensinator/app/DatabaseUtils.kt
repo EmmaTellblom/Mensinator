@@ -135,12 +135,14 @@ object DatabaseUtils {
         // This will allow the user to fine tune how many cycles back should be used for prediction
         // NO because its going to be a number
         // Insert new row for language
+        // Insert new row for showing cycle numbers
         db.execSQL("""
             INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
             VALUES
             ('period_history','Period history','5','3','NO'),
             ('ovulation_history','Ovulation history','5','3','NO'),
-            ('lang', 'Language', 'en', '3', 'LI')
+            ('lang', 'Language', 'EN', '3', 'LI'),
+            ('cycle_numbers_show','Show cycle numbers','1','3','SW')
         """)
 
         // Add color to the symptoms table
@@ -150,13 +152,6 @@ object DatabaseUtils {
         // Set all colors to black
         db.execSQL("""
             UPDATE symptoms SET color = 'Black'
-        """)
-
-        db.execSQL("""
-            INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
-            VALUES (
-            'cycle_numbers_show','Show cycle numbers','1','3','SW'
-            )
         """)
 
         // Fixed symptom colors, so we can remove setting for symptom indicator

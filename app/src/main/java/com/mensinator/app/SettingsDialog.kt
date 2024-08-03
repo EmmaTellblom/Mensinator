@@ -49,10 +49,10 @@ fun SettingsDialog(
         "Light Gray" to Color.LightGray
     )
 
-    //Fix real language that translates to code
-    // English should be saved as EN to the database
-    val predefinedLang = listOf(
-        "EN"
+    // Here is available languages of the app
+    // When more languages have been translated, add them here
+    val predefinedLang = mapOf(
+        "English" to "EN"
     )
 
     val predefinedReminders = (0..10).map { it.toString() }
@@ -221,6 +221,35 @@ fun SettingsDialog(
                                                             selectedReminder = reminder
                                                             savedSettings = savedSettings.map {
                                                                 if (it.key == setting.key) it.copy(value = selectedReminder) else it
+                                                            }
+                                                            expanded = false
+                                                        }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else if (setting.type == "LI" && setting.key == "lang") {
+                                        var expanded by remember { mutableStateOf(false) }
+                                        var selectedLang by remember { mutableStateOf(
+                                            predefinedLang.entries.find { it.value == setting.value }?.key ?: "English"
+                                        ) }
+
+                                        Box(modifier = Modifier.alignByBaseline()) {
+                                            TextButton(onClick = { expanded = !expanded }) {
+                                                Text(selectedLang)
+                                            }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { expanded = false }
+                                            ) {
+                                                predefinedLang.forEach { (name, code) ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(name) },
+                                                        onClick = {
+                                                            selectedLang = name
+                                                            savedSettings = savedSettings.map {
+                                                                if (it.key == setting.key) it.copy(value = code) else it
                                                             }
                                                             expanded = false
                                                         }
