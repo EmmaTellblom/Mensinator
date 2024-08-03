@@ -134,11 +134,13 @@ object DatabaseUtils {
         // Insert new row for cycle history
         // This will allow the user to fine tune how many cycles back should be used for prediction
         // NO because its going to be a number
+        // Insert new row for language
         db.execSQL("""
             INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
             VALUES
             ('period_history','Period history','5','3','NO'),
-            ('ovulation_history','Ovulation history','5','3','NO')
+            ('ovulation_history','Ovulation history','5','3','NO'),
+            ('lang', 'Language', 'en', '3', 'LI')
         """)
 
         // Add color to the symptoms table
@@ -161,5 +163,6 @@ object DatabaseUtils {
         db.execSQL("""
             DELETE FROM app_settings WHERE setting_key = 'symptom_color'
         """)
+
     }
 }

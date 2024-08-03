@@ -49,6 +49,12 @@ fun SettingsDialog(
         "Light Gray" to Color.LightGray
     )
 
+    //Fix real language that translates to code
+    // English should be saved as EN to the database
+    val predefinedLang = listOf(
+        "EN"
+    )
+
     val predefinedReminders = (0..10).map { it.toString() }
 
     val groupedSettings = savedSettings.groupBy { it.groupId }
