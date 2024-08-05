@@ -25,6 +25,8 @@ import java.util.Locale
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -212,6 +214,7 @@ fun CalendarScreen() {
             .fillMaxSize()
             .padding(16.dp)
             .systemBarsPadding()
+            .verticalScroll(rememberScrollState())
     )
     {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
