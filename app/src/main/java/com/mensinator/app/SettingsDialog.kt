@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -16,8 +17,54 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.LocaleListCompat
+
+//Maps Database keys to res/strings.xml for multilanguage support
+object ResourceMapper {
+    //maps res strings xml file to db keys
+    private val resourceMap = mapOf(
+        //settings
+        "app_settings" to R.string.app_settings,
+        "period_color" to R.string.period_color,
+        "selection_color" to R.string.selection_color,
+        "period_selection_color" to R.string.period_selection_color,
+        "expected_period_color" to R.string.expected_period_color,
+        "ovulation_color" to R.string.ovulation_color,
+        "expected_ovulation_color" to R.string.expected_ovulation_color,
+        "reminders" to R.string.reminders,
+        "reminder_days" to R.string.days_before_reminder,
+        "other_settings" to R.string.other_settings,
+        "luteal_period_calculation" to R.string.luteal_phase_calculation,
+        "period_history" to R.string.period_history,
+        "ovulation_history" to R.string.ovulation_history,
+        "lang" to R.string.language,
+        "cycle_numbers_show" to R.string.cycle_numbers_show,
+        "close" to R.string.close,
+        "save" to R.string.save,
+        "Heavy_Flow" to R.string.heavy,
+        "Medium_Flow" to R.string.medium,
+        "Light_Flow" to R.string.light,
+        // colors
+        "Red" to R.string.color_red,
+        "Green" to R.string.color_green,
+        "Blue" to R.string.color_blue,
+        "Yellow" to R.string.color_yellow,
+        "Cyan" to R.string.color_cyan,
+        "Magenta" to R.string.color_magenta,
+        "Black" to R.string.color_black,
+        "White" to R.string.color_white,
+        "DarkGray" to R.string.color_darkgray,
+        "Grey" to R.string.color_grey,
+
+        )
+
+    fun getStringResourceId(key: String): Int? {
+        return resourceMap[key]
+    }
+}
 
 @Composable
 fun SettingsDialog(
@@ -52,7 +99,28 @@ fun SettingsDialog(
     // Here is available languages of the app
     // When more languages have been translated, add them here
     val predefinedLang = mapOf(
-        "English" to "EN"
+        "English" to "en",
+        "Svenska" to "sv",
+        "Tamil" to "ta",
+        /*"Hindi" to "hi"
+        "Chinese" to "zh",
+        "Spanish" to "es",
+        "Bengali" to "bn",
+        "Portuguese" to "pt",
+        "Russian" to "ru",
+        "Japanese" to "ja",
+        "Western Punjabi" to "pa",
+        "Marathi" to "mr",
+        "Telugu" to "te",
+        "Wu Chinese" to "wuu",
+        "Turkish" to "tr",
+        "Korean" to "ko",
+        "French" to "fr",
+        "German" to "de",
+        "Vietnamese" to "vi",
+        "Urdu" to "ur",
+        "Cantonese" to "yue"*/
+
     )
 
     val predefinedReminders = (0..10).map { it.toString() }
@@ -62,7 +130,7 @@ fun SettingsDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = "App Settings", fontSize = 20.sp)
+            Text(text = stringResource(id = R.string.app_settings), fontSize = 20.sp)
         },
         text = {
             Column(
@@ -75,7 +143,7 @@ fun SettingsDialog(
                     when (groupId) {
                         1 -> {
                             Text(
-                                text = "Colors",
+                                text = stringResource(id = R.string.colors),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp)
@@ -84,6 +152,8 @@ fun SettingsDialog(
                             settingsInGroup.forEach { setting ->
                                 var expanded by remember { mutableStateOf(false) }
                                 var selectedColorName by remember { mutableStateOf(setting.value) }
+                                val settingsKey = ResourceMapper.getStringResourceId(setting.key)
+                                val selectedColorKey = ResourceMapper.getStringResourceId(selectedColorName)
 
                                 Row(
                                     modifier = Modifier
@@ -93,21 +163,24 @@ fun SettingsDialog(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = setting.label,
+                                        text = settingsKey?.let { stringResource(id = it) } ?:"Not found",
                                         fontSize = 14.sp,
-                                        modifier = Modifier.weight(1f).alignByBaseline()
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .alignByBaseline()
                                     )
                                     Box(modifier = Modifier.alignByBaseline()) {
                                         TextButton(onClick = { expanded = !expanded }) {
-                                            Text(selectedColorName)
+                                            Text(selectedColorKey?.let { stringResource(id = it) } ?:"Not found")
                                         }
                                         DropdownMenu(
                                             expanded = expanded,
                                             onDismissRequest = { expanded = false }
                                         ) {
                                             predefinedColors.forEach { (name, _) ->
+                                                val colors = ResourceMapper.getStringResourceId(name)
                                                 DropdownMenuItem(
-                                                    text = { Text(name) },
+                                                    text = { Text(colors?.let { stringResource(id = it) } ?:"Not found") },
                                                     onClick = {
                                                         selectedColorName = name
                                                         savedSettings = savedSettings.map {
@@ -124,7 +197,7 @@ fun SettingsDialog(
                         }
                         2 -> {
                             Text(
-                                text = "Reminders",
+                                text = stringResource(id = R.string.reminders),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp)
@@ -133,6 +206,7 @@ fun SettingsDialog(
                             settingsInGroup.forEach { setting ->
                                 var expanded by remember { mutableStateOf(false) }
                                 var selectedReminder by remember { mutableStateOf(setting.value) }
+                                val settingsKey = ResourceMapper.getStringResourceId(setting.key)
 
                                 Row(
                                     modifier = Modifier
@@ -142,9 +216,11 @@ fun SettingsDialog(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = setting.label,
+                                        text = settingsKey?.let { stringResource(id = it) } ?: setting.label,
                                         fontSize = 14.sp,
-                                        modifier = Modifier.weight(1f).alignByBaseline()
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .alignByBaseline()
                                     )
                                     Box(modifier = Modifier.alignByBaseline()) {
                                         TextButton(onClick = { expanded = !expanded }) {
@@ -173,13 +249,15 @@ fun SettingsDialog(
                         }
                         else -> {
                             Text(
-                                text = "Other settings",
+                                text = stringResource(id = R.string.other_settings),
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(vertical = 8.dp)
                             )
                             settingsInGroup.forEach { setting ->
                                 var isChecked by remember { mutableStateOf(setting.value == "1") }
+                                val settingsKey = ResourceMapper.getStringResourceId(setting.key)
+
 
                                 Row(
                                     modifier = Modifier
@@ -189,7 +267,7 @@ fun SettingsDialog(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(
-                                        text = setting.label,
+                                        text = settingsKey?.let { stringResource(id = it) } ?: setting.label,
                                         fontSize = 14.sp,
                                         modifier = Modifier.weight(1f)
                                     )
@@ -216,7 +294,7 @@ fun SettingsDialog(
                                             ) {
                                                 predefinedReminders.forEach { reminder ->
                                                     DropdownMenuItem(
-                                                        text = { Text(reminder) },
+                                                        text = {reminder},
                                                         onClick = {
                                                             selectedReminder = reminder
                                                             savedSettings = savedSettings.map {
@@ -231,9 +309,12 @@ fun SettingsDialog(
                                     }
                                     else if (setting.type == "LI" && setting.key == "lang") {
                                         var expanded by remember { mutableStateOf(false) }
-                                        var selectedLang by remember { mutableStateOf(
-                                            predefinedLang.entries.find { it.value == setting.value }?.key ?: "English"
-                                        ) }
+                                        var selectedLang by remember {
+                                            mutableStateOf(
+                                                predefinedLang.entries.find { it.value == setting.value }?.key
+                                                    ?: throw IllegalStateException("Locale code ${setting.value} not found in predefined languages.")
+                                            )
+                                        }
 
                                         Box(modifier = Modifier.alignByBaseline()) {
                                             TextButton(onClick = { expanded = !expanded }) {
@@ -252,6 +333,10 @@ fun SettingsDialog(
                                                                 if (it.key == setting.key) it.copy(value = code) else it
                                                             }
                                                             expanded = false
+                                                            // Update application locales
+//                                                            AppCompatDelegate.setApplicationLocales(
+//                                                                LocaleListCompat.forLanguageTags(code)
+//                                                            )
                                                         }
                                                     )
                                                 }
@@ -271,6 +356,13 @@ fun SettingsDialog(
 
                 savedSettings.forEach { setting ->
                     dbHelper.updateSetting(setting.key, setting.value)
+                    // Update the application locale if the language setting has changed
+                    if (setting.key == "lang") {
+                        val newLocale = setting.value
+                        AppCompatDelegate.setApplicationLocales(
+                            LocaleListCompat.forLanguageTags(newLocale)
+                        )
+                    }
                     Log.d("SettingsDialog", "Updated setting ${setting.key} to ${setting.value}")
                     if (setting.key == "reminder_days" && setting.value.toInt() > 0) {
                         Log.d("SettingsDialog", "Reminder days set and value > 0")
@@ -284,12 +376,12 @@ fun SettingsDialog(
                 }
                 onDismissRequest()
             }) {
-                Text("Save")
+                Text(stringResource(id = R.string.save))
             }
         },
         dismissButton = {
             Button(onClick = onDismissRequest) {
-                Text("Close")
+                Text(stringResource(id = R.string.close))
             }
         },
         modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f)

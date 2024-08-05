@@ -1,0 +1,125 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+
+    <!-- Home -->
+    <string name="previous">Föregående</string>
+    <string name="next">Nästa</string>
+    <string name="period_button">Mens</string>
+    <string name="symptoms_button">Symptom</string>
+    <string name="ovulation_button">Ägglossning</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Inga datum att spara eller ta bort</string>
+    <string name="successfully_saved_alert">Ändringarna sparades</string>
+    <string name="no_data_selected">Inga datum är valda</string>
+    <string name="only_day_alert">Bara en dag kan ha ägglossning</string>
+    <string name="success_saved_ovulation">Ägglossning sparad</string>
+    <string name="no_date_selected_ovulation">Inget datum valt för ägglossning</string>
+
+
+    <!-- Settings -->
+    <string name="app_settings">Inställningar</string>
+    <string name="colors">Färger</string>
+    <string name="period_color">Mens</string>
+    <string name="selection_color">Markering</string>
+    <string name="period_selection_color">Mensmarkering</string>
+    <string name="expected_period_color">Förväntad mens</string>
+    <string name="ovulation_color">Ägglossning</string>
+    <string name="expected_ovulation_color">Förväntad ägglossning</string>
+    <string name="reminders">Påminnelser</string>
+    <string name="days_before_reminder">Dagar före påminnelse</string>
+    <string name="other_settings">Andra inställningar</string>
+    <string name="luteal_phase_calculation">Lutealberäkning</string>
+    <string name="period_history">Menshistorik</string>
+    <string name="ovulation_history">Ägglossningshistorik</string>
+    <string name="language">Språk</string>
+    <string name="cycle_numbers_show">Visa cykelnummer</string>
+    <string name="close">Stäng</string>
+    <string name="save">Spara</string>
+    <!-- Color values -->
+    <string name="color_red">Röd</string>
+    <string name="color_green">Grön</string>
+    <string name="color_blue">Blå</string>
+    <string name="color_yellow">Gul</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_black">Svart</string>
+    <string name="color_white">Vit</string>
+    <string name="color_darkgray">Mörkgrå</string>
+    <string name="color_grey">Grå</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statistik</string>
+    <string name="period_count">Antal menscykler: %1$d</string>
+    <string name="average_cycle_length">Medellängd menscykel: %1$.1f days</string>
+    <string name="average_period_length">Medellängd mens: %1$.1f days</string>
+    <string name="next_period_start_past">Nästa beräknade mens: %1$s   Beräknat datum har passerat!</string>
+    <string name="next_period_start_future">Nästa beräknade mens: %1$s</string>
+    <string name="ovulation_count">Antal ägglossningar: %1$d</string>
+    <string name="average_ovulation_day">Medeldag för ägglossning: %1$s</string>
+    <string name="next_predicted_ovulation">Nästa beräknade ägglossning: %1$s</string>
+    <string name="next_predicted_ovulation_default">Inte tillräckligt mycket data för att beräkna ägglossning</string>
+    <string name="average_luteal_length">Medellängd lutealfas: %1$.1f days</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Symptom for %1$s</string>
+    <string name="create_new_symptom_button">Skapa nytt symptom</string>
+    <string name="save_symptoms_button">Spara symptom</string>
+    <string name="cancel_button">Avbryt</string>
+    <string name="heavy">Riklig mens</string>
+    <string name="medium">Vanlig mens</string>
+    <string name="light">Lätt mens</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Skapa Nytt Symptom</string>
+    <string name="symptom_name_label">Symptom Namn</string>
+    <string name="save_button">Spara</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Hantera Symptom</string>
+
+
+    <!-- Calender -->
+    <string name="mon">Mån</string>
+    <string name="tue">Tis</string>
+    <string name="wed">Ons</string>
+    <string name="thu">Tor</string>
+    <string name="fri">Fre</string>
+    <string name="sat">Lör</string>
+    <string name="sun">Sön</string>
+
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">Exportera/Importera Data</string>
+    <string name="export_button">Exportera</string>
+    <string name="import_button">Importera</string>
+    <string name="export_success_toast">Exporterade till %1$s</string>
+    <string name="import_success_toast">Filen importerades korrekt</string>
+    <string name="import_failure_toast">Importen misslyckades</string>
+    <string name="export_path_label">Exportplats: %1$s</string>
+    <string name="import_path_label">Importplats: %1$s</string>
+
+
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Vanliga Frågor</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">Användarmanual</string>
+    <string name="how_to_use">Användning:</string>
+    <string name="select_dates">• Välja datum: Klicka på ett datum för att markera/avmarkera</string>
+    <string name="add_or_remove_dates">• Lägg till eller ta bort dagar för mens: Klicka på Mens efter att du har valt datum.</string>
+    <string name="symptoms">• Symptom: Klicka på \'Symptom\' efter att du har markerat ett datum för att se symptom på aktuellt datum.</string>
+    <string name="ovulation">• Ägglossning: Välj ett datum och klicka på ägglossning. För att ta bort ägglossning, markera datumet och tryck på ägglossning igen.</string>
+    <string name="statistics">• Statistik: Klicka på menyn nere till höger och sendan \'Statistik\'.</string>
+    <string name="import_export">• Importera/Exportera: Klicka på Importera/Exportera i menyn nere till höger för att importera eller exportera din data, Detta är ett MÅSTE när du ska flytta din data till en ny enhet.</string>
+    <string name="calculations">• Beräkningar: \nMens är beräknad utifrån medellängd på din menscykel.\nMensen kan beräknas utifrån medellängd på din lutealfas. Beräkningen kollar då historiskt (på antal cykler som du väljer i inställningarna) för att komma fram till en medellängd på lutealfasen och beräknar mens. Detta ställer du in i inställningarna. \nÄgglossning är beräknat utifrån medellängd på ägglossningscykeln. </string>
+    <string name="features_coming_soon">Funktioner som kommer snart:</string>
+    <string name="upcoming_features">• Nytt gränssnitt (när vi har lust)</string>
+    <string name="our_story_header">Vår bakgrund</string>
+    <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. Vi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. Häng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Viktigt:</string>
+    <string name="disclaimer">• Det här är ett hobby-projekt och är inte tänkt för medicinsk användning. Vi är gör helt enkelt detta för vår egna behov. Men vi välkommnar ideer och förfrågningar! Häng med oss på Discord eller skicka ett mail: mensinator.app@gmail.com</string>
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">Stäng</string>
+    <string name="not_enough_data">Inte tillräckligt med data</string>
+</resources>

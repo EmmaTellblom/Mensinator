@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
+import androidx.compose.ui.res.stringResource
+
 
 
 
@@ -39,7 +41,7 @@ fun StatisticsDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = "Statistics")
+            Text(text = stringResource(id = R.string.statistics_title))
         },
         text = {
             Column(
@@ -49,50 +51,49 @@ fun StatisticsDialog(
                     .verticalScroll(scrollState)  // Add vertical scrolling capability
             ) {
                 Text(
-                    text = "Number of periods tracked: $periodCount",
+                    text = stringResource(id = R.string.period_count, periodCount),
                     fontSize = 16.sp
                 )
                 Text(
-                    text = "Average cycle length: ${"%.1f".format(averageCycleLength)} days",
+                    text = stringResource(id = R.string.average_cycle_length, averageCycleLength),
                     fontSize = 16.sp
                 )
                 Text(
-                    text = "Average period length: ${"%.1f".format(averagePeriodLength)} days",
+                    text = stringResource(id = R.string.average_period_length, averagePeriodLength),
                     fontSize = 16.sp
                 )
                 Text(
                     text = if (nextPeriodStart < LocalDate.now().toString()) {
-                        "Next assumed period: $nextPeriodStart \n\nAssumed period date has passed!"
+                        stringResource(id = R.string.next_period_start_past, nextPeriodStart)
                     } else {
-                        "Next assumed period: $nextPeriodStart"
+                        stringResource(id = R.string.next_period_start_future, nextPeriodStart)
                     },
                     fontSize = 16.sp
                 )
                 // Ovulation statistics
                 Text(
-                    text = "\nNumber of ovulations tracked: $ovulationCount",
+                    text = stringResource(id = R.string.ovulation_count, ovulationCount),
                     fontSize = 16.sp
                 )
                 Text(
-                    text = "Average ovulation day: $follicleGrowthDays",
+                    text = stringResource(id = R.string.average_ovulation_day, follicleGrowthDays),
                     fontSize = 16.sp
                 )
                 Text(
                     text = nextPredictedOvulation?.let {
-                        "Next predicted ovulation date: $it"
-                    } ?: "Not enough data to predict next ovulation",
+                        stringResource(id = R.string.next_predicted_ovulation, it)
+                    } ?: stringResource(id = R.string.next_predicted_ovulation_default),
                     fontSize = 16.sp
                 )
-
                 Text(
-                    text = "Average luteal phase length: ${"%.1f".format(avgLutealLength)} days",
+                    text = stringResource(id = R.string.average_luteal_length, avgLutealLength),
                     fontSize = 16.sp
                 )
             }
         },
         confirmButton = {
             Button(onClick = onDismissRequest) {
-                Text("Close")
+                Text(stringResource(id = R.string.close_button))
             }
         },
         modifier = Modifier

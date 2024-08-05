@@ -1,0 +1,123 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">மென்சினேட்டர்</string>
+
+    <!-- Home -->
+    <string name="previous">முந்தைய</string>
+    <string name="next">முந்தைய</string>
+    <string name="period_button">காலம்</string>
+    <string name="symptoms_button">அறிகுறிகள்</string>
+    <string name="ovulation_button">அறிகுறிகள்</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">சேமிக்க அல்லது அகற்ற தேதிகள் இல்லை</string>
+    <string name="successfully_saved_alert">மாற்றங்கள் வெற்றிகரமாக சேமிக்கப்பட்டன</string>
+    <string name="no_data_selected">மாற்றங்கள் வெற்றிகரமாக சேமிக்கப்பட்டன</string>
+    <string name="only_day_alert">ஒரே ஒரு நாள் தான் அண்டவிடுப்பின் முடியும்!</string>
+    <string name="success_saved_ovulation">அண்டவிடுப்பின் வெற்றிகரமாக சேமிக்கப்பட்டது</string>
+    <string name="no_date_selected_ovulation">அண்டவிடுப்பின் தேதி எதுவும் தேர்ந்தெடுக்கப்படவில்லை</string>
+
+
+    <!-- Settings -->
+    <string name="app_settings">பயன்பாட்டு அமைப்புகள்</string>
+    <string name="colors">வண்ணங்கள்</string>
+    <string name="period_color">மாதவிடாய் நிறம்</string>
+    <string name="selection_color">தேர்வு நிறம்</string>
+    <string name="period_selection_color">மாதவிடாய் தேர்வு நிறம்</string>
+    <string name="expected_period_color">எதிர்பார்க்கப்படும் மாதவிடாய் நிறம்</string>
+    <string name="ovulation_color">அண்டவிடுப்பின் நிறம்</string>
+    <string name="expected_ovulation_color">எதிர்பார்க்கப்படும் அண்டவிடுப்பின் நிறம்</string>
+    <string name="reminders">நினைவூட்டல்கள்</string>
+    <string name="days_before_reminder">நினைவூட்டலுக்கு நாட்களுக்கு முன்</string>
+    <string name="other_settings">பிற அமைப்புகள்</string>
+    <string name="luteal_phase_calculation">லூட்டல் கட்ட கணக்கீடு</string>
+    <string name="period_history">கால வரலாறு</string>
+    <string name="ovulation_history">அண்டவிடுப்பின் வரலாறு</string>
+    <string name="language">மொழி</string>
+    <string name="cycle_numbers_show">சுழற்சி எண்களைக் காட்டு</string>
+    <string name="close">மூடு</string>
+    <string name="save">சேமிக்கவும்</string>
+    <!-- Color values -->
+    <string name="color_red">சிவப்பு</string>
+    <string name="color_green">பச்சை</string>
+    <string name="color_blue">நீலம்</string>
+    <string name="color_yellow">மஞ்சள்</string>
+    <string name="color_cyan">சியான்</string>
+    <string name="color_magenta">மெஜந்தா</string>
+    <string name="color_black">கருப்பு</string>
+    <string name="color_white">வெள்ளை</string>
+    <string name="color_darkgray">அடர் சாம்பல்</string>
+    <string name="color_grey">சாம்பல்</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">புள்ளிவிவரங்கள்</string>
+    <string name="period_count">கண்காணிக்கப்பட்ட மாதவிடாய் எண்ணிக்கை: %1$d</string>
+    <string name="average_cycle_length">சராசரி சுழற்சி நீளம்: %1$.1f days</string>
+    <string name="average_period_length">சராசரி மாதவிடாய் நீளம்: %1$.1f days</string>
+    <string name="next_period_start_past">\n\nஊகிக்கப்பட்ட காலக்கெடு கடந்துவிட்டது!</string>
+    <string name="next_period_start_future">அடுத்ததாகக் கருதப்படும் மாதவிடாய்: %1$s</string>
+    <string name="ovulation_count">கண்காணிக்கப்பட்ட அண்டவிடுப்பின் எண்ணிக்கை: %1$d</string>
+    <string name="average_ovulation_day">சராசரி அண்டவிடுப்பின் நாள்: %1$s</string>
+    <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: %1$s</string>
+    <string name="next_predicted_ovulation_default">அடுத்த அண்டவிடுப்பின் கணிக்க போதுமான தரவு இல்லை</string>
+    <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: %1$.1f days</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">அறிகுறி %1$s</string>
+    <string name="create_new_symptom_button">புதிய அறிகுறியை உருவாக்கவும்</string>
+    <string name="save_symptoms_button">அறிகுறிகளைச் சேமிக்கவும்</string>
+    <string name="cancel_button">ரத்து</string>
+    <string name="heavy">கனமான ஓட்டம்</string>
+    <string name="medium">நடுத்தர ஓட்டம்</string>
+    <string name="light">ஒளி ஓட்டம்</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">புதிய அறிகுறியை உருவாக்கவும்</string>
+    <string name="symptom_name_label">அறிகுறி பெயர்</string>
+    <string name="save_button">சேமி</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">அறிகுறிகளை நிர்வகிக்கவும்</string>
+
+
+    <!-- Calender -->
+    <string name="mon">தி</string>
+    <string name="tue">செ</string>
+    <string name="wed">பு</string>
+    <string name="thu">வி</string>
+    <string name="fri">வெ</string>
+    <string name="sat">ச</string>
+    <string name="sun">சூ</string>
+
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">ஏற்றுமதி/இறக்குமதி தரவு</string>
+    <string name="export_button">ஏற்றுமதி</string>
+    <string name="import_button">இறக்குமதி</string>
+    <string name="export_success_toast">ஏற்றுமதி செய்யப்பட்டது %1$s</string>
+    <string name="import_success_toast">கோப்பு வெற்றிகரமாக இறக்குமதி செய்யப்பட்டது</string>
+    <string name="import_failure_toast">கோப்பை இறக்குமதி செய்ய முடியவில்லை</string>
+    <string name="export_path_label">ஏற்றுமதி பாதை: %1$s</string>
+    <string name="import_path_label">இறக்குமதி பாதை: %1$s</string>
+
+
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">அடிக்கடி கேட்கப்படும் கேள்விகள்</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">பயனர் கையேடு</string>
+    <string name="how_to_use">எப்படி உபயோகிப்பது:</string>
+    <string name="select_dates">• தேதிகளைத் தேர்ந்தெடுக்கவும்: ஒரு தேதியைத் தேர்ந்தெடுக்க அல்லது தேர்வுநீக்க அதைத் தட்டவும்.</string>
+    <string name="add_or_remove_dates">• காலத்திற்கான தேதிகளைச் சேர்க்கவும் அல்லது அகற்றவும்: தேதிகளைத் தேர்ந்தெடுத்த பிறகு \'தேதிகளைச் சேர் அல்லது அகற்று\' பொத்தானைக் கிளிக் செய்யவும்.</string>
+    <string name="symptoms">• அறிகுறிகள்: தேர்ந்தெடுக்கப்பட்ட தேதிக்கான அறிகுறிகளைப் பார்க்க அல்லது சேர்க்க \'அறிகுறிகள்\' பொத்தானைக் கிளிக் செய்யவும்.</string>
+    <string name="ovulation">• அண்டவிடுப்பின்: ஒரு தேதியைத் தேர்ந்தெடுத்து, அண்டவிடுப்பின் பொத்தானைக் கிளிக் செய்யவும். அகற்ற, தேதியைத் தேர்ந்தெடுத்து மீண்டும் பொத்தானை அழுத்தவும்.</string>
+    <string name="statistics">• புள்ளி விவரங்கள்: \'பர்கர் மெனு\' என்பதைக் கிளிக் செய்து புள்ளிவிவரங்களைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="import_export">• இறக்குமதி/ஏற்றுமதி: உங்கள் தரவை இறக்குமதி செய்ய அல்லது ஏற்றுமதி செய்ய \'இறக்குமதி/ஏற்றுமதி\' பொத்தானைக் கிளிக் செய்யவும். புதிய சாதனத்திற்கு தரவை நகர்த்தும்போது இது அவசியம்!</string>
+    <string name="calculations">• கணக்கீடுகள்: \nசராசரி சுழற்சி நீளம் மற்றும் காலத்தின் நீளத்தின் படி காலங்கள் கணக்கிடப்படுகின்றன.\nசராசரி லுடீயல் கட்டத்தைப் பயன்படுத்தி காலங்களை கணக்கிடலாம். கணக்கீடுகள் கடைசி 5 சுழற்சிகளைப் பார்த்து, சராசரி லுடீயல் கட்டத்தை உருவாக்கி, காலத்தைக் கணக்கிட அதைப் பயன்படுத்தும். இது அமைப்புகளில் செயல்படுத்தப்படுகிறது.\nசராசரி அண்டவிடுப்பின் சுழற்சி நீளத்தின்படி அண்டவிடுப்பின் கணக்கிடப்படுகிறது.</string>
+    <string name="features_coming_soon">அம்சங்கள் விரைவில்:</string>
+    <string name="upcoming_features">• கருவிப்பட்டியில் வரவிருக்கும் காலத்திற்கான நினைவூட்டல். (இது அமைப்புகளில் காட்டப்பட்டுள்ளது, ஆனால் செயல்படுத்தப்படவில்லை)\n• புதிய பயனர் இடைமுகம் (நான் மனநிலையில் இருக்கும்போது).\n• பிற சிறிய UI மேம்பாடுகள்</string>
+    <string name="our_story_header">நமது கதை</string>
+    <string name="our_story">எங்கள் தரவை பெரிய நிறுவனங்களுக்கு விற்று சோர்வடைந்த இரண்டு பெண்கள் நாங்கள். எங்கள் ஆப்ஸ் உங்கள் எல்லா தரவையும் உங்கள் சாதனத்தில் உள்ளூரில் சேமித்து வைக்கிறது மேலும் எங்களிடம் &lt;b&gt;எந்தவிதமான அணுகலும் இல்லை&lt;/b&gt;.\nஉங்கள் தனியுரிமையை நாங்கள் மதிக்கிறோம் மற்றும் எந்த தனிப்பட்ட தகவலையும் சேமிக்கவோ அல்லது பகிரவோ மாட்டோம். இந்த செயலியை அறிமுகப்படுத்தியதில் இருந்து நாங்கள் வளர்ந்துள்ளோம், இப்போது இந்த செயலியில் ஆர்வமுள்ள மற்றும் எங்களுக்கு உதவ விரும்பும் நபர்களுடன் எங்கள் சொந்த டிஸ்கார்ட் சேவையகத்தை வைத்திருக்கிறோம்!\n\nஇங்கே டிஸ்கார்டில் எங்களுடன் சேரவும்: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">மறுப்பு:</string>
+    <string name="disclaimer">• இது ஒரு பொழுதுபோக்கு திட்டம் மற்றும் மருத்துவ பயன்பாட்டிற்காக அல்ல. இதை நாம் நமது தேவைக்காக மட்டுமே செய்கிறோம். ஆனால் நாங்கள் யோசனைகளையும் கோரிக்கைகளையும் வரவேற்கிறோம். டிஸ்கார்டில் எங்களுடன் சேரவும் அல்லது எங்களுக்கு மின்னஞ்சல் அனுப்பவும்:\nmensinator.app@gmail.com</string>
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">மூடு</string>
+</resources>

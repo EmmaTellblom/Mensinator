@@ -9,19 +9,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
+import androidx.compose.ui.res.stringResource
+
+
+
+
 
 @Composable
 fun SymptomsDialog(
-    date: LocalDate, // last selected date from the calendar
+    date: LocalDate,
     symptoms: List<Symptom>,
     dbHelper: PeriodDatabaseHelper,
     onSave: (List<Symptom>) -> Unit,
     onCancel: () -> Unit,
-    onCreateNewSymptom: () -> Unit  // Added callback for the new button
+    onCreateNewSymptom: () -> Unit
 ) {
     var selectedSymptoms by remember { mutableStateOf(emptySet<Symptom>()) }
 
-    // LaunchedEffect to fetch symptom IDs and initialize selectedSymptoms
     LaunchedEffect(date) {
         val symptomIdsForDate = dbHelper.getSymptomsFromDate(date).toSet()
         selectedSymptoms = symptoms.filter { it.id in symptomIdsForDate }.toSet()
@@ -30,11 +34,13 @@ fun SymptomsDialog(
     AlertDialog(
         onDismissRequest = { onCancel() },
         title = {
-            Text(text = "Symptoms for $date")  // Display the date in the dialog title
+            Text(text = stringResource(id = R.string.symptoms_dialog_title, date))
         },
         text = {
             Column {
                 symptoms.forEach { symptom ->
+                    val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
+                    val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -53,18 +59,17 @@ fun SymptomsDialog(
                             onCheckedChange = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = symptom.name, fontSize = 16.sp)
+                        Text(text = symptomDisplayName, fontSize = 16.sp)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
-                        onCreateNewSymptom()  // Call the new button click handler
+                        onCreateNewSymptom()
                     },
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Create New Symptom")
+                    Text(text = stringResource(id = R.string.create_new_symptom_button))
                 }
             }
         },
@@ -75,7 +80,7 @@ fun SymptomsDialog(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Save symptoms")
+                Text(text = stringResource(id = R.string.save_symptoms_button))
             }
         },
         dismissButton = {
@@ -85,11 +90,12 @@ fun SymptomsDialog(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cancel")
+                Text(text = stringResource(id = R.string.cancel_button))
             }
         }
     )
 }
+
 
 @Composable
 fun CreateNewSymptomDialog(
@@ -98,14 +104,16 @@ fun CreateNewSymptomDialog(
     onCancel: () -> Unit
 ) {
     var symptomName by remember { mutableStateOf(newSymptom) }
+    //val symptomKey = ResourceMapper.getStringResourceId(symptomName)
 
     AlertDialog(
         onDismissRequest = { onCancel() },
         title = {
-            Text(text = "Create New Symptom")
+            Text(text = stringResource(id = R.string.create_new_symptom_dialog_title))
         },
         text = {
             TextField(
+                //value = symptomKey?.let { stringResource(id = it) } ?: "Not Found",
                 value = symptomName,
                 onValueChange = { symptomName = it },
                 label = { Text("Symptom Name") }
@@ -117,7 +125,7 @@ fun CreateNewSymptomDialog(
                     onSave(symptomName)
                 }
             ) {
-                Text("Save")
+                Text(stringResource(id = R.string.save_button))
             }
         },
         dismissButton = {
@@ -126,7 +134,7 @@ fun CreateNewSymptomDialog(
                     onCancel()
                 }
             ) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel_button))
             }
         }
     )

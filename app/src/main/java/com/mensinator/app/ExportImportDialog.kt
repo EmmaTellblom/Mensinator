@@ -18,6 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import java.io.File
 import java.io.FileOutputStream
+import androidx.compose.ui.res.stringResource
+
+
 
 @Composable
 fun ExportImportDialog(
@@ -30,11 +33,13 @@ fun ExportImportDialog(
 
     val exportPath = remember { mutableStateOf(exportImport.getDocumentsExportFilePath()) }
     val importPath = remember { mutableStateOf("") }
+    val impSuccess = stringResource(id = R.string.import_success_toast)
+    val impFailure = stringResource(id = R.string.import_failure_toast)
 
     val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             val inputStream = context.contentResolver.openInputStream(it)
-            val file = File(ExportImport().getDefaultImportFilePath(context))
+            val file = File(exportImport.getDefaultImportFilePath(context))
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
@@ -42,10 +47,10 @@ fun ExportImportDialog(
                 // Call the import function
                 onImportClick(importPath.value)
                 // Show success toast
-                Toast.makeText(context, "File was imported successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 // Show error toast
-                Toast.makeText(context, "Failed to import file", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
                 Log.d("ExportImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
             } finally {
                 // Clean up
@@ -57,32 +62,33 @@ fun ExportImportDialog(
         }
     }
 
+    val expSuccess = stringResource(id = R.string.export_success_toast, exportPath.value)
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(onClick = {
                 onExportClick(exportPath.value)
-                Toast.makeText(context, "Exported to ${exportPath.value}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, expSuccess, Toast.LENGTH_SHORT).show()
                 onDismissRequest()
             }) {
-                Text("Export")
+                Text(stringResource(id = R.string.export_button))
             }
         },
         dismissButton = {
             Button(onClick = {
                 importLauncher.launch("application/json")
             }) {
-                Text("Import")
+                Text(stringResource(id = R.string.import_button))
             }
         },
         title = {
-            Text("Export/Import Data")
+            Text(stringResource(id = R.string.export_import_title))
         },
         text = {
             Column {
-                Text("Export Path: ${exportPath.value}")
+                Text(stringResource(id = R.string.export_path_label, exportPath.value))
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Import Path: ${importPath.value}")
+                Text(stringResource(id = R.string.import_path_label, importPath.value))
             }
         }
     )
