@@ -141,7 +141,7 @@ object DatabaseUtils {
             VALUES
             ('period_history','Period history','5','3','NO'),
             ('ovulation_history','Ovulation history','5','3','NO'),
-            ('lang', 'Language', 'EN', '3', 'LI'),
+            ('lang', 'Language', 'en', '3', 'LI'),
             ('cycle_numbers_show','Show cycle numbers','1','3','SW')
         """)
 

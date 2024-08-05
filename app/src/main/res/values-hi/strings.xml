@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
     <resources>
         <!-- App Name -->
         <string name="app_name">Mensinator</string>
@@ -124,5 +123,3 @@
         <!-- Universal/ Repeated Strings -->
         <string name="close_button">Close</string>
     </resources>
-
-</resources>

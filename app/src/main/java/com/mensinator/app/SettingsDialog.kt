@@ -100,10 +100,10 @@ fun SettingsDialog(
     // When more languages have been translated, add them here
     val predefinedLang = mapOf(
         "English" to "en",
-        "Swedish" to "sv",
+        "Svenska" to "sv",
         "Tamil" to "ta",
-        "Hindi" to "hi"
-        /*"Chinese" to "zh",
+        /*"Hindi" to "hi"
+        "Chinese" to "zh",
         "Spanish" to "es",
         "Bengali" to "bn",
         "Portuguese" to "pt",
@@ -178,9 +178,9 @@ fun SettingsDialog(
                                             onDismissRequest = { expanded = false }
                                         ) {
                                             predefinedColors.forEach { (name, _) ->
-                                                val Colors = ResourceMapper.getStringResourceId(name)
+                                                val colors = ResourceMapper.getStringResourceId(name)
                                                 DropdownMenuItem(
-                                                    text = { Text(Colors?.let { stringResource(id = it) } ?:"Not found",) },
+                                                    text = { Text(colors?.let { stringResource(id = it) } ?:"Not found") },
                                                     onClick = {
                                                         selectedColorName = name
                                                         savedSettings = savedSettings.map {
@@ -309,9 +309,12 @@ fun SettingsDialog(
                                     }
                                     else if (setting.type == "LI" && setting.key == "lang") {
                                         var expanded by remember { mutableStateOf(false) }
-                                        var selectedLang by remember { mutableStateOf(
-                                            predefinedLang.entries.find { it.value == setting.value }?.key ?: "English"
-                                        ) }
+                                        var selectedLang by remember {
+                                            mutableStateOf(
+                                                predefinedLang.entries.find { it.value == setting.value }?.key
+                                                    ?: throw IllegalStateException("Locale code ${setting.value} not found in predefined languages.")
+                                            )
+                                        }
 
                                         Box(modifier = Modifier.alignByBaseline()) {
                                             TextButton(onClick = { expanded = !expanded }) {
@@ -330,11 +333,10 @@ fun SettingsDialog(
                                                                 if (it.key == setting.key) it.copy(value = code) else it
                                                             }
                                                             expanded = false
-                                                            AppCompatDelegate.setApplicationLocales(
-                                                                LocaleListCompat.forLanguageTags(
-                                                                    predefinedLang[name]
-                                                                )
-                                                            )
+                                                            // Update application locales
+//                                                            AppCompatDelegate.setApplicationLocales(
+//                                                                LocaleListCompat.forLanguageTags(code)
+//                                                            )
                                                         }
                                                     )
                                                 }
@@ -354,6 +356,13 @@ fun SettingsDialog(
 
                 savedSettings.forEach { setting ->
                     dbHelper.updateSetting(setting.key, setting.value)
+                    // Update the application locale if the language setting has changed
+                    if (setting.key == "lang") {
+                        val newLocale = setting.value
+                        AppCompatDelegate.setApplicationLocales(
+                            LocaleListCompat.forLanguageTags(newLocale)
+                        )
+                    }
                     Log.d("SettingsDialog", "Updated setting ${setting.key} to ${setting.value}")
                     if (setting.key == "reminder_days" && setting.value.toInt() > 0) {
                         Log.d("SettingsDialog", "Reminder days set and value > 0")

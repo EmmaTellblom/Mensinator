@@ -55,9 +55,12 @@ fun ManageSymptom(
         "White" to Color.White,
         "Dark Gray" to Color.DarkGray,
         "Light Gray" to Color.LightGray,
+    )
+
+    val predefinedSymptoms = listOf(
         "Heavy_Flow" to R.string.heavy,
         "Medium_Flow" to R.string.medium,
-        "Light_Flow" to R.string.light,
+        "Light_Flow" to R.string.light
     )
 
     AlertDialog(
@@ -83,7 +86,7 @@ fun ManageSymptom(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = colorKey?.let { stringResource(id = it) } ?:"Not found", fontSize = 16.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Left)
+                        Text(text = predefinedSymptoms.find { it.first == symptom.name }?.second?.let { stringResource(id = it) } ?:"Not found", textAlign = androidx.compose.ui.text.style.TextAlign.Left)
                         Switch(
                             checked = symptom.active == 1,
                             onCheckedChange = { checked ->
