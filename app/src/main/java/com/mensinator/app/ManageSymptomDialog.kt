@@ -25,9 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
+
+
+//Maps Database keys to res/strings.xml for multilanguage support
 @Composable
 fun ManageSymptom(
     onDismissRequest: () -> Unit,
@@ -49,13 +54,16 @@ fun ManageSymptom(
         "Black" to Color.Black,
         "White" to Color.White,
         "Dark Gray" to Color.DarkGray,
-        "Light Gray" to Color.LightGray
+        "Light Gray" to Color.LightGray,
+        "Heavy_Flow" to R.string.heavy,
+        "Medium_Flow" to R.string.medium,
+        "Light_Flow" to R.string.light,
     )
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text(text = "Manage Symptoms", fontSize = 20.sp)
+            Text(text = stringResource(id = R.string.manage_symptoms), fontSize = 20.sp)
         },
         text = {
             Column(
@@ -67,12 +75,15 @@ fun ManageSymptom(
                 savedSymptoms.forEach { symptom ->
                     var expanded by remember { mutableStateOf(false) }
                     var selectedColorName by remember { mutableStateOf(symptom.color) }
+                    val colorKey = ResourceMapper.getStringResourceId(selectedColorName)
+                    val resKey = ResourceMapper.getStringResourceId(symptom.name)
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = symptom.name, fontSize = 16.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Left)
+                        Text(text = colorKey?.let { stringResource(id = it) } ?:"Not found", fontSize = 16.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Left)
                         Switch(
                             checked = symptom.active == 1,
                             onCheckedChange = { checked ->
@@ -90,7 +101,7 @@ fun ManageSymptom(
                                 .clickable { expanded = true }
                         ) {
                             Text(
-                                text = selectedColorName,
+                                text = colorKey?.let { stringResource(id = it) } ?:"Not found",
                                 textAlign = androidx.compose.ui.text.style.TextAlign.Left
                             )
                         }
@@ -100,8 +111,10 @@ fun ManageSymptom(
                             onDismissRequest = { expanded = false }
                         ) {
                             predefinedColors.forEach { (colorName) ->
+                                val colorKey = ResourceMapper.getStringResourceId(colorName)
+
                                 DropdownMenuItem(
-                                    { Text(text = colorName, textAlign = androidx.compose.ui.text.style.TextAlign.Left) },
+                                    { Text(text = colorKey?.let { stringResource(id = it) } ?:"Not found", textAlign = androidx.compose.ui.text.style.TextAlign.Left) },
                                         onClick = {
                                             selectedColorName = colorName
                                             expanded = false
@@ -126,12 +139,12 @@ fun ManageSymptom(
                 onSave()
                 onDismissRequest()  // Close the dialog
             }) {
-                Text("Save")
+                Text(stringResource(id = R.string.save))
             }
         },
         dismissButton = {
             Button(onClick = onDismissRequest) {
-                Text("Close")
+                Text(stringResource(id = R.string.close))
             }
         },
         // To adjust the width of the AlertDialog based on screen size

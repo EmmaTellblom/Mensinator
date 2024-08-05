@@ -15,6 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+
+
+
+
 
 @Composable
 fun FAQDialog(
@@ -25,7 +30,7 @@ fun FAQDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,  // Call the dismiss callback when dialog is dismissed
         title = {
-            Text(text = "Frequently Asked Questions")
+            Text(text = stringResource(id = R.string.faq_title))
         },
         text = {
             Column(
@@ -36,7 +41,7 @@ fun FAQDialog(
             ) {
                 // User Manual Header
                 Text(
-                    text = "User Manual",
+                    text = stringResource(id = R.string.user_manual_header),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -44,79 +49,67 @@ fun FAQDialog(
 
                 // How to Use
                 Text(
-                    text = "How to Use:",
+                    text = stringResource(id = R.string.how_to_use),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "• Select Dates: Tap on a date to select or deselect it.",
+                    text = stringResource(id = R.string.select_dates),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Add or Remove Dates for Period: Click the 'Add or Remove Dates' button after selecting dates.",
+                    text = stringResource(id = R.string.add_or_remove_dates),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Symptoms: Click the 'Symptoms' button to view or add symptoms for the selected date.",
+                    text = stringResource(id = R.string.symptoms),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Ovulation: Select a single date and click the ovulation button. To remove, select date and press button again.",
+                    text = stringResource(id = R.string.ovulation),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Statistics: Click the 'Burger menu' and select statistics.",
+                    text = stringResource(id = R.string.statistics),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "• Import/Export: Click the 'Import/Export' button to import or export your data. This is a MUST when moving the data to a new device!",
+                    text = stringResource(id = R.string.import_export),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
                 Text(
-                    text = "• Calculations: " +
-                            "\nPeriods are calculated according to average cycle length and period length." +
-                            "\nPeriods _can_ be calculated using average luteal phase. The calculations will then look at the last 5 cycles" +
-                            " to make an average lutal phase and use that to calculate the period. This is activated in the settings" +
-                            "\nOvulation is calculated according to average ovulation cycle length.",
+                    text = stringResource(id = R.string.calculations),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Text(
-                    text = "\nFeatures Coming Soon:",
+                    text = stringResource(id = R.string.features_coming_soon),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "• Reminder for upcoming period to the toolbar. (This is shown in settings but not implemented )\n" +
-                            "• New user interface (when I'm in the mood).\n" +
-                            "• Other small UI improvements",
+                    text = stringResource(id = R.string.upcoming_features),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
 
                 // Our Story Header
                 Text(
-                    text = "Our Story",
+                    text = stringResource(id = R.string.our_story_header),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = "We are two women who were tired of selling our data to big corporations. " +
-                            "Our app stores all your data locally on your device and we have **no access to it whatsoever**.\n" +
-                            "We value your privacy and do not save or share any personal information." +
-                            "Since launching this app we have grown and now have our own Discord-server with people who are passionate about this app and want to help us out!"+
-                            "\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN",
+                    text = stringResource(id = R.string.our_story),
                     style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(16.dp)) // Space between sections
 
                 // Disclaimer Header
                 Text(
-                    text = "Disclaimer:",
+                    text = stringResource(id = R.string.disclaimer_header),
                     style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "• This is a hobby-project and not intended for medical use. We are simply doing this for our own needs." +
-                            "But we do welcome ideas and requests, join us on Discord or send us an email:\n" +
-                            "mensinator.app@gmail.com",
+                    text = stringResource(id = R.string.disclaimer),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -125,7 +118,7 @@ fun FAQDialog(
             Button(
                 onClick = onDismissRequest  // Call the dismiss callback when the button is clicked
             ) {
-                Text("Close")
+                Text(stringResource(id = R.string.close_button))
             }
         },
         modifier = Modifier

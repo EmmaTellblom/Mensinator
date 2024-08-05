@@ -7,12 +7,25 @@ import kotlin.math.roundToInt
 
 // TODO REMOVE noPeriods+noOvulations USE GLOBAL VARIABLES INSTEAD
 
+/**
+ * The `Calculations` class provides methods to calculate menstrual cycle related data
+ * such as next period date, average cycle length, and average luteal length.
+ *
+ * @param context The context used to access the database.
+ */
+
 class Calculations (context: Context){
     private val dbHelper = PeriodDatabaseHelper(context)
     private val periodHistory = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
     private val ovulationHistory = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
     private val lutealCalculation = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
 
+
+    /**
+     * Calculates the next expected period date.
+     *
+     * @return The next expected period date as a string.
+     */
     fun calculateNextPeriod(): String {
         val expectedPeriodDate: String
 
@@ -21,6 +34,7 @@ class Calculations (context: Context){
             Log.d("TAG", "Advanced calculation")
             expectedPeriodDate = advancedNextPeriod()
         } else{
+            // Basic calculation using latest period start dates
             Log.d("TAG", "Basic calculation")
             //do basic calculation here
             //Use X latest periodstartdates (will return list of X+1)
@@ -41,6 +55,12 @@ class Calculations (context: Context){
         return expectedPeriodDate
     }
 
+
+    /**
+     * Advanced calculation for the next expected period date using ovulation data.
+     *
+     * @return The next expected period date as a string.
+     */
     private fun advancedNextPeriod(): String {
         // Get the list of the latest ovulation dates
         val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(ovulationHistory)
@@ -91,6 +111,11 @@ class Calculations (context: Context){
     }
 
     //Returns average no of days from first last period to ovulation for passed X periods
+    /**
+     * Calculates the average number of days from the first day of the last period to ovulation.
+     *
+     * @return The average follicular phase length as a string.
+     */
     fun averageFollicalGrowthInDays(): String {
         val ovulationDates = dbHelper.getXLatestOvulationsDates(ovulationHistory)
         if (ovulationDates.isEmpty()) {
@@ -113,6 +138,11 @@ class Calculations (context: Context){
 
     // Takes the X (periodHistory) latest period start dates and calculates the average cycle length
     // X comes from app_settings in the database
+    /**
+     * Calculates the average cycle length using the latest period start dates.
+     * X comes from app_settings in the database
+     * @return The average cycle length as a double.
+     */
     fun averageCycleLength(): Double{
         val periodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
@@ -137,6 +167,12 @@ class Calculations (context: Context){
         return cycleLengthAverage
     }
 
+
+    /**
+     * Calculates the average period length using the latest period start dates.
+     *
+     * @return The average period length as a double.
+     */
     fun averagePeriodLength(): Double {
         val daysInPeriod = mutableListOf<Int>()
 
@@ -162,6 +198,11 @@ class Calculations (context: Context){
         }
     }
 
+    /**
+     * Calculates the average luteal phase length using the latest ovulation dates.
+     *
+     * @return The average luteal phase length as a double.
+     */
     // Takes the X (ovulationHistory) latest ovulation dates and calculates the average luteal length
     // X comes from app_settings in the database
     fun averageLutealLength(): Double{
@@ -192,6 +233,13 @@ class Calculations (context: Context){
         return lutealLengths.average()
     }
 
+
+    /**
+     * Calculates the luteal phase length for a specific cycle.
+     *
+     * @param date The ovulation date.
+     * @return The luteal phase length as an integer.
+     */
     // This function is used to get the luteal length of a cycle.
     // Date input should only be ovulation date
     // To be used with setting for calculating periods according to ovulation

@@ -23,6 +23,8 @@ import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -30,6 +32,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
+import androidx.compose.ui.res.stringResource
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -192,8 +195,18 @@ fun CalendarScreen() {
         updateCalculations()
     }
 
-    val daysOfWeek = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+    //List of Days of Week
+    val daysOfWeek = listOf(
+        stringResource(id = R.string.mon),
+        stringResource(id = R.string.tue),
+        stringResource(id = R.string.wed),
+        stringResource(id = R.string.thu),
+        stringResource(id = R.string.fri),
+        stringResource(id = R.string.sat),
+        stringResource(id = R.string.sun)
+    )
 
+    //UI Implementation
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -205,10 +218,18 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
             }) {
-                Text(text = "Previous")
+                Text(stringResource(id = R.string.previous))
             }
+            // Get the current locale from AppCompatDelegate
+            val localeList = AppCompatDelegate.getApplicationLocales()
+            val currentLocale = if (localeList.isEmpty) {
+                Locale.ENGLISH // Fallback to English if locale list is empty
+            } else {
+                localeList[0] // Retrieve the first locale from the list
+            }
+
             Text(
-                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)} ${currentMonth.value.year}",
+                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
@@ -216,7 +237,7 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
-                Text(text = "Next")
+                Text(text = stringResource(id = R.string.next))
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -409,10 +430,12 @@ fun CalendarScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val emptyClick = stringResource(id = R.string.statistics_title)
+        val successSaved = stringResource(id = R.string.successfully_saved_alert)
         Button(
             onClick = {
                 if (selectedDates.value.isEmpty()) {
-                    Toast.makeText(context, "No dates to save or remove", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, emptyClick, Toast.LENGTH_SHORT).show()
                 } else {
                     for (date in selectedDates.value) {
                         if (date in periodDates.value) {
@@ -447,7 +470,7 @@ fun CalendarScreen() {
                     {
                         sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
                     }
-                    Toast.makeText(context, "Changes saved successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
                 }
             },
             enabled = isPeriodsButtonEnabled,  // Set the state of the Periods button
@@ -455,16 +478,17 @@ fun CalendarScreen() {
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = "Period")
+            Text(text = stringResource(id = R.string.period_button))
         }
 
+        val noDataSelected = stringResource(id = R.string.no_data_selected)
         Button(
             onClick = {
                 //selectedDate = selectedDates.value.firstOrNull()  // Select the first date as the date for the SymptomsDialog
                 if (selectedDates.value.isNotEmpty()) {
                     showSymptomsDialog = true
                 } else {
-                    Toast.makeText(context, "No dates selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,noDataSelected , Toast.LENGTH_SHORT).show()
                 }
             },
             enabled = isSymptomsButtonEnabled,  // Set the state of the Symptoms button
@@ -472,24 +496,28 @@ fun CalendarScreen() {
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = "Symptoms")
+            Text(text = stringResource(id = R.string.symptoms_button))
         }
 
         //ovulation starts here
+        val onlyDayAlert = stringResource(id = R.string.only_day_alert)
+        val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
+        val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
+
         Button(
             onClick = {
                 if(selectedDates.value.size > 1){
-                    Toast.makeText(context, "Only one day can be ovulation!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, onlyDayAlert, Toast.LENGTH_SHORT).show()
                 }
                 else if(selectedDates.value.size == 1){
                     val date = selectedDates.value.first()
                     dbHelper.updateOvulationDate(date)
                     refreshOvulationDates()
 
-                    Toast.makeText(context, "Ovulation saved successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
                 }
                 else{
-                    Toast.makeText(context, "No date selected for ovulation", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
                 }
                 selectedDates.value = emptySet()
                 updateCalculations()
@@ -504,7 +532,7 @@ fun CalendarScreen() {
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = "Ovulation")
+            Text(text = stringResource(id = R.string.ovulation_button))
         }
 
         // Show the SymptomsDialog

@@ -11,6 +11,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
+
+// Define your custom colors for dark and light themes
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -33,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+// Composable function to apply the custom theme
 @Composable
 fun MensinatorTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

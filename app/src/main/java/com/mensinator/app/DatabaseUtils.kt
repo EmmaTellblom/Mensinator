@@ -26,7 +26,7 @@ object DatabaseUtils {
             )
         """)
 
-        val predefinedSymptoms = listOf("Heavy Flow", "Medium Flow", "Light Flow")
+        val predefinedSymptoms = listOf("Heavy_Flow", "Medium_Flow", "Light_Flow")
         predefinedSymptoms.forEach { symptom ->
             db.execSQL(
                 """
