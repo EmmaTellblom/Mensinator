@@ -57,12 +57,6 @@ fun ManageSymptom(
         "Light Gray" to Color.LightGray,
     )
 
-    val predefinedSymptoms = listOf(
-        "Heavy_Flow" to R.string.heavy,
-        "Medium_Flow" to R.string.medium,
-        "Light_Flow" to R.string.light
-    )
-
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
@@ -79,14 +73,17 @@ fun ManageSymptom(
                     var expanded by remember { mutableStateOf(false) }
                     var selectedColorName by remember { mutableStateOf(symptom.color) }
                     val colorKey = ResourceMapper.getStringResourceId(selectedColorName)
-                    val resKey = ResourceMapper.getStringResourceId(symptom.name)
+                    //val resKey = ResourceMapper.getStringResourceId(symptom.name)
+
+                    val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
+                    val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(text = predefinedSymptoms.find { it.first == symptom.name }?.second?.let { stringResource(id = it) } ?:"Not found", textAlign = androidx.compose.ui.text.style.TextAlign.Left)
+                        Text(text = symptomDisplayName, textAlign = androidx.compose.ui.text.style.TextAlign.Left)
                         Switch(
                             checked = symptom.active == 1,
                             onCheckedChange = { checked ->

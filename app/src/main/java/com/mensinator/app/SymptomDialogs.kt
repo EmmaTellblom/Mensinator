@@ -40,6 +40,7 @@ fun SymptomsDialog(
             Column {
                 symptoms.forEach { symptom ->
                     val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
+                    val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -58,7 +59,7 @@ fun SymptomsDialog(
                             onCheckedChange = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = symptomKey?.let { stringResource(id = it) } ?: "Not Found", fontSize = 16.sp)
+                        Text(text = symptomDisplayName, fontSize = 16.sp)
                     }
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -103,7 +104,7 @@ fun CreateNewSymptomDialog(
     onCancel: () -> Unit
 ) {
     var symptomName by remember { mutableStateOf(newSymptom) }
-    val symptomKey = ResourceMapper.getStringResourceId(symptomName)
+    //val symptomKey = ResourceMapper.getStringResourceId(symptomName)
 
     AlertDialog(
         onDismissRequest = { onCancel() },
@@ -112,7 +113,8 @@ fun CreateNewSymptomDialog(
         },
         text = {
             TextField(
-                value = symptomKey?.let { stringResource(id = it) } ?: "Not Found",
+                //value = symptomKey?.let { stringResource(id = it) } ?: "Not Found",
+                value = symptomName,
                 onValueChange = { symptomName = it },
                 label = { Text("Symptom Name") }
             )
