@@ -1,0 +1,125 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+
+    <!-- Home -->
+    <string name="previous">Înapoi</string>
+    <string name="next">Înainte</string>
+    <string name="period_button">Menstruație</string>
+    <string name="symptoms_button">Simptome</string>
+    <string name="ovulation_button">Ovulație</string>
+   
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Nu există zile de salvat sau șters</string>
+    <string name="successfully_saved_alert">Schimbările au fost salvate cu succes</string>
+    <string name="no_data_selected">Nicio zi selectată</string>
+    <string name="only_day_alert">Ovulația poate fi doar într-o zi!</string>
+    <string name="success_saved_ovulation">Ovulația a fost salvată cu succes</string>
+    <string name="no_date_selected_ovulation">Nicio zi selectată pentru ovulație</string>
+
+    <!-- Settings -->
+    <string name="app_settings">Setările Aplicației</string>
+    <string name="colors">Culori</string>
+    <string name="period_color">Menstruație</string>
+    <string name="selection_color">Selecție</string>
+    <string name="period_selection_color">Selectare menstruație</string>
+    <string name="expected_period_color">Ziua estimată a menstruației</string>
+    <string name="ovulation_color">Ovulație</string>
+    <string name="expected_ovulation_color">Ziua estimată a ovulației</string>
+    <string name="reminders">Memento-uri</string>
+    <string name="days_before_reminder">Zile rămase</string>
+    <string name="other_settings">Alte setări</string>
+    <string name="luteal_phase_calculation">Calculare fază luteală</string>
+    <string name="period_history">Istoric menstrual</string>
+    <string name="ovulation_history">Istoric ovulație</string>
+    <string name="language">Limbă</string>
+    <string name="cycle_numbers_show">Arată numărul ciclurilor</string>
+    <string name="close">Închide</string>
+    <string name="save">Salvează</string>
+    <!-- Color values -->
+    <string name="color_red">Roșu</string>
+    <string name="color_green">Verde</string>
+    <string name="color_blue">Albastru</string>
+    <string name="color_yellow">Galben</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_black">Negru</string>
+    <string name="color_white">Alb</string>
+    <string name="color_darkgray">Gri închis</string>
+    <string name="color_grey">Gri</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statistici</string>
+    <string name="period_count">Numărul ciclurilor menstruale introduse: %1$d</string>
+    <string name="average_cycle_length">Durata medie a ciclului: %1$.1f zile</string>
+    <string name="average_period_length">Durata medie a menstruației: %1$.1f zile</string>
+    <string name="next_period_start_past">Ziua estimată a următoarei menstruații: %1$s \n\nData estimată a trecut!</string>
+    <string name="next_period_start_future">Ziua estimată a următoarei menstruații: %1$s</string>
+    <string name="ovulation_count">Numărul de ovulații introduse: %1$d</string>
+    <string name="average_ovulation_day">Ziua medie de ovulație: %1$s</string>
+    <string name="next_predicted_ovulation">Ziua estimată a următoarei ovulații: %1$s</string>
+    <string name="next_predicted_ovulation_default">Date insuficiente pentru a prezice</string>
+    <string name="average_luteal_length">Durata medie a fazei luteale: %1$.1f zile</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Simptome la data %1$s</string>
+    <string name="create_new_symptom_button">Adaugă un simptom nou</string>
+    <string name="save_symptoms_button">Salvează simptomele</string>
+    <string name="cancel_button">Anulează</string>
+    <string name="heavy">Flux abundent</string>
+    <string name="medium">Flux moderat</string>
+    <string name="light">Flux slab</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Adaugă un simptom nou</string>
+    <string name="symptom_name_label">Numele simptomului</string>
+    <string name="save_button">Salvează</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Gestionează simptomele</string>
+
+
+    <!-- Calender -->
+    <string name="mon">Lun</string>
+    <string name="tue">Mar</string>
+    <string name="wed">Mie</string>
+    <string name="thu">Joi</string>
+    <string name="fri">Vin</string>
+    <string name="sat">Sâm</string>
+    <string name="sun">Dum</string>
+
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">Exportă/Importă datele</string>
+    <string name="export_button">Exportă</string>
+    <string name="import_button">Importă</string>
+    <string name="export_success_toast">Exportat la: %1$s</string>
+    <string name="import_success_toast">Fișierul a fost importat cu succes</string>
+    <string name="import_failure_toast">Nu s-a putut importa fișierul</string>
+    <string name="export_path_label">Cale fișiere exportate: %1$s</string>
+    <string name="import_path_label">Cale fișiere importate: %1$s</string>
+
+
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Întrebări frecvente</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">Manualul utilizatorului</string>
+    <string name="how_to_use">Cum se folosește aplicația:</string>
+    <string name="select_dates">• Selectează zilele: Apasă pe o zi pentru a o selecta sau deselecta.</string>
+    <string name="add_or_remove_dates">• Adaugă sau șterge zile menstruale: Apasă pe butonul \'Adaugă sau șterge zile\' după ce ai selectat zilele.</string>
+    <string name="symptoms">• Simptome: Apasă pe butonul \'Simptome\' pentru a vizualiza sau adăuga simptome pentru perioada selectată.</string>
+    <string name="ovulation">• Ovulație: Selectează o singură zi și apasă pe butonul \'Ovulație\'. Pentru a șterge, selectează ziua și apasă butonul din nou.</string>
+    <string name="statistics">• Statistici: Apasă pe \'Butonul de meniu\' și selectează statisticile.</string>
+    <string name="import_export">• Importă/Exportă: Apasă pe butonul \'Importă/Exportă\' pentru a importa sau exporta datele tale. Acest pas este NECESAR la mutarea datelor într-un telefon nou!</string>
+    <string name="calculations">• Estimări: \nMenstruațiile sunt calculate în funcție de durata medie a ciclurilor menstruale și a menstruației.\nMenstruațiile pot fi calculate folosind media fazelor luteale. Vor fi luate în considerare ultimele 5 cicluri pentru a face o medie a fazei luteale din care se calculează perioada menstruală. Acest lucru se activează din setări.\nOvulația este calculată în raport cu durata medie a ciclului menstrual.</string>
+    <string name="features_coming_soon">Opțiuni viitoare:</string>
+    
+    <string name="upcoming_features">• Memento pentru începerea menstruației următoare în bara de instrumente. (Acesta este afișat în setări dar nu este implementat) • Aspect nou al aplicației. • Alte îmbunătățiri mici alte aplicației.</string>
+    <string name="our_story_header">Povestea noastră</string>
+    <string name="our_story">Suntem două femei sătule să ne vindem datele personale corporațiilor mari. Aplicația noastră salvează toate datele tale pe dispozitivul tău, iar noi nu avem niciun acces la ele.\nÎți prețuim confidențialitatea și nu îți vom salva sau distribui datele personale.\nDe la lansarea aplicației, echipa noastră a crescut și acum avem propriul nostru server de Discord plin de oameni pasionați care vor să ne ajute!\n\nAlătură-te nouă pe Discord aici: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Disclaimer:</string>
+    <string name="disclaimer">• Acesta este un proiect născut din pasiune și nu este destinat folosirii în scop medical. Facem acest lucru din simpla noastră nevoie. Suntem deschise la idei noi și cereri de îmbunătățire. Alătură-te pe Discord sau trimite-ne un email la: \nmensinator.app@gmail.com</string>
+
+    <!-- Universal/Repeated Strings -->
+    <string name="close_button">Închide</string>
+</resources>

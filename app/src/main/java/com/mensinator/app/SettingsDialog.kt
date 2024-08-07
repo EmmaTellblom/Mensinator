@@ -102,6 +102,7 @@ fun SettingsDialog(
         "English" to "en",
         "Svenska" to "sv",
         "Tamil" to "ta",
+        "Romanian" to "ro",
         /*"Hindi" to "hi"
         "Chinese" to "zh",
         "Spanish" to "es",
