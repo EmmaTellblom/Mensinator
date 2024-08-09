@@ -1,0 +1,29 @@
+CREATE TABLE app_setting (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+label TEXT NOT NULL UNIQUE,
+value TEXT NOT NULL,
+category TEXT NOT NULL
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+getAllSettings:
+SELECT * FROM app_setting;
+
+getAllSettingsByCategory:
+SELECT * FROM app_setting WHERE category = ?;
+
+
+-- INSERT QUERIES --
+--------------------
+
+
+-- UPDATE QUERIES --
+--------------------
+
+
+-- DELETE QUERIES --
+--------------------
+

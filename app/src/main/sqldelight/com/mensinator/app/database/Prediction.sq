@@ -1,0 +1,23 @@
+CREATE TABLE prediction(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+date TEXT NOT NULL,
+type TEXT NOT NULL,
+cycle_id INTEGER,
+FOREIGN KEY (cycle_id) REFERENCES cycle(id)
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+
+-- INSERT QUERIES --
+--------------------
+
+
+-- UPDATE QUERIES --
+--------------------
+
+
+-- DELETE QUERIES --
+--------------------

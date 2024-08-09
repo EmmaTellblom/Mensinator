@@ -1,0 +1,51 @@
+CREATE TABLE note(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+name TEXT NOT NULL UNIQUE,
+category TEXT NOT NULL,
+is_active INTEGER NOT NULL
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+getAllNotesByCategory:
+SELECT * FROM note WHERE category = ?;
+
+getAllNotesByDate:
+SELECT note.*
+FROM note
+INNER JOIN note_date_cross_ref nd_cr ON note.id = nd_cr.note_id
+INNER JOIN note_date ON nd_cr.note_date_id = note_date.id
+WHERE note_date.date = ?;
+
+
+-- INSERT QUERIES --
+--------------------
+
+insertNote:
+INSERT OR REPLACE INTO note (name, category, is_active)
+VALUES (?, ?, ?);
+
+
+-- UPDATE QUERIES --
+--------------------
+
+toggleNoteActiveStatus:
+UPDATE note
+SET is_active = CASE
+    WHEN is_active = 1 THEN 0
+    WHEN is_active = 0 THEN 1
+    ELSE is_active
+END
+WHERE name = ?;
+
+
+-- DELETE QUERIES --
+--------------------
+
+deleteNoteByName:
+DELETE FROM note WHERE name = ?;
+
+deleteNoteByCategory:
+DELETE FROM note WHERE category = ?;
