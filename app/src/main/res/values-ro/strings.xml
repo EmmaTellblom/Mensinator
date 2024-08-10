@@ -114,7 +114,7 @@
     <string name="calculations">• Estimări: \nMenstruațiile sunt calculate în funcție de durata medie a ciclurilor menstruale și a menstruației.\nMenstruațiile pot fi calculate folosind media fazelor luteale. Vor fi luate în considerare ultimele 5 cicluri pentru a face o medie a fazei luteale din care se calculează perioada menstruală. Acest lucru se activează din setări.\nOvulația este calculată în raport cu durata medie a ciclului menstrual.</string>
     <string name="features_coming_soon">Opțiuni viitoare:</string>
     
-    <string name="upcoming_features">• Memento pentru începerea menstruației următoare în bara de instrumente. (Acesta este afișat în setări dar nu este implementat) • Aspect nou al aplicației. • Alte îmbunătățiri mici alte aplicației.</string>
+    <string name="upcoming_features">• Aspect nou al aplicației. • Alte îmbunătățiri mici alte aplicației.</string>
     <string name="our_story_header">Povestea noastră</string>
     <string name="our_story">Suntem două femei sătule să ne vindem datele personale corporațiilor mari. Aplicația noastră salvează toate datele tale pe dispozitivul tău, iar noi nu avem niciun acces la ele.\nÎți prețuim confidențialitatea și nu îți vom salva sau distribui datele personale.\nDe la lansarea aplicației, echipa noastră a crescut și acum avem propriul nostru server de Discord plin de oameni pasionați care vor să ne ajute!\n\nAlătură-te nouă pe Discord aici: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>

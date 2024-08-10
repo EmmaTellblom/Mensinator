@@ -113,7 +113,7 @@
     <string name="import_export">• Import/Export: Click the \'Import/Export\' button to import or export your data. This is a MUST when moving the data to a new device!</string>
     <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
     <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• Reminder for upcoming period in the toolbar. (This is shown in settings but not implemented) • New user interface (when I\'m in the mood). • Other small UI improvements</string>
+    <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
     <string name="our_story_header">Our Story</string>
     <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>
