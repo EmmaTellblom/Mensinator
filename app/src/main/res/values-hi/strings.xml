@@ -4,54 +4,54 @@
         <string name="app_name">Mensinator</string>
 
         <!-- Home -->
-        <string name="previous">Previous</string>
-        <string name="next">Next</string>
-        <string name="period_button">Period</string>
-        <string name="symptoms_button">Symptoms</string>
-        <string name="ovulation_button">ovulation</string>
+        <string name="previous">पिछला</string>
+        <string name="next">अगला</string>
+        <string name="period_button">पिरियड्</string>
+        <string name="symptoms_button">लक्षण</string>
+        <string name="ovulation_button">ओव्यूलेशन</string>
         <!-- Home Alerts -->
-        <string name="empty_click_alert">No dates to save or remove</string>
-        <string name="successfully_saved_alert">Changes saved successfully</string>
-        <string name="no_data_selected">No dates selected</string>
-        <string name="only_day_alert">Only one day can be ovulation!</string>
-        <string name="success_saved_ovulation">Ovulation saved successfully</string>
-        <string name="no_date_selected_ovulation">No date selected for ovulation</string>
+        <string name="empty_click_alert">"सहेजने या हटाने के लिए कोई तारीख नहीं "</string>
+        <string name="successfully_saved_alert">"परिवर्तन सफलतापूर्वक सहेजे गए "</string>
+        <string name="no_data_selected">कोई तारीख़ नहीं चुनी गई</string>
+        <string name="only_day_alert">केवल एक दिन ही ओव्यूलेशन हो सकता है!</string>
+        <string name="success_saved_ovulation">ओव्यूलेशन सफलतापूर्वक सहेजा गया</string>
+        <string name="no_date_selected_ovulation">अण्डोत्सर्ग के लिए कोई तिथि नहीं चुनी गई</string>
 
 
         <!-- Settings -->
-        <string name="app_settings">App Settings</string>
-        <string name="colors">Colors</string>
-        <string name="period_color">Period Color</string>
-        <string name="selection_color">Selection Color</string>
-        <string name="period_selection_color">Period Selection Color</string>
+        <string name="app_settings">एप्लिकेशन सेटिंग</string>
+        <string name="colors">रंग</string>
+        <string name="period_color">पिरियड् रंग</string>
+        <string name="selection_color">"चयन का रंग "</string>
+        <string name="period_selection_color">"पिरियड् चयन का रंग "</string>
         <string name="expected_period_color">Expected Period Color</string>
-        <string name="ovulation_color">Ovulation Color</string>
-        <string name="expected_ovulation_color">Expected Ovulation Color</string>
-        <string name="reminders">Reminders</string>
-        <string name="days_before_reminder">Days Before Reminder</string>
-        <string name="other_settings">Other settings</string>
-        <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
-        <string name="period_history">Period history</string>
-        <string name="ovulation_history">Ovulation history</string>
-        <string name="language">Language</string>
-        <string name="cycle_numbers_show">Show cycle numbers</string>
-        <string name="close">Close</string>
-        <string name="save">Save</string>
+        <string name="ovulation_color">ओव्यूलेशन रंग</string>
+        <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
+        <string name="reminders">अनुस्मारक</string>
+        <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>
+        <string name="other_settings">अन्य सेटिंग</string>
+        <string name="luteal_phase_calculation">"ल्यूटियल चरण की गणना "</string>
+        <string name="period_history">पिरियड् इतिहास</string>
+        <string name="ovulation_history">ओव्यूलेशन इतिहास</string>
+        <string name="language">भाषा</string>
+        <string name="cycle_numbers_show">चक्र संख्या दिखाएं</string>
+        <string name="close">"बंद करना "</string>
+        <string name="save">"लक्षण सेव करें "</string>
         <!-- Color values -->
-        <string name="color_red">Red</string>
-        <string name="color_green">Green</string>
-        <string name="color_blue">Blue</string>
-        <string name="color_yellow">Yellow</string>
-        <string name="color_cyan">Cyan</string>
-        <string name="color_magenta">Magenta</string>
-        <string name="color_black">Black</string>
-        <string name="color_white">White</string>
-        <string name="color_darkgray">DarkGray</string>
-        <string name="color_grey">Grey</string>
+        <string name="color_red">लाल</string>
+        <string name="color_green">हरा</string>
+        <string name="color_blue">नीला</string>
+        <string name="color_yellow">पीला</string>
+        <string name="color_cyan">सियान</string>
+        <string name="color_magenta">मैजेंटा</string>
+        <string name="color_black">काला</string>
+        <string name="color_white">सफ़ेद</string>
+        <string name="color_darkgray">गहरा स्लेटी</string>
+        <string name="color_grey">स्लेटी</string>
 
         <!-- Statistics -->
-        <string name="statistics_title">Statistics</string>
-        <string name="period_count">Number of periods tracked: %1$d</string>
+        <string name="statistics_title">सांख्यिकी</string>
+        <string name="period_count">ट्रैक की गई पिरियड् की संख्या: %1$d</string>
         <string name="average_cycle_length">Average cycle length: %1$.1f days</string>
         <string name="average_period_length">Average period length: %1$.1f days</string>
         <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
@@ -64,29 +64,29 @@
 
         <!-- Symptoms -->
         <string name="symptoms_dialog_title">Symptoms for %1$s</string>
-        <string name="create_new_symptom_button">Create New Symptom</string>
-        <string name="save_symptoms_button">Save symptoms</string>
-        <string name="cancel_button">Cancel</string>
-        <string name="heavy">Heavy Flow</string>
-        <string name="medium">Medium Flow</string>
-        <string name="light">Light Flow</string>
+        <string name="create_new_symptom_button">नया संकेत बनाएँ</string>
+        <string name="save_symptoms_button">संकेत सेव करें</string>
+        <string name="cancel_button">रद्द</string>
+        <string name="heavy">"अधिक रक्तस्राव "</string>
+        <string name="medium">"मध्यम रक्तस्राव "</string>
+        <string name="light">"हल्का रक्तस्राव "</string>
 
         <!-- CreateNewSymptomDialog -->
-        <string name="create_new_symptom_dialog_title">Create New Symptom</string>
+        <string name="create_new_symptom_dialog_title">नया संकेत बनाएँ</string>
         <string name="symptom_name_label">Symptom Name</string>
-        <string name="save_button">Save</string>
+        <string name="save_button">संकेत सेव करें</string>
         <!-- CreateNewSymptomDialog -->
         <string name="manage_symptoms">Manage Symptoms</string>
 
 
         <!-- Calender -->
-        <string name="mon">Mon</string>
-        <string name="tue">Tue</string>
-        <string name="wed">Wed</string>
-        <string name="thu">Thu</string>
-        <string name="fri">Fri</string>
-        <string name="sat">Sat</string>
-        <string name="sun">Sun</string>
+        <string name="mon">"सोमवार "</string>
+        <string name="tue">"मंगलवार "</string>
+        <string name="wed">"बुधवार "</string>
+        <string name="thu">"गुरुवार "</string>
+        <string name="fri">"शुक्रवार "</string>
+        <string name="sat">"शनिवार "</string>
+        <string name="sun">"रविवार "</string>
 
         <!-- Import Export Dialog -->
         <string name="export_import_title">Export/Import Data</string>

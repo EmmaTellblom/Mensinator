@@ -103,8 +103,8 @@ fun SettingsDialog(
         "Svenska" to "sv",
         "Tamil" to "ta",
         "Romanian" to "ro",
-        /*"Hindi" to "hi"
-        "Chinese" to "zh",
+        "Hindi" to "hi"
+        /*"Chinese" to "zh",
         "Spanish" to "es",
         "Bengali" to "bn",
         "Portuguese" to "pt",
