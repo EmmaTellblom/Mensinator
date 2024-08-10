@@ -57,8 +57,7 @@ object ResourceMapper {
         "Black" to R.string.color_black,
         "White" to R.string.color_white,
         "DarkGray" to R.string.color_darkgray,
-        "Grey" to R.string.color_grey,
-
+        "LightGray" to R.string.color_gray,
         )
 
     fun getStringResourceId(key: String): Int? {
@@ -92,8 +91,8 @@ fun SettingsDialog(
         "Magenta" to Color.Magenta,
         "Black" to Color.Black,
         "White" to Color.White,
-        "Dark Gray" to Color.DarkGray,
-        "Light Gray" to Color.LightGray
+        "DarkGray" to Color.DarkGray,
+        "LightGray" to Color.LightGray
     )
 
     // Here is available languages of the app

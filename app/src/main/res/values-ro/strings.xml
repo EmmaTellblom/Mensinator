@@ -46,7 +46,7 @@
     <string name="color_black">Negru</string>
     <string name="color_white">Alb</string>
     <string name="color_darkgray">Gri închis</string>
-    <string name="color_grey">Gri</string>
+    <string name="color_gray">Gri</string>
 
     <!-- Statistics -->
     <string name="statistics_title">Statistici</string>

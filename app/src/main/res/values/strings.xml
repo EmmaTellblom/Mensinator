@@ -45,8 +45,8 @@
     <string name="color_magenta">Magenta</string>
     <string name="color_black">Black</string>
     <string name="color_white">White</string>
-    <string name="color_darkgray">DarkGray</string>
-    <string name="color_grey">Grey</string>
+    <string name="color_darkgray">Dark Gray</string>
+    <string name="color_gray">Light Gray</string>
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>

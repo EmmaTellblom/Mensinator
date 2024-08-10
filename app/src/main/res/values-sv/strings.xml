@@ -46,7 +46,7 @@
     <string name="color_black">Svart</string>
     <string name="color_white">Vit</string>
     <string name="color_darkgray">Mörkgrå</string>
-    <string name="color_grey">Grå</string>
+    <string name="color_gray">Grå</string>
 
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>

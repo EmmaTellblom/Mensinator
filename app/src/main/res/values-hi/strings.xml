@@ -47,7 +47,7 @@
         <string name="color_black">काला</string>
         <string name="color_white">सफ़ेद</string>
         <string name="color_darkgray">गहरा स्लेटी</string>
-        <string name="color_grey">स्लेटी</string>
+        <string name="color_gray">स्लेटी</string>
 
         <!-- Statistics -->
         <string name="statistics_title">सांख्यिकी</string>

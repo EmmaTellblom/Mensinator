@@ -46,7 +46,7 @@
     <string name="color_black">கருப்பு</string>
     <string name="color_white">வெள்ளை</string>
     <string name="color_darkgray">அடர் சாம்பல்</string>
-    <string name="color_grey">சாம்பல்</string>
+    <string name="color_gray">சாம்பல்</string>
 
     <!-- Statistics -->
     <string name="statistics_title">புள்ளிவிவரங்கள்</string>
