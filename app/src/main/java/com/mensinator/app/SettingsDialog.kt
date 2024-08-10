@@ -124,7 +124,7 @@ fun SettingsDialog(
 
     )
 
-    val predefinedReminders = (0..10).map { it.toString() }
+    val predefinedReminders = (0..12).map { it.toString() }
 
     val groupedSettings = savedSettings.groupBy { it.groupId }
 
@@ -295,7 +295,7 @@ fun SettingsDialog(
                                             ) {
                                                 predefinedReminders.forEach { reminder ->
                                                     DropdownMenuItem(
-                                                        text = {reminder},
+                                                        text = { Text(reminder) },
                                                         onClick = {
                                                             selectedReminder = reminder
                                                             savedSettings = savedSettings.map {
@@ -334,10 +334,6 @@ fun SettingsDialog(
                                                                 if (it.key == setting.key) it.copy(value = code) else it
                                                             }
                                                             expanded = false
-                                                            // Update application locales
-//                                                            AppCompatDelegate.setApplicationLocales(
-//                                                                LocaleListCompat.forLanguageTags(code)
-//                                                            )
                                                         }
                                                     )
                                                 }
