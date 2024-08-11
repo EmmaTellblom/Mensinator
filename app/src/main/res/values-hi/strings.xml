@@ -25,7 +25,7 @@
         <string name="selection_color">"चयन का रंग "</string>
         <string name="period_selection_color">"पिरियड् चयन का रंग "</string>
         <string name="expected_period_color">Expected Period Color</string>
-        <string name="ovulation_color">ओव्यूलेशन रंग</string>
+        <string name="ovulation_color">अंडोत्सर्ग रंग</string>
         <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
         <string name="reminders">अनुस्मारक</string>
         <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>

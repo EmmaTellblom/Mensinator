@@ -11,8 +11,8 @@ android {
         applicationId = "com.mensinator.app"
         minSdk = 30
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.71"
+        versionCode = 8
+        versionName = "1.75"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
