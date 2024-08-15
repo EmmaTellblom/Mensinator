@@ -240,7 +240,7 @@ fun CalendarScreen() {
             }
 
             Text(
-                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}",
+                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}".capitalized(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
@@ -694,4 +694,12 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
     // Enqueue the work request
     workManager.enqueue(workRequest)
     Log.d("CalendarScreen", "Work request enqueued with delay: $delayMillis")
+}
+
+fun String.capitalized(): String {
+    return this.replaceFirstChar {
+        if (it.isLowerCase())
+            it.titlecase(Locale.getDefault())
+        else it.toString()
+    }
 }
