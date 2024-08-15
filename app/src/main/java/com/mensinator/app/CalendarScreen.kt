@@ -27,6 +27,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -225,7 +228,8 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
             }) {
-                Text(stringResource(id = R.string.previous))
+                //Text(stringResource(id = R.string.previous))
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             // Get the current locale from AppCompatDelegate
             val localeList = AppCompatDelegate.getApplicationLocales()
@@ -244,7 +248,8 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
-                Text(text = stringResource(id = R.string.next))
+                //Text(text = stringResource(id = R.string.next))
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
