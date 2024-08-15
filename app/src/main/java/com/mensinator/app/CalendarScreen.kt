@@ -132,6 +132,10 @@ fun CalendarScreen() {
     // Fetch symptoms from the database
     LaunchedEffect(Unit) {
         symptoms = dbHelper.getAllActiveSymptoms()
+        val newLocale = dbHelper.getSettingByKey("lang")?.value ?: "en"
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(newLocale)
+        )
     }
 
     // Function to refresh symptom dates
