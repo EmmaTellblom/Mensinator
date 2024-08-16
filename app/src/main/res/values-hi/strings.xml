@@ -24,7 +24,7 @@
         <string name="period_color">पिरियड् रंग</string>
         <string name="selection_color">"चयन का रंग "</string>
         <string name="period_selection_color">"पिरियड् चयन का रंग "</string>
-        <string name="expected_period_color">Expected Period Color</string>
+        <string name="expected_period_color">अपेक्षित पीरियड रंग</string>
         <string name="ovulation_color">अंडोत्सर्ग रंग</string>
         <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
         <string name="reminders">अनुस्मारक</string>
@@ -52,18 +52,18 @@
         <!-- Statistics -->
         <string name="statistics_title">सांख्यिकी</string>
         <string name="period_count">ट्रैक की गई पिरियड् की संख्या: %1$d</string>
-        <string name="average_cycle_length">Average cycle length: %1$.1f days</string>
-        <string name="average_period_length">Average period length: %1$.1f days</string>
-        <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
-        <string name="next_period_start_future">Next assumed period: %1$s</string>
-        <string name="ovulation_count">Number of ovulation tracked: %1$d</string>
-        <string name="average_ovulation_day">Average ovulation day: %1$s</string>
-        <string name="next_predicted_ovulation">Next predicted ovulation date: %1$s</string>
-        <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
-        <string name="average_luteal_length">Average luteal phase length: %1$.1f days</string>
+        <string name="average_cycle_length">औसत साइकिल लंबाई: %1$.1f दिन</string>
+        <string name="average_period_length">औसत पीरियड की लंबाई: %1$.1f दिन</string>
+        <string name="next_period_start_past">अगला अनुमानित पीरियड: %1$s \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
+        <string name="next_period_start_future">अगला अनुमानित पीरियड: %1$s</string>
+        <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: %1$d</string>
+        <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: %1$s</string>
+        <string name="next_predicted_ovulation">अगला अनुमानित अंडोत्सर्ग तिथि: %1$s</string>
+        <string name="next_predicted_ovulation_default">अगले अंडोत्सर्ग की भविष्यवाणी करने के लिए पर्याप्त डेटा नहीं है</string>
+        <string name="average_luteal_length">औसत ल्यूटियल चरण की लंबाई: %1$.1f दिन</string>
 
         <!-- Symptoms -->
-        <string name="symptoms_dialog_title">Symptoms for %1$s</string>
+        <string name="symptoms_dialog_title">के लिए लक्षण %1$s</string>
         <string name="create_new_symptom_button">नया संकेत बनाएँ</string>
         <string name="save_symptoms_button">संकेत सेव करें</string>
         <string name="cancel_button">रद्द</string>
@@ -73,20 +73,20 @@
 
         <!-- CreateNewSymptomDialog -->
         <string name="create_new_symptom_dialog_title">नया संकेत बनाएँ</string>
-        <string name="symptom_name_label">Symptom Name</string>
+        <string name="symptom_name_label">लक्षण का नाम</string>
         <string name="save_button">संकेत सेव करें</string>
         <!-- CreateNewSymptomDialog -->
-        <string name="manage_symptoms">Manage Symptoms</string>
+        <string name="manage_symptoms">लक्षण प्रबंधित करें</string>
 
 
         <!-- Calender -->
-        <string name="mon">"सोमवार "</string>
-        <string name="tue">"मंगलवार "</string>
-        <string name="wed">"बुधवार "</string>
-        <string name="thu">"गुरुवार "</string>
-        <string name="fri">"शुक्रवार "</string>
-        <string name="sat">"शनिवार "</string>
-        <string name="sun">"रविवार "</string>
+        <string name="mon">सोम</string>
+        <string name="tue">मंगल</string>
+        <string name="wed">बुध</string>
+        <string name="thu">गुरू</string>
+        <string name="fri">शुक्र</string>
+        <string name="sat">शनि</string>
+        <string name="sun">रवि</string>
 
         <!-- Import Export Dialog -->
         <string name="export_import_title">Export/Import Data</string>
