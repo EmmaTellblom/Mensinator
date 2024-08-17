@@ -51,74 +51,74 @@
     <!-- Statistics -->
     <string name="statistics_title">পরিসংখ্যান</string>
     <string name="period_count">ট্র্যাক করা মাসিকের সংখ্যা: %1$d</string>
-    <string name="average_cycle_length">গড় চক্রের দৈর্ঘ্য: %1$.1f days</string>
-    <string name="average_period_length">গড় মাসিকের দৈর্ঘ্য: %1$.1f days</string>
-    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক: %1$s \n\nAssumed period date has passed!</string>
+    <string name="average_cycle_length">গড় চক্রের দৈর্ঘ্য: %1$.1f দিন</string>
+    <string name="average_period_length">গড় মাসিকের দৈর্ঘ্য: %1$.1f দিন</string>
+    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক: %1$s \n\n অনুমানিত মাসিকের তারিখ পেরিয়ে গেছে!</string>
     <string name="next_period_start_future">পরবর্তী অনুমানিত মাসিক: %1$s</string>
     <string name="ovulation_count">ট্র্যাক করা ওভুলেশনের সংখ্যা: %1$d</string>
     <string name="average_ovulation_day">গড় ওভুলেশন দিন: %1$s</string>
     <string name="next_predicted_ovulation">পরবর্তী পূর্বাভাসিত ওভুলেশন তারিখ: %1$s</string>
-    <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
-    <string name="average_luteal_length">Average luteal phase length: %1$.1f days</string>
+    <string name="next_predicted_ovulation_default">পরবর্তী ওভুলেশন পূর্বাভাস দেওয়ার জন্য পর্যাপ্ত তথ্য নেই</string>
+    <string name="average_luteal_length">গড় লুটিয়াল পর্যায়ের দৈর্ঘ্য: %1$.1f দিন</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Symptoms for %1$s</string>
-    <string name="create_new_symptom_button">Create New Symptom</string>
-    <string name="save_symptoms_button">Save symptoms</string>
-    <string name="cancel_button">Cancel</string>
-    <string name="heavy">Heavy Flow</string>
-    <string name="medium">Medium Flow</string>
-    <string name="light">Light Flow</string>
+    <string name="symptoms_dialog_title">%1$s জন্য উপসর্গ</string>
+    <string name="create_new_symptom_button">নতুন উপসর্গ তৈরি করুন</string>
+    <string name="save_symptoms_button">উপসর্গ সংরক্ষণ করুন</string>
+    <string name="cancel_button">বাতিল করুন</string>
+    <string name="heavy">বহুল প্রবাহ</string>
+    <string name="medium">মাঝারি প্রবাহ</string>
+    <string name="light">হালকা প্রবাহ</string>
 
     <!-- CreateNewSymptomDialog -->
-    <string name="create_new_symptom_dialog_title">Create New Symptom</string>
-    <string name="symptom_name_label">Symptom Name</string>
-    <string name="save_button">Save</string>
+    <string name="create_new_symptom_dialog_title">নতুন উপসর্গ তৈরি করুন</string>
+    <string name="symptom_name_label">উপসর্গের নাম</string>
+    <string name="save_button">উপসর্গ সংরক্ষণ করুন</string>
     <!-- CreateNewSymptomDialog -->
-    <string name="manage_symptoms">Manage Symptoms</string>
+    <string name="manage_symptoms">উপসর্গ পরিচালনা করুন</string>
 
 
     <!-- Calender -->
-    <string name="mon">Mon</string>
-    <string name="tue">Tue</string>
-    <string name="wed">Wed</string>
-    <string name="thu">Thu</string>
-    <string name="fri">Fri</string>
-    <string name="sat">Sat</string>
-    <string name="sun">Sun</string>
+    <string name="mon">সোম</string>
+    <string name="tue">মঙ্গল</string>
+    <string name="wed">বুধ</string>
+    <string name="thu">গুরু</string>
+    <string name="fri">শুক্র</string>
+    <string name="sat">শনিবার</string>
+    <string name="sun">রবিবার</string>
 
     <!-- Import Export Dialog -->
-    <string name="export_import_title">Export/Import Data</string>
-    <string name="export_button">Export</string>
-    <string name="import_button">Import</string>
-    <string name="export_success_toast">Exported to %1$s</string>
-    <string name="import_success_toast">File was imported successfully</string>
-    <string name="import_failure_toast">Failed to import file</string>
-    <string name="export_path_label">Export Path: %1$s</string>
-    <string name="import_path_label">Import Path: %1$s</string>
+    <string name="export_import_title">তথ্য রপ্তানি/আনা</string>
+    <string name="export_button">রপ্তানি</string>
+    <string name="import_button">আনা</string>
+    <string name="export_success_toast">রপ্তানি সফল হয়েছে %1$s এ</string>
+    <string name="import_success_toast">ফাইল সফলভাবে আনা হয়েছে</string>
+    <string name="import_failure_toast">ফাইল আনতে ব্যর্থ</string>
+    <string name="export_path_label">রপ্তানি পথ: %1$s</string>
+    <string name="import_path_label">আনার পথ: %1$s</string>
 
 
 
     <!-- Frequently Asked Questions -->
-    <string name="faq_title">Frequently Asked Questions</string>
+    <string name="faq_title">প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</string>
 
     <!-- User Manual Section -->
-    <string name="user_manual_header">User Manual</string>
-    <string name="how_to_use">How to Use:</string>
-    <string name="select_dates">• Select Dates: Tap on a date to select or deselect it.</string>
-    <string name="add_or_remove_dates">• Add or Remove Dates for Period: Click the \'Add or Remove Dates\' button after selecting dates.</string>
-    <string name="symptoms">• Symptoms: Click the \'Symptoms\' button to view or add symptoms for the selected date.</string>
-    <string name="ovulation">• Ovulation: Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
-    <string name="statistics">• Statistics: Click the \'Burger menu\' and select statistics.</string>
-    <string name="import_export">• Import/Export: Click the \'Import/Export\' button to import or export your data. This is a MUST when moving the data to a new device!</string>
-    <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
-    <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
-    <string name="our_story_header">Our Story</string>
-    <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
-    <string name="disclaimer_header">Disclaimer:</string>
-    <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
+    <string name="user_manual_header">ব্যবহারকারী ম্যানুয়াল</string>
+    <string name="how_to_use">ব্যবহার কীভাবে করবেন:</string>
+    <string name="select_dates">• তারিখ নির্বাচন করুন: একটি তারিখে ট্যাপ করে নির্বাচন করুন অথবা বাতিল করুন।</string>
+    <string name="add_or_remove_dates">• সময়সীমার জন্য তারিখ যোগ বা বাদ দিন: তারিখ নির্বাচন করার পরে \'তারিখ যোগ বা বাদ দিন\' বোতাম ক্লিক করুন।</string>
+    <string name="symptoms">• উপসর্গ: নির্বাচিত তারিখের জন্য উপসর্গ দেখতে বা যোগ করতে \'উপসর্গ\' বোতাম ক্লিক করুন।</string>
+    <string name="ovulation">• অণ্ডসংবহন: একটি একক তারিখ নির্বাচন করুন এবং অণ্ডসংবহন বোতাম ক্লিক করুন। সরাতে, তারিখ নির্বাচন করুন এবং আবার বোতাম ক্লিক করুন।</string>
+    <string name="statistics">• পরিসংখ্যান: \'বার্গার মেনু\' ক্লিক করুন এবং পরিসংখ্যান নির্বাচন করুন।</string>
+    <string name="import_export">• আমদানি/রপ্তানি: আপনার তথ্য আমদানি বা রপ্তানি করতে \'আমদানি/রপ্তানি\' বোতামে ক্লিক করুন। নতুন ডিভাইসে তথ্য স্থানান্তরের সময় এটি অত্যন্ত গুরুত্বপূর্ণ!</string>
+    <string name="calculations">• গণনা: \nমাসিক চক্রের দৈর্ঘ্য এবং মাসিক দৈর্ঘ্য অনুযায়ী গণনা করা হয়। \nগণনা গড় লুটিয়াল পর্যায় ব্যবহার করে করা যেতে পারে। গণনাগুলি শেষ ৫টি চক্র দেখবে এবং একটি গড় লুটিয়াল পর্যায় ব্যবহার করে পরবর্তীতে গণনা করবে। এটি সেটিংসে সক্রিয় করা হয়।\nঅণ্ডসংবহন গড় অণ্ডসংবহন চক্রের দৈর্ঘ্য অনুযায়ী গণনা করা হয়।</string>
+    <string name="features_coming_soon">শীঘ্রই আসছে ফিচার:</string>
+    <string name="upcoming_features">• নতুন ব্যবহারকারী ইন্টারফেস (যখন আমার মনমেজাজ থাকবে)। • অন্যান্য ছোট UI উন্নতি</string>
+    <string name="our_story_header">আমাদের গল্প</string>
+    <string name="our_story">আমরা দুইজন মহিলা যারা বড় কর্পোরেশনগুলিকে আমাদের ডেটা বিক্রি করতে ক্লান্ত ছিলাম। আমাদের অ্যাপ সমস্ত ডেটা আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষণ করে এবং আমাদের কোনো অ্যাক্সেস নেই।\nআমরা আপনার গোপনীয়তাকে মূল্য দিই এবং কোনো ব্যক্তিগত তথ্য সংরক্ষণ বা ভাগ করি না। এই অ্যাপটি চালু করার পর থেকে আমরা বৃদ্ধি পেয়েছি এবং এখন আমাদের একটি নিজস্ব ডিসকর্ড সার্ভার রয়েছে যেখানে মানুষ এই অ্যাপের প্রতি উত্সাহী এবং আমাদের সাহায্য করতে চায়!\n\nআমাদের ডিসকর্ডে যোগ দিন এখানে: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">মর্যাদা:</string>
+    <string name="disclaimer">• এটি একটি শখের প্রকল্প এবং চিকিৎসা ব্যবহারের উদ্দেশ্যে নয়। আমরা এটি কেবল আমাদের নিজস্ব প্রয়োজনের জন্য করছি। তবে আমরা ধারণা এবং অনুরোধ স্বাগত জানাই। ডিসকর্ডে যোগ দিন অথবা আমাদের ইমেইল পাঠান:\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
-    <string name="close_button">Close</string>
+    <string name="close_button">বন্ধ করুন</string>
 </resources>
