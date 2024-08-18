@@ -39,6 +39,9 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import androidx.compose.ui.res.stringResource
 
+import androidx.work.Constraints
+import androidx.work.NetworkType
+
 /*
 This file creates the calendar. A sort of "main screen".
  */
@@ -685,8 +688,13 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
     // Cancel existing work requests with the same tag
     workManager.cancelAllWorkByTag(notificationTag)
 
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // No network required
+        .build()
+
     // Create a work request to send the notification
     val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+        .setConstraints(constraints)
         .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
         .addTag(notificationTag) // Tag the work request
         .build()
