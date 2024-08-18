@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.work.Constraints
 import androidx.work.NetworkType
 
-
 /*
 This file creates the calendar. A sort of "main screen".
  */
