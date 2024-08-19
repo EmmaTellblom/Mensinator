@@ -14,6 +14,9 @@ FOREIGN KEY (note_date_id) REFERENCES note_date(id)
 -- INSERT QUERIES --
 --------------------
 
+insertNoteDateCrossRef:
+INSERT OR REPLACE INTO note_date_cross_ref(note_id, note_date_id) VALUES (?,?);
+
 
 -- UPDATE QUERIES --
 --------------------
@@ -21,3 +24,6 @@ FOREIGN KEY (note_date_id) REFERENCES note_date(id)
 
 -- DELETE QUERIES --
 --------------------
+
+deleteNoteDateCrossRef:
+DELETE FROM note_date_cross_ref WHERE note_id = ? AND note_date_id = ?;

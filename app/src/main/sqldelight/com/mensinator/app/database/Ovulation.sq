@@ -9,9 +9,18 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getOvulationByDate:
+SELECT * FROM ovulation WHERE date = ?;
+
+getOvulationByCycle:
+SELECT * FROM ovulation WHERE cycle_id = ?;
+
 
 -- INSERT QUERIES --
 --------------------
+
+insertOvulation:
+INSERT OR REPLACE INTO ovulation(date, cycle_id) VALUES (?,?);
 
 
 -- UPDATE QUERIES --
@@ -20,3 +29,9 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 
 -- DELETE QUERIES --
 --------------------
+
+deleteOvulationByDate:
+DELETE FROM ovulation WHERE date = ?;
+
+deleteOvulationByCycle:
+DELETE FROM ovulation WHERE cycle_id = ?;

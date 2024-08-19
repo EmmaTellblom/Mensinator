@@ -9,9 +9,6 @@ category TEXT NOT NULL
 -- SELECT QUERIES --
 --------------------
 
-getAllSettings:
-SELECT * FROM app_setting;
-
 getAllSettingsByCategory:
 SELECT * FROM app_setting WHERE category = ?;
 
@@ -19,11 +16,23 @@ SELECT * FROM app_setting WHERE category = ?;
 -- INSERT QUERIES --
 --------------------
 
+insertAppSetting:
+INSERT OR REPLACE INTO app_setting(label, value, category) VALUES (?,?,?);
+
 
 -- UPDATE QUERIES --
 --------------------
 
+setAppSettingValue:
+UPDATE app_setting SET value = ? WHERE label = ?;
+
 
 -- DELETE QUERIES --
 --------------------
+
+deleteAppSettingByLabel:
+DELETE FROM app_setting WHERE label = ?;
+
+deleteAppSettingsByCategory:
+DELETE FROM app_setting WHERE category = ?;
 

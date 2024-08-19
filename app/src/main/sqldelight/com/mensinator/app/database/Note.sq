@@ -1,8 +1,10 @@
+import kotlin.Boolean;
+
 CREATE TABLE note(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL UNIQUE,
 category TEXT NOT NULL,
-is_active INTEGER NOT NULL
+is_active INTEGER AS Boolean NOT NULL
 );
 
 
@@ -47,5 +49,5 @@ WHERE name = ?;
 deleteNoteByName:
 DELETE FROM note WHERE name = ?;
 
-deleteNoteByCategory:
+deleteNotesByCategory:
 DELETE FROM note WHERE category = ?;

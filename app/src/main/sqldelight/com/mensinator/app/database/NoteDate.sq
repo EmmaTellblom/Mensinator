@@ -1,6 +1,6 @@
 CREATE TABLE note_date(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-date TEXT NOT NULL
+date TEXT NOT NULL UNIQUE
 );
 
 
@@ -28,3 +28,6 @@ INSERT OR REPLACE INTO note_date(date) VALUES (?);
 
 -- DELETE QUERIES --
 --------------------
+
+deleteNoteDate:
+DELETE FROM note_date WHERE date = ?;

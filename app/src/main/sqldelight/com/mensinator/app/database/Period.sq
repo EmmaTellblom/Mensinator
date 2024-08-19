@@ -9,9 +9,18 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getPeriodByDate:
+SELECT * FROM period WHERE date = ?;
+
+getAllPeriodsByCycle:
+SELECT * FROM period WHERE cycle_id = ?;
+
 
 -- INSERT QUERIES --
 --------------------
+
+insertPeriod:
+INSERT OR REPLACE INTO period(date, cycle_id) VALUES (?,?);
 
 
 -- UPDATE QUERIES --
@@ -20,3 +29,9 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 
 -- DELETE QUERIES --
 --------------------
+
+deletePeriodByDate:
+DELETE FROM period WHERE date = ?;
+
+deletePeriodsByCycle:
+DELETE FROM period WHERE cycle_id = ?;

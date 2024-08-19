@@ -10,9 +10,27 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getPredictionsByType:
+SELECT * FROM prediction WHERE type = ?;
+
+getPredictionsByCycle:
+SELECT * FROM prediction WHERE cycle_id = ?;
+
+getPredictionsByMonth:
+SELECT * FROM prediction WHERE date BETWEEN ? AND ?;
+
+getPredictionsByTypeCycle:
+SELECT * FROM prediction WHERE type = ? AND cycle_id = ?;
+
+getPredictionsByTypeMonth:
+SELECT * FROM prediction WHERE type = ? AND date BETWEEN ? AND ?;
+
 
 -- INSERT QUERIES --
 --------------------
+
+insertPrediction:
+INSERT OR REPLACE INTO prediction(date, type, cycle_id) VALUES (?,?,?);
 
 
 -- UPDATE QUERIES --
@@ -21,3 +39,19 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 
 -- DELETE QUERIES --
 --------------------
+
+deletePredictionsByCycle:
+DELETE FROM prediction WHERE cycle_id = ?;
+
+deletePredictionsByMonth:
+DELETE FROM prediction WHERE date BETWEEN ? AND ?;
+
+deletePredictionsByDate:
+DELETE FROM prediction WHERE date = ?;
+
+deletePredictionsByTypeCycle:
+DELETE FROM prediction WHERE type = ? AND  cycle_id = ?;
+
+deletePredictionsByTypeMonth:
+DELETE FROM prediction WHERE type = ? AND date BETWEEN ? AND ?;
+

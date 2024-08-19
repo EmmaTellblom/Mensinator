@@ -74,6 +74,7 @@ dependencies {
     //SQLDelight
     implementation("app.cash.sqldelight:android-driver:2.0.2")
     implementation("app.cash.sqldelight:coroutines-extensions-jvm:2.0.2")
+    implementation("app.cash.sqldelight:primitive-adapters:2.0.2")
 }
 
 sqldelight {
