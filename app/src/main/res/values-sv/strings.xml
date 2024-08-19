@@ -46,7 +46,7 @@
     <string name="color_black">Svart</string>
     <string name="color_white">Vit</string>
     <string name="color_darkgray">Mörkgrå</string>
-    <string name="color_grey">Grå</string>
+    <string name="color_gray">Grå</string>
 
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
@@ -113,7 +113,7 @@
     <string name="import_export">• Importera/Exportera: Klicka på Importera/Exportera i menyn nere till höger för att importera eller exportera din data, Detta är ett MÅSTE när du ska flytta din data till en ny enhet.</string>
     <string name="calculations">• Beräkningar: \nMens är beräknad utifrån medellängd på din menscykel.\nMensen kan beräknas utifrån medellängd på din lutealfas. Beräkningen kollar då historiskt (på antal cykler som du väljer i inställningarna) för att komma fram till en medellängd på lutealfasen och beräknar mens. Detta ställer du in i inställningarna. \nÄgglossning är beräknat utifrån medellängd på ägglossningscykeln. </string>
     <string name="features_coming_soon">Funktioner som kommer snart:</string>
-    <string name="upcoming_features">• Nytt gränssnitt (när vi har lust)</string>
+    <string name="upcoming_features">• Nytt gränssnitt (när vi har lust) • Andra UI förbättringar</string>
     <string name="our_story_header">Vår bakgrund</string>
     <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. Vi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. Häng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Viktigt:</string>
@@ -121,5 +121,4 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Stäng</string>
-    <string name="not_enough_data">Inte tillräckligt med data</string>
 </resources>

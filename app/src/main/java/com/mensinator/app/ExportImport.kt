@@ -82,10 +82,15 @@ class ExportImport {
         exportData.put("symptom_date", cursorToJsonArray(symptomDatesCursor))
         symptomDatesCursor.close()
 
-        // Export symptom_date table
+        // Export ovulations table
         val ovulationsCursor = db.query("ovulations", null, null, null, null, null, null)
         exportData.put("ovulations", cursorToJsonArray(ovulationsCursor))
         ovulationsCursor.close()
+
+        // Export app_settings table
+        val settingsCursor = db.query("app_settings", null, null, null, null, null, null)
+        exportData.put("app_settings", cursorToJsonArray(settingsCursor))
+        settingsCursor.close()
 
         // Write JSON data to file
         val file = File(filePath)
@@ -149,6 +154,13 @@ class ExportImport {
                 importJsonArrayToTable(db, "ovulations", importData.getJSONArray("ovulations"))
             } else {
                 Log.d("Import", "No ovulations data found in the file.")
+            }
+
+            // Check if "app_settings" key exists and import if present
+            if (importData.has("app_settings")) {
+                importJsonArrayToTable(db, "app_settings", importData.getJSONArray("app_settings"))
+            } else {
+                Log.d("Import", "No app_settings data found in the file.")
             }
 
             db.setTransactionSuccessful()

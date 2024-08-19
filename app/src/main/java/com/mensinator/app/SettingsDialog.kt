@@ -57,8 +57,7 @@ object ResourceMapper {
         "Black" to R.string.color_black,
         "White" to R.string.color_white,
         "DarkGray" to R.string.color_darkgray,
-        "Grey" to R.string.color_grey,
-
+        "LightGray" to R.string.color_gray,
         )
 
     fun getStringResourceId(key: String): Int? {
@@ -92,8 +91,8 @@ fun SettingsDialog(
         "Magenta" to Color.Magenta,
         "Black" to Color.Black,
         "White" to Color.White,
-        "Dark Gray" to Color.DarkGray,
-        "Light Gray" to Color.LightGray
+        "DarkGray" to Color.DarkGray,
+        "LightGray" to Color.LightGray
     )
 
     // Here is available languages of the app
@@ -103,10 +102,10 @@ fun SettingsDialog(
         "Svenska" to "sv",
         "Tamil" to "ta",
         "Romanian" to "ro",
-        /*"Hindi" to "hi"
-        "Chinese" to "zh",
+        "Hindi" to "hi",
+        "Bengali" to "bn"
+        /*"Chinese" to "zh",
         "Spanish" to "es",
-        "Bengali" to "bn",
         "Portuguese" to "pt",
         "Russian" to "ru",
         "Japanese" to "ja",
@@ -124,7 +123,7 @@ fun SettingsDialog(
 
     )
 
-    val predefinedReminders = (0..10).map { it.toString() }
+    val predefinedReminders = (0..12).map { it.toString() }
 
     val groupedSettings = savedSettings.groupBy { it.groupId }
 
@@ -295,7 +294,7 @@ fun SettingsDialog(
                                             ) {
                                                 predefinedReminders.forEach { reminder ->
                                                     DropdownMenuItem(
-                                                        text = {reminder},
+                                                        text = { Text(reminder) },
                                                         onClick = {
                                                             selectedReminder = reminder
                                                             savedSettings = savedSettings.map {
@@ -334,10 +333,6 @@ fun SettingsDialog(
                                                                 if (it.key == setting.key) it.copy(value = code) else it
                                                             }
                                                             expanded = false
-                                                            // Update application locales
-//                                                            AppCompatDelegate.setApplicationLocales(
-//                                                                LocaleListCompat.forLanguageTags(code)
-//                                                            )
                                                         }
                                                     )
                                                 }

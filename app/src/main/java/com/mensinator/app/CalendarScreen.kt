@@ -27,6 +27,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -35,6 +38,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 import androidx.compose.ui.res.stringResource
+import androidx.work.Constraints
+import androidx.work.NetworkType
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -132,6 +137,10 @@ fun CalendarScreen() {
     // Fetch symptoms from the database
     LaunchedEffect(Unit) {
         symptoms = dbHelper.getAllActiveSymptoms()
+        val newLocale = dbHelper.getSettingByKey("lang")?.value ?: "en"
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(newLocale)
+        )
     }
 
     // Function to refresh symptom dates
@@ -221,7 +230,8 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
             }) {
-                Text(stringResource(id = R.string.previous))
+                //Text(stringResource(id = R.string.previous))
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
             // Get the current locale from AppCompatDelegate
             val localeList = AppCompatDelegate.getApplicationLocales()
@@ -232,7 +242,7 @@ fun CalendarScreen() {
             }
 
             Text(
-                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}",
+                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}".capitalized(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
@@ -240,7 +250,8 @@ fun CalendarScreen() {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
-                Text(text = stringResource(id = R.string.next))
+                //Text(text = stringResource(id = R.string.next))
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -676,8 +687,13 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
     // Cancel existing work requests with the same tag
     workManager.cancelAllWorkByTag(notificationTag)
 
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // No network required
+        .build()
+
     // Create a work request to send the notification
     val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
+        .setConstraints(constraints)
         .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
         .addTag(notificationTag) // Tag the work request
         .build()
@@ -685,4 +701,12 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
     // Enqueue the work request
     workManager.enqueue(workRequest)
     Log.d("CalendarScreen", "Work request enqueued with delay: $delayMillis")
+}
+
+fun String.capitalized(): String {
+    return this.replaceFirstChar {
+        if (it.isLowerCase())
+            it.titlecase(Locale.getDefault())
+        else it.toString()
+    }
 }

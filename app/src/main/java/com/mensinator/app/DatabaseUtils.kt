@@ -81,7 +81,7 @@ object DatabaseUtils {
         db.execSQL("""
             INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id) VALUES
                 ('period_color', 'Period Color', 'Red', 1),
-                ('selection_color', 'Selection Color', 'Grey', 1),
+                ('selection_color', 'Selection Color', 'LightGray', 1),
                 ('period_selection_color', 'Period Selection Color', 'DarkGray', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
                 ('reminder_days', 'Days Before Reminder', '0', 2),
@@ -157,6 +157,10 @@ object DatabaseUtils {
         // Fixed symptom colors, so we can remove setting for symptom indicator
         db.execSQL("""
             DELETE FROM app_settings WHERE setting_key = 'symptom_color'
+        """)
+
+        db.execSQL("""
+            UPDATE app_settings SET setting_value = 'LightGray' WHERE setting_value = 'Grey'
         """)
 
     }
