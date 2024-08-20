@@ -48,6 +48,7 @@ object DatabaseUtils {
         createAppSettings(db)
         createOvulationStructure(db)
         databaseVersion7(db)
+        databaseVersion8(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -162,6 +163,18 @@ object DatabaseUtils {
         db.execSQL("""
             UPDATE app_settings SET setting_value = 'LightGray' WHERE setting_value = 'Grey'
         """)
+
+    }
+
+    fun databaseVersion8(db: SQLiteDatabase) {
+        //Insert new row for screen protection
+        db.execSQL("""
+            INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id, setting_type)
+            VALUES
+            ('screen_protection', 'Protect screen', '1', '3', 'SW')
+        """)
+
+
 
     }
 }
