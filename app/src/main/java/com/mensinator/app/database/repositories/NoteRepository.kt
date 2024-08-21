@@ -11,7 +11,18 @@ import kotlinx.coroutines.withContext
 
 class NoteRepository(private val database: MensinatorDB, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
+    init {
+        insertPredefinedNotes();
+    }
 
+    private fun insertPredefinedNotes(){
+        if(database.noteQueries.getAllNotes().executeAsList().isEmpty()){
+            //Type of flow
+            database.noteQueries.insertNote(PredefinedSymptoms.HEAVY_FLOW.value, NoteCategory.SYMPTOMS.value, true)
+            database.noteQueries.insertNote(PredefinedSymptoms.MEDIUM_FLOW.value, NoteCategory.SYMPTOMS.value, true)
+            database.noteQueries.insertNote(PredefinedSymptoms.LIGHT_FLOW.value, NoteCategory.SYMPTOMS.value, true)
+        }
+    }
 
     //----- READ -----
 

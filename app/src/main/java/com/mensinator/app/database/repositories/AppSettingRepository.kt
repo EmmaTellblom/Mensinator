@@ -12,7 +12,31 @@ import kotlinx.coroutines.withContext
 
 class AppSettingRepository(private val database: MensinatorDB, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
+    init {
+        insertPredefinedSettings();
+    }
 
+    private fun insertPredefinedSettings(){
+        if(database.appSettingQueries.getAllSettings().executeAsList().isEmpty()){
+            //Color settings
+            database.appSettingQueries.insertAppSetting("period_color", Colors.RED.value, AppCategory.COLORS.value)
+            database.appSettingQueries.insertAppSetting("selection_color", Colors.LIGHT_GRAY.value, AppCategory.COLORS.value)
+            database.appSettingQueries.insertAppSetting("period_selection_color", Colors.DARK_GRAY.value, AppCategory.COLORS.value)
+            database.appSettingQueries.insertAppSetting("expected_period_color", Colors.YELLOW.value, AppCategory.COLORS.value)
+            database.appSettingQueries.insertAppSetting("ovulation_color", Colors.BLUE.value, AppCategory.COLORS.value)
+            database.appSettingQueries.insertAppSetting("expected_ovulation_color", Colors.MAGENTA.value, AppCategory.COLORS.value)
+
+            //Reminder settings
+            database.appSettingQueries.insertAppSetting("reminder_days", "0", AppCategory.REMINDERS.value)
+
+            //Other settings
+            database.appSettingQueries.insertAppSetting("luteal_period_calculation", "0", AppCategory.OTHERS.value)
+            database.appSettingQueries.insertAppSetting("period_history", "5", AppCategory.OTHERS.value)
+            database.appSettingQueries.insertAppSetting("ovulation_history", "5", AppCategory.OTHERS.value)
+            database.appSettingQueries.insertAppSetting("language", "en", AppCategory.OTHERS.value)
+            database.appSettingQueries.insertAppSetting("cycle_numbers_show", "1", AppCategory.OTHERS.value)
+        }
+    }
 
     //----- READ -----
 
