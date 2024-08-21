@@ -57,8 +57,17 @@ android {
 }
 
 dependencies {
+
+    // Versions
+    val sqlDelightVersion = "2.0.2"
+    val koinVersion = "4.0.0-RC1"
+
+    // AndroidX Core Libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+
+    // AndroidX Compose Libraries
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -66,30 +75,36 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.window)
+
+    // AndroidX Work Libraries
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.appcompat)
+
+    //SQLDelight
+    implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+    implementation("app.cash.sqldelight:coroutines-extensions-jvm:$sqlDelightVersion")
+    implementation("app.cash.sqldelight:primitive-adapters:$sqlDelightVersion")
+
+    // Koin for Android
+    implementation(platform("io.insert-koin:koin-bom:$koinVersion"))
+    implementation("io.insert-koin:koin-core")
+    implementation (libs.koin.android)
+    implementation("io.insert-koin:koin-androidx-compose")
+
+    // Testing
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
-    //SQLDelight
-    implementation("app.cash.sqldelight:android-driver:2.0.2")
-    implementation("app.cash.sqldelight:coroutines-extensions-jvm:2.0.2")
-    implementation("app.cash.sqldelight:primitive-adapters:2.0.2")
-
-    // Koin for Android
-    implementation(platform("io.insert-koin:koin-bom:4.0.0-RC1"))
-    implementation("io.insert-koin:koin-core")
-    implementation (libs.koin.android)
 }
 
 sqldelight {
     databases {
-        create("Database") {
+        create("MensinatorDB") {
             packageName.set("com.mensinator.app.database")
         }
     }

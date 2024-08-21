@@ -1,6 +1,5 @@
 [versions]
 agp = "8.5.0"
-koinAndroid = "4.0.0"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -11,7 +10,6 @@ activityCompose = "1.9.0"
 composeBom = "2024.04.01"
 window = "1.3.0"
 workRuntimeKtx = "2.9.0"
-places = "3.5.0"
 appcompat = "1.7.0"
 
 [libraries]
@@ -32,7 +30,6 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-window = { group = "androidx.window", name = "window", version.ref = "window" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
 koin-android = { module = "io.insert-koin:koin-android", version = "4.0.0-RC1" }
-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 [plugins]
