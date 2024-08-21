@@ -16,6 +16,12 @@ class AppSettingViewModel(private val appSettingRepository: AppSettingRepository
 
     //----- READ -----
 
+    fun loadAllSettings(){
+        viewModelScope.launch {
+            _appSettingsCategory.value = appSettingRepository.getAllSettings()
+        }
+    }
+
     fun loadSettingsCategory(category: String){
         viewModelScope.launch {
             _appSettingsCategory.value = appSettingRepository.getAllSettingsByCategory(category)

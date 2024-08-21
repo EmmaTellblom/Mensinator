@@ -12,7 +12,7 @@ class MensinatorApplication : Application() {
             androidLogger()
             modules(
                 databaseModule,
-                viewModelModule
+                dataModule
             )
         }
     }

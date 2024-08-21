@@ -20,6 +20,12 @@ class NoteViewModel(private val noteRepository: NoteRepository): ViewModel() {
 
     //----- READ -----
 
+    fun loadAllNotes(){
+        viewModelScope.launch {
+            _notes.value = noteRepository.getAllNotes()
+        }
+    }
+
     fun loadNotesByCategory(category: String){
         viewModelScope.launch {
             _notes.value = noteRepository.getAllNotesByCategory(category)
