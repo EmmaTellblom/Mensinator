@@ -1,22 +1,23 @@
 package com.mensinator.app.database.repositories
 
-import com.mensinator.app.database.Database
+import com.mensinator.app.database.MensinatorDB
 import com.mensinator.app.database.Ovulation
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class OvulationRepository(private val database: Database) {
+class OvulationRepository(private val database: MensinatorDB, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     //----- READ -----
 
     suspend fun getOvulationByDate(date: String): Ovulation? {
-       return withContext(Dispatchers.IO){
+       return withContext(dispatcher){
            database.ovulationQueries.getOvulationByDate(date).executeAsOneOrNull()
        }
    }
 
     suspend fun getOvulationByCycle(cycleId: Long): Ovulation? {
-        return withContext(Dispatchers.IO){
+        return withContext(dispatcher){
             database.ovulationQueries.getOvulationByCycle(cycleId).executeAsOneOrNull()
         }
     }
@@ -25,7 +26,7 @@ class OvulationRepository(private val database: Database) {
     //----- CREATE -----
 
     suspend fun insertOvulation(date: String, cycleId: Long){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.ovulationQueries.insertOvulation(date, cycleId)
         }
     }
@@ -37,13 +38,13 @@ class OvulationRepository(private val database: Database) {
     //----- DELETE -----
 
     suspend fun deleteOvulationByDate(date: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.ovulationQueries.deleteOvulationByDate(date)
         }
     }
 
     suspend fun deleteOvulationByCycle(cycleId: Long){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.ovulationQueries.deleteOvulationByCycle(cycleId)
         }
     }

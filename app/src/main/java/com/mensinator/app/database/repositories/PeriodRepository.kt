@@ -1,22 +1,23 @@
 package com.mensinator.app.database.repositories
 
-import com.mensinator.app.database.Database
+import com.mensinator.app.database.MensinatorDB
 import com.mensinator.app.database.Period
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class PeriodRepository(private val database: Database) {
+class PeriodRepository(private val database: MensinatorDB, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     //----- READ -----
 
     suspend fun getPeriodByDate(date: String): Period? {
-        return withContext(Dispatchers.IO){
+        return withContext(dispatcher){
             database.periodQueries.getPeriodByDate(date).executeAsOneOrNull()
         }
     }
 
     suspend fun getAllPeriodsByCycle(cycleId: Long): List<Period> {
-        return withContext(Dispatchers.IO){
+        return withContext(dispatcher){
             database.periodQueries.getAllPeriodsByCycle(cycleId).executeAsList()
         }
     }
@@ -25,7 +26,7 @@ class PeriodRepository(private val database: Database) {
     //----- CREATE -----
 
     suspend fun insertPeriod(date: String, cycleId: Long){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.periodQueries.insertPeriod(date, cycleId)
         }
     }
@@ -37,13 +38,13 @@ class PeriodRepository(private val database: Database) {
     //----- DELETE -----
 
     suspend fun deletePeriodByDate(date: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.periodQueries.deletePeriodByDate(date)
         }
     }
 
     suspend fun deletePeriodsByCycle(cycleId: Long){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.periodQueries.deletePeriodsByCycle(cycleId)
         }
     }

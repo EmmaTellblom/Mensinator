@@ -1,17 +1,29 @@
 package com.mensinator.app.database.repositories
 
-import com.mensinator.app.database.Database
+import com.mensinator.app.database.MensinatorDB
 import com.mensinator.app.database.App_setting
+import com.mensinator.app.database.AppCategory
+import com.mensinator.app.database.Colors
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-class AppSettingRepository(private val database: Database) {
+
+class AppSettingRepository(private val database: MensinatorDB, private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+
+
 
     //----- READ -----
 
+    suspend fun getAllSettings(): List<App_setting> {
+        return withContext(dispatcher){
+            database.appSettingQueries.getAllSettings().executeAsList()
+        }
+    }
+
     suspend fun getAllSettingsByCategory(category: String): List<App_setting> {
-        return withContext(Dispatchers.IO){
+        return withContext(dispatcher){
             database.appSettingQueries.getAllSettingsByCategory(category).executeAsList()
         }
     }
@@ -20,7 +32,7 @@ class AppSettingRepository(private val database: Database) {
     //----- CREATE -----
 
     suspend fun insertAppSetting(label: String, value: String, category: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.appSettingQueries.insertAppSetting(label, value, category)
         }
     }
@@ -29,7 +41,7 @@ class AppSettingRepository(private val database: Database) {
     //----- UPDATE -----
 
     suspend fun setAppSettingValue(value: String, label: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.appSettingQueries.setAppSettingValue(value, label)
         }
     }
@@ -38,13 +50,13 @@ class AppSettingRepository(private val database: Database) {
     //----- DELETE -----
 
     suspend fun deleteAppSettingByLabel(label: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.appSettingQueries.deleteAppSettingByLabel(label)
         }
     }
 
     suspend fun deleteAppSettingsByCategory(category: String){
-        withContext(Dispatchers.IO){
+        withContext(dispatcher){
             database.appSettingQueries.deleteAppSettingsByCategory(category)
         }
     }

@@ -9,6 +9,9 @@ category TEXT NOT NULL
 -- SELECT QUERIES --
 --------------------
 
+getAllSettings:
+SELECT * FROM app_setting;
+
 getAllSettingsByCategory:
 SELECT * FROM app_setting WHERE category = ?;
 

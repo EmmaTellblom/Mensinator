@@ -11,6 +11,9 @@ is_active INTEGER AS Boolean NOT NULL
 -- SELECT QUERIES --
 --------------------
 
+getAllNotes:
+SELECT * FROM note;
+
 getAllNotesByCategory:
 SELECT * FROM note WHERE category = ?;
 
