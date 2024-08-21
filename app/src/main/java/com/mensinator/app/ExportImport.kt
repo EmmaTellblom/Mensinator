@@ -46,18 +46,6 @@ class ExportImport {
         return exportFile.absolutePath
     }
 
-    fun getDocumentsImportFilePath(): String {
-        val documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-        val importFile = File(documentsDir, "import.json")
-        if (!documentsDir.exists()) {
-            documentsDir.mkdirs()
-        }
-        return importFile.absolutePath
-    }
-
-    fun getDefaultExportFilePath(context: Context): String {
-        return File(context.getExternalFilesDir(null), "export.json").absolutePath
-    }
     fun getDefaultImportFilePath(context: Context): String {
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
     }
@@ -158,7 +146,7 @@ class ExportImport {
 
             // Check if "app_settings" key exists and import if present
             if (importData.has("app_settings")) {
-                importJsonArrayToTable(db, "app_settings", importData.getJSONArray("app_settings"))
+                importAppSettings(db, importData.getJSONArray("app_settings"))
             } else {
                 Log.d("Import", "No app_settings data found in the file.")
             }
@@ -171,6 +159,8 @@ class ExportImport {
         db.close()
     }
 
+    // This function will delete all period, ovulation, symptoms and symptomdates before importing the file
+    // User should never do any changes before importing their file
     private fun importJsonArrayToTable(db: SQLiteDatabase, tableName: String, jsonArray: JSONArray) {
         db.delete(tableName, null, null)
         for (i in 0 until jsonArray.length()) {
@@ -184,4 +174,28 @@ class ExportImport {
             db.insert(tableName, null, contentValues)
         }
     }
+
+    // This function will only update values of the settings provided in the importfile
+    // Due to different db-versions there should never be a time where we want data from the file
+    // to insert into the database. It should always up update based on setting_key
+    private fun importAppSettings(db: SQLiteDatabase, jsonArray: JSONArray) {
+        // Loop through each JSON object in the array
+        for (i in 0 until jsonArray.length()) {
+            // Get the JSON object
+            val jsonObject = jsonArray.getJSONObject(i)
+
+            // Extract the setting_key to use as the condition for updating
+            val settingKey = jsonObject.getString("setting_key")
+            val settingValue = jsonObject.getString("setting_value")
+
+            // Create a ContentValues object to hold the updated values
+            val contentValues = ContentValues()
+            contentValues.put("setting_value", settingValue)
+
+            // Update the setting in the database
+                db.update("app_settings", contentValues, "setting_key = ?", arrayOf(settingKey))
+
+        }
+    }
+
 }
