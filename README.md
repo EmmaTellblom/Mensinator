@@ -9,13 +9,14 @@ Mensinator provides a clean and intuitive interface for tracking your menstrual 
 - No Sign-Up Required: Start using the app immediately—no account creation or personal information required. 🎉
 - Complete Privacy: Your data is stored locally on your device. We do not collect, share, or sell any personal information. 🔒
 - Easy Navigation: Quickly switch between months and track your cycle with just a few taps. 🖐️
-- Clear Statistics: Instantly view your average cycle length, average period length, and next period prediction right below your calendar. 📊
+- Clear Statistics: View your average cycle length, average period length, and next period prediction in the Statistics. 📊
 - Historical Insights: Get a summary of all your tracked periods to better understand your menstrual health over time. 📈
-- Visual Indicators: See visual indicators on the calendar for existing periods and selected dates. 🔴🔵
-- Customizable Colors: Personalize the app's appearance by customizing colors to your preference. 🎨
+- Visual Indicators: See visual indicators on the calendar for existing periods, selected dates and even different symptoms! 🔴🔵
+- Customizable Colors: Personalize the app's appearance by customizing colors for periods, ovulations, symptoms and predictions to your preference. 🎨
 - Export and Import Data: Easily export your data to a JSON file for backup or transfer and import it back into the app whenever needed. 📂
-- Why Choose Mensinator?
-- Mensinator stands out for its simplicity and dedication to privacy. With just one main view, you can track your periods, view statistics, and manage your menstrual health without any complications. The app does not require sign-ups or collect personal data, providing an effective and private way to keep track of your cycle.
+
+Why Choose Mensinator?
+- Mensinator stands out for its simplicity and dedication to privacy. With just one main view, you can track your periods and manage your menstrual health without any complications. The app does not require sign-ups or collect personal data, providing an effective and private way to keep track of your cycle.
 
 ## How It Works
 - Track Your Periods: Select dates on the calendar to mark your periods and monitor your cycle.
@@ -26,9 +27,16 @@ Mensinator provides a clean and intuitive interface for tracking your menstrual 
 ## Who Should Use It?
 Mensinator is perfect for anyone seeking a straightforward and private period tracking solution. Whether you're tracking for health reasons or simply keeping an eye on your cycle, Mensinator makes it easy and secure.
 
-## Getting Started
-To get started with Mensinator, simply download the app from the Google Play Store, and start tracking your menstrual cycle with ease and privacy.
-**https://play.google.com/store/apps/details?id=com.mensinator.app**
+## Get Started with Mensinator
+Ready to start tracking your menstrual cycle with ease and privacy? You can download the Mensinator app from your preferred source:
+
+- **[Google Play](https://play.google.com/store/apps/details?id=com.mensinator.app)**
+- **[IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.mensinator.app)**
+- **FDroid** (Coming soon)
+- Or download the APK directly from our [latest release on GitHub](https://github.com/EmmaTellblom/Mensinator/releases/latest).
+
+Choose the option that works best for you and take control of your cycle tracking with Mensinator!
+
 
 ## Contributing
 We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss your proposed changes. You are also welcome to join our Discord to discuss further or simply to chat with us!
