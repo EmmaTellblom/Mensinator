@@ -46,7 +46,7 @@ This file creates the calendar. A sort of "main screen".
  */
 
 @Composable
-fun CalendarScreen(onScreenProtectionChanged: (Boolean) -> Unit) {
+fun CalendarScreen() {
     val context = LocalContext.current
 
     // For accessing database functions
@@ -97,12 +97,6 @@ fun CalendarScreen(onScreenProtectionChanged: (Boolean) -> Unit) {
     var cycleNumber: Int
 
     val isScreenProtectionEnabled = remember { mutableStateOf(true) }
-
-    // If protectScreen is 1, it should protect the screen
-    // If protectScreen is 0, should not protect screen(allows prints and screen visibility in recent apps)
-    val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull()?:1
-    Log.d("screenProtectionUI", "protect screen value $protectScreen")
-    onScreenProtectionChanged(protectScreen != 0)
 
     // How many days before next period a notification should be sent to user
     // If set to 0, do not send notification
@@ -230,7 +224,6 @@ fun CalendarScreen(onScreenProtectionChanged: (Boolean) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .systemBarsPadding()
             .verticalScroll(rememberScrollState())
     )
     {

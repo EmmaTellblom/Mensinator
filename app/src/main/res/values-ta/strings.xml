@@ -16,6 +16,9 @@
     <string name="success_saved_ovulation">அண்டவிடுப்பின் வெற்றிகரமாக சேமிக்கப்பட்டது</string>
     <string name="no_date_selected_ovulation">அண்டவிடுப்பின் தேதி எதுவும் தேர்ந்தெடுக்கப்படவில்லை</string>
 
+    <!-- navigation -->
+    <string name="home_page">முகப்பு பக்கம்</string>
+    <string name="statisic_page">புள்ளிவிவரங்கள்</string>
 
     <!-- Settings -->
     <string name="app_settings">பயன்பாட்டு அமைப்புகள்</string>

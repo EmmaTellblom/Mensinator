@@ -1,124 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <resources>
-        <!-- App Name -->
-        <string name="app_name">Mensinator</string>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
 
-        <!-- Home -->
-        <string name="previous">पिछला</string>
-        <string name="next">अगला</string>
-        <string name="period_button">पिरियड्</string>
-        <string name="symptoms_button">लक्षण</string>
-        <string name="ovulation_button">ओव्यूलेशन</string>
-        <!-- Home Alerts -->
-        <string name="empty_click_alert">सहेजने या हटाने के लिए कोई तारीख नहीं</string>
-        <string name="successfully_saved_alert">परिवर्तन सफलतापूर्वक सहेजे गए</string>
-        <string name="no_data_selected">कोई तारीख़ नहीं चुनी गई</string>
-        <string name="only_day_alert">केवल एक दिन ही ओव्यूलेशन हो सकता है!</string>
-        <string name="success_saved_ovulation">ओव्यूलेशन सफलतापूर्वक सहेजा गया</string>
-        <string name="no_date_selected_ovulation">अण्डोत्सर्ग के लिए कोई तिथि नहीं चुनी गई</string>
+    <!-- Home -->
+    <string name="previous">पिछला</string>
+    <string name="next">अगला</string>
+    <string name="period_button">पिरियड्</string>
+    <string name="symptoms_button">लक्षण</string>
+    <string name="ovulation_button">ओव्यूलेशन</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">सहेजने या हटाने के लिए कोई तारीख नहीं</string>
+    <string name="successfully_saved_alert">परिवर्तन सफलतापूर्वक सहेजे गए</string>
+    <string name="no_data_selected">कोई तारीख़ नहीं चुनी गई</string>
+    <string name="only_day_alert">केवल एक दिन ही ओव्यूलेशन हो सकता है!</string>
+    <string name="success_saved_ovulation">ओव्यूलेशन सफलतापूर्वक सहेजा गया</string>
+    <string name="no_date_selected_ovulation">अण्डोत्सर्ग के लिए कोई तिथि नहीं चुनी गई</string>
 
-        <!-- Settings -->
-        <string name="app_settings">एप्लिकेशन सेटिंग</string>
-        <string name="colors">रंग</string>
-        <string name="period_color">पिरियड् रंग</string>
-        <string name="selection_color">चयन का रंग</string>
-        <string name="period_selection_color">पिरियड् चयन का रंग </string>
-        <string name="expected_period_color">अपेक्षित पीरियड रंग</string>
-        <string name="ovulation_color">अंडोत्सर्ग रंग</string>
-        <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
-        <string name="reminders">अनुस्मारक</string>
-        <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>
-        <string name="other_settings">अन्य सेटिंग</string>
-        <string name="luteal_phase_calculation">यूटियल चरण की गणना</string>
-        <string name="period_history">पिरियड् इतिहास</string>
-        <string name="ovulation_history">ओव्यूलेशन इतिहास</string>
-        <string name="language">भाषा</string>
-        <string name="cycle_numbers_show">चक्र संख्या दिखाएं</string>
-        <string name="close">बंद करना</string>
-        <string name="save">लक्षण सेव करें</string>
-        <!-- Color values -->
-        <string name="color_red">लाल</string>
-        <string name="color_green">हरा</string>
-        <string name="color_blue">नीला</string>
-        <string name="color_yellow">पीला</string>
-        <string name="color_cyan">सियान</string>
-        <string name="color_magenta">मैजेंटा</string>
-        <string name="color_black">काला</string>
-        <string name="color_white">सफ़ेद</string>
-        <string name="color_darkgray">गहरा स्लेटी</string>
-        <string name="color_gray">स्लेटी</string>
+    <!-- navigation -->
+    <string name="home_page">होम पेज</string>
+    <string name="statisic_page">आंकड़े</string>
 
-        <!-- Statistics -->
-        <string name="statistics_title">सांख्यिकी</string>
-        <string name="period_count">ट्रैक की गई पिरियड् की संख्या: %1$d</string>
-        <string name="average_cycle_length">औसत साइकिल लंबाई: %1$.1f दिन</string>
-        <string name="average_period_length">औसत पीरियड की लंबाई: %1$.1f दिन</string>
-        <string name="next_period_start_past">अगला अनुमानित पीरियड: %1$s \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
-        <string name="next_period_start_future">अगला अनुमानित पीरियड: %1$s</string>
-        <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: %1$d</string>
-        <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: %1$s</string>
-        <string name="next_predicted_ovulation">अगला अनुमानित अंडोत्सर्ग तिथि: %1$s</string>
-        <string name="next_predicted_ovulation_default">अगले अंडोत्सर्ग की भविष्यवाणी करने के लिए पर्याप्त डेटा नहीं है</string>
-        <string name="average_luteal_length">औसत ल्यूटियल चरण की लंबाई: %1$.1f दिन</string>
+    <!-- Settings -->
+    <string name="app_settings">एप्लिकेशन सेटिंग</string>
+    <string name="colors">रंग</string>
+    <string name="period_color">पिरियड् रंग</string>
+    <string name="selection_color">चयन का रंग</string>
+    <string name="period_selection_color">पिरियड् चयन का रंग </string>
+    <string name="expected_period_color">अपेक्षित पीरियड रंग</string>
+    <string name="ovulation_color">अंडोत्सर्ग रंग</string>
+    <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
+    <string name="reminders">अनुस्मारक</string>
+    <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>
+    <string name="other_settings">अन्य सेटिंग</string>
+    <string name="luteal_phase_calculation">यूटियल चरण की गणना</string>
+    <string name="period_history">पिरियड् इतिहास</string>
+    <string name="ovulation_history">ओव्यूलेशन इतिहास</string>
+    <string name="language">भाषा</string>
+    <string name="cycle_numbers_show">चक्र संख्या दिखाएं</string>
+    <string name="close">बंद करना</string>
+    <string name="save">लक्षण सेव करें</string>
+    <!-- Color values -->
+    <string name="color_red">लाल</string>
+    <string name="color_green">हरा</string>
+    <string name="color_blue">नीला</string>
+    <string name="color_yellow">पीला</string>
+    <string name="color_cyan">सियान</string>
+    <string name="color_magenta">मैजेंटा</string>
+    <string name="color_black">काला</string>
+    <string name="color_white">सफ़ेद</string>
+    <string name="color_darkgray">गहरा स्लेटी</string>
+    <string name="color_gray">स्लेटी</string>
 
-        <!-- Symptoms -->
-        <string name="symptoms_dialog_title">के लिए लक्षण %1$s</string>
-        <string name="create_new_symptom_button">नया संकेत बनाएँ</string>
-        <string name="save_symptoms_button">संकेत सेव करें</string>
-        <string name="cancel_button">रद्द</string>
-        <string name="heavy">अधिक रक्तस्राव</string>
-        <string name="medium">मध्यम रक्तस्राव</string>
-        <string name="light">हल्का रक्तस्राव</string>
+    <!-- Statistics -->
+    <string name="statistics_title">सांख्यिकी</string>
+    <string name="period_count">ट्रैक की गई पिरियड् की संख्या: %1$d</string>
+    <string name="average_cycle_length">औसत साइकिल लंबाई: %1$.1f दिन</string>
+    <string name="average_period_length">औसत पीरियड की लंबाई: %1$.1f दिन</string>
+    <string name="next_period_start_past">अगला अनुमानित पीरियड: %1$s \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
+    <string name="next_period_start_future">अगला अनुमानित पीरियड: %1$s</string>
+    <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: %1$d</string>
+    <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: %1$s</string>
+    <string name="next_predicted_ovulation">अगला अनुमानित अंडोत्सर्ग तिथि: %1$s</string>
+    <string name="next_predicted_ovulation_default">अगले अंडोत्सर्ग की भविष्यवाणी करने के लिए पर्याप्त डेटा नहीं है</string>
+    <string name="average_luteal_length">औसत ल्यूटियल चरण की लंबाई: %1$.1f दिन</string>
 
-        <!-- CreateNewSymptomDialog -->
-        <string name="create_new_symptom_dialog_title">नया संकेत बनाएँ</string>
-        <string name="symptom_name_label">लक्षण का नाम</string>
-        <string name="save_button">संकेत सेव करें</string>
-        <!-- CreateNewSymptomDialog -->
-        <string name="manage_symptoms">लक्षण प्रबंधित करें</string>
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">के लिए लक्षण %1$s</string>
+    <string name="create_new_symptom_button">नया संकेत बनाएँ</string>
+    <string name="save_symptoms_button">संकेत सेव करें</string>
+    <string name="cancel_button">रद्द</string>
+    <string name="heavy">अधिक रक्तस्राव</string>
+    <string name="medium">मध्यम रक्तस्राव</string>
+    <string name="light">हल्का रक्तस्राव</string>
 
-
-        <!-- Calender -->
-        <string name="mon">सोम</string>
-        <string name="tue">मंगल</string>
-        <string name="wed">बुध</string>
-        <string name="thu">गुरू</string>
-        <string name="fri">शुक्र</string>
-        <string name="sat">शनि</string>
-        <string name="sun">रवि</string>
-
-        <!-- Import Export Dialog -->
-        <string name="export_import_title">डेटा निर्यात/आयात</string>
-        <string name="export_button">निर्यात</string>
-        <string name="import_button">आयात</string>
-        <string name="export_success_toast">निर्यात सफलतापूर्वक %1$s पर किया गया</string>
-        <string name="import_success_toast">फाइल सफलतापूर्वक आयात की गई</string>
-        <string name="import_failure_toast">फाइल आयात करने में विफल</string>
-        <string name="export_path_label">निर्यात पथ: %1$s</string>
-        <string name="import_path_label">आयात पथ: %1$s</string>
-
-        <!-- Frequently Asked Questions -->
-        <string name="faq_title">सामान्य पूछे जाने वाले प्रश्न</string>
-
-        <!-- User Manual Section -->
-        <string name="user_manual_header">उपयोगकर्ता मैनुअल</string>
-        <string name="how_to_use">कैसे उपयोग करें:</string>
-        <string name="select_dates">• दिनांक चयन करें: एक तिथि पर टैप करके इसे चयनित या अस्वीकृत करें।</string>
-        <string name="add_or_remove_dates">• समयावधि के लिए तिथियाँ जोड़ें या हटाएँ: तिथियाँ चयनित करने के बाद \"तिथियाँ जोड़ें या हटाएँ" बटन पर क्लिक करें।</string>
-        <string name="symptoms">• लक्षण: चयनित तिथि के लिए लक्षण देखने या जोड़ने के लिए \"लक्षण" बटन पर क्लिक करें।</string>
-        <string name="ovulation">• अंडोत्सर्ग: एकल तिथि का चयन करें और अंडोत्सर्ग बटन पर क्लिक करें। हटाने के लिए, तिथि का चयन करें और बटन को फिर से दबाएं।</string>
-        <string name="statistics">• आँकड़े: \"बर्गर मेनू\" पर क्लिक करें और आँकड़े चुनें।</string>
-        <string name="import_export">• आयात/निर्यात: अपने डेटा को आयात या निर्यात करने के लिए \"आयात/निर्यात\" बटन पर क्लिक करें। नए डिवाइस में डेटा ट्रांसफर करते समय यह अनिवार्य है!</string>
-        <string name="calculations">• गणनाएँ: \nमासिक चक्र की औसत लंबाई और अवधि के आधार पर गणना की जाती है। \nगणनाएँ औसत ल्यूटियल चरण का उपयोग करके की जा सकती हैं। गणनाएँ पिछले 5 चक्रों को देखेगी और एक औसत ल्यूटियल चरण का उपयोग करेगी। यह सेटिंग्स में सक्रिय किया जाता है।\nअंडोत्सर्ग औसत अंडोत्सर्ग चक्र की लंबाई के अनुसार गणना की जाती है।</string>
-        <string name="features_coming_soon">जल्द आ रही सुविधाएँ:</string>
-        <string name="upcoming_features">• नया उपयोगकर्ता इंटरफ़ेस (जब मैं मूड में हूँ)। • अन्य छोटे UI सुधार</string>
-        <string name="our_story_header">हमारी कहानी</string>
-        <string name="our_story">हम दो महिलाएँ हैं जो बड़ी कंपनियों को अपना डेटा बेचते-बेचते थक गई थीं। हमारा ऐप आपके डिवाइस पर स्थानीय रूप से आपका सारा डेटा स्टोर करता है और हमारे पास इसका कोई एक्सेस नहीं है।\nहम आपकी गोपनीयता को महत्व देते हैं और किसी भी व्यक्तिगत जानकारी को सेव या साझा नहीं करते हैं। इस ऐप को लॉन्च करने के बाद से हम बढ़ गए हैं और अब हमारे पास एक खुद का डिस्कॉर्ड सर्वर है जहाँ लोग इस ऐप के प्रति उत्साही हैं और हमारी मदद करना चाहते हैं!\n\nहमारे डिस्कॉर्ड में शामिल हों यहाँ: https://discord.gg/tHA2k3bFRN</string>
-        <string name="disclaimer_header">अस्वीकृति:</string>
-        <string name="disclaimer">• यह एक शौकिया प्रोजेक्ट है और चिकित्सा उपयोग के लिए नहीं है। हम इसे अपनी व्यक्तिगत ज़रूरतों के लिए कर रहे हैं। लेकिन हम विचारों और अनुरोधों का स्वागत करते हैं। डिस्कॉर्ड पर शामिल हों या हमें ईमेल भेजें:\nmensinator.app@gmail.com</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">नया संकेत बनाएँ</string>
+    <string name="symptom_name_label">लक्षण का नाम</string>
+    <string name="save_button">संकेत सेव करें</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">लक्षण प्रबंधित करें</string>
 
 
+    <!-- Calender -->
+    <string name="mon">सोम</string>
+    <string name="tue">मंगल</string>
+    <string name="wed">बुध</string>
+    <string name="thu">गुरू</string>
+    <string name="fri">शुक्र</string>
+    <string name="sat">शनि</string>
+    <string name="sun">रवि</string>
 
-        <!-- Universal/ Repeated Strings -->
-        <string name="close_button">बंद करें</string>
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">डेटा निर्यात/आयात</string>
+    <string name="export_button">निर्यात</string>
+    <string name="import_button">आयात</string>
+    <string name="export_success_toast">निर्यात सफलतापूर्वक %1$s पर किया गया</string>
+    <string name="import_success_toast">फाइल सफलतापूर्वक आयात की गई</string>
+    <string name="import_failure_toast">फाइल आयात करने में विफल</string>
+    <string name="export_path_label">निर्यात पथ: %1$s</string>
+    <string name="import_path_label">आयात पथ: %1$s</string>
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">सामान्य पूछे जाने वाले प्रश्न</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">उपयोगकर्ता मैनुअल</string>
+    <string name="how_to_use">कैसे उपयोग करें:</string>
+    <string name="select_dates">• दिनांक चयन करें: एक तिथि पर टैप करके इसे चयनित या अस्वीकृत करें।</string>
+    <string name="add_or_remove_dates">• समयावधि के लिए तिथियाँ जोड़ें या हटाएँ: तिथियाँ चयनित करने के बाद \"तिथियाँ जोड़ें या हटाएँ" बटन पर क्लिक करें।</string>
+    <string name="symptoms">• लक्षण: चयनित तिथि के लिए लक्षण देखने या जोड़ने के लिए \"लक्षण" बटन पर क्लिक करें।</string>
+    <string name="ovulation">• अंडोत्सर्ग: एकल तिथि का चयन करें और अंडोत्सर्ग बटन पर क्लिक करें। हटाने के लिए, तिथि का चयन करें और बटन को फिर से दबाएं।</string>
+    <string name="statistics">• आँकड़े: \"बर्गर मेनू\" पर क्लिक करें और आँकड़े चुनें।</string>
+    <string name="import_export">• आयात/निर्यात: अपने डेटा को आयात या निर्यात करने के लिए \"आयात/निर्यात\" बटन पर क्लिक करें। नए डिवाइस में डेटा ट्रांसफर करते समय यह अनिवार्य है!</string>
+    <string name="calculations">• गणनाएँ: \nमासिक चक्र की औसत लंबाई और अवधि के आधार पर गणना की जाती है। \nगणनाएँ औसत ल्यूटियल चरण का उपयोग करके की जा सकती हैं। गणनाएँ पिछले 5 चक्रों को देखेगी और एक औसत ल्यूटियल चरण का उपयोग करेगी। यह सेटिंग्स में सक्रिय किया जाता है।\nअंडोत्सर्ग औसत अंडोत्सर्ग चक्र की लंबाई के अनुसार गणना की जाती है।</string>
+    <string name="features_coming_soon">जल्द आ रही सुविधाएँ:</string>
+    <string name="upcoming_features">• नया उपयोगकर्ता इंटरफ़ेस (जब मैं मूड में हूँ)। • अन्य छोटे UI सुधार</string>
+    <string name="our_story_header">हमारी कहानी</string>
+    <string name="our_story">हम दो महिलाएँ हैं जो बड़ी कंपनियों को अपना डेटा बेचते-बेचते थक गई थीं। हमारा ऐप आपके डिवाइस पर स्थानीय रूप से आपका सारा डेटा स्टोर करता है और हमारे पास इसका कोई एक्सेस नहीं है।\nहम आपकी गोपनीयता को महत्व देते हैं और किसी भी व्यक्तिगत जानकारी को सेव या साझा नहीं करते हैं। इस ऐप को लॉन्च करने के बाद से हम बढ़ गए हैं और अब हमारे पास एक खुद का डिस्कॉर्ड सर्वर है जहाँ लोग इस ऐप के प्रति उत्साही हैं और हमारी मदद करना चाहते हैं!\n\nहमारे डिस्कॉर्ड में शामिल हों यहाँ: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">अस्वीकृति:</string>
+    <string name="disclaimer">• यह एक शौकिया प्रोजेक्ट है और चिकित्सा उपयोग के लिए नहीं है। हम इसे अपनी व्यक्तिगत ज़रूरतों के लिए कर रहे हैं। लेकिन हम विचारों और अनुरोधों का स्वागत करते हैं। डिस्कॉर्ड पर शामिल हों या हमें ईमेल भेजें:\nmensinator.app@gmail.com</string>
+
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">बंद करें</string>
 </resources>
