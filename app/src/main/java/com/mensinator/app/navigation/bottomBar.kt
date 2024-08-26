@@ -1,4 +1,4 @@
-package com.mensinator.app.Navigation
+package com.mensinator.app.navigation
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
@@ -31,6 +31,7 @@ import com.mensinator.app.R
 
 enum class Screens {
     Home,
+    Symptoms,
     Statistic,
     Settings
 }
@@ -45,7 +46,7 @@ fun BottomBar(
     val dbHelper = remember { PeriodDatabaseHelper(context) }
     // If protectScreen is 1, it should protect the screen
     // If protectScreen is 0, should not protect screen(allows prints and screen visibility in recent apps)
-    val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull()?:1
+    val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1
     Log.d("screenProtectionUI", "protect screen value $protectScreen")
     onScreenProtectionChanged(protectScreen != 0)
 
@@ -59,6 +60,8 @@ fun BottomBar(
         val newIndex = when (currentScreen) {//this is not the best practise but works the same
             Screens.Home -> 0
             Screens.Statistic -> 1
+            Screens.Symptoms -> 2
+            Screens.Settings -> 3
             else -> 0 // Default value
         }
 
@@ -73,12 +76,22 @@ fun BottomBar(
                 BarItem(
                     R.string.home_page,
                     R.drawable.home_field,
-                    R.drawable.home
+                    R.drawable.home_field //here you can add not_field icon if you want. when its not selected
                 ),
                 BarItem(
                     R.string.statisic_page,
                     R.drawable.outline_bar_chart_24,
                     R.drawable.outline_bar_chart_24
+                ),
+                BarItem(
+                    R.string.symptoms_page,
+                    R.drawable.baseline_bloodtype_24,
+                    R.drawable.baseline_bloodtype_24
+                ),
+                BarItem(
+                    R.string.settings_page,
+                    R.drawable.settings_24px,
+                    R.drawable.settings_24px
                 ),
             )
             NavigationBar {
@@ -96,6 +109,22 @@ fun BottomBar(
                                     }
 
                                     1 -> navController.navigate(Screens.Statistic.name) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+
+                                    2 -> navController.navigate(Screens.Symptoms.name) {
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+
+                                    3 -> navController.navigate(Screens.Settings.name) {
                                         popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
                                         }
@@ -126,11 +155,17 @@ fun BottomBar(
             startDestination = Screens.Home.name,
             modifier = Modifier.padding(paddingValues)
         ) {
-            composable(route = Screens.Home.name) {
+            composable(route = Screens.Home.name) {//create a new file for every page and pass it inside the composable
                 CalendarScreen()
             }
             composable(route = Screens.Statistic.name) {
-                //here call the Statistic page
+                // here you add the page that you want to open(Statistic)
+            }
+            composable(route = Screens.Symptoms.name) {
+                // here you add the page that you want to open(Symptoms)
+            }
+            composable(route = Screens.Settings.name) {
+                // here you add the page that you want to open(Settings)
             }
         }
     }

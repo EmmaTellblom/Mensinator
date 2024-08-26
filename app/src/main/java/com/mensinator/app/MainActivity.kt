@@ -4,7 +4,7 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.mensinator.app.Navigation.BottomBar
+import com.mensinator.app.navigation.BottomBar
 import com.mensinator.app.ui.theme.MensinatorTheme
 
 class MainActivity : AppCompatActivity() {

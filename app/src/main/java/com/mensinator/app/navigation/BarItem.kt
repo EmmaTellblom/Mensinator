@@ -1,4 +1,4 @@
-package com.mensinator.app.Navigation
+package com.mensinator.app.navigation
 
 import androidx.annotation.StringRes
 
