@@ -593,9 +593,9 @@ fun CalendarScreen() {
         // Show the StatisticsDialog
         if (showStatisticsDialog) {
             StatisticsDialog(
-                nextPeriodStart = nextPeriodStartCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
+                //nextPeriodStart = nextPeriodStartCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
                 follicleGrowthDays = follicleGrowthDays, // This is calculated in CalendarScreen for Ovulation, so we can send it to statistics
-                nextPredictedOvulation = nextOvulationCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
+                //nextPredictedOvulation = nextOvulationCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
                 onDismissRequest = { showStatisticsDialog = false }
             )
         }
