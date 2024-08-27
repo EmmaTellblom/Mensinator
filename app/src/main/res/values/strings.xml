@@ -16,6 +16,11 @@
     <string name="success_saved_ovulation">Ovulation saved successfully</string>
     <string name="no_date_selected_ovulation">No date selected for ovulation</string>
 
+    <!-- navigation -->
+    <string name="home_page">Home</string>
+    <string name="statisic_page">Statistic</string>
+    <string name="symptoms_page" translatable="false">Symptoms</string>
+    <string name="settings_page" translatable="false">Settings</string>
 
     <!-- Settings -->
     <string name="app_settings">App Settings</string>

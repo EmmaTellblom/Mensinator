@@ -16,6 +16,9 @@
     <string name="success_saved_ovulation">ওভুলেশন সফলভাবে সংরক্ষিত হয়েছে</string>
     <string name="no_date_selected_ovulation">ওভুলেশনের জন্য কোনো তারিখ নির্বাচিত হয়নি</string>
 
+    <!-- navigation -->
+    <string name="home_page">হোম পেজ</string>
+    <string name="statisic_page">পরিসংখ্যান</string>
 
     <!-- Settings -->
     <string name="app_settings">অ্যাপ সেটিংস</string>

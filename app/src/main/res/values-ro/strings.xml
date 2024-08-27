@@ -17,6 +17,10 @@
     <string name="success_saved_ovulation">Ovulația a fost salvată cu succes</string>
     <string name="no_date_selected_ovulation">Nicio zi selectată pentru ovulație</string>
 
+    <!-- navigation -->
+    <string name="home_page">Pagina principală</string>
+    <string name="statisic_page">Statistici</string>
+
     <!-- Settings -->
     <string name="app_settings">Setările Aplicației</string>
     <string name="colors">Culori</string>
