@@ -19,8 +19,8 @@
     <!-- navigation -->
     <string name="home_page">Home</string>
     <string name="statisic_page">Statistic</string>
-    <string name="symptoms_page" translatable="false">Symptoms</string>
-    <string name="settings_page" translatable="false">Settings</string>
+    <string name="symptoms_page">Symptoms</string>
+    <string name="settings_page">Settings</string>
 
     <!-- Settings -->
     <string name="app_settings">App Settings</string>

@@ -123,4 +123,6 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">மூடு</string>
+    <string name="symptoms_page">அறிகுறிகள்</string>
+    <string name="settings_page">அமைப்புகள்</string>
 </resources>

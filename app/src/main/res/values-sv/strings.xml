@@ -124,4 +124,6 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Stäng</string>
+    <string name="symptoms_page">Symptom</string>
+    <string name="settings_page">Inställningar</string>
 </resources>

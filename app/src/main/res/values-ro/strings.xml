@@ -126,4 +126,6 @@
 
     <!-- Universal/Repeated Strings -->
     <string name="close_button">Închide</string>
+    <string name="symptoms_page">Simptome</string>
+    <string name="settings_page">Setări</string>
 </resources>

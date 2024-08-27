@@ -124,4 +124,6 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">बंद करें</string>
+    <string name="symptoms_page">लक्षण</string>
+    <string name="settings_page">सेटिंग्स</string>
 </resources>
