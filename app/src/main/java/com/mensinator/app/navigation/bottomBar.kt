@@ -26,8 +26,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.CalendarScreen
+import com.mensinator.app.ManageSymptom
 import com.mensinator.app.PeriodDatabaseHelper
 import com.mensinator.app.R
+import com.mensinator.app.SettingsDialog
 
 enum class Screens {
     Home,
@@ -62,7 +64,6 @@ fun BottomBar(
             Screens.Statistic -> 1
             Screens.Symptoms -> 2
             Screens.Settings -> 3
-            else -> 0 // Default value
         }
 
         if (selectedItemIndex != newIndex) {
@@ -160,12 +161,28 @@ fun BottomBar(
             }
             composable(route = Screens.Statistic.name) {
                 // here you add the page that you want to open(Statistic)
+//                StatisticsDialog(
+//                    nextPeriodStart = "TBD",
+//                    follicleGrowthDays = "TBD",
+//                    nextPredictedOvulation = "TBD",
+//
+//                ) {
+//
+//                }
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
+                ManageSymptom(onDismissRequest = { navController.popBackStack() }) {
+
+                }
             }
             composable(route = Screens.Settings.name) {
                 // here you add the page that you want to open(Settings)
+                SettingsDialog(
+                    onDismissRequest = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }
