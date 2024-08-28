@@ -128,4 +128,7 @@
     <string name="close_button">Închide</string>
     <string name="symptoms_page">Simptome</string>
     <string name="settings_page">Setări</string>
+    <string name="delete_symptom">Șterge simptomul</string>
+    <string name="delete_question">Ești sigură că vrei să ștergi acest simptom?</string>
+    <string name="delete_button">Șterge</string>
 </resources>

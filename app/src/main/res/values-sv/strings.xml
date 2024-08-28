@@ -126,4 +126,7 @@
     <string name="close_button">Stäng</string>
     <string name="symptoms_page">Symptom</string>
     <string name="settings_page">Inställningar</string>
+    <string name="delete_symptom">Radera symptom</string>
+    <string name="delete_question">Är du säker på att du vill radera detta symptom?</string>
+    <string name="delete_button">Radera</string>
 </resources>

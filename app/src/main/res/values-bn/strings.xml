@@ -126,4 +126,7 @@
     <string name="close_button">বন্ধ করুন</string>
     <string name="symptoms_page">লক্ষণগুলি</string>
     <string name="settings_page">সেটিংস</string>
+    <string name="delete_symptom">লক্ষণ মুছুন</string>
+    <string name="delete_question">আপনি কি নিশ্চিত যে আপনি এই লক্ষণটি মুছতে চান?</string>
+    <string name="delete_button">মুছুন</string>
 </resources>

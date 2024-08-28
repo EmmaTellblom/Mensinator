@@ -126,4 +126,7 @@
     <string name="close_button">बंद करें</string>
     <string name="symptoms_page">लक्षण</string>
     <string name="settings_page">सेटिंग्स</string>
+    <string name="delete_symptom">लक्षण हटाएं</string>
+    <string name="delete_question">क्या आप सुनिश्चित हैं कि आप इस लक्षण को हटाना चाहते हैं?</string>
+    <string name="delete_button">हटाएं</string>
 </resources>
