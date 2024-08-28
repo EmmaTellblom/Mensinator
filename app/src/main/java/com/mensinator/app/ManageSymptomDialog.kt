@@ -2,17 +2,24 @@ package com.mensinator.app
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,19 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-
 
 
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
 fun ManageSymptom(
-    onDismissRequest: () -> Unit,
     onSave: () -> Unit
 ) {
     val context = LocalContext.current
@@ -57,97 +61,140 @@ fun ManageSymptom(
         "Light Gray" to Color.LightGray,
     )
 
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        title = {
-            Text(text = stringResource(id = R.string.manage_symptoms), fontSize = 20.sp)
-        },
-        text = {
-            Column(
+    Column(
+        modifier = Modifier
+            .padding(15.dp)
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState()),  // Make the column scrollable
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp)
+        ) {
+            Text(
+                text = "Flow",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.weight(1f)) //cover available space
+            Text(
+                text = "Color",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.padding(3.dp))
+        savedSymptoms.forEach { symptom ->
+            var expanded by remember { mutableStateOf(false) }
+            var selectedColorName by remember { mutableStateOf(symptom.color) }
+            val colorKey = ResourceMapper.getStringResourceId(selectedColorName)
+            //val resKey = ResourceMapper.getStringResourceId(symptom.name)
+
+            val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
+            val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
+            Card(
                 modifier = Modifier
-                    .padding(16.dp)
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())  // Make the column scrollable
+                    .padding(top = 15.dp),
+                shape = RoundedCornerShape(25.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFFf5ebff) //change this color when you implement a theme
+                )                                           // to something like : MaterialTheme.colorScheme.onBackground
             ) {
-                savedSymptoms.forEach { symptom ->
-                    var expanded by remember { mutableStateOf(false) }
-                    var selectedColorName by remember { mutableStateOf(symptom.color) }
-                    val colorKey = ResourceMapper.getStringResourceId(selectedColorName)
-                    //val resKey = ResourceMapper.getStringResourceId(symptom.name)
-
-                    val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
-                    val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp)
+                ) {
+                    IconButton(
+                        onClick = {
+                            TODO("make a data fun to delete one symptom")
+                        },
+                        modifier = Modifier.size(20.dp)
                     ) {
-                        Text(text = symptomDisplayName, textAlign = androidx.compose.ui.text.style.TextAlign.Left)
-                        Switch(
-                            checked = symptom.active == 1,
-                            onCheckedChange = { checked ->
-                                val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
-                                savedSymptoms = savedSymptoms.map {
-                                    if (it.id == symptom.id) updatedSymptom else it
-                                }
-                            }
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(id = R.string.close)
                         )
+                    }
+                    Spacer(modifier = Modifier.padding(start = 5.dp))
+                    Text(
+                        text = symptomDisplayName,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Left,
+                        modifier = Modifier.weight(1f) // Let the text expand to fill available space
+                    )
 
-                        // Color Dropdown
-                        Row(
-                            modifier = Modifier
-                                .padding(start = 16.dp)
-                                .clickable { expanded = true }
-                        ) {
-                            Text(
-                                text = colorKey?.let { stringResource(id = it) } ?:"Not found",
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Left
-                            )
+
+                    Switch(
+                        checked = symptom.active == 1,
+                        onCheckedChange = { checked ->
+                            val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
+                            savedSymptoms = savedSymptoms.map {
+                                if (it.id == symptom.id) updatedSymptom else it
+                            }
+                            // Save settings to the database
+                            savedSymptoms.forEach { symptom ->
+                                dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
+                            }
+                            onSave()
                         }
+                    )
+                    Spacer(modifier = Modifier.weight(0.4f))
+                    // Color Dropdown wrapped in a Box for alignment
+                    Box(
+                        modifier = Modifier
+                            .padding(start = 16.dp)
+                            .clickable { expanded = true }
+                    ) {
+                        Text(
+                            text = colorKey?.let { stringResource(id = it) } ?: "Not found",
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Left,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
 
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
                             predefinedColors.forEach { (colorName) ->
-                                val colorKey = ResourceMapper.getStringResourceId(colorName)
+                                val keyColor = ResourceMapper.getStringResourceId(colorName)
 
                                 DropdownMenuItem(
-                                    { Text(text = colorKey?.let { stringResource(id = it) } ?:"Not found", textAlign = androidx.compose.ui.text.style.TextAlign.Left) },
-                                        onClick = {
-                                            selectedColorName = colorName
-                                            expanded = false
-                                            val updatedSymptom = symptom.copy(color = colorName)
-                                            savedSymptoms = savedSymptoms.map {
-                                                if (it.id == symptom.id) updatedSymptom else it
-                                            }
+                                    onClick = {
+                                        selectedColorName = colorName
+                                        expanded = false
+                                        val updatedSymptom = symptom.copy(color = colorName)
+                                        savedSymptoms = savedSymptoms.map {
+                                            if (it.id == symptom.id) updatedSymptom else it
                                         }
+                                        // Save settings to the database
+                                        savedSymptoms.forEach { symptom ->
+                                            dbHelper.updateSymptom(
+                                                symptom.id,
+                                                symptom.active,
+                                                symptom.color
+                                            )
+                                        }
+                                        onSave()
+                                    },
+                                    text = {
+                                        Text(
+                                            text = keyColor?.let { stringResource(id = it) }
+                                                ?: "Not found",
+                                            textAlign = androidx.compose.ui.text.style.TextAlign.Left
+                                        )
+                                    }
                                 )
                             }
                         }
                     }
                 }
             }
-        },
-        confirmButton = {
-            Button(onClick = {
-                // Save settings to the database
-                savedSymptoms.forEach { symptom ->
-                    dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
-                }
-                onSave()
-                onDismissRequest()  // Close the dialog
-            }) {
-                Text(stringResource(id = R.string.save))
-            }
-        },
-        dismissButton = {
-            Button(onClick = onDismissRequest) {
-                Text(stringResource(id = R.string.close))
-            }
-        },
-        // To adjust the width of the AlertDialog based on screen size
-        modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f) // Adjust width to 90% of screen width
-    )
+        }
+    }
 }

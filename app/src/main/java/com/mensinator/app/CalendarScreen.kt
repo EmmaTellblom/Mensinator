@@ -615,7 +615,6 @@ fun CalendarScreen() {
 
         if (showManageSymptomsDialog) {
             ManageSymptom(
-                onDismissRequest = { showManageSymptomsDialog = false },
                 onSave = {
                     // Refresh symptoms when saving
                     refreshSymptomDates()
