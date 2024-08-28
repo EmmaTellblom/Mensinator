@@ -172,8 +172,7 @@ fun BottomBar(
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
-                ManageSymptom(onDismissRequest = { navController.popBackStack() }) {
-
+                ManageSymptom {
                 }
             }
             composable(route = Screens.Settings.name) {
