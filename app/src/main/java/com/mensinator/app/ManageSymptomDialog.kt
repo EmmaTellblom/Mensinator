@@ -119,8 +119,10 @@ fun ManageSymptom(
                                     Log.d("test2", dbHelper.getAllActiveSymptoms().toString())
                                     showDeleteDialog = true
                                     symptomToDelete = symptom
+
                                 } else {
                                     //TODO("make a data fun to delete one symptom")
+
                                 }
                             },
                             modifier = Modifier.size(20.dp)
@@ -238,13 +240,12 @@ fun ManageSymptom(
             confirmButton = {
                 Button(
                     onClick = {
-                        /*TODO("make a data fun to delete one symptom")
-                        symptomToDelete?.let { symptom ->
+                            symptomToDelete?.let { symptom ->
                             savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
                             dbHelper.deleteSymptom(symptom.id)
                             onSave()
                         }
-                        */
+
                         showDeleteDialog = false
                     },
                     modifier = Modifier.padding(end = 15.dp)

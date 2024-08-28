@@ -788,4 +788,18 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
         return ovulationDates
     }
+
+    //This function is used to remove a date from the periods table
+    fun deleteSymptom(symptomId: Int) {
+        val db = writableDatabase
+        val whereClause = "id = ?"
+        val whereArgs = arrayOf(symptomId.toString())
+        val rowsDeleted = db.delete("symptoms", whereClause, whereArgs)
+        if (rowsDeleted > 0) {
+            Log.d(TAG, "Deleted symptom from symptoms")
+        } else {
+            Log.d(TAG, "No symptoms to delete")
+        }
+        db.close()
+    }
 }
