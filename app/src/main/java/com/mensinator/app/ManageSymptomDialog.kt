@@ -1,6 +1,7 @@
 package com.mensinator.app
 
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,17 +10,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,10 +36,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mensinator.app.data.DataSource
 
 
 //Maps Database keys to res/strings.xml for multilanguage support
@@ -47,19 +55,9 @@ fun ManageSymptom(
     val initialSymptoms = remember { dbHelper.getAllSymptoms() }
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
 
-    // Predefined list of colors
-    val predefinedColors = listOf(
-        "Red" to Color.Red,
-        "Green" to Color.Green,
-        "Blue" to Color.Blue,
-        "Yellow" to Color.Yellow,
-        "Cyan" to Color.Cyan,
-        "Magenta" to Color.Magenta,
-        "Black" to Color.Black,
-        "White" to Color.White,
-        "Dark Gray" to Color.DarkGray,
-        "Light Gray" to Color.LightGray,
-    )
+    // State to manage the dialog visibility
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var symptomToDelete by remember { mutableStateOf<Symptom?>(null) }
 
     Column(
         modifier = Modifier
@@ -90,8 +88,11 @@ fun ManageSymptom(
         savedSymptoms.forEach { symptom ->
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
-            val colorKey = ResourceMapper.getStringResourceId(selectedColorName)
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
+            val colorIndex =
+                DataSource().predefinedListOfColors.indexOfFirst { it.first == selectedColorName }
+            val selectedColor =
+                DataSource().predefinedListOfColors.getOrNull(colorIndex)?.second ?: Color.Gray
 
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
             val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
@@ -111,21 +112,29 @@ fun ManageSymptom(
                         .fillMaxWidth()
                         .padding(start = 10.dp, end = 10.dp)
                 ) {
-                    IconButton(
-                        onClick = {
-                            TODO("make a data fun to delete one symptom")
-                        },
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(id = R.string.close)
-                        )
+                    if (savedSymptoms.size > 1) {
+                        IconButton(
+                            onClick = {
+                                if (dbHelper.getAllActiveSymptoms().contains(symptom)) {
+                                    Log.d("test2", dbHelper.getAllActiveSymptoms().toString())
+                                    showDeleteDialog = true
+                                    symptomToDelete = symptom
+                                } else {
+                                    //TODO("make a data fun to delete one symptom")
+                                }
+                            },
+                            modifier = Modifier.size(20.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Close,
+                                contentDescription = stringResource(id = R.string.close)
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.padding(start = 5.dp))
                     Text(
                         text = symptomDisplayName,
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Left,
+                        textAlign = TextAlign.Left,
                         modifier = Modifier.weight(1f) // Let the text expand to fill available space
                     )
 
@@ -144,24 +153,41 @@ fun ManageSymptom(
                             onSave()
                         }
                     )
-                    Spacer(modifier = Modifier.weight(0.4f))
+                    Spacer(modifier = Modifier.weight(0.2f))
                     // Color Dropdown wrapped in a Box for alignment
                     Box(
                         modifier = Modifier
-                            .padding(start = 16.dp)
-                            .clickable { expanded = true }
+                            .padding(start = 10.dp)
                     ) {
-                        Text(
-                            text = colorKey?.let { stringResource(id = it) } ?: "Not found",
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Left,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
+                        OutlinedButton(
+                            onClick = { expanded = true },
+                            modifier = Modifier
+                                .padding(4.dp),
+                            border = BorderStroke(
+                                2.dp,
+                                selectedColor
+                            ) // Set the border color to the selected color
+                        ) {
+                            Text(
+                                text = selectedColorName,
+                                textAlign = TextAlign.Left
+                            )
+                            Icon(
+                                painter = painterResource(id = R.drawable.keyboard_arrow_down_24px),
+                                contentDescription = stringResource(
+                                    id =
+                                    R.string.selection_color
+                                ),
+                                modifier = Modifier.wrapContentSize()
+                            )
+                        }
+
 
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            predefinedColors.forEach { (colorName) ->
+                            DataSource().predefinedListOfColors.forEach { (colorName) ->
                                 val keyColor = ResourceMapper.getStringResourceId(colorName)
 
                                 DropdownMenuItem(
@@ -186,7 +212,7 @@ fun ManageSymptom(
                                         Text(
                                             text = keyColor?.let { stringResource(id = it) }
                                                 ?: "Not found",
-                                            textAlign = androidx.compose.ui.text.style.TextAlign.Left
+                                            textAlign = TextAlign.Left
                                         )
                                     }
                                 )
@@ -196,5 +222,46 @@ fun ManageSymptom(
                 }
             }
         }
+    }
+    // Show the delete confirmation dialog
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showDeleteDialog = false
+            },
+            title = {
+                Text(text = stringResource(id = R.string.delete_symptom))
+            },
+            text = {
+                Text(text = stringResource(id = R.string.delete_question))
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        /*TODO("make a data fun to delete one symptom")
+                        symptomToDelete?.let { symptom ->
+                            savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
+                            dbHelper.deleteSymptom(symptom.id)
+                            onSave()
+                        }
+                        */
+                        showDeleteDialog = false
+                    },
+                    modifier = Modifier.padding(end = 15.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.delete_button))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showDeleteDialog = false
+                    },
+                    modifier = Modifier.padding(end = 50.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.cancel_button))
+                }
+            }
+        )
     }
 }

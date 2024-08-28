@@ -22,6 +22,11 @@
     <string name="symptoms_page">Symptoms</string>
     <string name="settings_page">Settings</string>
 
+    <!-- symptoms page -->
+    <string name="delete_symptom" translatable="false">Delete Symptom</string>
+    <string name="delete_question" translatable="false">Are you sure you want to delete this symptom?</string>
+    <string name="delete_button" translatable="false">Delete</string>
+
     <!-- Settings -->
     <string name="app_settings">App Settings</string>
     <string name="colors">Colors</string>
