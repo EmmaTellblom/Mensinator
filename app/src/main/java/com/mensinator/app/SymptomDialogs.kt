@@ -123,7 +123,8 @@ fun CreateNewSymptomDialog(
             Button(
                 onClick = {
                     onSave(symptomName)
-                }
+                },
+                modifier = Modifier.padding(end = 27.dp)
             ) {
                 Text(stringResource(id = R.string.save_button))
             }
@@ -132,7 +133,8 @@ fun CreateNewSymptomDialog(
             Button(
                 onClick = {
                     onCancel()
-                }
+                },
+                modifier = Modifier.padding(end = 30.dp)
             ) {
                 Text(stringResource(id = R.string.cancel_button))
             }

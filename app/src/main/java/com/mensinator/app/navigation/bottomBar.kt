@@ -2,6 +2,10 @@ package com.mensinator.app.navigation
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -11,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -19,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -52,6 +58,8 @@ fun BottomBar(
     Log.d("screenProtectionUI", "protect screen value $protectScreen")
     onScreenProtectionChanged(protectScreen != 0)
 
+    val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screens.valueOf(
         backStackEntry?.destination?.route ?: Screens.Home.name
@@ -72,6 +80,20 @@ fun BottomBar(
     }
 
     Scaffold(
+        floatingActionButton = {
+            if (currentScreen == Screens.Symptoms) {
+                FloatingActionButton(
+                    onClick = { showCreateSymptom.value = true },
+                    shape = CutCornerShape(topEnd = 16.dp, bottomStart = 16.dp),
+                    modifier = Modifier.padding(5.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.delete_button)
+                    )
+                }
+            }
+        },
         bottomBar = {
             val barItems = listOf(
                 BarItem(
@@ -172,7 +194,7 @@ fun BottomBar(
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
-                ManageSymptom {
+                ManageSymptom(showCreateSymptom) {
                 }
             }
             composable(route = Screens.Settings.name) {

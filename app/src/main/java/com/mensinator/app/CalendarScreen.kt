@@ -30,6 +30,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -132,7 +133,7 @@ fun CalendarScreen() {
     val selectedPeriodColor = dbHelper.getSettingByKey("period_selection_color")?.value?.let { colorMap[it] } ?: colorMap["DarkGray"]!!
     val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] } ?: colorMap["Blue"]!!
     val nextOvulationColor = dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] } ?: colorMap["Magenta"]!!
-
+    val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
     // Initializing symptom indicator color
     var symptomColor: Color
 
@@ -615,6 +616,7 @@ fun CalendarScreen() {
 
         if (showManageSymptomsDialog) {
             ManageSymptom(
+                showCreateSymptom = showCreateSymptom ,
                 onSave = {
                     // Refresh symptoms when saving
                     refreshSymptomDates()

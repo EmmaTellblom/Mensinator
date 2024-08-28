@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,11 +49,12 @@ import com.mensinator.app.data.DataSource
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
 fun ManageSymptom(
+    showCreateSymptom: MutableState<Boolean>,
     onSave: () -> Unit
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }
-    val initialSymptoms = remember { dbHelper.getAllSymptoms() }
+    var initialSymptoms = remember { dbHelper.getAllSymptoms() }
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
 
     // State to manage the dialog visibility
@@ -121,8 +123,11 @@ fun ManageSymptom(
                                     symptomToDelete = symptom
 
                                 } else {
-                                    //TODO("make a data fun to delete one symptom")
-
+                                    symptom.let { symptom ->
+                                        savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
+                                        dbHelper.deleteSymptom(symptom.id)
+                                        onSave()
+                                    }
                                 }
                             },
                             modifier = Modifier.size(20.dp)
@@ -224,6 +229,20 @@ fun ManageSymptom(
                 }
             }
         }
+    }
+    if(showCreateSymptom.value){
+        CreateNewSymptomDialog(
+            newSymptom = "",  // Pass an empty string for new symptoms
+            onSave = { newSymptomName ->
+                dbHelper.createNewSymptom(newSymptomName)
+                initialSymptoms = dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
+                savedSymptoms = initialSymptoms
+                showCreateSymptom.value = false  // Close the new symptom dialog
+            },
+            onCancel = {
+                showCreateSymptom.value = false  // Close the new symptom dialog
+            },
+        )
     }
     // Show the delete confirmation dialog
     if (showDeleteDialog) {
