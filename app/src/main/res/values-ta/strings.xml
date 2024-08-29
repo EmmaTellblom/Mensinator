@@ -125,4 +125,7 @@
     <string name="close_button">மூடு</string>
     <string name="symptoms_page">அறிகுறிகள்</string>
     <string name="settings_page">அமைப்புகள்</string>
+    <string name="delete_symptom">அறிகுறியை நீக்கு</string>
+    <string name="delete_question">இந்த அறிகுறியை நிச்சயமாக நீக்க விரும்புகிறீர்களா?</string>
+    <string name="delete_button">நீக்கு</string>
 </resources>
