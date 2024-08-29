@@ -393,6 +393,7 @@ fun SettingsDialog(
     )
 }
 
+
 fun areNotificationsEnabled(context: Context): Boolean {
     val notificationManager = NotificationManagerCompat.from(context)
     return notificationManager.areNotificationsEnabled()
