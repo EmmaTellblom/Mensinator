@@ -1,7 +1,8 @@
 package com.mensinator.app
 
 import android.util.Log
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -160,35 +161,39 @@ fun ManageSymptom(
                             onSave()
                         }
                     )
-                    Spacer(modifier = Modifier.weight(0.2f))
-                    // Color Dropdown wrapped in a Box for alignment
-                    Box(
-                        modifier = Modifier
-                            .padding(start = 10.dp)
-                    ) {
-                        OutlinedButton(
-                            onClick = { expanded = true },
+                    Spacer(modifier = Modifier.weight(0.3f))
+                    Box {
+                        // Color Dropdown wrapped in a Box for alignment
+                        Card(
                             modifier = Modifier
-                                .padding(4.dp),
-                            border = BorderStroke(
-                                2.dp,
-                                selectedColor
-                            ) // Set the border color to the selected color
+                                .padding(start = 10.dp)
+                                .clickable { }
+                                .clip(RoundedCornerShape(26.dp)),  // Make the entire row round
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Transparent,
+                            ),
+                            onClick = { expanded = true }
                         ) {
-                            Text(
-                                text = selectedColorName,
-                                textAlign = TextAlign.Left
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.keyboard_arrow_down_24px),
-                                contentDescription = stringResource(
-                                    id =
-                                    R.string.selection_color
-                                ),
-                                modifier = Modifier.wrapContentSize()
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(22.dp)
+                                        .clip(RoundedCornerShape(26.dp))
+                                        .background(selectedColor),
+                                )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.keyboard_arrow_down_24px),
+                                    contentDescription = stringResource(
+                                        id =
+                                        R.string.selection_color
+                                    ),
+                                    modifier = Modifier.wrapContentSize()
+                                )
+                            }
                         }
-
 
                         DropdownMenu(
                             expanded = expanded,
@@ -230,12 +235,13 @@ fun ManageSymptom(
             }
         }
     }
-    if(showCreateSymptom.value){
+    if (showCreateSymptom.value) {
         CreateNewSymptomDialog(
             newSymptom = "",  // Pass an empty string for new symptoms
             onSave = { newSymptomName ->
                 dbHelper.createNewSymptom(newSymptomName)
-                initialSymptoms = dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
+                initialSymptoms =
+                    dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
                 savedSymptoms = initialSymptoms
                 showCreateSymptom.value = false  // Close the new symptom dialog
             },
@@ -244,7 +250,7 @@ fun ManageSymptom(
             },
         )
     }
-    // Show the delete confirmation dialog
+// Show the delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -259,7 +265,7 @@ fun ManageSymptom(
             confirmButton = {
                 Button(
                     onClick = {
-                            symptomToDelete?.let { symptom ->
+                        symptomToDelete?.let { symptom ->
                             savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
                             dbHelper.deleteSymptom(symptom.id)
                             onSave()
