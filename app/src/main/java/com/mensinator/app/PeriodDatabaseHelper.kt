@@ -802,4 +802,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         }
         db.close()
     }
+
+    fun getDBVersion(): String {
+        return DATABASE_VERSION.toString()
+    }
 }

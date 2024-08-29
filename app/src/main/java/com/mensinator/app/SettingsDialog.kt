@@ -2,6 +2,7 @@ package com.mensinator.app
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
@@ -344,7 +345,13 @@ fun SettingsDialog(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                val contextApp = LocalContext.current
+                val appVersion = getAppVersion(contextApp)
+                Text(text = "App Version: $appVersion   |   DB-version: ${dbHelper.getDBVersion()}", fontSize = 12.sp)
+
             }
+
         },
         confirmButton = {
             Button(onClick = {
@@ -370,6 +377,7 @@ fun SettingsDialog(
                         }
                     }
                 }
+
                 onDismissRequest()
             }) {
                 Text(stringResource(id = R.string.save))
@@ -381,6 +389,7 @@ fun SettingsDialog(
             }
         },
         modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f)
+
     )
 }
 
@@ -395,4 +404,13 @@ fun openNotificationSettings(context: Context) {
         putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
     }
     context.startActivity(intent)
+}
+
+fun getAppVersion(context: Context): String {
+    return try {
+        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        packageInfo.versionName // Returns the version name, e.g., "1.8.4"
+    } catch (e: PackageManager.NameNotFoundException) {
+        "Unknown" // Fallback if the version name is not found
+    }
 }
