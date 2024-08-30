@@ -36,6 +36,7 @@ import com.mensinator.app.ManageSymptom
 import com.mensinator.app.PeriodDatabaseHelper
 import com.mensinator.app.R
 import com.mensinator.app.SettingsDialog
+import com.mensinator.app.StatisticsDialog
 
 enum class Screens {
     Home,
@@ -183,14 +184,11 @@ fun BottomBar(
             }
             composable(route = Screens.Statistic.name) {
                 // here you add the page that you want to open(Statistic)
-//                StatisticsDialog(
-//                    nextPeriodStart = "TBD",
-//                    follicleGrowthDays = "TBD",
-//                    nextPredictedOvulation = "TBD",
-//
-//                ) {
-//
-//                }
+                StatisticsDialog(
+                    nextPeriodStart = "TBD",
+                    follicleGrowthDays = "TBD",
+                    nextPredictedOvulation = "TBD",
+                    )
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
