@@ -36,6 +36,7 @@ import com.mensinator.app.ManageSymptom
 import com.mensinator.app.PeriodDatabaseHelper
 import com.mensinator.app.R
 import com.mensinator.app.SettingsDialog
+import com.mensinator.app.StatisticsDialog
 
 enum class Screens {
     Home,
@@ -57,6 +58,10 @@ fun BottomBar(
     val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1
     Log.d("screenProtectionUI", "protect screen value $protectScreen")
     onScreenProtectionChanged(protectScreen != 0)
+
+    var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
+    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
+    var follicleGrowthDays by remember { mutableStateOf("0") }
 
     val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
 
@@ -177,20 +182,30 @@ fun BottomBar(
             navController = navController,
             startDestination = Screens.Home.name,
             modifier = Modifier.padding(paddingValues)
-        ) {
-            composable(route = Screens.Home.name) {//create a new file for every page and pass it inside the composable
-                CalendarScreen()
+        ) {//create a new file for every page and pass it inside the composable
+            composable(route = Screens.Home.name) {
+                CalendarScreen(
+                    nextPeriodStartCalculated,
+                    nextOvulationCalculated,
+                    follicleGrowthDays,
+                    onChangeNextOvulationCalculated = { newOvulationDate ->
+                        nextOvulationCalculated = newOvulationDate.toString()
+                    },
+                    onChangeNextPeriodStart = { newPeriodStartDate ->
+                        nextPeriodStartCalculated = newPeriodStartDate.toString()
+                    },
+                    onChangeFollicleGrowthDays = { newFollicleGrowthDays ->
+                        follicleGrowthDays = newFollicleGrowthDays.toString()
+                    }
+                )
             }
             composable(route = Screens.Statistic.name) {
                 // here you add the page that you want to open(Statistic)
-//                StatisticsDialog(
-//                    nextPeriodStart = "TBD",
-//                    follicleGrowthDays = "TBD",
-//                    nextPredictedOvulation = "TBD",
-//
-//                ) {
-//
-//                }
+                StatisticsDialog(
+                    nextPeriodStart = nextPeriodStartCalculated,
+                    follicleGrowthDays = follicleGrowthDays,
+                    nextPredictedOvulation = nextOvulationCalculated,
+                )
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
@@ -203,4 +218,6 @@ fun BottomBar(
             }
         }
     }
+
 }
+
