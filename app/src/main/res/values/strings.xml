@@ -132,6 +132,6 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
     <string name="data_settings">Data settings</string>
-    <string name="import_export_data">Import data</string>
+    <string name="import_export_data">Import Export Data</string>
     <string name="export_data">Export data</string>
 </resources>

@@ -130,6 +130,6 @@
     <string name="delete_question">Är du säker på att du vill radera detta symptom?</string>
     <string name="delete_button">Radera</string>
     <string name="data_settings">Datainställningar</string>
-    <string name="import_export_data">Importera data</string>
+    <string name="import_export_data">Importera Exportera Data</string>
     <string name="export_data">Exportera data</string>
 </resources>
