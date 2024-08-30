@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import java.time.LocalDate
 
 
 @Composable
@@ -54,14 +55,14 @@ fun StatisticsDialog(
                 text = stringResource(id = R.string.average_period_length, averagePeriodLength),
                 fontSize = 16.sp
             )
-//                Text(
-//                    text = if (nextPeriodStart < LocalDate.now().toString()) {
-//                        stringResource(id = R.string.next_period_start_past, nextPeriodStart)
-//                    } else {
-//                        stringResource(id = R.string.next_period_start_future, nextPeriodStart)
-//                    },
-//                    fontSize = 16.sp
-//                )
+                Text(
+                    text = if (nextPeriodStart < LocalDate.now().toString()) {
+                        stringResource(id = R.string.next_period_start_past, nextPeriodStart)
+                } else {
+                        stringResource(id = R.string.next_period_start_future, nextPeriodStart)
+                  },
+                  fontSize = 16.sp
+             )
             // Ovulation statistics
             Text(
                 text = stringResource(id = R.string.ovulation_count, ovulationCount),
@@ -71,12 +72,12 @@ fun StatisticsDialog(
                 text = stringResource(id = R.string.average_ovulation_day, follicleGrowthDays),
                 fontSize = 16.sp
             )
-//                Text(
-//                    text = nextPredictedOvulation?.let {
-//                        stringResource(id = R.string.next_predicted_ovulation, it)
-//                    } ?: stringResource(id = R.string.next_predicted_ovulation_default),
-//                    fontSize = 16.sp
-//                )
+                Text(
+                    text = nextPredictedOvulation?.let {
+                        stringResource(id = R.string.next_predicted_ovulation, it)
+                    } ?: stringResource(id = R.string.next_predicted_ovulation_default),
+                    fontSize = 16.sp
+                )
             Text(
                 text = stringResource(id = R.string.average_luteal_length, avgLutealLength),
                 fontSize = 16.sp

@@ -47,7 +47,14 @@ This file creates the calendar. A sort of "main screen".
  */
 
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(
+    nextPeriodStartCalculated: String,
+    nextOvulationCalculated: String,
+    follicleGrowthDays: String,
+    onChangeNextOvulationCalculated: (Any?) -> Unit,
+    onChangeNextPeriodStart: (Any?) -> Unit,
+    onChangeFollicleGrowthDays: (Any?) -> Unit,
+) {
     val context = LocalContext.current
 
     // For accessing database functions
@@ -85,15 +92,14 @@ fun CalendarScreen() {
 
     // Previous ovulation date
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
-    // Follicle growth days
-    var follicleGrowthDays by remember { mutableStateOf("0") }
 
     // Oldest first date of period in the database
     val oldestPeriodDate = dbHelper.getOldestPeriodDate() // Used to calculate cycle numbers
 
     // If set to 1, show cycle numbers on calendar
     // If set to 0, do not show cycle numbers
-    val showCycleNumbersSetting = dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1
+    val showCycleNumbersSetting =
+        dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1
     // Cycle number of date
     var cycleNumber: Int
 
@@ -104,9 +110,6 @@ fun CalendarScreen() {
     // From app_settings in the database
     val reminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
 
-    // Variables which will contain predicted dates for period and ovulation
-    var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
-    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
 
     // The first date of previous period
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -127,24 +130,25 @@ fun CalendarScreen() {
     )
 
     // Colors from app_settings in the database
-    val periodColor = dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
-    val selectedColor = dbHelper.getSettingByKey("selected_color")?.value?.let { colorMap[it] } ?: colorMap["LightGray"]!!
-    val nextPeriodColor = dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] } ?: colorMap["Yellow"]!!
-    val selectedPeriodColor = dbHelper.getSettingByKey("period_selection_color")?.value?.let { colorMap[it] } ?: colorMap["DarkGray"]!!
-    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] } ?: colorMap["Blue"]!!
-    val nextOvulationColor = dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] } ?: colorMap["Magenta"]!!
+    val periodColor =
+        dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
+    val selectedColor = dbHelper.getSettingByKey("selected_color")?.value?.let { colorMap[it] }
+        ?: colorMap["LightGray"]!!
+    val nextPeriodColor =
+        dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
+            ?: colorMap["Yellow"]!!
+    val selectedPeriodColor =
+        dbHelper.getSettingByKey("period_selection_color")?.value?.let { colorMap[it] }
+            ?: colorMap["DarkGray"]!!
+    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] }
+        ?: colorMap["Blue"]!!
+    val nextOvulationColor =
+        dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
+            ?: colorMap["Magenta"]!!
     val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
     // Initializing symptom indicator color
     var symptomColor: Color
 
-    // Fetch symptoms from the database
-    LaunchedEffect(Unit) {
-        symptoms = dbHelper.getAllActiveSymptoms()
-        val newLocale = dbHelper.getSettingByKey("lang")?.value ?: "en"
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(newLocale)
-        )
-    }
 
     // Function to refresh symptom dates
     fun refreshSymptomDates() {
@@ -152,6 +156,7 @@ fun CalendarScreen() {
         val month = currentMonth.value.monthValue
         symptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
     }
+
     // Function to refresh ovulation dates
     fun refreshOvulationDates() {
         val year = currentMonth.value.year
@@ -164,11 +169,13 @@ fun CalendarScreen() {
         periodCount = dbHelper.getPeriodCount()
         ovulationCount = dbHelper.getOvulationCount()
 
-        nextPeriodStartCalculated = if (periodCount>=2) { // If there is at least 2 cycles, then we can calculate next period
-            calcHelper.calculateNextPeriod()
-        } else {
-            "Not enough data"
-        }
+        onChangeNextPeriodStart(
+            if (periodCount >= 2) { // If there is at least 2 cycles, then we can calculate next period
+                calcHelper.calculateNextPeriod()
+            } else {
+                "Not enough data"
+            }
+        )
 
         // Ovulation statistics
         lastOvulationDate = dbHelper.getNewestOvulationDate()
@@ -177,21 +184,32 @@ fun CalendarScreen() {
         // Predict the next ovulation date
         // Make sure there is at least one period and one ovulation date
         // Make sure the last ovulation date is before the last first period date
-        if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString()<previousFirstPeriodDate.toString())) {
-            follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
-            nextOvulationCalculated = previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
+        if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString())) {
+            onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
+            onChangeNextOvulationCalculated(
+                previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString())
 
         } else { // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
-            if(lastOvulationDate.toString()>previousFirstPeriodDate.toString() && (nextPeriodStartCalculated != "Not enough data")){
-                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
-                if(follicleGrowthDays!="Not enough data"){
-                    nextOvulationCalculated = LocalDate.parse(nextPeriodStartCalculated).plusDays(follicleGrowthDays.toLong()).toString()
+            if (lastOvulationDate.toString() > previousFirstPeriodDate.toString() && (nextPeriodStartCalculated != "Not enough data")) {
+                onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
+                if (follicleGrowthDays != "Not enough data") {
+                    onChangeNextOvulationCalculated(LocalDate.parse(nextPeriodStartCalculated)
+                        .plusDays(follicleGrowthDays.toLong()).toString())
                 }
-            }
-            else{ // There is not enough data to make ovulation calculation
-                nextOvulationCalculated = "Not enough data"
+            } else { // There is not enough data to make ovulation calculation
+                onChangeNextOvulationCalculated("Not enough data")
             }
         }
+    }
+
+    // Fetch symptoms from the database AND update data for calculations in stats screen
+    LaunchedEffect(Unit) {
+        updateCalculations() // Call updateCalculations on launch
+        symptoms = dbHelper.getAllActiveSymptoms()
+        val newLocale = dbHelper.getSettingByKey("lang")?.value ?: "en"
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(newLocale)
+        )
     }
 
     // Update button state based on selected dates
@@ -244,7 +262,12 @@ fun CalendarScreen() {
             }
 
             Text(
-                text = "${currentMonth.value.month.getDisplayName(TextStyle.FULL, currentLocale)} ${currentMonth.value.year}".capitalized(),
+                text = "${
+                    currentMonth.value.month.getDisplayName(
+                        TextStyle.FULL,
+                        currentLocale
+                    )
+                } ${currentMonth.value.year}".capitalized(),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
@@ -253,7 +276,10 @@ fun CalendarScreen() {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
                 //Text(text = stringResource(id = R.string.next))
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                    contentDescription = null
+                )
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -282,8 +308,10 @@ fun CalendarScreen() {
                         val hasPeriodDate = dayDate in periodDates.value
                         val hasSymptomDate = dayDate in symptomDates.value
                         val hasOvulationDate = dayDate in ovulationDates.value
-                        val hasOvulationDateCalculated = dayDate.toString() == nextOvulationCalculated
-                        val hasPeriodDateCalculated = dayDate.toString() == nextPeriodStartCalculated
+                        val hasOvulationDateCalculated =
+                            dayDate.toString() == nextOvulationCalculated
+                        val hasPeriodDateCalculated =
+                            dayDate.toString() == nextPeriodStartCalculated
 
                         Box(
                             modifier = Modifier
@@ -300,7 +328,9 @@ fun CalendarScreen() {
                         ) {
 
                             // If date is a calculated period date
-                            if (dayDate.toString().trim() == nextPeriodStartCalculated.trim() && !hasPeriodDate) {
+                            if (dayDate.toString()
+                                    .trim() == nextPeriodStartCalculated.trim() && !hasPeriodDate
+                            ) {
                                 Box(
                                     modifier = Modifier
                                         .size(32.dp)
@@ -351,11 +381,10 @@ fun CalendarScreen() {
                             if (hasSymptomDate) {
                                 val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
 
-                                if(noSymptomsForDay.size == 1){
+                                if (noSymptomsForDay.size == 1) {
                                     val colorName = noSymptomsForDay[0]
                                     symptomColor = colorMap[colorName] ?: Color.Black
-                                }
-                                else{
+                                } else {
                                     // Display a grey circle if multiple symptoms
                                     symptomColor = Color.Gray
                                 }
@@ -401,40 +430,44 @@ fun CalendarScreen() {
                                 )
                             }
 
-                    // Here is cycle numbers
-                    if(oldestPeriodDate != null && showCycleNumbersSetting == 1) {
-                        if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
-                            previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(dayDate)
-                            if (previousFirstPeriodDate != null) {
-                                // Calculate the number of days between the firstLastPeriodDate and dayDate
-                                cycleNumber = ChronoUnit.DAYS.between(previousFirstPeriodDate, dayDate)
-                                    .toInt() + 1
-
-                                // Render UI elements based on cycleNumber or other logic
-                                Box(
-                                    modifier = Modifier
-                                        .size(18.dp)
-                                        .background(
-                                            Color.Transparent,
-                                            //CircleShape
+                            // Here is cycle numbers
+                            if (oldestPeriodDate != null && showCycleNumbersSetting == 1) {
+                                if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
+                                    previousFirstPeriodDate =
+                                        dbHelper.getFirstPreviousPeriodDate(dayDate)
+                                    if (previousFirstPeriodDate != null) {
+                                        // Calculate the number of days between the firstLastPeriodDate and dayDate
+                                        cycleNumber = ChronoUnit.DAYS.between(
+                                            previousFirstPeriodDate,
+                                            dayDate
                                         )
-                                        .align(Alignment.TopStart)
-                                ) {
-                                    Text(
-                                        text = cycleNumber.toString(),
-                                        style = androidx.compose.ui.text.TextStyle(
-                                            color = Color.Black,
-                                            fontSize = 8.sp,
-                                            textAlign = TextAlign.Left
-                                        ),
-                                        modifier = Modifier.padding(2.dp)
-                                    )
+                                            .toInt() + 1
+
+                                        // Render UI elements based on cycleNumber or other logic
+                                        Box(
+                                            modifier = Modifier
+                                                .size(18.dp)
+                                                .background(
+                                                    Color.Transparent,
+                                                    //CircleShape
+                                                )
+                                                .align(Alignment.TopStart)
+                                        ) {
+                                            Text(
+                                                text = cycleNumber.toString(),
+                                                style = androidx.compose.ui.text.TextStyle(
+                                                    color = Color.Black,
+                                                    fontSize = 8.sp,
+                                                    textAlign = TextAlign.Left
+                                                ),
+                                                modifier = Modifier.padding(2.dp)
+                                            )
+                                        }
+                                    }
+
+
                                 }
                             }
-
-
-                        }
-                    }
 
                         }
                     } else {
@@ -475,16 +508,22 @@ fun CalendarScreen() {
                         LocalDate.of(year, month + 1, 1) // First of the next month in the same year
                     }
                     // Recalculate the previous periods first day the first day of the next month
-                    previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
+                    previousFirstPeriodDate =
+                        dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
                     updateCalculations()
 
                     // Schedule notification for reminder
                     // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
                     // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
-                    if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString())
-                    {
-                        sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
+                    if (reminderDays > 0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated >= LocalDate.now()
+                            .toString()
+                    ) {
+                        sendNotification(
+                            context,
+                            reminderDays,
+                            LocalDate.parse(nextPeriodStartCalculated)
+                        )
                     }
                     Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
                 }
@@ -504,7 +543,7 @@ fun CalendarScreen() {
                 if (selectedDates.value.isNotEmpty()) {
                     showSymptomsDialog = true
                 } else {
-                    Toast.makeText(context,noDataSelected , Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, noDataSelected, Toast.LENGTH_SHORT).show()
                 }
             },
             enabled = isSymptomsButtonEnabled,  // Set the state of the Symptoms button
@@ -522,25 +561,29 @@ fun CalendarScreen() {
 
         Button(
             onClick = {
-                if(selectedDates.value.size > 1){
+                if (selectedDates.value.size > 1) {
                     Toast.makeText(context, onlyDayAlert, Toast.LENGTH_SHORT).show()
-                }
-                else if(selectedDates.value.size == 1){
+                } else if (selectedDates.value.size == 1) {
                     val date = selectedDates.value.first()
                     dbHelper.updateOvulationDate(date)
                     refreshOvulationDates()
 
                     Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
-                }
-                else{
+                } else {
                     Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
                 }
                 selectedDates.value = emptySet()
                 updateCalculations()
 
                 // Schedule notification for reminder
-                if(reminderDays>0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated>=LocalDate.now().toString()){
-                    sendNotification(context, reminderDays, LocalDate.parse(nextPeriodStartCalculated))
+                if (reminderDays > 0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated >= LocalDate.now()
+                        .toString()
+                ) {
+                    sendNotification(
+                        context,
+                        reminderDays,
+                        LocalDate.parse(nextPeriodStartCalculated)
+                    )
                 }
             },
             enabled = isOvulationButtonEnabled,  // Set the state of the Ovulation button
@@ -613,7 +656,7 @@ fun CalendarScreen() {
 
         if (showManageSymptomsDialog) {
             ManageSymptom(
-                showCreateSymptom = showCreateSymptom ,
+                showCreateSymptom = showCreateSymptom,
                 onSave = {
                     // Refresh symptoms when saving
                     refreshSymptomDates()
@@ -652,12 +695,16 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
 
     // Check if the notification date is in the past
     if (notificationDate.isBefore(LocalDate.now())) {
-        Log.d("CalendarScreen", "Notification not scheduled because the reminder date is in the past")
+        Log.d(
+            "CalendarScreen",
+            "Notification not scheduled because the reminder date is in the past"
+        )
         return
     }
 
     // Convert the LocalDate to a timestamp (milliseconds since epoch)
-    val notificationTimeMillis = notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    val notificationTimeMillis =
+        notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
     val currentTimeMillis = System.currentTimeMillis()
 
     // Calculate the delay in milliseconds
@@ -665,7 +712,10 @@ fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalD
 
     // Handle negative delay
     if (delayMillis < 0) {
-        Log.d("CalendarScreen", "Notification not scheduled because the calculated delay is negative")
+        Log.d(
+            "CalendarScreen",
+            "Notification not scheduled because the calculated delay is negative"
+        )
         return
     }
 

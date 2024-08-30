@@ -59,6 +59,10 @@ fun BottomBar(
     Log.d("screenProtectionUI", "protect screen value $protectScreen")
     onScreenProtectionChanged(protectScreen != 0)
 
+    var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
+    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
+    var follicleGrowthDays by remember { mutableStateOf("0") }
+
     val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -178,17 +182,30 @@ fun BottomBar(
             navController = navController,
             startDestination = Screens.Home.name,
             modifier = Modifier.padding(paddingValues)
-        ) {
-            composable(route = Screens.Home.name) {//create a new file for every page and pass it inside the composable
-                CalendarScreen()
+        ) {//create a new file for every page and pass it inside the composable
+            composable(route = Screens.Home.name) {
+                CalendarScreen(
+                    nextPeriodStartCalculated,
+                    nextOvulationCalculated,
+                    follicleGrowthDays,
+                    onChangeNextOvulationCalculated = { newOvulationDate ->
+                        nextOvulationCalculated = newOvulationDate.toString()
+                    },
+                    onChangeNextPeriodStart = { newPeriodStartDate ->
+                        nextPeriodStartCalculated = newPeriodStartDate.toString()
+                    },
+                    onChangeFollicleGrowthDays = { newFollicleGrowthDays ->
+                        follicleGrowthDays = newFollicleGrowthDays.toString()
+                    }
+                )
             }
             composable(route = Screens.Statistic.name) {
                 // here you add the page that you want to open(Statistic)
                 StatisticsDialog(
-                    nextPeriodStart = "TBD",
-                    follicleGrowthDays = "TBD",
-                    nextPredictedOvulation = "TBD",
-                    )
+                    nextPeriodStart = nextPeriodStartCalculated,
+                    follicleGrowthDays = follicleGrowthDays,
+                    nextPredictedOvulation = nextOvulationCalculated,
+                )
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
@@ -201,4 +218,6 @@ fun BottomBar(
             }
         }
     }
+
 }
+
