@@ -132,4 +132,5 @@
     <string name="data_settings">Datainställningar</string>
     <string name="import_export_data">Importera Exportera Data</string>
     <string name="export_data">Exportera data</string>
+    <string name="about_app">Om Appen</string>
 </resources>

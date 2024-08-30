@@ -2,8 +2,10 @@ package com.mensinator.app
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
@@ -84,7 +86,7 @@ fun SettingsDialog() {
     // State to hold the settings to be saved
     var savedSettings by remember { mutableStateOf(settings) }
     var showExportImportDialog by remember { mutableStateOf(false) }
-
+    var showFAQDialog by remember { mutableStateOf(false) }
 
     // Here is available languages of the app
     // When more languages have been translated, add them here
@@ -415,6 +417,23 @@ fun SettingsDialog() {
                     )
                 }
             }
+            val contextApp = LocalContext.current
+            val appVersion = getAppVersion(contextApp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                TextButton(onClick = { showFAQDialog = true }) {
+                    Text(text = stringResource(id = R.string.about_app))
+                }
+                //Spacer(modifier = Modifier.width(8.dp)) // Space between text elements
+                Spacer(modifier = Modifier.width(8.dp)) // Space between text elements
+                Text(
+                    text = "    |   App Version: $appVersion   |   DB-version: ${dbHelper.getDBVersion()}",
+                    fontSize = 12.sp
+                )
+            }
 
         }
     }
@@ -429,6 +448,10 @@ fun SettingsDialog() {
                 handleImport(context, importPath)
             }
         )
+    }
+
+    if (showFAQDialog) {
+        FAQDialog(onDismissRequest = { showFAQDialog = false })
     }
 }
 
@@ -491,3 +514,11 @@ fun openNotificationSettings(context: Context) {
     context.startActivity(intent)
 }
 
+fun getAppVersion(context: Context): String {
+    return try {
+        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        packageInfo.versionName // Returns the version name, e.g., "1.8.4"
+    } catch (e: PackageManager.NameNotFoundException) {
+        "Unknown" // Fallback if the version name is not found
+    }
+}

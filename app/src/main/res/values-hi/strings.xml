@@ -132,4 +132,5 @@
     <string name="data_settings">डेटा सेटिंग्स</string>
     <string name="import_export_data">डेटा आयात और निर्यात करें</string>
     <string name="export_data">डेटा निर्यात करें</string>
+    <string name="about_app">ऐप के बारे में</string>
 </resources>

@@ -134,4 +134,5 @@
     <string name="data_settings">Setări de date</string>
     <string name="import_export_data">Importă și exportă date</string>
     <string name="export_data">Exportă date</string>
+    <string name="about_app">Despre aplicație</string>
 </resources>

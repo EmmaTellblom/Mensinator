@@ -132,4 +132,5 @@
     <string name="data_settings">ডেটা সেটিংস</string>
     <string name="import_export_data">ডেটা আমদানি এবং রপ্তানি করুন</string>
     <string name="export_data">ডেটা রপ্তানি করুন</string>
+    <string name="about_app">অ্যাপ সম্পর্কে</string>
 </resources>
