@@ -609,9 +609,7 @@ fun CalendarScreen() {
         }
 
         if (showSettingsDialog) {
-            SettingsDialog(
-                onDismissRequest = { showSettingsDialog = false }
-            )
+            SettingsDialog()
         }
 
         if (showManageSymptomsDialog) {

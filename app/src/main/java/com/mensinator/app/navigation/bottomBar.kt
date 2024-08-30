@@ -199,11 +199,7 @@ fun BottomBar(
             }
             composable(route = Screens.Settings.name) {
                 // here you add the page that you want to open(Settings)
-                SettingsDialog(
-                    onDismissRequest = {
-                        navController.popBackStack()
-                    }
-                )
+                SettingsDialog()
             }
         }
     }
