@@ -165,11 +165,7 @@ fun NestedFAB(
 
         // Show SettingsDialog
         if (showSettingsDialog) {
-            SettingsDialog(
-                onDismissRequest = {
-                    showSettingsDialog = false  // Close the Settings dialog
-                }
-            )
+            SettingsDialog()
         }
 
         // Show ExportImportDialog
