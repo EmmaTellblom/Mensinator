@@ -76,13 +76,13 @@ fun ManageSymptom(
                 .padding(start = 10.dp, end = 10.dp)
         ) {
             Text(
-                text = "Flow",
+                text = stringResource(id = R.string.symptoms_button),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.weight(1f)) //cover available space
             Text(
-                text = "Color",
+                text = stringResource(id = R.string.colors),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )

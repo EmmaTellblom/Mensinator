@@ -131,4 +131,7 @@
     <string name="delete_symptom">Șterge simptomul</string>
     <string name="delete_question">Ești sigură că vrei să ștergi acest simptom?</string>
     <string name="delete_button">Șterge</string>
+    <string name="data_settings">Setări de date</string>
+    <string name="import_export_data">Importă și exportă date</string>
+    <string name="export_data">Exportă date</string>
 </resources>

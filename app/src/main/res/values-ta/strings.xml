@@ -128,4 +128,7 @@
     <string name="delete_symptom">அறிகுறியை நீக்கு</string>
     <string name="delete_question">இந்த அறிகுறியை நிச்சயமாக நீக்க விரும்புகிறீர்களா?</string>
     <string name="delete_button">நீக்கு</string>
+    <string name="data_settings">தரவுக் அமைப்புகள்</string>
+    <string name="import_export_data">தரவை இறக்குமதி மற்றும் ஏற்றுமதி செய்</string>
+    <string name="export_data">தரவை ஏற்றுமதி செய்</string>
 </resources>

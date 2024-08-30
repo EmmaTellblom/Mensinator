@@ -129,4 +129,7 @@
     <string name="delete_symptom">লক্ষণ মুছুন</string>
     <string name="delete_question">আপনি কি নিশ্চিত যে আপনি এই লক্ষণটি মুছতে চান?</string>
     <string name="delete_button">মুছুন</string>
+    <string name="data_settings">ডেটা সেটিংস</string>
+    <string name="import_export_data">ডেটা আমদানি এবং রপ্তানি করুন</string>
+    <string name="export_data">ডেটা রপ্তানি করুন</string>
 </resources>

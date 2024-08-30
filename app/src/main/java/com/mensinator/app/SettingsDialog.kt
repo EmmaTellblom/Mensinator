@@ -2,9 +2,9 @@ package com.mensinator.app
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -83,6 +83,7 @@ fun SettingsDialog() {
 
     // State to hold the settings to be saved
     var savedSettings by remember { mutableStateOf(settings) }
+    var showExportImportDialog by remember { mutableStateOf(false) }
 
 
     // Here is available languages of the app
@@ -383,20 +384,74 @@ fun SettingsDialog() {
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            val contextApp = LocalContext.current
-            val appVersion = getAppVersion(contextApp)
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(id = R.string.data_settings),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "App Version: $appVersion   |   DB-version: ${dbHelper.getDBVersion()}",
-                    fontSize = 12.sp
+                    text = stringResource(id = R.string.import_export_data),
+                    fontSize = 14.sp,
                 )
-                Spacer(modifier = Modifier.weight(1f))
+                TextButton(
+                    onClick = {
+                        showExportImportDialog = true
+                    },
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.import_export_data),
+                        fontSize = 14.sp
+                    )
+                }
             }
 
         }
     }
+    // Showing the ExportImportDialog when the user triggers it
+    if (showExportImportDialog) {
+        ExportImportDialog(
+            onDismissRequest = { showExportImportDialog = false },
+            onExportClick = { exportPath ->
+                handleExport(context, exportPath)
+            },
+            onImportClick = { importPath ->
+                handleImport(context, importPath)
+            }
+        )
+    }
+}
 
+fun handleExport(context: Context, exportPath: String) {
+    try {
+        val exportImport = ExportImport()
+        exportImport.exportDatabase(context, exportPath)
+        Toast.makeText(context, "Data exported successfully to $exportPath", Toast.LENGTH_SHORT).show()
+    } catch (e: Exception) {
+        Toast.makeText(context, "Error during export: ${e.message}", Toast.LENGTH_SHORT).show()
+        Log.e("Export", "Export error: ${e.message}", e)
+    }
+}
+
+fun handleImport(context: Context, importPath: String) {
+    try {
+        val exportImport = ExportImport()
+        exportImport.importDatabase(context, importPath)
+        Toast.makeText(context, "Data imported successfully from $importPath", Toast.LENGTH_SHORT).show()
+    } catch (e: Exception) {
+        Toast.makeText(context, "Error during import: ${e.message}", Toast.LENGTH_SHORT).show()
+        Log.e("Import", "Import error: ${e.message}", e)
+    }
 }
 
 fun saveData(savedSetting: List<Setting>,dbHelper: PeriodDatabaseHelper,context: Context) {
@@ -419,27 +474,8 @@ fun saveData(savedSetting: List<Setting>,dbHelper: PeriodDatabaseHelper,context:
             }
         }
     }
-}
-/*
-confirmButton = {
-Button(onClick = {
 
-
-    onDismissRequest()
-}) {
-    Text(stringResource(id = R.string.save))
 }
-},
-dismissButton = {
-Button(onClick = onDismissRequest) {
-    Text(stringResource(id = R.string.close))
-}
-},
-modifier = Modifier.width(LocalConfiguration.current.screenWidthDp.dp * 0.9f)
-
-)
-}
-*/
 
 
 fun areNotificationsEnabled(context: Context): Boolean {
@@ -455,11 +491,3 @@ fun openNotificationSettings(context: Context) {
     context.startActivity(intent)
 }
 
-fun getAppVersion(context: Context): String {
-    return try {
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        packageInfo.versionName // Returns the version name, e.g., "1.8.4"
-    } catch (e: PackageManager.NameNotFoundException) {
-        "Unknown" // Fallback if the version name is not found
-    }
-}
