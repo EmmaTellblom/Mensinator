@@ -6,8 +6,11 @@ import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,10 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
+import com.mensinator.app.data.DataSource
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -78,19 +84,6 @@ fun SettingsDialog() {
     // State to hold the settings to be saved
     var savedSettings by remember { mutableStateOf(settings) }
 
-    // Predefined lists
-    val predefinedColors = listOf(
-        "Red" to Color.Red,
-        "Green" to Color.Green,
-        "Blue" to Color.Blue,
-        "Yellow" to Color.Yellow,
-        "Cyan" to Color.Cyan,
-        "Magenta" to Color.Magenta,
-        "Black" to Color.Black,
-        "White" to Color.White,
-        "DarkGray" to Color.DarkGray,
-        "LightGray" to Color.LightGray
-    )
 
     // Here is available languages of the app
     // When more languages have been translated, add them here
@@ -152,41 +145,66 @@ fun SettingsDialog() {
                             text = stringResource(id = R.string.colors),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
                         )
 
                         settingsInGroup.forEach { setting ->
                             var expanded by remember { mutableStateOf(false) }
                             var selectedColorName by remember { mutableStateOf(setting.value) }
                             val settingsKey = ResourceMapper.getStringResourceId(setting.key)
-                            val selectedColorKey =
-                                ResourceMapper.getStringResourceId(selectedColorName)
 
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
+                                horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
                                     text = settingsKey?.let { stringResource(id = it) }
                                         ?: "Not found",
                                     fontSize = 14.sp,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .alignByBaseline()
                                 )
-                                Box(modifier = Modifier.alignByBaseline()) {
-                                    TextButton(onClick = { expanded = !expanded }) {
-                                        Text(selectedColorKey?.let { stringResource(id = it) }
-                                            ?: "Not found")
+                                Spacer(modifier = Modifier.weight(1f))
+                                Box{
+                                    Card(
+                                        modifier = Modifier
+                                            .clickable { }
+                                            .clip(RoundedCornerShape(26.dp)),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = Color.Transparent,
+                                        ),
+                                        onClick = { expanded = true }
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center,
+                                        ) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(20.dp)
+                                                    .clip(RoundedCornerShape(26.dp))
+                                                    .background(
+                                                        selectedColorName.let {
+                                                            DataSource().colorMap[selectedColorName]
+                                                        }
+                                                            ?: Color.Gray
+                                                    ),
+                                            )
+                                            Icon(
+                                                painter = painterResource(id = R.drawable.keyboard_arrow_down_24px),
+                                                contentDescription = stringResource(
+                                                    id =
+                                                    R.string.selection_color
+                                                ),
+                                                modifier = Modifier.wrapContentSize()
+                                            )
+                                        }
                                     }
                                     DropdownMenu(
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false }
                                     ) {
-                                        predefinedColors.forEach { (name, _) ->
+                                        DataSource().predefinedListOfColors.forEach { (name, _) ->
                                             val colors = ResourceMapper.getStringResourceId(name)
                                             DropdownMenuItem(
                                                 text = {
