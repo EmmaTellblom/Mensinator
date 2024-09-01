@@ -60,16 +60,16 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>
-    <string name="period_count">Number of periods tracked: %1$d</string>
-    <string name="average_cycle_length">Average cycle length: %1$.1f days</string>
-    <string name="average_period_length">Average period length: %1$.1f days</string>
-    <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
-    <string name="next_period_start_future">Next assumed period: %1$s</string>
-    <string name="ovulation_count">Number of ovulation tracked: %1$d</string>
-    <string name="average_ovulation_day">Average ovulation day: %1$s</string>
-    <string name="next_predicted_ovulation">Next predicted ovulation date: %1$s</string>
+    <string name="period_count">Periods tracked: %1$d</string>
+    <string name="average_cycle_length">Avg. cycle: %1$.1f days</string>
+    <string name="average_period_length">Avg. period: %1$.1f days</string>
+    <string name="next_period_start_past">Next period: %1$s \n\nAssumed period date has passed!</string>
+    <string name="next_period_start_future">Next period: %1$s</string>
+    <string name="ovulation_count">Ovulations tracked: %1$d</string>
+    <string name="average_ovulation_day">Avg. ovulation day: %1$s</string>
+    <string name="next_predicted_ovulation">Next ovulation: %1$s</string>
     <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
-    <string name="average_luteal_length">Average luteal phase length: %1$.1f days</string>
+    <string name="average_luteal_length">Avg. luteal length: %1$.1f days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>

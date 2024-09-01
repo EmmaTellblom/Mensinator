@@ -104,9 +104,6 @@ fun ManageSymptom(
                     .fillMaxWidth()
                     .padding(top = 15.dp),
                 shape = RoundedCornerShape(25.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFf5ebff) //change this color when you implement a theme
-                )                                           // to something like : MaterialTheme.colorScheme.onBackground
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

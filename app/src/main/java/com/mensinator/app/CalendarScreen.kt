@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.os.LocaleListCompat
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -54,6 +55,7 @@ fun CalendarScreen(
     onChangeNextOvulationCalculated: (Any?) -> Unit,
     onChangeNextPeriodStart: (Any?) -> Unit,
     onChangeFollicleGrowthDays: (Any?) -> Unit,
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
 ) {
     val context = LocalContext.current
 
@@ -287,7 +289,12 @@ fun CalendarScreen(
                 Text(
                     text = day,
                     modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = if (isDarkTheme) {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
                 )
             }
         }
@@ -337,8 +344,12 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
-                                        textAlign = TextAlign.Center
+                                        textAlign = TextAlign.Center,
+                                        color = if (isDarkTheme) {
+                                            Color.White
+                                        } else {
+                                            Color.Black
+                                        }
                                     )
                                 }
                             }
@@ -352,7 +363,11 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
+                                        color = if (isDarkTheme) {
+                                            Color.White
+                                        } else {
+                                            Color.Black
+                                        },
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -407,7 +422,11 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
+                                        color = if (isDarkTheme) {
+                                            Color.White
+                                        } else {
+                                            Color.Black
+                                        },
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center
                                     )
@@ -415,7 +434,11 @@ fun CalendarScreen(
                             } else { // Regular dates
                                 Text(
                                     text = dayOfMonth.toString(),
-                                    color = Color.Black,
+                                    color = if (isDarkTheme) {
+                                        Color.White
+                                    } else {
+                                        Color.Black
+                                    },
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
                                         .padding(4.dp)
@@ -449,7 +472,11 @@ fun CalendarScreen(
                                             Text(
                                                 text = cycleNumber.toString(),
                                                 style = androidx.compose.ui.text.TextStyle(
-                                                    color = Color.Black,
+                                                    color = if (isDarkTheme) {
+                                                        Color.White
+                                                    } else {
+                                                        Color.Black
+                                                    },
                                                     fontSize = 8.sp,
                                                     textAlign = TextAlign.Left
                                                 ),
@@ -526,7 +553,13 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = stringResource(id = R.string.period_button))
+            Text(
+                text = stringResource(id = R.string.period_button), color = if (isDarkTheme) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
+            )
         }
 
         val noDataSelected = stringResource(id = R.string.no_data_selected)
@@ -543,7 +576,13 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = stringResource(id = R.string.symptoms_button))
+            Text(
+                text = stringResource(id = R.string.symptoms_button), color = if (isDarkTheme) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
+            )
         }
 
         //ovulation starts here
@@ -583,7 +622,13 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         ) {
-            Text(text = stringResource(id = R.string.ovulation_button))
+            Text(
+                text = stringResource(id = R.string.ovulation_button), color = if (isDarkTheme) {
+                    Color.White
+                } else {
+                    Color.Black
+                }
+            )
         }
 
         // Show the SymptomsDialog
