@@ -187,14 +187,17 @@ fun CalendarScreen(
         if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString())) {
             onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
             onChangeNextOvulationCalculated(
-                previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString())
+                previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
+            )
 
         } else { // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
             if (lastOvulationDate.toString() > previousFirstPeriodDate.toString() && (nextPeriodStartCalculated != "Not enough data")) {
                 onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
                 if (follicleGrowthDays != "Not enough data") {
-                    onChangeNextOvulationCalculated(LocalDate.parse(nextPeriodStartCalculated)
-                        .plusDays(follicleGrowthDays.toLong()).toString())
+                    onChangeNextOvulationCalculated(
+                        LocalDate.parse(nextPeriodStartCalculated)
+                            .plusDays(follicleGrowthDays.toLong()).toString()
+                    )
                 }
             } else { // There is not enough data to make ovulation calculation
                 onChangeNextOvulationCalculated("Not enough data")
@@ -246,7 +249,11 @@ fun CalendarScreen(
             .verticalScroll(rememberScrollState())
     )
     {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
             }) {
@@ -282,7 +289,7 @@ fun CalendarScreen(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         Row {
             daysOfWeek.forEach { day ->
@@ -613,9 +620,6 @@ fun CalendarScreen(
                 onCancel = {
                     showSymptomsDialog = false
                     selectedDates.value = emptySet()
-                },
-                onCreateNewSymptom = {
-                    showCreateNewSymptomDialog = true
                 }
             )
         }
