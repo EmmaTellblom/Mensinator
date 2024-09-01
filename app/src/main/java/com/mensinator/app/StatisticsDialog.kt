@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import java.time.LocalDate
 
 
@@ -36,11 +37,14 @@ fun StatisticsDialog(
     Column(
         modifier = Modifier
             .verticalScroll(scrollState)
+            .padding(16.dp)
     ) {
-        Text(text = stringResource(id = R.string.statistics_title))
+        Text(text = stringResource(id = R.string.statistics_title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold)
         Column(
             modifier = Modifier
-                .padding(16.dp)  // Padding around the text content
+                //.padding(16.dp)  // Padding around the text content
                 .fillMaxWidth()
         ) {
             Text(

@@ -30,7 +30,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.runtime.saveable.rememberSaveable
+//import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import java.time.Instant
@@ -77,18 +77,11 @@ fun CalendarScreen(
     var periodCount by remember { mutableIntStateOf(0) } // Count of all period cycles in the database
     var ovulationCount by remember { mutableIntStateOf(0) } // Count of all ovulation dates in the database
 
-
     // All active symptoms in the database
     var symptoms by remember { mutableStateOf(emptyList<Symptom>()) }
 
     // Dialogs
-    var showCreateNewSymptomDialog by remember { mutableStateOf(false) }  // State to show the CreateNewSymptomDialog
-    var showStatisticsDialog by remember { mutableStateOf(false) }  // State to show the StatisticsDialog
-    var showFAQDialog by remember { mutableStateOf(false) } // State to show the FAQDialog
-    var showSettingsDialog by remember { mutableStateOf(false) } // State to show the SettingsDialog
-    var showExportImportDialog by remember { mutableStateOf(false) } // State to show the ExportImportDialog
     var showSymptomsDialog by remember { mutableStateOf(false) } // State to show the SymptomsDialog
-    var showManageSymptomsDialog by remember { mutableStateOf(false) } // State to show the ManageSymptomsDialog - Activate/Deactivate symptoms and colors
 
     // Previous ovulation date
     var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -103,13 +96,10 @@ fun CalendarScreen(
     // Cycle number of date
     var cycleNumber: Int
 
-    val isScreenProtectionEnabled = remember { mutableStateOf(true) }
-
     // How many days before next period a notification should be sent to user
     // If set to 0, do not send notification
     // From app_settings in the database
     val reminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
-
 
     // The first date of previous period
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
@@ -145,7 +135,7 @@ fun CalendarScreen(
     val nextOvulationColor =
         dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
             ?: colorMap["Magenta"]!!
-    val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
+    //val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
     // Initializing symptom indicator color
     var symptomColor: Color
 
@@ -204,6 +194,7 @@ fun CalendarScreen(
             }
         }
     }
+    Log.d("CalendarScreen", "NextOvulationCalculated: ${nextOvulationCalculated.toString()}")
 
     // Fetch symptoms from the database AND update data for calculations in stats screen
     LaunchedEffect(Unit) {
@@ -388,25 +379,20 @@ fun CalendarScreen(
                             if (hasSymptomDate) {
                                 val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
 
-                                if (noSymptomsForDay.size == 1) {
-                                    val colorName = noSymptomsForDay[0]
-                                    symptomColor = colorMap[colorName] ?: Color.Black
-                                } else {
-                                    // Display a grey circle if multiple symptoms
-                                    symptomColor = Color.Gray
-                                }
+                                noSymptomsForDay.forEachIndexed { currentIndex, symp ->
+                                    symptomColor = colorMap[symp] ?: Color.Black
+                                    val xPlace = (currentIndex * 4)
 
-                                Box(
-                                    modifier = Modifier
-                                        .offset(x = (-8).dp, y = (0).dp)
-                                        .size(8.dp)  // Size of the small bubble
-                                        .border(1.dp, Color.Black, CircleShape)
-                                        .background(
-                                            symptomColor,
-                                            CircleShape
-                                        )
-                                        .align(Alignment.TopEnd)
-                                )
+                                    Box(
+                                        modifier = Modifier
+                                            .offset(x = xPlace.dp, y = 0.dp)
+                                            .size(8.dp)  // Size of the small bubble
+                                            .border(1.dp, Color.Black, CircleShape)
+                                            .background(symptomColor, CircleShape)
+                                            .align(Alignment.BottomCenter)
+                                            .padding(2.dp)
+                                    )
+                                }
 
                             }
 
@@ -546,7 +532,6 @@ fun CalendarScreen(
         val noDataSelected = stringResource(id = R.string.no_data_selected)
         Button(
             onClick = {
-                //selectedDate = selectedDates.value.firstOrNull()  // Select the first date as the date for the SymptomsDialog
                 if (selectedDates.value.isNotEmpty()) {
                     showSymptomsDialog = true
                 } else {
@@ -624,71 +609,9 @@ fun CalendarScreen(
             )
         }
 
-        if (showCreateNewSymptomDialog) {
-            CreateNewSymptomDialog(
-                newSymptom = "",  // Pass an empty string for new symptoms
-                onSave = { newSymptomName ->
-                    dbHelper.createNewSymptom(newSymptomName)
-                    symptoms = dbHelper.getAllActiveSymptoms()
-                    showCreateNewSymptomDialog = false  // Close the new symptom dialog
-                },
-                onCancel = {
-                    showCreateNewSymptomDialog = false  // Close the new symptom dialog
-                }
-            )
-        }
-
-        // Show the StatisticsDialog
-        if (showStatisticsDialog) {
-            StatisticsDialog(
-                nextPeriodStart = nextPeriodStartCalculated, // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
-                follicleGrowthDays = follicleGrowthDays, // This is calculated in CalendarScreen for Ovulation, so we can send it to statistics
-                nextPredictedOvulation = nextOvulationCalculated // This needs to stay in CalendarScreen due to being marked in Calendar, so we can send it to statistics
-            )
-        }
-
-        // Show the FAQ Dialog
-        if (showFAQDialog) {
-            FAQDialog(
-                onDismissRequest = { showFAQDialog = false }
-            )
-        }
-
-        if (showSettingsDialog) {
-            SettingsDialog()
-        }
-
-        if (showManageSymptomsDialog) {
-            ManageSymptom(
-                showCreateSymptom = showCreateSymptom,
-                onSave = {
-                    // Refresh symptoms when saving
-                    refreshSymptomDates()
-                    Log.d("TAG", "Saved clicked on ManageSymptoms")
-                }
-            )
-        }
-
         Spacer(modifier = Modifier.weight(1f))
 
-    } // Here is the menu (FAB) right bottom corner
-    NestedFAB(
-        onStatisticsClick = {
-            showStatisticsDialog = true
-        },
-        onFAQClick = {
-            showFAQDialog = true
-        },
-        onSettingsClick = {
-            showSettingsDialog = true
-        },
-        onExportImportClick = {
-            showExportImportDialog = true
-        },
-        onManageSymptomsClick = {
-            showManageSymptomsDialog = true
-        }
-    )
+    }
 }
 
 // Function to create a notification for upcoming periods
