@@ -418,7 +418,7 @@ fun CalendarScreen(
                             if (dayDate == LocalDate.now()) {
                                 Box(
                                     modifier = Modifier
-                                        .padding(4.dp)
+                                        //.padding(4.dp)
                                         .size(circleSize)
                                         .border(1.dp, Color.Black, CircleShape)
                                         .background(Color.Transparent, CircleShape),
@@ -437,7 +437,7 @@ fun CalendarScreen(
                                     color = Color.Black,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
-                                        .padding(4.dp)
+                                        //.padding(4.dp)
                                         .background(Color.Transparent)
                                 )
                             }
