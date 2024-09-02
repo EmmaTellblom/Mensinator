@@ -122,7 +122,7 @@ fun CalendarScreen(
         "DarkGray" to Color(0xFFABABAB),   // Softer dark gray
         "LightGray" to Color(0xFFDFDDDD)  // Softer light gray
     )
-    val circleSize = 25.dp
+    val circleSize = 39.dp
 
     // Colors from app_settings in the database
     val periodColor =
@@ -309,8 +309,13 @@ fun CalendarScreen(
         val daysInMonth = currentMonth.value.lengthOfMonth()
         val dayOffset = (firstDayOfMonth.value - DayOfWeek.MONDAY.value + 7) % 7
 
+        Spacer(modifier = Modifier.padding(5.dp))
+
         for (week in 0..5) {
-            Row {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 for (day in 0..6) {
                     val dayOfMonth = week * 7 + day - dayOffset + 1
                     if (dayOfMonth in 1..daysInMonth) {
@@ -323,11 +328,9 @@ fun CalendarScreen(
                             dayDate.toString() == nextOvulationCalculated
                         val hasPeriodDateCalculated =
                             dayDate.toString() == nextPeriodStartCalculated
-
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-
                                 .clickable {
                                     if (isSelected) {
                                         selectedDates.value -= dayDate
@@ -336,16 +339,16 @@ fun CalendarScreen(
                                     }
                                 }
                                 .drawWithContent {
-                                drawContent() // Draw the content first
-                                val strokeWidth = 1.dp.toPx()
-                                val y = size.height - strokeWidth / 2
-                                drawLine(
-                                    color = Color.LightGray, // Replace with your desired color
-                                    strokeWidth = strokeWidth,
-                                    start = Offset(0f, y),
-                                    end = Offset(size.width, y)
-                                )
-                            }
+                                    drawContent() // Draw the content first
+                                    val strokeWidth = 1.dp.toPx()
+                                    val y = strokeWidth / 2 // Adjust y to start from the top
+                                    drawLine(
+                                        color = Color.LightGray, // Replace with your desired color
+                                        strokeWidth = strokeWidth,
+                                        start = Offset(0f, y),
+                                        end = Offset(size.width, y)
+                                    )
+                                }
                                 .padding(6.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -412,22 +415,24 @@ fun CalendarScreen(
                             if (hasSymptomDate) {
                                 val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
 
-                                noSymptomsForDay.forEachIndexed { currentIndex, symp ->
-                                    symptomColor = colorMap[symp] ?: Color.Black
-                                    val xPlace = (currentIndex * 4)
+                                Row(
+                                    modifier = Modifier
+                                        .offset(y = 12.dp)
+                                        .align(Alignment.BottomCenter),
+                                    horizontalArrangement = Arrangement.spacedBy((-5).dp)  // Negative spacing for overlap
+                                ) {
+                                    noSymptomsForDay.forEach { symp ->
+                                        symptomColor = colorMap[symp] ?: Color.Black
 
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(x = xPlace.dp, y = 0.dp)
-                                            .size(8.dp)  // Size of the small bubble
-                                            //.border(1.dp, Color.Black, CircleShape)
-                                            .background(symptomColor, CircleShape)
-                                            .align(Alignment.BottomCenter)
-                                            //.padding(4.dp)
-                                    )
+                                        Box(
+                                            modifier = Modifier
+                                                .size(11.dp)  // Size of the small bubble
+                                                .background(symptomColor, CircleShape)
+                                        )
+                                    }
                                 }
-
                             }
+
 
                             // Mark today's date with a black border and bold font
                             if (dayDate == LocalDate.now()) {
@@ -514,9 +519,10 @@ fun CalendarScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.weight(0.4f))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         val emptyClick = stringResource(id = R.string.statistics_title)
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
@@ -672,9 +678,7 @@ fun CalendarScreen(
                 }
             )
         }
-
         Spacer(modifier = Modifier.weight(1f))
-
     }
 }
 
