@@ -30,6 +30,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 //import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -107,17 +109,18 @@ fun CalendarScreen(
     // Color map to map string from database to HEX color in UI
     // These HEX-values can be changed if needed
     val colorMap = mapOf(
-        "Red" to Color(0xFFEF5350),        // Softer red
-        "Green" to Color(0xFF66BB6A),      // Softer green
-        "Blue" to Color(0xFF42A5F5),       // Softer blue
-        "Yellow" to Color(0xFFFFEB3B),     // Softer yellow
-        "Cyan" to Color(0xFF4DD0E1),       // Softer cyan
-        "Magenta" to Color(0xFFAB47BC),    // Softer magenta
+        "Red" to Color(0xFFFB7979),        // Softer red
+        "Green" to Color(0xFFACDF92),      // Softer green
+        "Blue" to Color(0xFF8FA7E4),       // Softer blue
+        "Yellow" to Color(0xFFFFF29F),     // Softer yellow
+        "Cyan" to Color(0xFF8ECCE9),       // Softer cyan
+        "Magenta" to Color(0xFFCFB6E0),    // Softer magenta
         "Black" to Color(0xFF212121),      // Softer black (dark gray)
         "White" to Color(0xFFF5F5F5),      // Softer white (light gray)
-        "DarkGray" to Color(0xFF616161),   // Softer dark gray
-        "LightGray" to Color(0xFFBDBDBD)  // Softer light gray
+        "DarkGray" to Color(0xFFABABAB),   // Softer dark gray
+        "LightGray" to Color(0xFFDFDDDD)  // Softer light gray
     )
+    val circleSize = 25.dp
 
     // Colors from app_settings in the database
     val periodColor =
@@ -174,11 +177,13 @@ fun CalendarScreen(
         // Predict the next ovulation date
         // Make sure there is at least one period and one ovulation date
         // Make sure the last ovulation date is before the last first period date
+        /* TODO: THIS IFSTATMENT IS NOT WORKING PROPERLY NEXTOVULATIONPREDICTION IS NOT CALCULATED CORRECTLY. FIX IT. 'NOT ENOUGH DATA ON LAUNCH' */
         if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString())) {
             onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
             onChangeNextOvulationCalculated(
                 previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
             )
+            Log.d("CalendarScreen", "1 NextOvulationCalculated: $nextOvulationCalculated")
 
         } else { // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
             if (lastOvulationDate.toString() > previousFirstPeriodDate.toString() && (nextPeriodStartCalculated != "Not enough data")) {
@@ -188,13 +193,14 @@ fun CalendarScreen(
                         LocalDate.parse(nextPeriodStartCalculated)
                             .plusDays(follicleGrowthDays.toLong()).toString()
                     )
+                    Log.d("CalendarScreen", "2 NextOvulationCalculated: $nextOvulationCalculated")
                 }
             } else { // There is not enough data to make ovulation calculation
                 onChangeNextOvulationCalculated("Not enough data")
             }
         }
     }
-    Log.d("CalendarScreen", "NextOvulationCalculated: ${nextOvulationCalculated.toString()}")
+    //Log.d("CalendarScreen", "NextOvulationCalculated: $nextOvulationCalculated")
 
     // Fetch symptoms from the database AND update data for calculations in stats screen
     LaunchedEffect(Unit) {
@@ -314,14 +320,26 @@ fun CalendarScreen(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                //.padding(8.dp)
+
                                 .clickable {
                                     if (isSelected) {
                                         selectedDates.value -= dayDate
                                     } else {
                                         selectedDates.value += dayDate
                                     }
-                                },
+                                }
+                                .drawWithContent {
+                                drawContent() // Draw the content first
+                                val strokeWidth = 1.dp.toPx()
+                                val y = size.height - strokeWidth / 2
+                                drawLine(
+                                    color = Color.LightGray, // Replace with your desired color
+                                    strokeWidth = strokeWidth,
+                                    start = Offset(0f, y),
+                                    end = Offset(size.width, y)
+                                )
+                            }
+                                .padding(6.dp),
                             contentAlignment = Alignment.Center
                         ) {
 
@@ -331,7 +349,7 @@ fun CalendarScreen(
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(32.dp)
+                                        .size(circleSize)
                                         .background(nextPeriodColor, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -346,7 +364,7 @@ fun CalendarScreen(
                             if (dayDate.toString() == nextOvulationCalculated && !hasOvulationDate) {
                                 Box(
                                     modifier = Modifier
-                                        .size(32.dp)
+                                        .size(circleSize)
                                         .background(nextOvulationColor, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -371,7 +389,7 @@ fun CalendarScreen(
 
                             Box(
                                 modifier = Modifier
-                                    .size(32.dp)
+                                    .size(circleSize)
                                     .background(backgroundColor, CircleShape)
                             )
 
@@ -387,10 +405,10 @@ fun CalendarScreen(
                                         modifier = Modifier
                                             .offset(x = xPlace.dp, y = 0.dp)
                                             .size(8.dp)  // Size of the small bubble
-                                            .border(1.dp, Color.Black, CircleShape)
+                                            //.border(1.dp, Color.Black, CircleShape)
                                             .background(symptomColor, CircleShape)
                                             .align(Alignment.BottomCenter)
-                                            .padding(2.dp)
+                                            //.padding(4.dp)
                                     )
                                 }
 
@@ -400,7 +418,8 @@ fun CalendarScreen(
                             if (dayDate == LocalDate.now()) {
                                 Box(
                                     modifier = Modifier
-                                        .size(32.dp)
+                                        .padding(4.dp)
+                                        .size(circleSize)
                                         .border(1.dp, Color.Black, CircleShape)
                                         .background(Color.Transparent, CircleShape),
                                     contentAlignment = Alignment.Center
