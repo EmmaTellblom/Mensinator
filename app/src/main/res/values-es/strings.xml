@@ -32,18 +32,18 @@
     <string name="colors">Colores</string>
     <string name="period_color">Color para el período</string>
     <string name="selection_color">Color de la selección</string>
-    <string name="period_selection_color">Period Selection Color</string>
-    <string name="expected_period_color">Expected Period Color</string>
-    <string name="ovulation_color">Ovulation Color</string>
-    <string name="expected_ovulation_color">Expected Ovulation Color</string>
+    <string name="period_selection_color">Color de la selección del período</string>
+    <string name="expected_period_color">Color del período esperado</string>
+    <string name="ovulation_color">Color para la ovulación</string>
+    <string name="expected_ovulation_color">Color de la ovulación esperada</string>
     <string name="reminders">Recordatorios</string>
-    <string name="days_before_reminder">Days Before Reminder</string>
-    <string name="other_settings">Other settings</string>
-    <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
-    <string name="period_history">Period history</string>
-    <string name="ovulation_history">Ovulation history</string>
-    <string name="language">Language</string>
-    <string name="cycle_numbers_show">Show cycle numbers</string>
+    <string name="days_before_reminder">Días antes del recordatorio</string>
+    <string name="other_settings">Otros ajustes</string>
+    <string name="luteal_phase_calculation">Cálculo de la fase lútea</string>
+    <string name="period_history">Historial menstrual</string>
+    <string name="ovulation_history">Historial de ovulación</string>
+    <string name="language">Idioma</string>
+    <string name="cycle_numbers_show">Mostrar números de ciclo</string>
     <string name="close">Cerrar</string>
     <string name="save">Guardar</string>
     <!-- Color values -->
@@ -60,11 +60,11 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Estadísticas</string>
-    <string name="period_count">Number of periods tracked: %1$d</string>
-    <string name="average_cycle_length">Average cycle length: %1$.1f days</string>
-    <string name="average_period_length">Average period length: %1$.1f days</string>
-    <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
-    <string name="next_period_start_future">Next assumed period: %1$s</string>
+    <string name="period_count">Número de períodos rastreados: %1$d</string>
+    <string name="average_cycle_length">Duración promedia del ciclo: %1$.1f days</string>
+    <string name="average_period_length">Duración promedia del período: %1$.1f days</string>
+    <string name="next_period_start_past">Próximo período asumido: %1$s \n\nAssumed period date has passed!</string>
+    <string name="next_period_start_future">Próximo período asumido: %1$s</string>
     <string name="ovulation_count">Number of ovulation tracked: %1$d</string>
     <string name="average_ovulation_day">Average ovulation day: %1$s</string>
     <string name="next_predicted_ovulation">Next predicted ovulation date: %1$s</string>
@@ -126,7 +126,7 @@
     <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
     <string name="our_story_header">Our Story</string>
     <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
-    <string name="disclaimer_header">Disclaimer:</string>
+    <string name="disclaimer_header">Aviso:</string>
     <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
