@@ -1,39 +1,39 @@
 package com.mensinator.app
 
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.LocaleListCompat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
 import java.util.Locale
-import android.content.Context
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.res.stringResource
 
 
 /*
@@ -112,7 +112,7 @@ fun CalendarScreen(
         "DarkGray" to Color(0xFFABABAB),   // Softer dark gray
         "LightGray" to Color(0xFFDFDDDD)  // Softer light gray
     )
-    val circleSize = 25.dp
+    val circleSize = 36.dp
 
     // Colors from app_settings in the database
     val periodColor =
@@ -294,8 +294,13 @@ fun CalendarScreen(
         val daysInMonth = currentMonth.value.lengthOfMonth()
         val dayOffset = (firstDayOfMonth.value - DayOfWeek.MONDAY.value + 7) % 7
 
+        Spacer(modifier = Modifier.padding(5.dp))
+
         for (week in 0..5) {
-            Row {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ){
                 for (day in 0..6) {
                     val dayOfMonth = week * 7 + day - dayOffset + 1
                     if (dayOfMonth in 1..daysInMonth) {
@@ -321,16 +326,16 @@ fun CalendarScreen(
                                     }
                                 }
                                 .drawWithContent {
-                                drawContent() // Draw the content first
-                                val strokeWidth = 1.dp.toPx()
-                                val y = size.height - strokeWidth / 2
-                                drawLine(
-                                    color = Color.LightGray, // Replace with your desired color
-                                    strokeWidth = strokeWidth,
-                                    start = Offset(0f, y),
-                                    end = Offset(size.width, y)
-                                )
-                            }
+                                    drawContent() // Draw the content first
+                                    val strokeWidth = 1.dp.toPx()
+                                    val y = strokeWidth / 2 // Adjust y to start from the top
+                                    drawLine(
+                                        color = Color.LightGray, // Replace with your desired color
+                                        strokeWidth = strokeWidth,
+                                        start = Offset(0f, y),
+                                        end = Offset(size.width, y)
+                                    )
+                                }
                                 .padding(6.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -389,19 +394,21 @@ fun CalendarScreen(
                             if (hasSymptomDate) {
                                 val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
 
-                                noSymptomsForDay.forEachIndexed { currentIndex, symp ->
-                                    symptomColor = colorMap[symp] ?: Color.Black
-                                    val xPlace = (currentIndex * 4)
+                                Row(
+                                    modifier = Modifier
+                                        .offset(y = 12.dp)
+                                        .align(Alignment.BottomCenter),
+                                    horizontalArrangement = Arrangement.spacedBy((-5).dp)  // Negative spacing for overlap
+                                ) {
+                                    noSymptomsForDay.forEach { symp ->
+                                        symptomColor = colorMap[symp] ?: Color.Black
 
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(x = xPlace.dp, y = 0.dp)
-                                            .size(8.dp)  // Size of the small bubble
-                                            //.border(1.dp, Color.Black, CircleShape)
-                                            .background(symptomColor, CircleShape)
-                                            .align(Alignment.BottomCenter)
-                                            //.padding(4.dp)
-                                    )
+                                        Box(
+                                            modifier = Modifier
+                                                .size(11.dp)  // Size of the small bubble
+                                                .background(symptomColor, CircleShape)
+                                        )
+                                    }
                                 }
 
                             }
@@ -479,9 +486,10 @@ fun CalendarScreen(
                     }
                 }
             }
+            Spacer(modifier = Modifier.weight(0.4f))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         val emptyClick = stringResource(id = R.string.statistics_title)
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
