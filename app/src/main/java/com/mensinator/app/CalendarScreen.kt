@@ -1,5 +1,6 @@
 package com.mensinator.app
 
+
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -32,17 +33,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-//import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
 import androidx.compose.ui.res.stringResource
-import androidx.work.Constraints
-import androidx.work.NetworkType
+
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -531,7 +523,7 @@ fun CalendarScreen(
                     if (reminderDays > 0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated >= LocalDate.now()
                             .toString()
                     ) {
-                        sendNotification(
+                        newSendNotification(
                             context,
                             reminderDays,
                             LocalDate.parse(nextPeriodStartCalculated)
@@ -590,7 +582,7 @@ fun CalendarScreen(
                 if (reminderDays > 0 && nextPeriodStartCalculated != "Not enough data" && nextPeriodStartCalculated >= LocalDate.now()
                         .toString()
                 ) {
-                    sendNotification(
+                    newSendNotification(
                         context,
                         reminderDays,
                         LocalDate.parse(nextPeriodStartCalculated)
@@ -633,70 +625,6 @@ fun CalendarScreen(
     }
 }
 
-// Function to create a notification for upcoming periods
-// used if reminderDays > 0
-fun sendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
-    // Calculate the notification date (periodDate - daysForReminding)
-    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
-
-    // Check if the notification date is in the past
-    if (notificationDate.isBefore(LocalDate.now())) {
-        Log.d(
-            "CalendarScreen",
-            "Notification not scheduled because the reminder date is in the past"
-        )
-        return
-    }
-
-    // Convert the LocalDate to a timestamp (milliseconds since epoch)
-    val notificationTimeMillis =
-        notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    val currentTimeMillis = System.currentTimeMillis()
-
-    // Calculate the delay in milliseconds
-    val delayMillis = notificationTimeMillis - currentTimeMillis
-
-    // Handle negative delay
-    if (delayMillis < 0) {
-        Log.d(
-            "CalendarScreen",
-            "Notification not scheduled because the calculated delay is negative"
-        )
-        return
-    }
-
-    // Convert delayMillis to the scheduled date and time - This is for troubleshooting the notification
-    val futureInstant = Instant.ofEpochMilli(currentTimeMillis + delayMillis)
-    val futureDateTime = LocalDateTime.ofInstant(futureInstant, ZoneId.systemDefault())
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-    val formattedDateTime = futureDateTime.format(formatter)
-
-    Log.d("CalendarScreen", "Notification is scheduled to be sent at: $formattedDateTime")
-
-    // Create a tag for the notification work request
-    val notificationTag = "period_reminder_notification"
-
-    // Get the WorkManager instance
-    val workManager = WorkManager.getInstance(context)
-
-    // Cancel existing work requests with the same tag
-    workManager.cancelAllWorkByTag(notificationTag)
-
-    val constraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.NOT_REQUIRED) // No network required
-        .build()
-
-    // Create a work request to send the notification
-    val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-        .setConstraints(constraints)
-        .setInitialDelay(delayMillis, TimeUnit.MILLISECONDS)
-        .addTag(notificationTag) // Tag the work request
-        .build()
-
-    // Enqueue the work request
-    workManager.enqueue(workRequest)
-    Log.d("CalendarScreen", "Work request enqueued with delay: $delayMillis")
-}
 
 fun String.capitalized(): String {
     return this.replaceFirstChar {
@@ -704,4 +632,24 @@ fun String.capitalized(): String {
             it.titlecase(Locale.getDefault())
         else it.toString()
     }
+}
+
+fun newSendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate){
+
+    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
+    if (notificationDate.isBefore(LocalDate.now())) {
+        Log.d(
+            "CalendarScreen",
+            "Notification not scheduled because the reminder date is in the past"
+        )
+        Toast.makeText(context, "Notification not scheduled because the date to remind you will be in the past", Toast.LENGTH_SHORT).show()
+    }
+    else{
+        //Schedule notification
+        val scheduler = NotificationScheduler(context)
+        scheduler.scheduleNotification(notificationDate)
+        Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
+
+    }
+
 }
