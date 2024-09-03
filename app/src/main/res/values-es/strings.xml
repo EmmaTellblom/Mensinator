@@ -116,11 +116,11 @@
     <string name="user_manual_header">Manual del usuario</string>
     <string name="how_to_use">Como usar:</string>
     <string name="select_dates">• Seleccionar fechas: toca una fecha para seleccionarla o deseleccionarla.</string>
-    <string name="add_or_remove_dates">• Añadir o eliminar fechas para el período: haz clic en el botón 'Período' después de seleccionar las fechas.</string>
-    <string name="symptoms">• Síntomas: Haz clic en el botón 'Síntomas' para ver o añadir síntomas para la fecha seleccionada.</string>
+    <string name="add_or_remove_dates">• Añadir o eliminar fechas para el período: haz clic en el botón "Período" después de seleccionar las fechas.</string>
+    <string name="symptoms">• Síntomas: Haz clic en el botón "Síntomas" para ver o añadir síntomas para la fecha seleccionada.</string>
     <string name="ovulation">• Ovulación: Selecciona una sola fecha y haz clic en el botón de ovulación. Para borrar, selecciona la fecha y vuelve a presionar el botón.</string>
-    <string name="statistics">• Estadísticas: Haz clic en el 'Botón de hamburguesa' y selecciona estadísticas.</string>
-    <string name="import_export">• Importar/Exportar: Haz clic en el botón 'Importar/Exportar' para importar o exportar tus datos. ¡Esto es imprescindible al transferir los datos a un nuevo dispositivo!</string>
+    <string name="statistics">• Estadísticas: Haz clic en el "Botón de hamburguesa" y selecciona estadísticas.</string>
+    <string name="import_export">• Importar/Exportar: Haz clic en el botón "Importar/Exportar" para importar o exportar tus datos. ¡Esto es imprescindible al transferir los datos a un nuevo dispositivo!</string>
     <string name="calculations">• Cálculos: \nLos períodos se calculan en función de la duración promedia del ciclo y del período.\nLos períodos pueden ser calculados usando la fase lútea promedia. Los cálculos entonces tomarán en cuenta los últimos 5 ciclos para hacer un promedio de la fase lútea y usarlo para calcular el período. Esto se activa en los ajustes.\nLa ovulación se calcula en función de la duración promedia del ciclo de ovulación.</string>
     <string name="features_coming_soon">Funciones próximas:</string>
     <string name="upcoming_features">• Nueva interfaz de usuario (cuando tenga ganas). • Otras pequeñas mejoras en la interfaz</string>

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
@@ -92,13 +91,14 @@ fun SettingsDialog() {
     // When more languages have been translated, add them here
     val predefinedLang = mapOf(
         "English" to "en",
-        "Svenska" to "sv",
+        "Swedish" to "sv",
         "Tamil" to "ta",
         "Romanian" to "ro",
         "Hindi" to "hi",
-        "Bengali" to "bn"
-        /*"Chinese" to "zh",
+        "Bengali" to "bn",
         "Spanish" to "es",
+        "French" to "fr"
+        /*"Chinese" to "zh",
         "Portuguese" to "pt",
         "Russian" to "ru",
         "Japanese" to "ja",
@@ -108,7 +108,6 @@ fun SettingsDialog() {
         "Wu Chinese" to "wuu",
         "Turkish" to "tr",
         "Korean" to "ko",
-        "French" to "fr",
         "German" to "de",
         "Vietnamese" to "vi",
         "Urdu" to "ur",
