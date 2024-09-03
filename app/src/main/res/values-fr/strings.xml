@@ -23,7 +23,7 @@
     <string name="settings_page">Paramètres</string>
 
     <!-- symptoms page -->
-    <string name="delete_symptom">Supprimer Symptôme</string>
+    <string name="delete_symptom">Supprimer symptôme</string>
     <string name="delete_question">Êtes-vous sûr de vouloir supprimer ce symptôme?</string>
     <string name="delete_button">Supprimer</string>
 
@@ -113,7 +113,7 @@
     <string name="faq_title">Foire aux questions</string>
 
     <!-- User Manual Section -->
-    <string name="user_manual_header">Manuel de l'utilisateur</string>
+    <string name="user_manual_header">Guide de l'utilisateur</string>
     <string name="how_to_use">Comment utiliser :</string>
     <string name="select_dates">• Sélectionner des dates : Touchez une date pour la sélectionner ou la désélectionner.</string>
     <string name="add_or_remove_dates">• Ajouter ou supprimer des dates pour les règles : Cliquez sur le bouton \'Règles\' après avoir sélectionné les dates.</string>

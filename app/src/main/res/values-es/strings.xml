@@ -63,13 +63,13 @@
     <string name="period_count">Número de períodos rastreados: %1$d</string>
     <string name="average_cycle_length">Duración promedia del ciclo: %1$.1f days</string>
     <string name="average_period_length">Duración promedia del período: %1$.1f days</string>
-    <string name="next_period_start_past">Próximo período asumido: %1$s \n\nAssumed period date has passed!</string>
+    <string name="next_period_start_past">Próximo período asumido: %1$s \n\nLa fecha asumida del período ha pasado!</string>
     <string name="next_period_start_future">Próximo período asumido: %1$s</string>
-    <string name="ovulation_count">Number of ovulation tracked: %1$d</string>
-    <string name="average_ovulation_day">Average ovulation day: %1$s</string>
-    <string name="next_predicted_ovulation">Next predicted ovulation date: %1$s</string>
-    <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
-    <string name="average_luteal_length">Average luteal phase length: %1$.1f days</string>
+    <string name="ovulation_count">Número de ovulaciones rastreadas: %1$d</string>
+    <string name="average_ovulation_day">Día promedio de ovulación: %1$s</string>
+    <string name="next_predicted_ovulation">Próxima ovulación predicha: %1$s</string>
+    <string name="next_predicted_ovulation_default">No hay suficientes datos para predecir la próxima ovulación</string>
+    <string name="average_luteal_length">Duración promedia de la fase lútea: %1$.1f days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Síntomas para %1$s</string>
@@ -115,19 +115,19 @@
     <!-- User Manual Section -->
     <string name="user_manual_header">Manual del usuario</string>
     <string name="how_to_use">Como usar:</string>
-    <string name="select_dates">• Select Dates: Tap on a date to select or deselect it.</string>
-    <string name="add_or_remove_dates">• Add or Remove Dates for Period: Click the \'Add or Remove Dates\' button after selecting dates.</string>
-    <string name="symptoms">• Symptoms: Click the \'Symptoms\' button to view or add symptoms for the selected date.</string>
-    <string name="ovulation">• Ovulation: Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
-    <string name="statistics">• Statistics: Click the \'Burger menu\' and select statistics.</string>
-    <string name="import_export">• Import/Export: Click the \'Import/Export\' button to import or export your data. This is a MUST when moving the data to a new device!</string>
-    <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
-    <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
-    <string name="our_story_header">Our Story</string>
-    <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
+    <string name="select_dates">• Seleccionar fechas: toca una fecha para seleccionarla o deseleccionarla.</string>
+    <string name="add_or_remove_dates">• Añadir o eliminar fechas para el período: haz clic en el botón 'Período' después de seleccionar las fechas.</string>
+    <string name="symptoms">• Síntomas: Haz clic en el botón 'Síntomas' para ver o añadir síntomas para la fecha seleccionada.</string>
+    <string name="ovulation">• Ovulación: Selecciona una sola fecha y haz clic en el botón de ovulación. Para borrar, selecciona la fecha y vuelve a presionar el botón.</string>
+    <string name="statistics">• Estadísticas: Haz clic en el 'Botón de hamburguesa' y selecciona estadísticas.</string>
+    <string name="import_export">• Importar/Exportar: Haz clic en el botón 'Importar/Exportar' para importar o exportar tus datos. ¡Esto es imprescindible al transferir los datos a un nuevo dispositivo!</string>
+    <string name="calculations">• Cálculos: \nLos períodos se calculan en función de la duración promedia del ciclo y del período.\nLos períodos pueden ser calculados usando la fase lútea promedia. Los cálculos entonces tomarán en cuenta los últimos 5 ciclos para hacer un promedio de la fase lútea y usarlo para calcular el período. Esto se activa en los ajustes.\nLa ovulación se calcula en función de la duración promedia del ciclo de ovulación.</string>
+    <string name="features_coming_soon">Funciones próximas:</string>
+    <string name="upcoming_features">• Nueva interfaz de usuario (cuando tenga ganas). • Otras pequeñas mejoras en la interfaz</string>
+    <string name="our_story_header">Nuestra Historia</string>
+    <string name="our_story">Somos dos mujeres que estábamos cansadas de vender nuestros datos a grandes corporaciones. Nuestra aplicación almacena todos tus datos localmente en tu dispositivo y no tenemos &lt;b&gt;ningún acceso a ellos&lt;/b&gt;.\nValoramos tu privacidad y no guardamos ni compartimos ninguna información personal. Desde el lanzamiento de esta aplicación, hemos crecido y ahora tenemos nuestro propio servidor en Discord con personas apasionadas por esta aplicación y que quieren ayudarnos.\n\nÚnete a nosotros en Discord aquí: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Aviso:</string>
-    <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
+    <string name="disclaimer">• Este es un proyecto pasatiempo y no está destinado para uso médico. Simplemente lo hacemos para nuestras propias necesidades. Pero agradecemos ideas y solicitudes. Únete a nosotros en Discord o envíanos un correo electrónico:\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Cerrar</string>
