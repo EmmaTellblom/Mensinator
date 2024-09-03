@@ -183,6 +183,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                 } while (it.moveToNext())
             }
         }
+        cursor.close()
+        db.close()
         return symptoms
     }
 
@@ -204,7 +206,12 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
                 } while (it.moveToNext())
             }
+
+
         }
+        cursor.close()
+        db.close()
+
         return symptoms
     }
 
@@ -384,6 +391,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             put(COLUMN_SETTING_VALUE, value)
         }
         val rowsUpdated = db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
+        db.close()
         return rowsUpdated > 0
     }
 

@@ -49,6 +49,8 @@ object DatabaseUtils {
         createOvulationStructure(db)
         databaseVersion7(db)
         databaseVersion8(db)
+
+        db.close()
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -65,6 +67,7 @@ object DatabaseUtils {
                 ('Reminders'),
                 ('Other')
         """)
+        db.close()
     }
 
     fun createAppSettings(db: SQLiteDatabase) {
@@ -88,6 +91,7 @@ object DatabaseUtils {
                 ('reminder_days', 'Days Before Reminder', '0', 2),
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
+        db.close()
     }
 
     fun createOvulationStructure(db: SQLiteDatabase){
@@ -104,6 +108,7 @@ object DatabaseUtils {
                 ('ovulation_color', 'Ovulation Color', 'Blue', '1'),
                 ('expected_ovulation_color', 'Expected Ovulation Color', 'Magenta', '1')
         """)
+        db.close()
     }
 
     fun insertLutealSetting(db: SQLiteDatabase){
@@ -111,6 +116,7 @@ object DatabaseUtils {
             INSERT INTO APP_SETTINGS(setting_key, setting_label, setting_value, group_label_id) VALUES
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
+        db.close()
     }
 
     fun databaseVersion7 (db: SQLiteDatabase) {
@@ -163,6 +169,7 @@ object DatabaseUtils {
         db.execSQL("""
             UPDATE app_settings SET setting_value = 'LightGray' WHERE setting_value = 'Grey'
         """)
+        db.close()
 
     }
 
@@ -174,7 +181,7 @@ object DatabaseUtils {
             ('screen_protection', 'Protect screen', '1', '3', 'SW')
         """)
 
-
+        db.close()
 
     }
 }
