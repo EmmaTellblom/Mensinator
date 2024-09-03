@@ -102,7 +102,7 @@
     <string name="export_button">Exporter</string>
     <string name="import_button">Importer</string>
     <string name="export_success_toast">Exporté vers %1$s</string>
-    <string name="import_success_toast">Le fichier a importé avec succès</string>
+    <string name="import_success_toast">Le fichier a été importé avec succès</string>
     <string name="import_failure_toast">Échec de l'importation du fichier</string>
     <string name="export_path_label">Chemin d'exportation : %1$s</string>
     <string name="import_path_label">Chemin d'importation : %1$s</string>
