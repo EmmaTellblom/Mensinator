@@ -336,7 +336,7 @@ fun CalendarScreen(
                                         end = Offset(size.width, y)
                                     )
                                 }
-                                .padding(6.dp),
+                                .padding(4.dp),
                             contentAlignment = Alignment.Center
                         ) {
 
@@ -352,7 +352,7 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
+                                        //color = Color.Black,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -367,7 +367,7 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
+                                        //color = Color.Black,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -419,13 +419,13 @@ fun CalendarScreen(
                                     modifier = Modifier
                                         //.padding(4.dp)
                                         .size(circleSize)
-                                        .border(1.dp, Color.Black, CircleShape)
+                                        .border(1.dp, Color.LightGray ,CircleShape)
                                         .background(Color.Transparent, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        color = Color.Black,
+                                        //color = Color.Black,
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center
                                     )
@@ -433,7 +433,7 @@ fun CalendarScreen(
                             } else { // Regular dates
                                 Text(
                                     text = dayOfMonth.toString(),
-                                    color = Color.Black,
+                                    //color = Color.Black,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
                                         //.padding(4.dp)
@@ -467,7 +467,7 @@ fun CalendarScreen(
                                             Text(
                                                 text = cycleNumber.toString(),
                                                 style = androidx.compose.ui.text.TextStyle(
-                                                    color = Color.Black,
+                                                    //color = Color.Black,
                                                     fontSize = 8.sp,
                                                     textAlign = TextAlign.Left
                                                 ),

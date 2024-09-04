@@ -26,6 +26,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -105,7 +106,7 @@ fun ManageSymptom(
                     .padding(top = 15.dp),
                 shape = RoundedCornerShape(25.dp),
                 colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFf5ebff) //change this color when you implement a theme
+                    //containerColor = Color(0xFFf5ebff) //change this color when you implement a theme
                 )                                           // to something like : MaterialTheme.colorScheme.onBackground
             ) {
                 Row(
@@ -159,7 +160,9 @@ fun ManageSymptom(
                                 dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
                             }
                             onSave()
-                        }
+                        },
+                        colors = SwitchDefaults.colors(
+                        )
                     )
                     Spacer(modifier = Modifier.weight(0.3f))
                     Box {
