@@ -297,10 +297,10 @@ fun CalendarScreen(
         Spacer(modifier = Modifier.padding(5.dp))
 
         for (week in 0..5) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 for (day in 0..6) {
                     val dayOfMonth = week * 7 + day - dayOffset + 1
                     if (dayOfMonth in 1..daysInMonth) {
@@ -317,7 +317,6 @@ fun CalendarScreen(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-
                                 .clickable {
                                     if (isSelected) {
                                         selectedDates.value -= dayDate
@@ -336,7 +335,7 @@ fun CalendarScreen(
                                         end = Offset(size.width, y)
                                     )
                                 }
-                                .padding(4.dp),
+                                .padding(bottom = 15.dp, top = 4.dp),
                             contentAlignment = Alignment.Center
                         ) {
 
@@ -419,7 +418,7 @@ fun CalendarScreen(
                                     modifier = Modifier
                                         //.padding(4.dp)
                                         .size(circleSize)
-                                        .border(1.dp, Color.LightGray ,CircleShape)
+                                        .border(1.dp, Color.LightGray, CircleShape)
                                         .background(Color.Transparent, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -475,8 +474,6 @@ fun CalendarScreen(
                                             )
                                         }
                                     }
-
-
                                 }
                             }
 
@@ -642,7 +639,7 @@ fun String.capitalized(): String {
     }
 }
 
-fun newSendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate){
+fun newSendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
 
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
     if (notificationDate.isBefore(LocalDate.now())) {
@@ -650,9 +647,12 @@ fun newSendNotification(context: Context, daysForReminding: Int, periodDate: Loc
             "CalendarScreen",
             "Notification not scheduled because the reminder date is in the past"
         )
-        Toast.makeText(context, "Notification not scheduled because the date to remind you will be in the past", Toast.LENGTH_SHORT).show()
-    }
-    else{
+        Toast.makeText(
+            context,
+            "Notification not scheduled because the date to remind you will be in the past",
+            Toast.LENGTH_SHORT
+        ).show()
+    } else {
         //Schedule notification
         val scheduler = NotificationScheduler(context)
         scheduler.scheduleNotification(notificationDate)
