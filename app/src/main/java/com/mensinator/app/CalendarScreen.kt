@@ -112,7 +112,7 @@ fun CalendarScreen(
         "DarkGray" to Color(0xFFABABAB),   // Softer dark gray
         "LightGray" to Color(0xFFDFDDDD)  // Softer light gray
     )
-    val circleSize = 36.dp
+    val circleSize = 30.dp
 
     // Colors from app_settings in the database
     val periodColor =
@@ -486,7 +486,7 @@ fun CalendarScreen(
                     }
                 }
             }
-            Spacer(modifier = Modifier.weight(0.4f))
+            Spacer(modifier = Modifier.weight(0.2f))
         }
 
         Spacer(modifier = Modifier.height(10.dp))
