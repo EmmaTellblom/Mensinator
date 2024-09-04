@@ -486,7 +486,7 @@ fun CalendarScreen(
             Spacer(modifier = Modifier.weight(0.2f))
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        //Spacer(modifier = Modifier.height(5.dp))
 
         val emptyClick = stringResource(id = R.string.statistics_title)
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
@@ -540,7 +540,7 @@ fun CalendarScreen(
             enabled = isPeriodsButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 8.dp)
         ) {
             Text(text = stringResource(id = R.string.period_button))
         }
@@ -557,7 +557,7 @@ fun CalendarScreen(
             enabled = isSymptomsButtonEnabled,  // Set the state of the Symptoms button
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 8.dp)
         ) {
             Text(text = stringResource(id = R.string.symptoms_button))
         }
@@ -597,7 +597,7 @@ fun CalendarScreen(
             enabled = isOvulationButtonEnabled,  // Set the state of the Ovulation button
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 8.dp)
         ) {
             Text(text = stringResource(id = R.string.ovulation_button))
         }
