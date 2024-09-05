@@ -19,17 +19,16 @@ class DataSource(isDarkTheme: Boolean) {
     )
 
     private val darkColorMap = mapOf(
-        "Red" to Color(0x99FB7979),
-        "Green" to Color(0x99ACDF92),
-        "Blue" to Color(0x998FA7E4),
-        "Yellow" to Color(0x99FFF29F),
-        "Cyan" to Color(0x998ECCE9),
-        "Magenta" to Color(0x99CFB6E0),
-        "Black" to Color(0x99212121),
-        "White" to Color(0x99F5F5F5),
-        "DarkGray" to Color(0x99ABABAB),
-        "LightGray" to Color(0x99DFDDDD),
-        "Light Gray" to Color(0x99DFDDDD)
+        "Red" to Color(0xFF995759), // Softer red
+        "Green" to Color(0xFF6B8D5D), // Softer green
+        "Blue" to Color(0xFF5F7097), // Softer blue
+        "Yellow" to Color(0xFFAC965B), // Softer yellow
+        "Cyan" to Color(0xFF6D96A8), // Softer cyan
+        "Magenta" to Color(0xFF6F5F79), // Softer magenta
+        "Black" to Color(0xFF212121), // Softer black (dark gray)
+        "White" to Color(0xFFF5F5F5), // Softer white (light gray)
+        "DarkGray" to Color(0xFF585858), // Softer dark gray
+        "LightGray" to Color(0xFF8F8F8F) // Softer light gray
     )
 
     val colorMap: Map<String, Color> = if (isDarkTheme) darkColorMap else lightColorMap
