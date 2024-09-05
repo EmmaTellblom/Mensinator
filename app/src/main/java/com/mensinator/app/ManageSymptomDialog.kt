@@ -93,10 +93,8 @@ fun ManageSymptom(
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
-            val colorIndex =
-                DataSource().predefinedListOfColors.indexOfFirst { it.first == selectedColorName }
-            val selectedColor =
-                DataSource().predefinedListOfColors.getOrNull(colorIndex)?.second ?: Color.Gray
+            val selectedColor = DataSource().colorMap[selectedColorName] ?: Color.Gray
+
 
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
             val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
@@ -202,9 +200,8 @@ fun ManageSymptom(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            DataSource().predefinedListOfColors.forEach { (colorName) ->
+                            DataSource().colorMap.forEach { (colorName) ->
                                 val keyColor = ResourceMapper.getStringResourceId(colorName)
-
                                 DropdownMenuItem(
                                     onClick = {
                                         selectedColorName = colorName

@@ -206,7 +206,7 @@ fun SettingsDialog() {
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false }
                                     ) {
-                                        DataSource().predefinedListOfColors.forEach { (name, _) ->
+                                        DataSource().colorMap.forEach { (name) ->
                                             val colors = ResourceMapper.getStringResourceId(name)
                                             DropdownMenuItem(
                                                 text = {
