@@ -424,13 +424,13 @@ fun SettingsDialog() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 TextButton(onClick = { showFAQDialog = true }) {
-                    Text(text = stringResource(id = R.string.about_app))
+                    Text(text = stringResource(id = R.string.about_app), fontSize = 12.sp)
                 }
                 //Spacer(modifier = Modifier.width(8.dp)) // Space between text elements
                 Spacer(modifier = Modifier.width(8.dp)) // Space between text elements
                 Text(
                     text = "    |   App Version: $appVersion   |   DB-version: ${dbHelper.getDBVersion()}",
-                    fontSize = 12.sp
+                    fontSize = 10.sp
                 )
             }
 
