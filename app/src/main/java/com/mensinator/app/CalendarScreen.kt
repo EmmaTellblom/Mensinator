@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
+import com.mensinator.app.data.DataSource
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -97,27 +98,14 @@ fun CalendarScreen(
 
     // The first date of previous period
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
+    val colorMap = DataSource().colorMap
 
-    // Color map to map string from database to HEX color in UI
-    // These HEX-values can be changed if needed
-    val colorMap = mapOf(
-        "Red" to Color(0xFFFB7979),        // Softer red
-        "Green" to Color(0xFFACDF92),      // Softer green
-        "Blue" to Color(0xFF8FA7E4),       // Softer blue
-        "Yellow" to Color(0xFFFFF29F),     // Softer yellow
-        "Cyan" to Color(0xFF8ECCE9),       // Softer cyan
-        "Magenta" to Color(0xFFCFB6E0),    // Softer magenta
-        "Black" to Color(0xFF212121),      // Softer black (dark gray)
-        "White" to Color(0xFFF5F5F5),      // Softer white (light gray)
-        "DarkGray" to Color(0xFFABABAB),   // Softer dark gray
-        "LightGray" to Color(0xFFDFDDDD)  // Softer light gray
-    )
     val circleSize = 30.dp
 
     // Colors from app_settings in the database
     val periodColor =
         dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
-    val selectedColor = dbHelper.getSettingByKey("selected_color")?.value?.let { colorMap[it] }
+    val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
         ?: colorMap["LightGray"]!!
     val nextPeriodColor =
         dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
@@ -170,7 +158,7 @@ fun CalendarScreen(
         // Make sure there is at least one period and one ovulation date
         // Make sure the last ovulation date is before the last first period date
         /* TODO: THIS IFSTATMENT IS NOT WORKING PROPERLY NEXTOVULATIONPREDICTION IS NOT CALCULATED CORRECTLY. FIX IT. 'NOT ENOUGH DATA ON LAUNCH' */
-        if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString())) {
+        if (ovulationCount >= 1 && periodCount >= 1 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString()) && (nextOvulationCalculated!= "Not enough data")) {
             onChangeFollicleGrowthDays(calcHelper.averageFollicalGrowthInDays())
             onChangeNextOvulationCalculated(
                 previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
