@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.ui.theme.isDarkMode
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -98,7 +99,7 @@ fun CalendarScreen(
 
     // The first date of previous period
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
-    val colorMap = DataSource().colorMap
+    val colorMap = DataSource(isDarkMode()).colorMap
 
     val circleSize = 30.dp
 

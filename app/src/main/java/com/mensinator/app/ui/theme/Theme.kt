@@ -58,3 +58,8 @@ fun MensinatorTheme(
         content = content
     )
 }
+
+@Composable
+fun isDarkMode(): Boolean {
+    return isSystemInDarkTheme()
+}

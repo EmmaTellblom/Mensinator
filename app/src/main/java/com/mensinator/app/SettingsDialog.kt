@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.ui.theme.isDarkMode
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -187,7 +188,7 @@ fun SettingsDialog() {
                                                     .clip(RoundedCornerShape(26.dp))
                                                     .background(
                                                         selectedColorName.let {
-                                                            DataSource().colorMap[selectedColorName]
+                                                            DataSource(isDarkMode()).colorMap[selectedColorName]
                                                         }
                                                             ?: Color.Gray
                                                     ),
@@ -206,7 +207,7 @@ fun SettingsDialog() {
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false }
                                     ) {
-                                        DataSource().colorMap.forEach { (name) ->
+                                        DataSource(isDarkMode()).colorMap.forEach { (name) ->
                                             val colors = ResourceMapper.getStringResourceId(name)
                                             DropdownMenuItem(
                                                 text = {

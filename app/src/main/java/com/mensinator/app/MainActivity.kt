@@ -2,7 +2,6 @@ package com.mensinator.app
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.compose.setContent
@@ -37,17 +36,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel(context: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelId = "1"
-            val channelName = "Mensinator"
-            val channelDescription = "Your Channel Description"
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val notificationChannel = NotificationChannel(channelId, channelName, importance).apply {
-                description = channelDescription
-            }
-
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(notificationChannel)
+        val channelId = "1"
+        val channelName = "Mensinator"
+        val channelDescription = "Your Channel Description"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val notificationChannel = NotificationChannel(channelId, channelName, importance).apply {
+            description = channelDescription
         }
+
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
     }
 }

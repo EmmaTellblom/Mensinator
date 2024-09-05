@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.ui.theme.isDarkMode
 
 
 //Maps Database keys to res/strings.xml for multilanguage support
@@ -93,7 +94,7 @@ fun ManageSymptom(
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
-            val selectedColor = DataSource().colorMap[selectedColorName] ?: Color.Gray
+            val selectedColor = DataSource(isDarkMode()).colorMap[selectedColorName] ?: Color.Gray
 
 
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
@@ -200,7 +201,7 @@ fun ManageSymptom(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            DataSource().colorMap.forEach { (colorName) ->
+                            DataSource(isDarkMode()).colorMap.forEach { (colorName) ->
                                 val keyColor = ResourceMapper.getStringResourceId(colorName)
                                 DropdownMenuItem(
                                     onClick = {
