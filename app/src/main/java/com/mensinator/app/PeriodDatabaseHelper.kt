@@ -815,4 +815,13 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     fun getDBVersion(): String {
         return DATABASE_VERSION.toString()
     }
+
+    fun renameSymptom(symptomId: Int, newName: String) {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("symptom_name", newName)
+        }
+        db.update("symptoms", contentValues, "id = ?", arrayOf(symptomId.toString()))
+
+    }
 }
