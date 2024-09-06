@@ -44,6 +44,7 @@
     <string name="ovulation_history">Ovulation history</string>
     <string name="language">Language</string>
     <string name="cycle_numbers_show">Show cycle numbers</string>
+    <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
     <!-- Color values -->

@@ -135,4 +135,5 @@
     <string name="import_export_data">Importă și exportă date</string>
     <string name="export_data">Exportă date</string>
     <string name="about_app">Despre aplicație</string>
+    <string name="screen_protection">preveni capturile de ecran</string>
 </resources>

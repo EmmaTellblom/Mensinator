@@ -132,4 +132,5 @@
     <string name="import_export_data">தரவை இறக்குமதி மற்றும் ஏற்றுமதி செய்</string>
     <string name="export_data">தரவை ஏற்றுமதி செய்</string>
     <string name="about_app">செயலியின் பற்றிய</string>
+    <string name="screen_protection">ஸ்கிரீன் ஷாட்களைத் தடுக்கவும்</string>
 </resources>

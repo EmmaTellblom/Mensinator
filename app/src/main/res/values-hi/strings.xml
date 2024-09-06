@@ -133,4 +133,5 @@
     <string name="import_export_data">डेटा आयात और निर्यात करें</string>
     <string name="export_data">डेटा निर्यात करें</string>
     <string name="about_app">ऐप के बारे में</string>
+    <string name="screen_protection">स्क्रीनशॉट रोकें</string>
 </resources>

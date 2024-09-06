@@ -135,4 +135,5 @@
     <string name="import_export_data">Importar/Exportar datos</string>
     <string name="export_data">Exportar los datos</string>
     <string name="about_app">Acerca de la aplicación</string>
+    <string name="screen_protection">evitar capturas de pantalla</string>
 </resources>
