@@ -74,6 +74,7 @@ object ResourceMapper {
     }
 }
 
+
 @Composable
 fun SettingsDialog() {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
