@@ -169,14 +169,14 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
+            "SELECT $COLUMN_ID, SUBSTRING($COLUMN_SYMPTOM_NAME, 1, 15) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
-                    val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
+                    val symptomName = it.getString(it.getColumnIndexOrThrow("truncated_name"))
                     val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
                     val color = it.getString(it.getColumnIndexOrThrow("color"))
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
@@ -193,14 +193,14 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS ORDER BY $COLUMN_SYMPTOM_NAME"
+            "SELECT $COLUMN_ID, SUBSTRING($COLUMN_SYMPTOM_NAME, 1, 15) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS ORDER BY $COLUMN_SYMPTOM_NAME"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
-                    val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
+                    val symptomName = it.getString(it.getColumnIndexOrThrow("truncated_name"))
                     val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
                     val color = it.getString(it.getColumnIndexOrThrow("color"))
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
