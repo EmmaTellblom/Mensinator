@@ -321,7 +321,9 @@ fun SettingsDialog() {
                                                 if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
                                             }
                                             saveData(savedSettings,dbHelper,context)
-                                        }
+                                        },
+                                        colors = SwitchDefaults.colors(
+                                        )
                                     )
                                 } else if (setting.type == "NO") {
                                     Box(modifier = Modifier.alignByBaseline()) {
