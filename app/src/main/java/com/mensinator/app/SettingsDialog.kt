@@ -124,11 +124,11 @@ fun SettingsDialog() {
 
     Column(
         modifier = Modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {//we have 2 columns so the scroll animation does get cut by the padding of the second column
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start
