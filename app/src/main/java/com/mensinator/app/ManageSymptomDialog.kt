@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -200,37 +201,39 @@ fun ManageSymptom(
 
                         DropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.width(50.dp).clip(RoundedCornerShape(100.dp))
                         ) {
-                            DataSource(isDarkMode()).colorMap.forEach { (colorName) ->
-                                val keyColor = ResourceMapper.getStringResourceId(colorName)
-                                DropdownMenuItem(
-                                    onClick = {
-                                        selectedColorName = colorName
-                                        expanded = false
-                                        val updatedSymptom = symptom.copy(color = colorName)
-                                        savedSymptoms = savedSymptoms.map {
-                                            if (it.id == symptom.id) updatedSymptom else it
-                                        }
-                                        // Save settings to the database
-                                        savedSymptoms.forEach { symptom ->
-                                            dbHelper.updateSymptom(
-                                                symptom.id,
-                                                symptom.active,
-                                                symptom.color
+                                DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
+                                    val keyColor = ResourceMapper.getStringResourceId(colorName)
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            selectedColorName = colorName
+                                            expanded = false
+                                            val updatedSymptom = symptom.copy(color = colorName)
+                                            savedSymptoms = savedSymptoms.map {
+                                                if (it.id == symptom.id) updatedSymptom else it
+                                            }
+                                            // Save settings to the database
+                                            savedSymptoms.forEach { symptom ->
+                                                dbHelper.updateSymptom(
+                                                    symptom.id,
+                                                    symptom.active,
+                                                    symptom.color
+                                                )
+                                            }
+                                            onSave()
+                                        },
+                                        text = {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(25.dp)
+                                                    .clip(RoundedCornerShape(26.dp))
+                                                    .background(colorValue),  // Use the color from the map
                                             )
                                         }
-                                        onSave()
-                                    },
-                                    text = {
-                                        Text(
-                                            text = keyColor?.let { stringResource(id = it) }
-                                                ?: "Not found",
-                                            textAlign = TextAlign.Left
-                                        )
-                                    }
-                                )
-                            }
+                                    )
+                                }
                         }
                     }
                 }
