@@ -134,4 +134,5 @@
     <string name="export_data">Exportera data</string>
     <string name="about_app">Om Appen</string>
     <string name="screen_protection">Blockera screenshots</string>
+    <string name="rename_symptom" >Döp om symptom</string>
 </resources>

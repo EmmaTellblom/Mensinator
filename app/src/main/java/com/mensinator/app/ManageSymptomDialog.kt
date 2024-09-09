@@ -62,6 +62,10 @@ fun ManageSymptom(
     var initialSymptoms = remember { dbHelper.getAllSymptoms() }
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
 
+    // State to manage the rename dialog visibility
+    var showRenameDialog by remember { mutableStateOf(false) }
+    var symptomToRename by remember { mutableStateOf<Symptom?>(null) }
+
     // State to manage the dialog visibility
     var showDeleteDialog by remember { mutableStateOf(false) }
     var symptomToDelete by remember { mutableStateOf<Symptom?>(null) }
@@ -104,11 +108,13 @@ fun ManageSymptom(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp),
+                    .padding(top = 15.dp)
+                    .clickable {
+                        symptomToRename = symptom
+                        showRenameDialog = true
+                    },
                 shape = RoundedCornerShape(25.dp),
-                colors = CardDefaults.cardColors(
-                    //containerColor = Color(0xFFf5ebff) //change this color when you implement a theme
-                )                                           // to something like : MaterialTheme.colorScheme.onBackground
+                colors = CardDefaults.cardColors(),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -204,36 +210,36 @@ fun ManageSymptom(
                             onDismissRequest = { expanded = false },
                             modifier = Modifier.width(50.dp).clip(RoundedCornerShape(100.dp))
                         ) {
-                                DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
-                                    val keyColor = ResourceMapper.getStringResourceId(colorName)
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            selectedColorName = colorName
-                                            expanded = false
-                                            val updatedSymptom = symptom.copy(color = colorName)
-                                            savedSymptoms = savedSymptoms.map {
-                                                if (it.id == symptom.id) updatedSymptom else it
-                                            }
-                                            // Save settings to the database
-                                            savedSymptoms.forEach { symptom ->
-                                                dbHelper.updateSymptom(
-                                                    symptom.id,
-                                                    symptom.active,
-                                                    symptom.color
-                                                )
-                                            }
-                                            onSave()
-                                        },
-                                        text = {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(25.dp)
-                                                    .clip(RoundedCornerShape(26.dp))
-                                                    .background(colorValue),  // Use the color from the map
+                            DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
+                                val keyColor = ResourceMapper.getStringResourceId(colorName)
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedColorName = colorName
+                                        expanded = false
+                                        val updatedSymptom = symptom.copy(color = colorName)
+                                        savedSymptoms = savedSymptoms.map {
+                                            if (it.id == symptom.id) updatedSymptom else it
+                                        }
+                                        // Save settings to the database
+                                        savedSymptoms.forEach { symptom ->
+                                            dbHelper.updateSymptom(
+                                                symptom.id,
+                                                symptom.active,
+                                                symptom.color
                                             )
                                         }
-                                    )
-                                }
+                                        onSave()
+                                    },
+                                    text = {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(25.dp)
+                                                .clip(RoundedCornerShape(26.dp))
+                                                .background(colorValue),  // Use the color from the map
+                                        )
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -255,6 +261,25 @@ fun ManageSymptom(
             },
         )
     }
+
+    if (showRenameDialog && symptomToRename != null) {
+        val symptomKey = ResourceMapper.getStringResourceId(symptomToRename!!.name)
+        val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptomToRename!!.name
+
+        RenameSymptomDialog(
+            symptomDisplayName = symptomDisplayName,
+            onRename = { newName ->
+                dbHelper.renameSymptom(symptomToRename!!.id, newName)
+                initialSymptoms = dbHelper.getAllSymptoms()
+                savedSymptoms = initialSymptoms
+                showRenameDialog = false
+            },
+            onCancel = {
+                showRenameDialog = false
+            }
+        )
+    }
+
 // Show the delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
@@ -295,4 +320,43 @@ fun ManageSymptom(
             }
         )
     }
+}
+
+@Composable
+fun RenameSymptomDialog(
+    symptomDisplayName: String,
+    onRename: (String) -> Unit,
+    onCancel: () -> Unit
+) {
+    var newName by remember { mutableStateOf(symptomDisplayName) }
+
+    AlertDialog(
+        onDismissRequest = onCancel,
+        title = {
+            Text(text = stringResource(id = R.string.rename_symptom))
+        },
+        text = {
+            Column {
+                Spacer(modifier = Modifier.size(8.dp))
+                androidx.compose.material3.OutlinedTextField(
+                    value = newName,
+                    onValueChange = { newName = it },
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onRename(newName)
+                }
+            ) {
+                Text(text = stringResource(id = R.string.save_button))
+            }
+        },
+        dismissButton = {
+            Button(onClick = onCancel) {
+                Text(text = stringResource(id = R.string.cancel_button))
+            }
+        }
+    )
 }

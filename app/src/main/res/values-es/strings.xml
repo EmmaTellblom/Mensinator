@@ -136,4 +136,5 @@
     <string name="export_data">Exportar los datos</string>
     <string name="about_app">Acerca de la aplicación</string>
     <string name="screen_protection">evitar capturas de pantalla</string>
+    <string name="rename_symptom" >Renombrar síntoma</string>
 </resources>

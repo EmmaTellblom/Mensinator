@@ -134,4 +134,5 @@
     <string name="export_data">डेटा निर्यात करें</string>
     <string name="about_app">ऐप के बारे में</string>
     <string name="screen_protection">स्क्रीनशॉट रोकें</string>
+    <string name="rename_symptom" >लक्षण का नाम बदलें</string>
 </resources>
