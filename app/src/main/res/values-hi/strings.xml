@@ -24,12 +24,12 @@
     <!-- Settings -->
     <string name="app_settings">एप्लिकेशन सेटिंग</string>
     <string name="colors">रंग</string>
-    <string name="period_color">पिरियड् रंग</string>
-    <string name="selection_color">चयन का रंग</string>
-    <string name="period_selection_color">पिरियड् चयन का रंग </string>
-    <string name="expected_period_color">अपेक्षित पीरियड रंग</string>
-    <string name="ovulation_color">अंडोत्सर्ग रंग</string>
-    <string name="expected_ovulation_color">अपेक्षित ओवुलेशन रंग</string>
+    <string name="period_color">पिरियड्</string>
+    <string name="selection_color">चयन का</string>
+    <string name="period_selection_color">पिरियड् चयन का</string>
+    <string name="expected_period_color">अपेक्षित पीरियड</string>
+    <string name="ovulation_color">अंडोत्सर्ग</string>
+    <string name="expected_ovulation_color">अपेक्षित ओवुलेशन</string>
     <string name="reminders">अनुस्मारक</string>
     <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>
     <string name="other_settings">अन्य सेटिंग</string>

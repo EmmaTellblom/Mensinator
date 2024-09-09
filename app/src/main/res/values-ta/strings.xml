@@ -23,12 +23,12 @@
     <!-- Settings -->
     <string name="app_settings">பயன்பாட்டு அமைப்புகள்</string>
     <string name="colors">வண்ணங்கள்</string>
-    <string name="period_color">மாதவிடாய் நிறம்</string>
-    <string name="selection_color">தேர்வு நிறம்</string>
-    <string name="period_selection_color">மாதவிடாய் தேர்வு நிறம்</string>
-    <string name="expected_period_color">எதிர்பார்க்கப்படும் மாதவிடாய் நிறம்</string>
-    <string name="ovulation_color">அண்டவிடுப்பின் நிறம்</string>
-    <string name="expected_ovulation_color">எதிர்பார்க்கப்படும் அண்டவிடுப்பின் நிறம்</string>
+    <string name="period_color">மாதவிடாய்</string>
+    <string name="selection_color">தேர்வு</string>
+    <string name="period_selection_color">மாதவிடாய் தேர்வு</string>
+    <string name="expected_period_color">எதிர்பார்க்கப்படும் மாதவிடாய்</string>
+    <string name="ovulation_color">அண்டவிடுப்பின்</string>
+    <string name="expected_ovulation_color">எதிர்பார்க்கப்படும் அண்டவிடுப்பின்</string>
     <string name="reminders">நினைவூட்டல்கள்</string>
     <string name="days_before_reminder">நினைவூட்டலுக்கு நாட்களுக்கு முன்</string>
     <string name="other_settings">பிற அமைப்புகள்</string>

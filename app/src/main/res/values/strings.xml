@@ -30,12 +30,12 @@
     <!-- Settings -->
     <string name="app_settings">App Settings</string>
     <string name="colors">Colors</string>
-    <string name="period_color">Period Color</string>
-    <string name="selection_color">Selection Color</string>
-    <string name="period_selection_color">Period Selection Color</string>
-    <string name="expected_period_color">Expected Period Color</string>
-    <string name="ovulation_color">Ovulation Color</string>
-    <string name="expected_ovulation_color">Expected Ovulation Color</string>
+    <string name="period_color">Period</string>
+    <string name="selection_color">Selection</string>
+    <string name="period_selection_color">Period Selection</string>
+    <string name="expected_period_color">Expected Period</string>
+    <string name="ovulation_color">Ovulation</string>
+    <string name="expected_ovulation_color">Expected Ovulation</string>
     <string name="reminders">Reminders</string>
     <string name="days_before_reminder">Days Before Reminder</string>
     <string name="other_settings">Other settings</string>

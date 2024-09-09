@@ -23,12 +23,12 @@
     <!-- Settings -->
     <string name="app_settings">অ্যাপ সেটিংস</string>
     <string name="colors">রং</string>
-    <string name="period_color">মাসিকের রং</string>
-    <string name="selection_color">নির্বাচন রং</string>
-    <string name="period_selection_color">মাসিক নির্বাচন রং</string>
-    <string name="expected_period_color">অপেক্ষিত মাসিকের রং</string>
-    <string name="ovulation_color">ওভুলেশনের রং</string>
-    <string name="expected_ovulation_color">অপেক্ষিত ওভুলেশনের রং</string>
+    <string name="period_color">মাসিকের</string>
+    <string name="selection_color">নির্বাচন</string>
+    <string name="period_selection_color">মাসিক নির্বাচন</string>
+    <string name="expected_period_color">অপেক্ষিত মাসিকের</string>
+    <string name="ovulation_color">ওভুলেশনের</string>
+    <string name="expected_ovulation_color">অপেক্ষিত ওভুলেশনের</string>
     <string name="reminders">স্মরণকারী</string>
     <string name="days_before_reminder">স্মরণকারীর আগে দিন</string>
     <string name="other_settings">অন্যান্য সেটিংস</string>
