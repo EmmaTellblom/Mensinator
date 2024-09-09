@@ -124,11 +124,11 @@ fun SettingsDialog() {
 
     Column(
         modifier = Modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {//we have 2 columns so the scroll animation does get cut by the padding of the second column
         Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start
@@ -206,15 +206,20 @@ fun SettingsDialog() {
                                         }
                                     }
                                     DropdownMenu(
+                                        modifier = Modifier.width(50.dp),
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false }
                                     ) {
-                                        DataSource(isDarkMode()).colorMap.forEach { (name) ->
+                                        DataSource(isDarkMode()).colorMap.forEach { (name, colorValue) ->
                                             val colors = ResourceMapper.getStringResourceId(name)
                                             DropdownMenuItem(
                                                 text = {
-                                                    Text(colors?.let { stringResource(id = it) }
-                                                        ?: "Not found")
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(25.dp)
+                                                            .clip(RoundedCornerShape(26.dp))
+                                                            .background(colorValue),  // Use the color from the map
+                                                    )
                                                 },
                                                 onClick = {
                                                     selectedColorName = name

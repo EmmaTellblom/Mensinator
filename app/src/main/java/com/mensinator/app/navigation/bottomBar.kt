@@ -1,6 +1,9 @@
 package com.mensinator.app.navigation
 
 import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -181,7 +184,9 @@ fun BottomBar(
         NavHost(
             navController = navController,
             startDestination = Screens.Home.name,
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues),
+            enterTransition = { fadeIn(animationSpec = tween(200)) },
+            exitTransition = { fadeOut(animationSpec = tween(200)) },
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screens.Home.name) {
                 CalendarScreen(
