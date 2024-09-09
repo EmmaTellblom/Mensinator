@@ -89,11 +89,6 @@ fun ManageSymptom(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.weight(1f)) //cover available space
-            Text(
-                text = stringResource(id = R.string.colors),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
         }
         Spacer(modifier = Modifier.padding(3.dp))
         savedSymptoms.forEach { symptom ->
@@ -154,24 +149,7 @@ fun ManageSymptom(
                         modifier = Modifier.weight(1f) // Let the text expand to fill available space
                     )
 
-
-                    Switch(
-                        checked = symptom.active == 1,
-                        onCheckedChange = { checked ->
-                            val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
-                            savedSymptoms = savedSymptoms.map {
-                                if (it.id == symptom.id) updatedSymptom else it
-                            }
-                            // Save settings to the database
-                            savedSymptoms.forEach { symptom ->
-                                dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
-                            }
-                            onSave()
-                        },
-                        colors = SwitchDefaults.colors(
-                        )
-                    )
-                    Spacer(modifier = Modifier.weight(0.3f))
+                     //Color Picker Dropdown Menu
                     Box {
                         // Color Dropdown wrapped in a Box for alignment
                         Card(
@@ -208,10 +186,12 @@ fun ManageSymptom(
                         DropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
-                            modifier = Modifier.width(50.dp).clip(RoundedCornerShape(100.dp))
+                            modifier = Modifier
+                                .width(50.dp)
+                                .clip(RoundedCornerShape(100.dp))
                         ) {
                             DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
-                                val keyColor = ResourceMapper.getStringResourceId(colorName)
+                                //val keyColor = ResourceMapper.getStringResourceId(colorName)
                                 DropdownMenuItem(
                                     onClick = {
                                         selectedColorName = colorName
@@ -242,6 +222,26 @@ fun ManageSymptom(
                             }
                         }
                     }
+
+                    Spacer(modifier = Modifier.weight(0.5f))
+
+                    Switch(
+                        checked = symptom.active == 1,
+                        onCheckedChange = { checked ->
+                            val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
+                            savedSymptoms = savedSymptoms.map {
+                                if (it.id == symptom.id) updatedSymptom else it
+                            }
+                            // Save settings to the database
+                            savedSymptoms.forEach { symptom ->
+                                dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
+                            }
+                            onSave()
+                        },
+                        colors = SwitchDefaults.colors(
+                        )
+                    )
+                Spacer(modifier = Modifier.weight(0.1f))
                 }
             }
         }
