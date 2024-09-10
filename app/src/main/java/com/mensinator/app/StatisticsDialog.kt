@@ -22,9 +22,6 @@ import java.time.LocalDate
 
 @Composable
 fun StatisticsDialog(
-    nextPeriodStart: String, // This actually needs to be calculated in CalendarScreen due to the calendar
-    follicleGrowthDays: String,
-    nextPredictedOvulation: String?, // This actually needs to be calculated in CalendarScreen due to the calendar
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }
@@ -34,6 +31,9 @@ fun StatisticsDialog(
     val ovulationCount = dbHelper.getOvulationCount()
     val averagePeriodLength = calcHelper.averagePeriodLength()
     val avgLutealLength = calcHelper.averageLutealLength()
+    val nextPeriodStart = GlobalState.nextPeriodStartCalculated
+    val nextPredictedOvulation = GlobalState.nextOvulationCalculated
+    val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().toInt().toString()
 
     val scrollState = rememberScrollState()
 
@@ -56,7 +56,7 @@ fun StatisticsDialog(
         ) {
             RowOfText(
                 stringResource(id = R.string.period_count),
-                periodCount.toString() + " " + stringResource(id = R.string.days)
+                periodCount.toString()
             )
 
             RowOfText(
@@ -88,16 +88,14 @@ fun StatisticsDialog(
                 follicleGrowthDays
             )
 
-            nextPredictedOvulation?.let {
-                RowOfText(
-                    stringResource(id = R.string.next_predicted_ovulation),
-                    it
-                )
-            }
+            RowOfText(
+                stringResource(id = R.string.next_predicted_ovulation),
+                nextPredictedOvulation
+            )
 
             RowOfText(
                 stringResource(id = R.string.average_luteal_length),
-                avgLutealLength.toString()
+                avgLutealLength.toString()+ " " + stringResource(id = R.string.days)
             )
         }
     }
@@ -121,15 +119,3 @@ fun RowOfText(stringOne: String, stringTwo: String) {
         )
     }
 }
-/*
-confirmButton = {
-    Button(onClick = onDismissRequest) {
-        Text(stringResource(id = R.string.close_button))
-    }
-},
-modifier = Modifier
-//.padding(16.dp)
-    .fillMaxWidth()
-)
-}
-*/
