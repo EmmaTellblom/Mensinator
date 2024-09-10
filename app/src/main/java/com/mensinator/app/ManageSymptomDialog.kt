@@ -149,7 +149,7 @@ fun ManageSymptom(
                         modifier = Modifier.weight(1f) // Let the text expand to fill available space
                     )
 
-                     //Color Picker Dropdown Menu
+                    //Color Picker Dropdown Menu
                     Box {
                         // Color Dropdown wrapped in a Box for alignment
                         Card(
@@ -241,7 +241,7 @@ fun ManageSymptom(
                         colors = SwitchDefaults.colors(
                         )
                     )
-                Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.1f))
                 }
             }
         }
@@ -264,7 +264,8 @@ fun ManageSymptom(
 
     if (showRenameDialog && symptomToRename != null) {
         val symptomKey = ResourceMapper.getStringResourceId(symptomToRename!!.name)
-        val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptomToRename!!.name
+        val symptomDisplayName =
+            symptomKey?.let { stringResource(id = it) } ?: symptomToRename!!.name
 
         RenameSymptomDialog(
             symptomDisplayName = symptomDisplayName,
@@ -303,7 +304,7 @@ fun ManageSymptom(
 
                         showDeleteDialog = false
                     },
-                    modifier = Modifier.padding(end = 15.dp)
+                    modifier = Modifier.padding(end = 27.dp)
                 ) {
                     Text(text = stringResource(id = R.string.delete_button))
                 }
@@ -313,7 +314,7 @@ fun ManageSymptom(
                     onClick = {
                         showDeleteDialog = false
                     },
-                    modifier = Modifier.padding(end = 50.dp)
+                    modifier = Modifier.padding(end = 30.dp)
                 ) {
                     Text(text = stringResource(id = R.string.cancel_button))
                 }
@@ -348,13 +349,17 @@ fun RenameSymptomDialog(
             Button(
                 onClick = {
                     onRename(newName)
-                }
+                },
+                modifier = Modifier.padding(end = 27.dp)
             ) {
                 Text(text = stringResource(id = R.string.save_button))
             }
         },
         dismissButton = {
-            Button(onClick = onCancel) {
+            Button(
+                onClick = onCancel,
+                modifier = Modifier.padding(end = 30.dp)
+            ) {
                 Text(text = stringResource(id = R.string.cancel_button))
             }
         }
