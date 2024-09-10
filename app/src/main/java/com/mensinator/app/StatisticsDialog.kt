@@ -108,7 +108,7 @@ fun RowOfText(stringOne: String, stringTwo: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 15.dp, start = 5.dp, end = 5.dp, bottom = 7.dp)
+            .padding(top = 15.dp, start = 5.dp, end = 5.dp, bottom = 20.dp)
     ) {
         Text(
             text = stringOne,
