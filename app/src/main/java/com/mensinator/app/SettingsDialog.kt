@@ -29,6 +29,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
+import androidx.compose.ui.platform.LocalConfiguration
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -57,22 +58,23 @@ object ResourceMapper {
         "Light_Flow" to R.string.light,
         "screen_protection" to R.string.screen_protection,
         // colors
-        "Red" to R.string.color_red,
-        "Green" to R.string.color_green,
-        "Blue" to R.string.color_blue,
-        "Yellow" to R.string.color_yellow,
-        "Cyan" to R.string.color_cyan,
-        "Magenta" to R.string.color_magenta,
-        "Black" to R.string.color_black,
-        "White" to R.string.color_white,
-        "DarkGray" to R.string.color_darkgray,
-        "LightGray" to R.string.color_gray,
+//        "Red" to R.string.color_red,
+//        "Green" to R.string.color_green,
+//        "Blue" to R.string.color_blue,
+//        "Yellow" to R.string.color_yellow,
+//        "Cyan" to R.string.color_cyan,
+//        "Magenta" to R.string.color_magenta,
+//        "Black" to R.string.color_black,
+//        "White" to R.string.color_white,
+//        "DarkGray" to R.string.color_darkgray,
+//        "LightGray" to R.string.color_gray,
     )
 
     fun getStringResourceId(key: String): Int? {
         return resourceMap[key]
     }
 }
+
 
 
 @Composable
@@ -89,6 +91,9 @@ fun SettingsDialog() {
     var savedSettings by remember { mutableStateOf(settings) }
     var showExportImportDialog by remember { mutableStateOf(false) }
     var showFAQDialog by remember { mutableStateOf(false) }
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val menuHeight = screenHeight * 0.8f // 80% of the screen height
 
     // Here is available languages of the app
     // When more languages have been translated, add them here
@@ -206,12 +211,15 @@ fun SettingsDialog() {
                                         }
                                     }
                                     DropdownMenu(
-                                        modifier = Modifier.width(50.dp),
+                                        modifier = Modifier
+                                            .width(50.dp)
+                                            .height(menuHeight),
                                         expanded = expanded,
                                         onDismissRequest = { expanded = false }
                                     ) {
+
                                         DataSource(isDarkMode()).colorMap.forEach { (name, colorValue) ->
-                                            val colors = ResourceMapper.getStringResourceId(name)
+                                            //val colors = ResourceMapper.getStringResourceId(name)
                                             DropdownMenuItem(
                                                 text = {
                                                     Box(

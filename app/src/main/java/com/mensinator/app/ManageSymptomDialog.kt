@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -40,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -69,6 +71,9 @@ fun ManageSymptom(
     // State to manage the dialog visibility
     var showDeleteDialog by remember { mutableStateOf(false) }
     var symptomToDelete by remember { mutableStateOf<Symptom?>(null) }
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val menuHeight = screenHeight * 0.8f // 80% of the screen height
 
     Column(
         modifier = Modifier
@@ -168,7 +173,7 @@ fun ManageSymptom(
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(22.dp)
+                                        .size(25.dp)
                                         .clip(RoundedCornerShape(26.dp))
                                         .background(selectedColor),
                                 )
@@ -188,6 +193,7 @@ fun ManageSymptom(
                             onDismissRequest = { expanded = false },
                             modifier = Modifier
                                 .width(50.dp)
+                                .height(menuHeight)
                                 .clip(RoundedCornerShape(100.dp))
                         ) {
                             DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
