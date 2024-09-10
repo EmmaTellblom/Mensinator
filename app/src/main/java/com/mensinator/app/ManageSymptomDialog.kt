@@ -85,7 +85,7 @@ fun ManageSymptom(
         ) {
             Text(
                 text = stringResource(id = R.string.symptoms_button),
-                fontSize = 20.sp,
+                fontSize = 25.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.weight(1f)) //cover available space
