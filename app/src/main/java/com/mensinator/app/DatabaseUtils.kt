@@ -151,9 +151,15 @@ object DatabaseUtils {
         db.execSQL("""
             ALTER TABLE symptoms ADD COLUMN color TEXT DEFAULT 'Black'
         """)
-        // Set all colors to black
+        // Set all colors for the standard symptoms
         db.execSQL("""
-            UPDATE symptoms SET color = 'Black'
+            UPDATE symptoms SET color = 'DarkRed' where symptom_name = 'Heavy_Flow'
+        """)
+        db.execSQL("""
+            UPDATE symptoms SET color = 'Red' where symptom_name = 'Medium_Flow'
+        """)
+        db.execSQL("""
+            UPDATE symptoms SET color = 'LightRed' where symptom_name = 'Light_Flow'
         """)
 
         // Fixed symptom colors, so we can remove setting for symptom indicator
