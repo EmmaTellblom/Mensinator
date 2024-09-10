@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -345,7 +346,7 @@ fun RenameSymptomDialog(
         text = {
             Column {
                 Spacer(modifier = Modifier.size(8.dp))
-                androidx.compose.material3.OutlinedTextField(
+                TextField(
                     value = newName,
                     onValueChange = { newName = it },
                 )
