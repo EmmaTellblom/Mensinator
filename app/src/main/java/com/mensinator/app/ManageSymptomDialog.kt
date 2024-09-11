@@ -230,7 +230,7 @@ fun ManageSymptom(
                         }
                     }
 
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    Spacer(modifier = Modifier.weight(0.05f))
 
                     Switch(
                         checked = symptom.active == 1,
@@ -248,7 +248,7 @@ fun ManageSymptom(
                         colors = SwitchDefaults.colors(
                         )
                     )
-                    Spacer(modifier = Modifier.weight(0.1f))
+                    Spacer(modifier = Modifier.weight(0.05f))
                 }
             }
         }

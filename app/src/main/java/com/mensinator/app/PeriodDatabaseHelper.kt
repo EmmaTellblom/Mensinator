@@ -169,7 +169,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, SUBSTR($COLUMN_SYMPTOM_NAME, 1, 15) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
+            "SELECT $COLUMN_ID, SUBSTR($COLUMN_SYMPTOM_NAME, 1, 20) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
