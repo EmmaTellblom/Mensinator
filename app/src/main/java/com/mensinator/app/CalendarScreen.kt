@@ -53,8 +53,6 @@ fun CalendarScreen(
 ) {
     val context = LocalContext.current
 
-    //var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
-    //var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
     var follicleGrowthDays by remember { mutableStateOf("0") }
 
     // For accessing database functions
@@ -172,7 +170,7 @@ fun CalendarScreen(
         } else { // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
             if(lastOvulationDate.toString()>previousFirstPeriodDate.toString() && (GlobalState.nextPeriodStartCalculated != "Not enough data")){
                 follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
-                if(follicleGrowthDays!="Not enough data"){
+                if(follicleGrowthDays!="0"){
                     GlobalState.nextOvulationCalculated = LocalDate.parse(GlobalState.nextPeriodStartCalculated).plusDays(follicleGrowthDays.toLong()).toString()
                 }
             }
@@ -299,9 +297,9 @@ fun CalendarScreen(
                         val hasSymptomDate = dayDate in symptomDates.value
                         val hasOvulationDate = dayDate in ovulationDates.value
                         val hasOvulationDateCalculated =
-                            dayDate.toString() == GlobalState.nextOvulationCalculated
+                            dayDate.toString() == if(GlobalState.nextOvulationCalculated != "0") GlobalState.nextOvulationCalculated else false
                         val hasPeriodDateCalculated =
-                            dayDate.toString() == GlobalState.nextPeriodStartCalculated
+                            dayDate.toString() == if(GlobalState.nextPeriodStartCalculated != "0") GlobalState.nextPeriodStartCalculated else false
 
                         Box(
                             modifier = Modifier

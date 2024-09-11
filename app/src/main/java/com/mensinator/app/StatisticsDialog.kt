@@ -33,7 +33,7 @@ fun StatisticsDialog(
     val avgLutealLength = calcHelper.averageLutealLength()
     val nextPeriodStart = GlobalState.nextPeriodStartCalculated
     val nextPredictedOvulation = GlobalState.nextOvulationCalculated
-    val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().toInt().toString()
+    val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
 
     val scrollState = rememberScrollState()
 

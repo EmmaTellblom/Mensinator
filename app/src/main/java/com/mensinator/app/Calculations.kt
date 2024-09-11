@@ -130,7 +130,7 @@ class Calculations (context: Context){
                 }
             }
             if (growthRate.isEmpty()) {
-                return "Not enough data"
+                return "0"
             }
             return growthRate.average().roundToInt().toString()
         }
