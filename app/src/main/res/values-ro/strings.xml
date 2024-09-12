@@ -54,16 +54,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistici</string>
-    <string name="period_count">Numărul ciclurilor menstruale introduse: %1$d</string>
-    <string name="average_cycle_length">Durata medie a ciclului: %1$.1f zile</string>
-    <string name="average_period_length">Durata medie a menstruației: %1$.1f zile</string>
-    <string name="next_period_start_past">Ziua estimată a următoarei menstruații: %1$s \n\nData estimată a trecut!</string>
-    <string name="next_period_start_future">Ziua estimată a următoarei menstruații: %1$s</string>
-    <string name="ovulation_count">Numărul de ovulații introduse: %1$d</string>
-    <string name="average_ovulation_day">Ziua medie de ovulație: %1$s</string>
-    <string name="next_predicted_ovulation">Ziua estimată a următoarei ovulații: %1$s</string>
+    <string name="period_count">Numărul ciclurilor menstruale introduse: </string>
+    <string name="average_cycle_length">Durata medie a ciclului: </string>
+    <string name="average_period_length">Durata medie a menstruației: </string>
+    <string name="next_period_start_past">Ziua estimată a următoarei menstruații:  \n\nData estimată a trecut!</string>
+    <string name="next_period_start_future">Ziua estimată a următoarei menstruații: </string>
+    <string name="ovulation_count">Numărul de ovulații introduse: </string>
+    <string name="average_ovulation_day">Ziua medie de ovulație: </string>
+    <string name="next_predicted_ovulation">Ziua estimată a următoarei ovulații: </string>
     <string name="next_predicted_ovulation_default">Date insuficiente pentru a prezice</string>
-    <string name="average_luteal_length">Durata medie a fazei luteale: %1$.1f zile</string>
+    <string name="average_luteal_length">Durata medie a fazei luteale: </string>
+    <string name="days"> zile</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Simptome la data %1$s</string>

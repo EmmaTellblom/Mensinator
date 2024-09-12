@@ -60,16 +60,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Estadísticas</string>
-    <string name="period_count">Número de períodos rastreados: %1$d</string>
-    <string name="average_cycle_length">Duración promedia del ciclo: %1$.1f days</string>
-    <string name="average_period_length">Duración promedia del período: %1$.1f days</string>
-    <string name="next_period_start_past">Próximo período asumido: %1$s \n\nLa fecha asumida del período ha pasado!</string>
-    <string name="next_period_start_future">Próximo período asumido: %1$s</string>
-    <string name="ovulation_count">Número de ovulaciones rastreadas: %1$d</string>
-    <string name="average_ovulation_day">Día promedio de ovulación: %1$s</string>
-    <string name="next_predicted_ovulation">Próxima ovulación predicha: %1$s</string>
+    <string name="period_count">Número de períodos rastreados: </string>
+    <string name="average_cycle_length">Duración promedia del ciclo: </string>
+    <string name="average_period_length">Duración promedia del período: </string>
+    <string name="next_period_start_past">Próximo período asumido:  \n\nLa fecha asumida del período ha pasado!</string>
+    <string name="next_period_start_future">Próximo período asumido: </string>
+    <string name="ovulation_count">Número de ovulaciones rastreadas: </string>
+    <string name="average_ovulation_day">Día promedio de ovulación: </string>
+    <string name="next_predicted_ovulation">Próxima ovulación predicha: </string>
     <string name="next_predicted_ovulation_default">No hay suficientes datos para predecir la próxima ovulación</string>
-    <string name="average_luteal_length">Duración promedia de la fase lútea: %1$.1f days</string>
+    <string name="average_luteal_length">Duración promedia de la fase lútea: </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Síntomas para %1$s</string>

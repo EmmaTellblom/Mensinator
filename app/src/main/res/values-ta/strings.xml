@@ -53,16 +53,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">புள்ளிவிவரங்கள்</string>
-    <string name="period_count">கண்காணிக்கப்பட்ட மாதவிடாய் எண்ணிக்கை: %1$d</string>
-    <string name="average_cycle_length">சராசரி சுழற்சி நீளம்: %1$.1f days</string>
-    <string name="average_period_length">சராசரி மாதவிடாய் நீளம்: %1$.1f days</string>
+    <string name="period_count">கண்காணிக்கப்பட்ட மாதவிடாய் எண்ணிக்கை: </string>
+    <string name="average_cycle_length">சராசரி சுழற்சி நீளம்: </string>
+    <string name="average_period_length">சராசரி மாதவிடாய் நீளம்: </string>
     <string name="next_period_start_past">\n\nஊகிக்கப்பட்ட காலக்கெடு கடந்துவிட்டது!</string>
-    <string name="next_period_start_future">அடுத்ததாகக் கருதப்படும் மாதவிடாய்: %1$s</string>
-    <string name="ovulation_count">கண்காணிக்கப்பட்ட அண்டவிடுப்பின் எண்ணிக்கை: %1$d</string>
-    <string name="average_ovulation_day">சராசரி அண்டவிடுப்பின் நாள்: %1$s</string>
-    <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: %1$s</string>
+    <string name="next_period_start_future">அடுத்ததாகக் கருதப்படும் மாதவிடாய்: </string>
+    <string name="ovulation_count">கண்காணிக்கப்பட்ட அண்டவிடுப்பின் எண்ணிக்கை: </string>
+    <string name="average_ovulation_day">சராசரி அண்டவிடுப்பின் நாள்: </string>
+    <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: </string>
     <string name="next_predicted_ovulation_default">அடுத்த அண்டவிடுப்பின் கணிக்க போதுமான தரவு இல்லை</string>
-    <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: %1$.1f days</string>
+    <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">அறிகுறி %1$s</string>

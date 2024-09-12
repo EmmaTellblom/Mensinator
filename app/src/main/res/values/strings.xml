@@ -64,14 +64,14 @@
     <string name="period_count">Number of periods tracked: </string>
     <string name="average_cycle_length">Average cycle length:  </string>
     <string name="average_period_length">Average period length:  </string>
-    <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
+    <string name="next_period_start_past">Next assumed period: \n\nAssumed period date has passed!</string>
     <string name="next_period_start_future">Next assumed period:  </string>
     <string name="ovulation_count">Number of ovulation tracked:  </string>
     <string name="average_ovulation_day">Average ovulation day:  </string>
     <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
     <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
     <string name="average_luteal_length">Average luteal phase length:  </string>
-    <string name="days" translatable="false"> days</string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>

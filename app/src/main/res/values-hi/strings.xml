@@ -54,16 +54,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">सांख्यिकी</string>
-    <string name="period_count">ट्रैक की गई पिरियड् की संख्या: %1$d</string>
-    <string name="average_cycle_length">औसत साइकिल लंबाई: %1$.1f दिन</string>
-    <string name="average_period_length">औसत पीरियड की लंबाई: %1$.1f दिन</string>
-    <string name="next_period_start_past">अगला अनुमानित पीरियड: %1$s \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
-    <string name="next_period_start_future">अगला अनुमानित पीरियड: %1$s</string>
-    <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: %1$d</string>
-    <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: %1$s</string>
-    <string name="next_predicted_ovulation">अगला अनुमानित अंडोत्सर्ग तिथि: %1$s</string>
+    <string name="period_count">ट्रैक की गई पिरियड् की संख्या: </string>
+    <string name="average_cycle_length">औसत साइकिल लंबाई: </string>
+    <string name="average_period_length">औसत पीरियड की लंबाई: %</string>
+    <string name="next_period_start_past">अगला अनुमानित पीरियड: \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
+    <string name="next_period_start_future">अगला अनुमानित पीरियड: </string>
+    <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: </string>
+    <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: </string>
+    <string name="next_predicted_ovulation">अगला अनुमानित अंडोत्सर्ग तिथि: </string>
     <string name="next_predicted_ovulation_default">अगले अंडोत्सर्ग की भविष्यवाणी करने के लिए पर्याप्त डेटा नहीं है</string>
-    <string name="average_luteal_length">औसत ल्यूटियल चरण की लंबाई: %1$.1f दिन</string>
+    <string name="average_luteal_length">औसत ल्यूटियल चरण की लंबाई: </string>
+    <string name="days"> दिन</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">के लिए लक्षण %1$s</string>
