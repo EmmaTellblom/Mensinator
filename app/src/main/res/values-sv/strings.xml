@@ -53,16 +53,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
-    <string name="period_count">Antal menscykler: %1$d</string>
-    <string name="average_cycle_length">Medellängd menscykel: %1$.1f days</string>
-    <string name="average_period_length">Medellängd mens: %1$.1f days</string>
-    <string name="next_period_start_past">Nästa beräknade mens: %1$s   Beräknat datum har passerat!</string>
-    <string name="next_period_start_future">Nästa beräknade mens: %1$s</string>
-    <string name="ovulation_count">Antal ägglossningar: %1$d</string>
-    <string name="average_ovulation_day">Medeldag för ägglossning: %1$s</string>
-    <string name="next_predicted_ovulation">Nästa beräknade ägglossning: %1$s</string>
+    <string name="period_count">Antal menscykler: </string>
+    <string name="average_cycle_length">Medellängd menscykel: </string>
+    <string name="average_period_length">Medellängd mens: </string>
+    <string name="next_period_start_past">Nästa beräknade mens:    Beräknat datum har passerat!</string>
+    <string name="next_period_start_future">Nästa beräknade mens: </string>
+    <string name="ovulation_count">Antal ägglossningar: </string>
+    <string name="average_ovulation_day">Medeldag för ägglossning: </string>
+    <string name="next_predicted_ovulation">Nästa beräknade ägglossning: </string>
     <string name="next_predicted_ovulation_default">Inte tillräckligt mycket data för att beräkna ägglossning</string>
-    <string name="average_luteal_length">Medellängd lutealfas: %1$.1f days</string>
+    <string name="average_luteal_length">Medellängd lutealfas: </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptom for %1$s</string>

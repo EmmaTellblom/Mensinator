@@ -61,16 +61,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistiques</string>
-    <string name="period_count">Nombre de règles suivies: %1$d</string>
-    <string name="average_cycle_length">Durée moyenne du cycle: %1$.1f days</string>
-    <string name="average_period_length">Durée moyenne des règles: %1$.1f days</string>
-    <string name="next_period_start_past">Prochaine règle prévue: %1$s \n\nLa date des règles prévue est passée !!</string>
-    <string name="next_period_start_future">Prochaine règle prévue: %1$s</string>
-    <string name="ovulation_count">Nombre d\'ovulations suivies: %1$d</string>
-    <string name="average_ovulation_day">Jour moyen d\'ovulation: %1$s</string>
-    <string name="next_predicted_ovulation">Prochaine date d\'ovulation prévue: %1$s</string>
+    <string name="period_count">Nombre de règles suivies: </string>
+    <string name="average_cycle_length">Durée moyenne du cycle: </string>
+    <string name="average_period_length">Durée moyenne des règles: </string>
+    <string name="next_period_start_past">Prochaine règle prévue: \n\nLa date des règles prévue est passée !!</string>
+    <string name="next_period_start_future">Prochaine règle prévue: </string>
+    <string name="ovulation_count">Nombre d\'ovulations suivies: </string>
+    <string name="average_ovulation_day">Jour moyen d\'ovulation: </string>
+    <string name="next_predicted_ovulation">Prochaine date d\'ovulation prévue: </string>
     <string name="next_predicted_ovulation_default">Pas assez de données pour prédire la prochaine ovulation</string>
-    <string name="average_luteal_length">Durée moyenne de la phase lutéale: %1$.1f days</string>
+    <string name="average_luteal_length">Durée moyenne de la phase lutéale: </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptômes pour %1$s</string>
