@@ -53,16 +53,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">পরিসংখ্যান</string>
-    <string name="period_count">ট্র্যাক করা মাসিকের সংখ্যা: %1$d</string>
-    <string name="average_cycle_length">গড় চক্রের দৈর্ঘ্য: %1$.1f দিন</string>
-    <string name="average_period_length">গড় মাসিকের দৈর্ঘ্য: %1$.1f দিন</string>
-    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক: %1$s \n\n অনুমানিত মাসিকের তারিখ পেরিয়ে গেছে!</string>
-    <string name="next_period_start_future">পরবর্তী অনুমানিত মাসিক: %1$s</string>
-    <string name="ovulation_count">ট্র্যাক করা ওভুলেশনের সংখ্যা: %1$d</string>
-    <string name="average_ovulation_day">গড় ওভুলেশন দিন: %1$s</string>
-    <string name="next_predicted_ovulation">পরবর্তী পূর্বাভাসিত ওভুলেশন তারিখ: %1$s</string>
+    <string name="period_count">ট্র্যাক করা মাসিকের সংখ্যা: </string>
+    <string name="average_cycle_length">গড় চক্রের দৈর্ঘ্য: </string>
+    <string name="average_period_length">গড় মাসিকের দৈর্ঘ্য: </string>
+    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক:  \n\n অনুমানিত মাসিকের তারিখ পেরিয়ে গেছে!</string>
+    <string name="next_period_start_future">পরবর্তী অনুমানিত মাসিক: </string>
+    <string name="ovulation_count">ট্র্যাক করা ওভুলেশনের সংখ্যা: </string>
+    <string name="average_ovulation_day">গড় ওভুলেশন দিন: </string>
+    <string name="next_predicted_ovulation">পরবর্তী পূর্বাভাসিত ওভুলেশন তারিখ: </string>
     <string name="next_predicted_ovulation_default">পরবর্তী ওভুলেশন পূর্বাভাস দেওয়ার জন্য পর্যাপ্ত তথ্য নেই</string>
-    <string name="average_luteal_length">গড় লুটিয়াল পর্যায়ের দৈর্ঘ্য: %1$.1f দিন</string>
+    <string name="average_luteal_length">গড় লুটিয়াল পর্যায়ের দৈর্ঘ্য: </string>
+    <string name="days"> দিন</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">%1$s জন্য উপসর্গ</string>
