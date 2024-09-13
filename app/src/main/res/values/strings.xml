@@ -71,7 +71,7 @@
     <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
     <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
     <string name="average_luteal_length">Average luteal phase length:  </string>
-    <string name="days" translatable="false"> days</string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>

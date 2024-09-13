@@ -63,7 +63,7 @@
     <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: </string>
     <string name="next_predicted_ovulation_default">அடுத்த அண்டவிடுப்பின் கணிக்க போதுமான தரவு இல்லை</string>
     <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: </string>
-    <string name="days"> days</string>
+    <string name="days">" நாட்கள்"</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">அறிகுறி %1$s</string>

@@ -65,6 +65,7 @@
     <string name="average_luteal_length">Medellängd lutealfas:  days</string>
 
     <!-- Symptoms -->
+    <string name="days">" dagar"</string>
     <string name="symptoms_dialog_title">Symptom for %1$s</string>
     <string name="create_new_symptom_button">Skapa nytt symptom</string>
     <string name="save_symptoms_button">Spara symptom</string>
