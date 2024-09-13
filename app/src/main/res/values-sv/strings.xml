@@ -53,8 +53,8 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
-    <string name="period_count">Antal menscykler: %1$d</string>
-    <string name="average_cycle_length">Medellängd menscykel: %1$.1f days</string>
+    <string name="period_count">Antal cykler: %1$d</string>
+    <string name="average_cycle_length">Medellängd cykel: %1$.1f days</string>
     <string name="average_period_length">Medellängd mens: %1$.1f days</string>
     <string name="next_period_start_past">Nästa beräknade mens: %1$s   Beräknat datum har passerat!</string>
     <string name="next_period_start_future">Nästa beräknade mens: %1$s</string>
