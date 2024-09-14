@@ -121,11 +121,11 @@
     <string name="add_or_remove_dates">• Add or Remove Dates for Period: Click the \'Add or Remove Dates\' button after selecting dates.</string>
     <string name="symptoms">• Symptoms: Click the \'Symptoms\' button to view or add symptoms for the selected date.</string>
     <string name="ovulation">• Ovulation: Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
-    <string name="statistics">• Statistics: Click the \'Burger menu\' and select statistics.</string>
-    <string name="import_export">• Import/Export: Click the \'Import/Export\' button to import or export your data. This is a MUST when moving the data to a new device!</string>
+    <string name="statistics">• Statistics: Click statistics in the bottom menu and select statistics.</string>
+    <string name="import_export">• Import/Export: Click the settings button in the bottom menu and then scroll down among the settings. Click import/export to import or export your data. This is a MUST when moving the data to a new device!</string>
     <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
     <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
+    <string name="upcoming_features">• Check our Github for the latest regarding the apps development!</string>
     <string name="our_story_header">Our Story</string>
     <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>

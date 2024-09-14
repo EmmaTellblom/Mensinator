@@ -111,13 +111,13 @@
     <string name="how_to_use">Användning:</string>
     <string name="select_dates">• Välja datum: Klicka på ett datum för att markera/avmarkera</string>
     <string name="add_or_remove_dates">• Lägg till eller ta bort dagar för mens: Klicka på Mens efter att du har valt datum.</string>
-    <string name="symptoms">• Symptom: Klicka på \'Symptom\' efter att du har markerat ett datum för att se symptom på aktuellt datum.</string>
+    <string name="symptoms">• Symptom: Klicka på symptom efter att du har markerat ett datum för att se symptom på aktuellt datum.</string>
     <string name="ovulation">• Ägglossning: Välj ett datum och klicka på ägglossning. För att ta bort ägglossning, markera datumet och tryck på ägglossning igen.</string>
-    <string name="statistics">• Statistik: Klicka på menyn nere till höger och sendan \'Statistik\'.</string>
-    <string name="import_export">• Importera/Exportera: Klicka på Importera/Exportera i menyn nere till höger för att importera eller exportera din data, Detta är ett MÅSTE när du ska flytta din data till en ny enhet.</string>
+    <string name="statistics">• Statistik: I den nedre menyn välj Statistik.</string>
+    <string name="import_export">• Importera/Exportera: Klicka på inställningarna i den nedre menyn och scrolla ner och välj Importera/Exportera. Detta är ett MÅSTE när du ska flytta din data till en ny enhet.</string>
     <string name="calculations">• Beräkningar: \nMens är beräknad utifrån medellängd på din menscykel.\nMensen kan beräknas utifrån medellängd på din lutealfas. Beräkningen kollar då historiskt (på antal cykler som du väljer i inställningarna) för att komma fram till en medellängd på lutealfasen och beräknar mens. Detta ställer du in i inställningarna. \nÄgglossning är beräknat utifrån medellängd på ägglossningscykeln. </string>
     <string name="features_coming_soon">Funktioner som kommer snart:</string>
-    <string name="upcoming_features">• Nytt gränssnitt (när vi har lust) • Andra UI förbättringar</string>
+    <string name="upcoming_features">• Kolla in vår Github för att se det senaste som är pågång i utvecklingen!</string>
     <string name="our_story_header">Vår bakgrund</string>
     <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. Vi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. Häng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Viktigt:</string>
