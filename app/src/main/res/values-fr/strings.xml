@@ -64,7 +64,7 @@
     <string name="period_count">Nombre de règles suivies: </string>
     <string name="average_cycle_length">Durée moyenne du cycle: </string>
     <string name="average_period_length">Durée moyenne des règles: </string>
-    <string name="next_period_start_past">Prochaine règle prévue: \n\nLa date des règles prévue est passée !!</string>
+    <string name="next_period_start_past">Prochaine règle prévue: </string>
     <string name="next_period_start_future">Prochaine règle prévue: </string>
     <string name="ovulation_count">Nombre d\'ovulations suivies: </string>
     <string name="average_ovulation_day">Jour moyen d\'ovulation: </string>

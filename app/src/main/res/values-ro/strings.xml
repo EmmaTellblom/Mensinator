@@ -57,7 +57,7 @@
     <string name="period_count">Numărul ciclurilor menstruale introduse: </string>
     <string name="average_cycle_length">Durata medie a ciclului: </string>
     <string name="average_period_length">Durata medie a menstruației: </string>
-    <string name="next_period_start_past">Ziua estimată a următoarei menstruații:  \n\nData estimată a trecut!</string>
+    <string name="next_period_start_past">Ziua estimată a următoarei menstruații: </string>
     <string name="next_period_start_future">Ziua estimată a următoarei menstruații: </string>
     <string name="ovulation_count">Numărul de ovulații introduse: </string>
     <string name="average_ovulation_day">Ziua medie de ovulație: </string>

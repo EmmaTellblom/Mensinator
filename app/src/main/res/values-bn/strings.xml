@@ -56,7 +56,7 @@
     <string name="period_count">ট্র্যাক করা মাসিকের সংখ্যা: </string>
     <string name="average_cycle_length">গড় চক্রের দৈর্ঘ্য: </string>
     <string name="average_period_length">গড় মাসিকের দৈর্ঘ্য: </string>
-    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক:  \n\n অনুমানিত মাসিকের তারিখ পেরিয়ে গেছে!</string>
+    <string name="next_period_start_past">পরবর্তী অনুমানিত মাসিক: </string>
     <string name="next_period_start_future">পরবর্তী অনুমানিত মাসিক: </string>
     <string name="ovulation_count">ট্র্যাক করা ওভুলেশনের সংখ্যা: </string>
     <string name="average_ovulation_day">গড় ওভুলেশন দিন: </string>

@@ -63,7 +63,7 @@
     <string name="period_count">Número de períodos rastreados: </string>
     <string name="average_cycle_length">Duración promedia del ciclo: </string>
     <string name="average_period_length">Duración promedia del período: </string>
-    <string name="next_period_start_past">Próximo período asumido:  \n\nLa fecha asumida del período ha pasado!</string>
+    <string name="next_period_start_past">Próximo período asumido: </string>
     <string name="next_period_start_future">Próximo período asumido: </string>
     <string name="ovulation_count">Número de ovulaciones rastreadas: </string>
     <string name="average_ovulation_day">Día promedio de ovulación: </string>
