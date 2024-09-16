@@ -51,55 +51,50 @@ fun StatisticsDialog(
             modifier = Modifier.padding(start = 5.dp, bottom = 5.dp),
             fontWeight = FontWeight.Bold
         )
-        Column(
-            modifier = Modifier
-                //.padding(16.dp)  // Padding around the text content
-                .fillMaxWidth()
-        ) {
-            RowOfText(
-                stringResource(id = R.string.period_count),
-                periodCount.toString()
-            )
+        RowOfText(
+            stringResource(id = R.string.period_count),
+            periodCount.toString()
+        )
 
-            RowOfText(
-                stringResource(id = R.string.average_cycle_length),
-                (Math.round(averageCycleLength*10)/10.0).toString() + " " + stringResource(id = R.string.days)
-            )
+        RowOfText(
+            stringResource(id = R.string.average_cycle_length),
+            (Math.round(averageCycleLength * 10) / 10.0).toString() + " " + stringResource(id = R.string.days)
+        )
 
-            RowOfText(
-                stringResource(id = R.string.average_period_length),
-                (Math.round(averagePeriodLength*10)/10.0).toString() + " " + stringResource(id = R.string.days)
-            )
+        RowOfText(
+            stringResource(id = R.string.average_period_length),
+            (Math.round(averagePeriodLength * 10) / 10.0).toString() + " " + stringResource(id = R.string.days)
+        )
 
-            RowOfText(
-                if (nextPeriodStart < LocalDate.now().toString()) {
-                    stringResource(id = R.string.next_period_start_past)
-                } else {
-                    stringResource(id = R.string.next_period_start_future)
-                },
-                nextPeriodStart
-            )
+        RowOfText(
+            if (nextPeriodStart < LocalDate.now().toString()) {
+                stringResource(id = R.string.next_period_start_past)
+            } else {
+                stringResource(id = R.string.next_period_start_future)
+            },
+            nextPeriodStart
+        )
 
-            RowOfText(
-                stringResource(id = R.string.ovulation_count),
-                ovulationCount.toString()
-            )
+        RowOfText(
+            stringResource(id = R.string.ovulation_count),
+            ovulationCount.toString()
+        )
 
-            RowOfText(
-                stringResource(id = R.string.average_ovulation_day),
-                follicleGrowthDays
-            )
+        RowOfText(
+            stringResource(id = R.string.average_ovulation_day),
+            follicleGrowthDays
+        )
 
-            RowOfText(
-                stringResource(id = R.string.next_predicted_ovulation),
-                nextPredictedOvulation
-            )
+        RowOfText(
+            stringResource(id = R.string.next_predicted_ovulation),
+            nextPredictedOvulation
+        )
 
-            RowOfText(
-                stringResource(id = R.string.average_luteal_length),
-                (Math.round(avgLutealLength*10)/10.0).toString()+ " " + stringResource(id = R.string.days)
-            )
-        }
+        RowOfText(
+            stringResource(id = R.string.average_luteal_length),
+            (Math.round(avgLutealLength * 10) / 10.0).toString() + " " + stringResource(id = R.string.days)
+        )
+
     }
 }
 
