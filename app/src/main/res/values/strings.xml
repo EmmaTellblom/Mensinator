@@ -64,7 +64,7 @@
     <string name="period_count">"Periods tracked: "</string>
     <string name="average_cycle_length">"Average cycle:  "</string>
     <string name="average_period_length">"Average period:  "</string>
-    <string name="next_period_start_past">Next predicted period: \n\nAssumed period date has passed!</string>
+    <string name="next_period_start_past">Next predicted period: </string>
     <string name="next_period_start_future">Next predicted period:  </string>
     <string name="ovulation_count">"Ovulations tracked:  "</string>
     <string name="average_ovulation_day">Average ovulation day:  </string>
