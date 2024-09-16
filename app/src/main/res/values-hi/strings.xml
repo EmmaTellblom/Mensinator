@@ -57,7 +57,7 @@
     <string name="period_count">ट्रैक की गई पिरियड् की संख्या: </string>
     <string name="average_cycle_length">औसत साइकिल लंबाई: </string>
     <string name="average_period_length">"औसत पीरियड की लंबाई: "</string>
-    <string name="next_period_start_past">अगला अनुमानित पीरियड: \n\nअनुमानित पीरियड की तिथि बीत चुकी है!</string>
+    <string name="next_period_start_past">अगला अनुमानित पीरियड: </string>
     <string name="next_period_start_future">अगला अनुमानित पीरियड: </string>
     <string name="ovulation_count">ट्रैक किए गए अंडोत्सर्ग की संख्या: </string>
     <string name="average_ovulation_day">औसत अंडोत्सर्ग दिन: </string>
