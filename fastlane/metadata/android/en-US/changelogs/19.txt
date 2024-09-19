@@ -14,6 +14,7 @@ Translations:
 * Hindi completed
 * French added
 * Spanish added
+* Polish added
 
 Other improvements:
 * Notifications no longer requires network discovery
