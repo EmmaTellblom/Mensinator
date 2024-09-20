@@ -15,6 +15,7 @@ Translations:
 * French added
 * Spanish added
 * Polish added
+* Slovenian added
 
 Other improvements:
 * Notifications no longer requires network discovery
