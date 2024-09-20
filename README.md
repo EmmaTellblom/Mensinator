@@ -1,51 +1,41 @@
-# Mensinator
-Mensinator is the ultimate period tracker designed for those who prioritize simplicity, privacy, and user-friendliness. 🌟
+# Mensinator🩸
+Private period tracking with custom symptoms. We don't track your data - you do. Period.
 
-Private period tracking with custom symptoms. We don't track your data - You do. Period.
+## 🫂 Made for friends by friends
+Originally Emma made Mensinator for her friend with goals of better symptom tracking and privacy respect.  
+Soon, many of us joined and are now actively building the Mensinator together.  
+It is friendly, straightforward, and respects privacy.  
+We wanted an app to use, not an app to sell data to random corporations.
 
-## Overview
-Mensinator provides a clean and intuitive interface for tracking your menstrual cycle, monitoring your periods, and viewing essential statistics—all without the need for sign-ups or sharing personal data. All information is stored securely on your device, ensuring your privacy is always protected. 🛡️
+## 💡 Features
+- Period and ovulation tracking and statistics,
+- ***Customizable and colour-coded symptoms***,
+- Cycle prediction with average period calculation,
+- Cycle prediction with average ***luteal phase calculation for irregular cycles***,
+- Data export and import for backups or moving to another device,
+- No tracking. Your data is yours. No data is sent anywhere.
+- No bloat. No useless or complex features. No sign-up. No emails.
 
-## Key Features
-- Effortless Period Tracking: Easily mark your periods, view your cycle, and access statistics all in one place. 📅
-- No Sign-Up Required: Start using the app immediately—no account creation or personal information required. 🎉
-- Complete Privacy: Your data is stored locally on your device. We do not collect, share, or sell any personal information. 🔒
-- Easy Navigation: Quickly switch between months and track your cycle with just a few taps. 🖐️
-- Clear Statistics: View your average cycle length, average period length, and next period prediction in the Statistics. 📊
-- Historical Insights: Get a summary of all your tracked periods to better understand your menstrual health over time. 📈
-- Visual Indicators: See visual indicators on the calendar for existing periods, selected dates and even different symptoms! 🔴🔵
-- Customizable Colors: Personalize the app's appearance by customizing colors for periods, ovulations, symptoms and predictions to your preference. 🎨
-- Export and Import Data: Easily export your data to a JSON file for backup or transfer and import it back into the app whenever needed. 📂
-- Choose which calculation works for you! If you have an irregular cycle, choose another way to calculate your next period start by choosing 'luteal calculation' in the settings!
+## 🔮 Future ideas
+- Whatever you suggest: Discuss ideas with users and developers on **[our Discord](https://discord.gg/tHA2k3bFRN)**. Let us know what'd be good to have.
 
-Why Choose Mensinator?
-- Mensinator stands out for its simplicity and dedication to privacy. With just one main view, you can track your periods and manage your menstrual health without any complications. The app does not require sign-ups or collect personal data, providing an effective and private way to keep track of your cycle.
+## 🤝 Active development and user community
+Join **[our Discord](https://discord.gg/tHA2k3bFRN)** to share your thoughts, ask questions, and chat with other users and our team.  
+Mensinator is in early development, made by people like you. Your feedback will help us improve it.  
+Some of us even stick around to nag the developers to make the app into what we want it to be. And some of us develop the features directly.
 
-## How It Works
-- Track Your Periods: Select dates on the calendar, press 'period' and your done!
-- Track Your Ovulation: Select the ovulation date, press 'ovulation' and voila! 
-- View Statistics: Easily check your average cycle length, period length, and upcoming period/ovulation predictions.
-- Manage your symptoms: Add and track custom symptoms to reflect your unique cycle.
-- App settings: Change the app's colors, language, and settings to suit your preferences.
-- - Export and Import Data: Use the export feature to save your data as a JSON file and the import feature to load data back into the app.
-  
-## Who Should Use It?
-Mensinator is perfect for anyone seeking a straightforward and private period tracking solution. Whether you're tracking for health reasons or simply keeping an eye on your cycle, Mensinator makes it easy and secure.
+## 💾 Get the app
+Download the Mensinator app from your preferred source:
+- **[F-Droid](https://f-droid.org/en/packages/com.mensinator.app/)** (free and open source app store)
+- **[Google Play](https://play.google.com/store/apps/details?id=com.mensinator.app)** (Google's app store)
+- **[IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.mensinator.app)** (an F-Droid repository)
+- **[latest release on GitHub](https://github.com/EmmaTellblom/Mensinator/releases/latest)** (NO automatic updates)
 
-## Get Started with Mensinator
-Ready to start tracking your menstrual cycle with ease and privacy? You can download the Mensinator app from your preferred source:
+## 🛠️ Contributing for developers
+We welcome contributions to improve Mensinator!  
+If you'd like to contribute, please **[fork the repository](https://github.com/EmmaTellblom/Mensinator/fork)** and submit a pull request.  
+For major changes, please **[open an issue](https://github.com/EmmaTellblom/Mensinator/issues/new/choose)** first to discuss your proposed changes.  
+You are also welcome to **[join our Discord](https://discord.gg/tHA2k3bFRN)** to discuss further or simply to chat with us!
 
-- **[Google Play](https://play.google.com/store/apps/details?id=com.mensinator.app)**
-- **[IzzyOnDroid](https://apt.izzysoft.de/fdroid/index/apk/com.mensinator.app)**
-- **[FDroid](https://f-droid.org/en/packages/com.mensinator.app/)**
-- Or download the APK directly from our [latest release on GitHub](https://github.com/EmmaTellblom/Mensinator/releases/latest).
-
-Choose the option that works best for you and take control of your cycle tracking with Mensinator!
-
-
-## Contributing
-We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss your proposed changes. You are also welcome to join our Discord to discuss further or simply to chat with us!
-Join us here; **https://discord.gg/tHA2k3bFRN**
-
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 📜 License
+This project is licensed under the **[MIT License](https://github.com/EmmaTellblom/Mensinator/blob/main/LICENSE)**.  
