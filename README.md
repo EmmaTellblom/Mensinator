@@ -8,15 +8,15 @@ It is friendly, straightforward, and respects privacy.
 We wanted an app to use, not an app to sell data to random corporations.
 
 ## 💡 Features
-- Period and ovulation tracking,
-- Customizable and colour-coded symptoms,
-- Statistics and cycle prediction,
+- Period and ovulation tracking and statistics,
+- ***Customizable and colour-coded symptoms***,
+- Cycle prediction with average period calculation,
+- Cycle prediction with average ***luteal phase calculation for irregular cycles***,
 - Data export and import for backups or moving to another device,
 - No tracking. Your data is yours. No data is sent anywhere.
 - No bloat. No useless or complex features. No sign-up. No emails.
 
 ## 🔮 Future ideas
-- Different calculation types: Choose between regular and luteal prediction modes depending on (ir)regularity of your cycle,
 - Whatever you suggest: Discuss ideas with users and developers on **[our Discord](https://discord.gg/tHA2k3bFRN)**. Let us know what'd be good to have.
 
 ## 🤝 Active development and user community
@@ -39,5 +39,3 @@ You are also welcome to **[join our Discord](https://discord.gg/tHA2k3bFRN)** to
 
 ## 📜 License
 This project is licensed under the **[MIT License](https://github.com/EmmaTellblom/Mensinator/blob/main/LICENSE)**.  
-**[Contact us](https://github.com/EmmaTellblom/Mensinator/issues/new/choose)** if you require a different license.
-We are considering moving to AGPL License.
