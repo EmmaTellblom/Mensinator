@@ -68,7 +68,7 @@ class Calculations (context: Context){
         if (ovulationDates.isEmpty()) {
             // Return null or handle the case where no ovulations are available
             Log.d("TAG", "Ovulationdates are empty")
-            return "Not enough data"
+            return "-"
         }
 
         var lutealLength = 0
@@ -90,7 +90,7 @@ class Calculations (context: Context){
         if (lastOvulation == null) {
             // Return null or handle the case where no last ovulation date is available
             Log.d("TAG", "Ovulation is null")
-            return "Not enough data"
+            return "-"
         }
         val periodDates = dbHelper.getLatestXPeriodStart(ovulationHistory) //This always returns no+1 period dates
         if(periodDates.isNotEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate

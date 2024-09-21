@@ -160,7 +160,6 @@ fun CalendarScreen(
         // Predict the next ovulation date
         // Make sure there is at least two periods and two ovulation dates
         // Make sure the last ovulation date is before the last first period date
-        /* TODO: THIS IFSTATMENT IS NOT WORKING PROPERLY NEXTOVULATIONPREDICTION IS NOT CALCULATED CORRECTLY. FIX IT. 'NOT ENOUGH DATA ON LAUNCH' */
         if (ovulationCount >= 2 && periodCount >= 2 && (lastOvulationDate.toString() < previousFirstPeriodDate.toString())) {
             follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
             GlobalState.nextOvulationCalculated = previousFirstPeriodDate?.plusDays(follicleGrowthDays.toLong()).toString()
