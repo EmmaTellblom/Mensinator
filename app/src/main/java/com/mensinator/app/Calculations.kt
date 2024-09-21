@@ -120,7 +120,7 @@ class Calculations (context: Context){
         val ovulationDates = dbHelper.getXLatestOvulationsDates(ovulationHistory)
         if (ovulationDates.isEmpty()) {
             // Return a meaningful message or handle the case where no ovulations are available
-            return "Not enough data"
+            return "-"
         } else {
             val growthRate = mutableListOf<Int>()
             for (d in ovulationDates) {

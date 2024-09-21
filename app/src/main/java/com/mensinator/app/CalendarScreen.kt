@@ -149,7 +149,7 @@ fun CalendarScreen(
         GlobalState.nextPeriodStartCalculated = if (periodCount>=2) { // If there is at least 2 cycles, then we can calculate next period
             calcHelper.calculateNextPeriod()
         } else {
-            "Not enough data"
+            "-"
         }
 
 
@@ -168,14 +168,22 @@ fun CalendarScreen(
             Log.d("CalendarScreen", "1 NextOvulationCalculated: $GlobalState.nextOvulationCalculated")
 
         } else { // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
-            if(lastOvulationDate.toString()>previousFirstPeriodDate.toString() && (GlobalState.nextPeriodStartCalculated != "Not enough data")){
+            if (lastOvulationDate.toString() > previousFirstPeriodDate.toString() && (GlobalState.nextPeriodStartCalculated != "-")) {
                 follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
-                if(follicleGrowthDays!="0"){
-                    GlobalState.nextOvulationCalculated = LocalDate.parse(GlobalState.nextPeriodStartCalculated).plusDays(follicleGrowthDays.toLong()).toString()
+
+                val follicleGrowthDaysLong = follicleGrowthDays.toLongOrNull()
+
+                if (follicleGrowthDaysLong != null && follicleGrowthDaysLong != 0L) {
+                    GlobalState.nextOvulationCalculated = LocalDate.parse(GlobalState.nextPeriodStartCalculated)
+                        .plusDays(follicleGrowthDaysLong)
+                        .toString()
+                } else {
+                    // Handle invalid or zero follicle growth days
+                    GlobalState.nextOvulationCalculated = "-"
                 }
-            }
-            else{ // There is not enough data to make ovulation calculation
-                GlobalState.nextOvulationCalculated = "Not enough data"
+            } else {
+                // There is not enough data to make ovulation calculation
+                GlobalState.nextOvulationCalculated = "-"
             }
         }
     }
@@ -512,7 +520,7 @@ fun CalendarScreen(
                     // Schedule notification for reminder
                     // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
                     // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
-                    if (reminderDays > 0 && GlobalState.nextPeriodStartCalculated != "Not enough data" && GlobalState.nextPeriodStartCalculated >= LocalDate.now()
+                    if (reminderDays > 0 && GlobalState.nextPeriodStartCalculated != "-" && GlobalState.nextPeriodStartCalculated >= LocalDate.now()
                             .toString()
                     ) {
                         newSendNotification(
@@ -571,7 +579,7 @@ fun CalendarScreen(
                 updateCalculations()
 
                 // Schedule notification for reminder
-                if (reminderDays > 0 && GlobalState.nextPeriodStartCalculated != "Not enough data" && GlobalState.nextPeriodStartCalculated >= LocalDate.now()
+                if (reminderDays > 0 && GlobalState.nextPeriodStartCalculated != "-" && GlobalState.nextPeriodStartCalculated >= LocalDate.now()
                         .toString()
                 ) {
                     newSendNotification(

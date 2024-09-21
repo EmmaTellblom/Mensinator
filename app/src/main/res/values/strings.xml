@@ -69,7 +69,7 @@
     <string name="ovulation_count">"Ovulations tracked:  "</string>
     <string name="average_ovulation_day">Average ovulation day:  </string>
     <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
-    <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
+    <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Average luteal phase length:  </string>
     <string name="days"> days</string>
 
