@@ -1,0 +1,6 @@
+Hot-fix:
+* Issue with calculations solved
+
+Added languages:
+* Polish
+* Slovenian
