@@ -185,8 +185,8 @@ fun BottomBar(
             navController = navController,
             startDestination = Screens.Home.name,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn(animationSpec = tween(200)) },
-            exitTransition = { fadeOut(animationSpec = tween(200)) },
+            enterTransition = { fadeIn(animationSpec = tween(50)) },
+            exitTransition = { fadeOut(animationSpec = tween(50)) },
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screens.Home.name) {
                 CalendarScreen(
