@@ -105,7 +105,9 @@ fun SettingsDialog() {
         "Hindi" to "hi",
         "Bengali" to "bn",
         "Spanish" to "es",
-        "French" to "fr"
+        "French" to "fr",
+        "Polish" to "pl",
+        "Slovenian" to "sl"
         /*"Chinese" to "zh",
         "Portuguese" to "pt",
         "Russian" to "ru",
