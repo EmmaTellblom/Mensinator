@@ -100,6 +100,17 @@
     <string name="sun">Ned</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Januar</string>
+    <string name="february">Februar</string>
+    <string name="march">Marec</string>
+    <string name="april">April</string>
+    <string name="may">Maj</string>
+    <string name="june">Junij</string>
+    <string name="july">Julij</string>
+    <string name="august">Avgust</string>
+    <string name="september">September</string>
+    <string name="october">Oktober</string>
+    <string name="november">November</string>
     <string name="export_import_title">Izvoz/Uvoz podatkov</string>
     <string name="export_button">Izvozi</string>
     <string name="import_button">Uvozi</string>
@@ -138,4 +149,6 @@
     <string name="export_data">Izvozi podake</string>
     <string name="about_app">O aplikaciji</string>
     <string name="rename_symptom">Preimenuj simptom</string>
+    <string name="december">December</string>
+    <string name="calendar_title">Koledar</string>
 </resources>

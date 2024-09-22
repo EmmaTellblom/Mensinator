@@ -91,6 +91,17 @@
     <string name="sun">சூ</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">ஜனவரி</string>
+    <string name="february">பிப்ரவரி</string>
+    <string name="march">மார்ச்</string>
+    <string name="april">ஏப்ரல்</string>
+    <string name="may">மே</string>
+    <string name="june">ஜூன்</string>
+    <string name="july">ஜூலை</string>
+    <string name="august">ஆகஸ்ட்</string>
+    <string name="september">செப்டம்பர்</string>
+    <string name="october">அக்டோபர்</string>
+    <string name="november">நவம்பர்</string>
     <string name="export_import_title">ஏற்றுமதி/இறக்குமதி தரவு</string>
     <string name="export_button">ஏற்றுமதி</string>
     <string name="import_button">இறக்குமதி</string>
@@ -135,4 +146,6 @@
     <string name="about_app">செயலியின் பற்றிய</string>
     <string name="screen_protection">ஸ்கிரீன் ஷாட்களைத் தடுக்கவும்</string>
     <string name="rename_symptom" >அறிகுறியின் பெயரை மாற்றவும்</string>
+    <string name="december">டிசம்பர்</string>
+    <string name="calendar_title">கோஷ்டி</string>
 </resources>

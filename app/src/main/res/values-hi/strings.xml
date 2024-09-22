@@ -93,6 +93,17 @@
     <string name="sun">रवि</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">जनवरी</string>
+    <string name="february">फ़रवरी</string>
+    <string name="march">मार्च</string>
+    <string name="april">अप्रैल</string>
+    <string name="may">मई</string>
+    <string name="june">जून</string>
+    <string name="july">जुलाई</string>
+    <string name="august">अगस्त</string>
+    <string name="september">सितंबर</string>
+    <string name="october">अक्टूबर</string>
+    <string name="november">नवंबर</string>
     <string name="export_import_title">डेटा निर्यात/आयात</string>
     <string name="export_button">निर्यात</string>
     <string name="import_button">आयात</string>
@@ -136,4 +147,6 @@
     <string name="about_app">ऐप के बारे में</string>
     <string name="screen_protection">स्क्रीनशॉट रोकें</string>
     <string name="rename_symptom" >लक्षण का नाम बदलें</string>
+    <string name="december">दिसंबर</string>
+    <string name="calendar_title">कैलेंडर</string>
 </resources>

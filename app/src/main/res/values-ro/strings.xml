@@ -93,6 +93,17 @@
     <string name="sun">Dum</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Ianuarie</string>
+    <string name="february">Februarie</string>
+    <string name="march">Martie</string>
+    <string name="april">Aprilie</string>
+    <string name="may">Mai</string>
+    <string name="june">Iunie</string>
+    <string name="july">Iulie</string>
+    <string name="august">August</string>
+    <string name="september">Septembrie</string>
+    <string name="october">Octombrie</string>
+    <string name="november">Noiembrie</string>
     <string name="export_import_title">Exportă/Importă datele</string>
     <string name="export_button">Exportă</string>
     <string name="import_button">Importă</string>
@@ -138,4 +149,6 @@
     <string name="about_app">Despre aplicație</string>
     <string name="screen_protection">preveni capturile de ecran</string>
     <string name="rename_symptom" >Redenumește simptomul</string>
+    <string name="december">Decembrie</string>
+    <string name="calendar_title">Calendariu</string>
 </resources>

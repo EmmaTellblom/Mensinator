@@ -98,6 +98,17 @@
     <string name="sun">Dim</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Janvier</string>
+    <string name="february">Février</string>
+    <string name="march">Mars</string>
+    <string name="april">Avril</string>
+    <string name="may">Mai</string>
+    <string name="june">Juin</string>
+    <string name="july">Juillet</string>
+    <string name="august">Août</string>
+    <string name="september">Septembre</string>
+    <string name="october">Octobre</string>
+    <string name="november">Novembre</string>
     <string name="export_import_title">Exporter/Importer des données</string>
     <string name="export_button">Exporter</string>
     <string name="import_button">Importer</string>
@@ -135,4 +146,6 @@
     <string name="about_app">À propos de l\'application</string>
     <string name="screen_protection">empêcher les captures d\'écran</string>
     <string name="rename_symptom" >Renommer le symptôme</string>
+    <string name="december">Décembre</string>
+    <string name="calendar_title">Calendrier</string>
 </resources>

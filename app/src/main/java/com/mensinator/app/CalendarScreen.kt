@@ -33,9 +33,7 @@ import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
-import java.util.Locale
 
 
 /*
@@ -126,6 +124,8 @@ fun CalendarScreen(
     var symptomColor: Color
 
 
+
+
     // Function to refresh symptom dates
     fun refreshSymptomDates() {
         val year = currentMonth.value.year
@@ -213,6 +213,21 @@ fun CalendarScreen(
         updateCalculations()
     }
 
+    val monthName = mapOf(
+        1 to R.string.january,
+        2 to R.string.february,
+        3 to R.string.march,
+        4 to R.string.april,
+        5 to R.string.may,
+        6 to R.string.june,
+        7 to R.string.july,
+        8 to R.string.august,
+        9 to R.string.september,
+        10 to R.string.october,
+        11 to R.string.november,
+        12 to R.string.december
+    )
+
     //List of Days of Week
     val daysOfWeek = listOf(
         stringResource(id = R.string.mon),
@@ -243,21 +258,9 @@ fun CalendarScreen(
                 //Text(stringResource(id = R.string.previous))
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
-            // Get the current locale from AppCompatDelegate
-            val localeList = AppCompatDelegate.getApplicationLocales()
-            val currentLocale = if (localeList.isEmpty) {
-                Locale.ENGLISH // Fallback to English if locale list is empty
-            } else {
-                localeList[0] // Retrieve the first locale from the list
-            }
 
             Text(
-                text = "${
-                    currentMonth.value.month.getDisplayName(
-                        TextStyle.FULL,
-                        currentLocale
-                    )
-                } ${currentMonth.value.year}".capitalized(),
+                text = "${monthName[currentMonth.value.month.value]?.let { stringResource(id = it) }} ${currentMonth.value.year}",
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
@@ -621,15 +624,6 @@ fun CalendarScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-    }
-}
-
-
-fun String.capitalized(): String {
-    return this.replaceFirstChar {
-        if (it.isLowerCase())
-            it.titlecase(Locale.getDefault())
-        else it.toString()
     }
 }
 

@@ -100,6 +100,17 @@
     <string name="sun">Ndz</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Styczeń</string>
+    <string name="february">Luty</string>
+    <string name="march">Marzec</string>
+    <string name="april">Kwiecień</string>
+    <string name="may">Maj</string>
+    <string name="june">Czerwiec</string>
+    <string name="july">Lipiec</string>
+    <string name="august">Sierpień</string>
+    <string name="september">Wrzesień</string>
+    <string name="october">Październik</string>
+    <string name="november">Listopad</string>
     <string name="export_import_title">Eksportuj/Importuj Dane</string>
     <string name="export_button">Eksportuj</string>
     <string name="import_button">Importuj</string>
@@ -136,4 +147,6 @@
     <string name="export_data">Eksportuj Dane</string>
     <string name="about_app">O Aplikacji</string>
     <string name="rename_symptom">Zmień Nazwę Objawu</string>
+    <string name="december">Grudzień</string>
+    <string name="calendar_title">Kalendarz</string>
 </resources>

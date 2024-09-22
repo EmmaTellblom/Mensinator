@@ -92,6 +92,17 @@
     <string name="sun">রবিবার</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">জানুয়ারি</string>
+    <string name="february">ফেব্রুয়ারি</string>
+    <string name="march">মার্চ</string>
+    <string name="april">এপ্রিল</string>
+    <string name="may">মে</string>
+    <string name="june">জুন</string>
+    <string name="july">জুলাই</string>
+    <string name="august">আগস্ট</string>
+    <string name="september">সেপ্টেম্বর</string>
+    <string name="october">অক্টোবর</string>
+    <string name="november">নভেম্বর</string>
     <string name="export_import_title">তথ্য রপ্তানি/আনা</string>
     <string name="export_button">রপ্তানি</string>
     <string name="import_button">আনা</string>
@@ -136,4 +147,6 @@
     <string name="about_app">অ্যাপ সম্পর্কে</string>
     <string name="screen_protection">স্ক্রিনশট প্রতিরোধ করুন</string>
     <string name="rename_symptom" >লক্ষণের নাম পরিবর্তন করুন</string>
+    <string name="december">ডিসেম্বর</string>
+    <string name="calendar_title">পঞ্জিকা</string>
 </resources>

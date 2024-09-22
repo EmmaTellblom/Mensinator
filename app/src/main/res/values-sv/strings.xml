@@ -92,6 +92,17 @@
     <string name="sun">Sön</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Januari</string>
+    <string name="february">Februari</string>
+    <string name="march">Mars</string>
+    <string name="april">April</string>
+    <string name="may">Maj</string>
+    <string name="june">Juni</string>
+    <string name="july">Juli</string>
+    <string name="august">Augusti</string>
+    <string name="september">September</string>
+    <string name="october">Oktober</string>
+    <string name="november">November</string>
     <string name="export_import_title">Exportera/Importera Data</string>
     <string name="export_button">Exportera</string>
     <string name="import_button">Importera</string>
@@ -136,4 +147,6 @@
     <string name="about_app">Om Appen</string>
     <string name="screen_protection">Blockera screenshots</string>
     <string name="rename_symptom" >Döp om symptom</string>
+    <string name="december">December</string>
+    <string name="calendar_title">Kalender</string>
 </resources>
