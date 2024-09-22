@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,7 +41,7 @@ import com.mensinator.app.SettingsDialog
 import com.mensinator.app.StatisticsDialog
 
 enum class Screens {
-    Home,
+    Calendar,
     Symptoms,
     Statistic,
     Settings
@@ -70,13 +69,13 @@ fun BottomBar(
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screens.valueOf(
-        backStackEntry?.destination?.route ?: Screens.Home.name
+        backStackEntry?.destination?.route ?: Screens.Calendar.name
     )
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     LaunchedEffect(currentScreen) { //for navigating back with back phone arrow
         val newIndex = when (currentScreen) {//this is not the best practise but works the same
-            Screens.Home -> 0
+            Screens.Calendar -> 0
             Screens.Statistic -> 1
             Screens.Symptoms -> 2
             Screens.Settings -> 3
@@ -105,22 +104,22 @@ fun BottomBar(
         bottomBar = {
             val barItems = listOf(
                 BarItem(
-                    R.string.home_page,
-                    R.drawable.home_field,
-                    R.drawable.home_field //here you can add not_field icon if you want. when its not selected
+                    //R.string.home_page,
+                    R.drawable.baseline_calendar_month_24,
+                    R.drawable.baseline_calendar_month_24 //here you can add not_field icon if you want. when its not selected
                 ),
                 BarItem(
-                    R.string.statisic_page,
+                    //R.string.statisic_page,
                     R.drawable.outline_bar_chart_24,
                     R.drawable.outline_bar_chart_24
                 ),
                 BarItem(
-                    R.string.symptoms_page,
+                    //R.string.symptoms_page,
                     R.drawable.baseline_bloodtype_24,
                     R.drawable.baseline_bloodtype_24
                 ),
                 BarItem(
-                    R.string.settings_page,
+                    //R.string.settings_page,
                     R.drawable.settings_24px,
                     R.drawable.settings_24px
                 ),
@@ -131,7 +130,7 @@ fun BottomBar(
                         onClick = {
                             if (selectedItemIndex != index) {
                                 when (index) {
-                                    0 -> navController.navigate(Screens.Home.name) {
+                                    0 -> navController.navigate(Screens.Calendar.name) {
                                         popUpTo(navController.graph.findStartDestination().id) {
                                             saveState = true
                                         }
@@ -167,13 +166,13 @@ fun BottomBar(
                             }
                         },
                         selected = selectedItemIndex == index,
-                        label = { Text(text = stringResource(item.title)) },
+                        //label = { Text(text = stringResource(item.title)) },
                         icon = {
                             Icon(
                                 imageVector = if (index == selectedItemIndex) ImageVector.vectorResource(
                                     id = item.imageSelected
                                 ) else ImageVector.vectorResource(id = item.imageUnSelected),
-                                contentDescription = stringResource(id = item.title)
+                                contentDescription = stringResource(R.string.calendar_title)
                             )
                         }
                     )
@@ -183,12 +182,12 @@ fun BottomBar(
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screens.Home.name,
+            startDestination = Screens.Calendar.name,
             modifier = Modifier.padding(paddingValues),
             enterTransition = { fadeIn(animationSpec = tween(50)) },
             exitTransition = { fadeOut(animationSpec = tween(50)) },
         ) {//create a new file for every page and pass it inside the composable
-            composable(route = Screens.Home.name) {
+            composable(route = Screens.Calendar.name) {
                 CalendarScreen(
 //                    nextPeriodStartCalculated,
 //                    nextOvulationCalculated,
