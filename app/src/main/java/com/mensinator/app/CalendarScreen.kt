@@ -51,6 +51,10 @@ fun CalendarScreen(
 ) {
     val context = LocalContext.current
 
+    // new objects for prediction
+    val ovulationPrediction = OvulationPrediction(context)
+    val periodPrediction = PeriodPrediction(context)
+
     var follicleGrowthDays by remember { mutableStateOf("0") }
 
     // For accessing database functions

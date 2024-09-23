@@ -5,8 +5,6 @@ import android.util.Log
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
-// TODO REMOVE noPeriods+noOvulations USE GLOBAL VARIABLES INSTEAD
-
 /**
  * The `Calculations` class provides methods to calculate menstrual cycle related data
  * such as next period date, average cycle length, and average luteal length.
