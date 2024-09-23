@@ -6,4 +6,5 @@ open class Prediction(context: Context) {
 
     val dbHelper = PeriodDatabaseHelper(context)
     val calcHelper = Calculations(context)
+
 }
