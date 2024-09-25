@@ -3,7 +3,7 @@ package com.mensinator.app
 import android.content.Context
 import android.util.Log
 import java.time.LocalDate
-import kotlin.math.roundToInt
+import kotlin.math.round
 
 /**
  * The `Calculations` class provides methods to calculate menstrual cycle related data
@@ -114,11 +114,11 @@ class Calculations (context: Context){
      *
      * @return The average follicular phase length as a string.
      */
-    fun averageFollicalGrowthInDays(): String {
+    fun averageFollicalGrowthInDays(): Double {
         val ovulationDates = dbHelper.getXLatestOvulationsDates(ovulationHistory)
         if (ovulationDates.isEmpty()) {
             // Return a meaningful message or handle the case where no ovulations are available
-            return "-"
+            return 0.0
         } else {
             val growthRate = mutableListOf<Int>()
             for (d in ovulationDates) {
@@ -128,9 +128,9 @@ class Calculations (context: Context){
                 }
             }
             if (growthRate.isEmpty()) {
-                return "0"
+                return 0.0
             }
-            return growthRate.average().roundToInt().toString()
+            return growthRate.average().roundTo2Decimals()
         }
     }
 
@@ -252,5 +252,9 @@ class Calculations (context: Context){
             return 0
         }
 
+    }
+
+    private fun Double.roundTo2Decimals(): Double {
+        return (round(this * 100) / 100)
     }
 }

@@ -37,6 +37,9 @@ fun StatisticsDialog(
     val nextPredictedOvulation = GlobalState.nextOvulationCalculated
     val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
 
+    val ovulationPrediction = OvulationPrediction(context)
+    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+
     val scrollState = rememberScrollState()
 
     Column(
@@ -82,12 +85,13 @@ fun StatisticsDialog(
 
         RowOfText(
             stringResource(id = R.string.average_ovulation_day),
-            follicleGrowthDays
+            follicleGrowthDays.toString()
         )
 
         RowOfText(
             stringResource(id = R.string.next_predicted_ovulation),
-            nextPredictedOvulation
+            //nextPredictedOvulation
+            ovulationPredictionDate.toString()
         )
 
         RowOfText(

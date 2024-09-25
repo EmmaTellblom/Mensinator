@@ -824,4 +824,18 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.update("symptoms", contentValues, "id = ?", arrayOf(symptomId.toString()))
 
     }
+
+    fun getLatestPeriodStart(): LocalDate {
+        val latestPeriodStart = LocalDate.parse("1900-01-01")
+        val db = readableDatabase
+        val query = "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+            return LocalDate.parse(dateString)
+        }
+        cursor.close()
+        db.close()
+        return latestPeriodStart
+    }
 }
