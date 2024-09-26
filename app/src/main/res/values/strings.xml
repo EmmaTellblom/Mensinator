@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="period_button">Period</string>
     <string name="symptoms_button">Symptoms</string>
-    <string name="ovulation_button">ovulation</string>
+    <string name="ovulation_button">Ovulation</string>
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>
     <string name="successfully_saved_alert">Changes saved successfully</string>
@@ -38,12 +38,12 @@
     <string name="expected_ovulation_color">Expected Ovulation</string>
     <string name="reminders">Reminders</string>
     <string name="days_before_reminder">Days Before Reminder</string>
-    <string name="other_settings">Other settings</string>
+    <string name="other_settings">Other Settings</string>
     <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
-    <string name="period_history">Period history</string>
-    <string name="ovulation_history">Ovulation history</string>
+    <string name="period_history">Period History</string>
+    <string name="ovulation_history">Ovulation History</string>
     <string name="language">Language</string>
-    <string name="cycle_numbers_show">Show cycle numbers</string>
+    <string name="cycle_numbers_show">Show Cycle Numbers</string>
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
@@ -76,7 +76,7 @@
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>
     <string name="create_new_symptom_button">Create New Symptom</string>
-    <string name="save_symptoms_button">Save symptoms</string>
+    <string name="save_symptoms_button">Save Symptoms</string>
     <string name="cancel_button">Cancel</string>
     <string name="heavy">Heavy Flow</string>
     <string name="medium">Medium Flow</string>
