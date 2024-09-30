@@ -2,7 +2,6 @@ package com.mensinator.app
 
 import android.content.Context
 import java.time.LocalDate
-import java.util.Date
 
 class PeriodPrediction(context: Context) : Prediction(context) {
     private lateinit var periodDatePrediction: LocalDate
