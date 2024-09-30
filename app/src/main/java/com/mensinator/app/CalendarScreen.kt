@@ -35,8 +35,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-//TODO: Fix so that when a ovulation is entered, remove the predicted ovulation date from the calendar
-
 /*
 This file creates the calendar. A sort of "main screen".
  */
@@ -72,9 +70,6 @@ fun CalendarScreen(
 
     // Dialogs
     var showSymptomsDialog by remember { mutableStateOf(false) } // State to show the SymptomsDialog
-
-    // Previous ovulation date
-    //var lastOvulationDate by remember { mutableStateOf<LocalDate?>(null) }
 
     // Oldest first date of period in the database
     val oldestPeriodDate = dbHelper.getOldestPeriodDate() // Used to calculate cycle numbers
@@ -113,7 +108,7 @@ fun CalendarScreen(
     val nextOvulationColor =
         dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
             ?: colorMap["Magenta"]!!
-    //val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
+
     // Initializing symptom indicator color
     var symptomColor: Color
 
@@ -137,7 +132,6 @@ fun CalendarScreen(
         ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
         nextPeriodDate = periodPrediction.getPredictedPeriodDate()
     }
-    //Log.d("CalendarScreen", "NextOvulationCalculated: $nextOvulationCalculated")
 
     // Fetch symptoms from the database AND update data for calculations in stats screen
     LaunchedEffect(Unit) {
@@ -206,7 +200,6 @@ fun CalendarScreen(
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
             }) {
-                //Text(stringResource(id = R.string.previous))
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
 
@@ -219,7 +212,6 @@ fun CalendarScreen(
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
-                //Text(text = stringResource(id = R.string.next))
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null
@@ -297,7 +289,6 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        //color = Color.Black,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -312,7 +303,6 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        //color = Color.Black,
                                         textAlign = TextAlign.Center
                                     )
                                 }
@@ -362,7 +352,6 @@ fun CalendarScreen(
                             if (dayDate == LocalDate.now()) {
                                 Box(
                                     modifier = Modifier
-                                        //.padding(4.dp)
                                         .size(circleSize)
                                         .border(1.dp, Color.LightGray, CircleShape)
                                         .background(Color.Transparent, CircleShape),
@@ -370,7 +359,6 @@ fun CalendarScreen(
                                 ) {
                                     Text(
                                         text = dayOfMonth.toString(),
-                                        //color = Color.Black,
                                         fontWeight = FontWeight.Bold,
                                         textAlign = TextAlign.Center
                                     )
@@ -378,10 +366,8 @@ fun CalendarScreen(
                             } else { // Regular dates
                                 Text(
                                     text = dayOfMonth.toString(),
-                                    //color = Color.Black,
                                     textAlign = TextAlign.Center,
                                     modifier = Modifier
-                                        //.padding(4.dp)
                                         .background(Color.Transparent)
                                 )
                             }
@@ -405,14 +391,12 @@ fun CalendarScreen(
                                                 .size(18.dp)
                                                 .background(
                                                     Color.Transparent,
-                                                    //CircleShape
                                                 )
                                                 .align(Alignment.TopStart)
                                         ) {
                                             Text(
                                                 text = cycleNumber.toString(),
                                                 style = androidx.compose.ui.text.TextStyle(
-                                                    //color = Color.Black,
                                                     fontSize = 8.sp,
                                                     textAlign = TextAlign.Left
                                                 ),
@@ -431,8 +415,6 @@ fun CalendarScreen(
             }
             Spacer(modifier = Modifier.weight(0.2f))
         }
-
-        //Spacer(modifier = Modifier.height(5.dp))
 
         val emptyClick = stringResource(id = R.string.statistics_title)
         val successSaved = stringResource(id = R.string.successfully_saved_alert)

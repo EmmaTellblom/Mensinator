@@ -37,17 +37,21 @@ class Calculations (context: Context){
             //do basic calculation here
             //Use X latest periodstartdates (will return list of X+1)
             val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
-            // Calculate the cycle lengths between consecutive periods
-            val cycleLengths = mutableListOf<Long>()
-            for (i in 0 until listPeriodDates.size - 1) {
-                val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(listPeriodDates[i], listPeriodDates[i + 1])
-                cycleLengths.add(cycleLength)
+
+            if(listPeriodDates.isEmpty()){
+                expectedPeriodDate = LocalDate.parse("1900-01-01")
             }
-            // Calculate the average cycle length
-            val averageLength = cycleLengths.average()
-            //Log.d("TAG", "Average cycle length Basic: $averageLength")
-            //Log.d("TAG", "Last period date to add days to: ${listPeriodDates.last()}")
-            expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong())
+            else{
+                // Calculate the cycle lengths between consecutive periods
+                val cycleLengths = mutableListOf<Long>()
+                for (i in 0 until listPeriodDates.size - 1) {
+                    val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(listPeriodDates[i], listPeriodDates[i + 1])
+                    cycleLengths.add(cycleLength)
+                }
+                // Calculate the average cycle length
+                val averageLength = cycleLengths.average()
+                expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong())
+            }
         }
         Log.d("TAG", "Expected period date Basic: $expectedPeriodDate")
         return expectedPeriodDate

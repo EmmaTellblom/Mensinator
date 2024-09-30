@@ -33,12 +33,13 @@ fun StatisticsDialog(
     val ovulationCount = dbHelper.getOvulationCount()
     val averagePeriodLength = calcHelper.averagePeriodLength()
     val avgLutealLength = calcHelper.averageLutealLength()
-    val nextPeriodStart = GlobalState.nextPeriodStartCalculated
-    val nextPredictedOvulation = GlobalState.nextOvulationCalculated
     val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
 
     val ovulationPrediction = OvulationPrediction(context)
-    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+    val ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+
+    val periodPrediction = PeriodPrediction(context)
+    val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
 
     val scrollState = rememberScrollState()
 
@@ -70,12 +71,12 @@ fun StatisticsDialog(
         )
 
         RowOfText(
-            if (nextPeriodStart < LocalDate.now().toString()) {
+            if (periodPredictionDate < LocalDate.now()) {
                 stringResource(id = R.string.next_period_start_past)
             } else {
                 stringResource(id = R.string.next_period_start_future)
             },
-            nextPeriodStart
+            periodPredictionDate.toString()
         )
 
         RowOfText(
