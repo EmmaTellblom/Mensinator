@@ -11,14 +11,14 @@ class PeriodPrediction(context: Context) : Prediction(context) {
     private lateinit var periodDatePrediction: LocalDate
 
     fun getPredictedPeriodDate() : LocalDate{
-        if (lutealCalculation == "1") {
-            // Advanced calculation using luteal phase
-            // Mainly for irregular periods
-            //periodDatePrediction = advancedCalculation()
-        } else {
-            // Basic calculation
-            //periodDatePrediction = basicCalculation()
+
+        if(periodCount>=2){
+            periodDatePrediction = calcHelper.calculateNextPeriod()
         }
+        else{
+            periodDatePrediction = LocalDate.parse("1900-01-01")
+        }
+
         return periodDatePrediction
     }
 

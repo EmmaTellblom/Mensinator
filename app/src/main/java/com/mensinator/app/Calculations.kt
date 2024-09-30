@@ -24,8 +24,8 @@ class Calculations (context: Context){
      *
      * @return The next expected period date as a string.
      */
-    fun calculateNextPeriod(): String {
-        val expectedPeriodDate: String
+    fun calculateNextPeriod(): LocalDate {
+        val expectedPeriodDate: LocalDate
 
         if(lutealCalculation==1){
             //go to advanced calculation using X latest ovulations (set by user in settings)
@@ -47,7 +47,7 @@ class Calculations (context: Context){
             val averageLength = cycleLengths.average()
             //Log.d("TAG", "Average cycle length Basic: $averageLength")
             //Log.d("TAG", "Last period date to add days to: ${listPeriodDates.last()}")
-            expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong()).toString()
+            expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong())
         }
         Log.d("TAG", "Expected period date Basic: $expectedPeriodDate")
         return expectedPeriodDate
@@ -59,14 +59,14 @@ class Calculations (context: Context){
      *
      * @return The next expected period date as a string.
      */
-    private fun advancedNextPeriod(): String {
+    private fun advancedNextPeriod(): LocalDate {
         // Get the list of the latest ovulation dates
         val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(ovulationHistory)
         //Log.d("TAG", "Ovulation dates: $ovulationDates")
         if (ovulationDates.isEmpty()) {
             // Return null or handle the case where no ovulations are available
             Log.d("TAG", "Ovulationdates are empty")
-            return "-"
+            return LocalDate.parse("1900-01-01")
         }
 
         var lutealLength = 0
@@ -88,7 +88,7 @@ class Calculations (context: Context){
         if (lastOvulation == null) {
             // Return null or handle the case where no last ovulation date is available
             Log.d("TAG", "Ovulation is null")
-            return "-"
+            return LocalDate.parse("1900-01-01")
         }
         val periodDates = dbHelper.getLatestXPeriodStart(ovulationHistory) //This always returns no+1 period dates
         if(periodDates.isNotEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
@@ -96,12 +96,12 @@ class Calculations (context: Context){
             //We need to recalculate according to next calculated ovulation
             val avgGrowthRate = averageFollicalGrowthInDays()
             val expectedOvulation = periodDates.last().plusDays(avgGrowthRate.toInt().toLong())
-            val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong()).toString()
+            val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong())
             Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
             return expectedPeriodDate
         }
         else{
-            val expectedPeriodDate = lastOvulation.plusDays(averageLutealLength.toLong()).toString()
+            val expectedPeriodDate = lastOvulation.plusDays(averageLutealLength.toLong())
             Log.d("TAG", "Next expected period: $expectedPeriodDate")
             // Calculate the expected period date
             return expectedPeriodDate
