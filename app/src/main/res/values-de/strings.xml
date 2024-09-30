@@ -1,0 +1,141 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+
+    <!-- Home -->
+    <string name="previous">Zurück</string>
+    <string name="next">Weiter</string>
+    <string name="period_button">Periode</string>
+    <string name="symptoms_button">Symptome</string>
+    <string name="ovulation_button">Ovulation</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Keine Daten ausgewählt zum Speichern oder Löschen</string>
+    <string name="successfully_saved_alert">Änderungen wurden gespeichert</string>
+    <string name="no_data_selected">Keine Daten ausgewählt</string>
+    <string name="only_day_alert">Die Ovulation kann nur ein Tag betreffen!</string>
+    <string name="success_saved_ovulation">Ovulation wurde gespeichert</string>
+    <string name="no_date_selected_ovulation">Kein Tag für Ovulation ausgewählt</string>
+
+    <!-- navigation -->
+    <string name="home_page">Start</string>
+    <string name="statisic_page">Statistiken</string>
+    <string name="symptoms_page">Symptome</string>
+    <string name="settings_page">Einstellungen</string>
+
+    <!-- symptoms page -->
+    <string name="delete_symptom">Symptom Entfernen</string>
+    <string name="delete_question">Bist du dir sicher, dass du dieses Symptom entfernen möchtest?</string>
+    <string name="delete_button">Entfernen</string>
+
+    <!-- Settings -->
+    <string name="app_settings">App-Einstellungen</string>
+    <string name="colors">Farben</string>
+    <string name="period_color">Periode</string>
+    <string name="selection_color">Ausgewählte Tage</string>
+    <string name="period_selection_color">Perioden-Auswahl</string>
+    <string name="expected_period_color">Voraussichtliche Periode</string>
+    <string name="ovulation_color">Ovulation</string>
+    <string name="expected_ovulation_color">Voraussichtliche Ovulation</string>
+    <string name="reminders">Erinnerungen</string>
+    <string name="days_before_reminder">Tage vor Erinnerung</string>
+    <string name="other_settings">Andere Einstellungen</string>
+    <string name="luteal_phase_calculation">Berechnung der Lutealphase</string>
+    <string name="period_history">Berücksichtigte Perioden für Vorhersage</string>
+    <string name="ovulation_history">Berücksichtigte Ovulationen für Vorhersage</string>
+    <string name="language">Sprache</string>
+    <string name="cycle_numbers_show">Zyklus-Nummern anzeigen</string>
+    <string name="screen_protection">Screenshots verhindern</string>
+    <string name="close">Schließen</string>
+    <string name="save">Speichern</string>
+    <!-- Color values -->
+    <string name="color_red">Rot</string>
+    <string name="color_green">Grün</string>
+    <string name="color_blue">Blau</string>
+    <string name="color_yellow">Gelb</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_black">Schwarz</string>
+    <string name="color_white">Weiß</string>
+    <string name="color_darkgray">Dunkelgrau</string>
+    <string name="color_gray">Hellgrau</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statistiken</string>
+    <string name="period_count">"Getrackte Perioden: "</string>
+    <string name="average_cycle_length">"Durchschnittlicher Zyklus:  "</string>
+    <string name="average_period_length">"Durchschnittliche Periode:  "</string>
+    <string name="next_period_start_past">Vorauss. nächste Periode: </string>
+    <string name="next_period_start_future">Vorauss. nächste Periode:  </string>
+    <string name="ovulation_count">"Getrackte Ovulationen:  "</string>
+    <string name="average_ovulation_day">Durchschnittlicher Ovulationstag:  </string>
+    <string name="next_predicted_ovulation">Vorauss. nächste Ovulation:  </string>
+    <string name="next_predicted_ovulation_default">-</string>
+    <string name="average_luteal_length">Durchschn. Länge Lutealphase:  </string>
+    <string name="days"> Tage</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Symptome am %1$s</string>
+    <string name="create_new_symptom_button">Symptom Erstellen</string>
+    <string name="save_symptoms_button">Symptome Speichern</string>
+    <string name="cancel_button">Abbrechen</string>
+    <string name="heavy">Starke Blutung</string>
+    <string name="medium">Mittelstarke Blutung</string>
+    <string name="light">Leichte Blutung</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Symptom Erstellen</string>
+    <string name="symptom_name_label">Symptom-Name</string>
+    <string name="save_button">Speichern</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Symptome Bearbeiten</string>
+
+
+    <!-- Calender -->
+    <string name="calendar_title">Kalendar</string>
+    <string name="mon">Mo.</string>
+    <string name="tue">Di.</string>
+    <string name="wed">Mi.</string>
+    <string name="thu">Do.</string>
+    <string name="fri">Fr.</string>
+    <string name="sat">Sa.</string>
+    <string name="sun">So.</string>
+
+    <string name="january">Januar</string>
+    <string name="february">Februar</string>
+    <string name="march">März</string>
+    <string name="april">April</string>
+    <string name="may">Mai</string>
+    <string name="june">Juni</string>
+    <string name="july">Juli</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">Oktober</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">Daten-Import/Export</string>
+    <string name="export_button">Exportieren</string>
+    <string name="import_button">Importieren</string>
+    <string name="export_success_toast">Nach %1$s exportiert</string>
+    <string name="import_success_toast">Datei wurde erfolgreich importiert</string>
+    <string name="import_failure_toast">Datei konnte nicht importiert werden</string>
+    <string name="export_path_label">Export-Pfad: %1$s</string>
+    <string name="import_path_label">Import-Pfad: %1$s</string>
+
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Frequently Asked Questions</string>
+
+    <!-- User Manual Section -->
+    <!-- not translated yet -->
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">Schließen</string>
+    <string name="data_settings">Daten-Einstellungen</string>
+    <string name="import_export_data">Import/Export</string>
+    <string name="export_data">Daten Exportieren</string>
+    <string name="about_app">Über die App</string>
+    <string name="rename_symptom">Symptom bearbeiten</string>
+</resources>

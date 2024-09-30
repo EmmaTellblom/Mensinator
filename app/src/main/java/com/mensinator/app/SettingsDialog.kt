@@ -107,7 +107,8 @@ fun SettingsDialog() {
         "Spanish" to "es",
         "French" to "fr",
         "Polish" to "pl",
-        "Slovenian" to "sl"
+        "Slovenian" to "sl",
+        "German" to "de",
         /*"Chinese" to "zh",
         "Portuguese" to "pt",
         "Russian" to "ru",
@@ -118,7 +119,6 @@ fun SettingsDialog() {
         "Wu Chinese" to "wuu",
         "Turkish" to "tr",
         "Korean" to "ko",
-        "German" to "de",
         "Vietnamese" to "vi",
         "Urdu" to "ur",
         "Cantonese" to "yue"*/
