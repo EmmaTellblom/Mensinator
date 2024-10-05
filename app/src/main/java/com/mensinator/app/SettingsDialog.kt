@@ -78,7 +78,7 @@ object ResourceMapper {
 
 
 @Composable
-fun SettingsDialog() {
+fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
 
     val context = LocalContext.current
@@ -331,6 +331,9 @@ fun SettingsDialog() {
                                     Switch(
                                         checked = isChecked,
                                         onCheckedChange = { newValue ->
+                                            if(setting.label == "Protect screen"){
+                                                onSwitchProtectionScreen(newValue)
+                                            }
                                             isChecked = newValue
                                             savedSettings = savedSettings.map {
                                                 if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
