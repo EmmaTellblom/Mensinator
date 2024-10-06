@@ -9,6 +9,9 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getAllOvulations:
+SELECT * FROM ovulation;
+
 getOvulationByDate:
 SELECT * FROM ovulation WHERE date = ?;
 

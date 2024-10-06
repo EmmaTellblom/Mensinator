@@ -10,6 +10,12 @@ class OvulationRepository(private val database: MensinatorDB, private val dispat
 
     //----- READ -----
 
+    suspend fun getAllOvulations(): List<Ovulation> {
+        return withContext(dispatcher){
+            database.ovulationQueries.getAllOvulations().executeAsList()
+        }
+    }
+
     suspend fun getOvulationByDate(date: String): Ovulation? {
        return withContext(dispatcher){
            database.ovulationQueries.getOvulationByDate(date).executeAsOneOrNull()

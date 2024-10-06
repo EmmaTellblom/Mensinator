@@ -10,6 +10,12 @@ class PeriodRepository(private val database: MensinatorDB, private val dispatche
 
     //----- READ -----
 
+    suspend fun getAllPeriods(): List<Period> {
+        return withContext(dispatcher){
+            database.periodQueries.getAllPeriods().executeAsList()
+        }
+    }
+
     suspend fun getPeriodByDate(date: String): Period? {
         return withContext(dispatcher){
             database.periodQueries.getPeriodByDate(date).executeAsOneOrNull()

@@ -10,6 +10,9 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getAllPredictions:
+SELECT * FROM prediction;
+
 getPredictionsByType:
 SELECT * FROM prediction WHERE type = ?;
 

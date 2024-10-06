@@ -9,6 +9,9 @@ FOREIGN KEY (cycle_id) REFERENCES cycle(id)
 -- SELECT QUERIES --
 --------------------
 
+getAllPeriods:
+SELECT * FROM period;
+
 getPeriodByDate:
 SELECT * FROM period WHERE date = ?;
 

@@ -7,6 +7,9 @@ date TEXT NOT NULL UNIQUE
 -- SELECT QUERIES --
 --------------------
 
+getAllNoteDates:
+SELECT * FROM note_date;
+
 getAllDatesByNote:
 SELECT note_date.*
 FROM note_date

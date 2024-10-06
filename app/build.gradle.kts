@@ -79,13 +79,14 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.window)
 
-    // AndroidX Work Libraries
-    implementation(libs.androidx.work.runtime.ktx)
-
     //SQLDelight
     implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
     implementation("app.cash.sqldelight:coroutines-extensions-jvm:$sqlDelightVersion")
     implementation("app.cash.sqldelight:primitive-adapters:$sqlDelightVersion")
+
+    // GSON
+    implementation("com.google.code.gson:gson:2.11.0")
+
 
     // Koin for Android
     implementation(platform("io.insert-koin:koin-bom:$koinVersion"))
@@ -102,6 +103,8 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:2.0.21-RC")
 }
 
 sqldelight {

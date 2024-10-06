@@ -1,6 +1,6 @@
 CREATE TABLE cycle(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-start_date TEXT NOT NULL,
+start_date TEXT NOT NULL UNIQUE,
 end_date TEXT,
 length INTEGER,
 luteal_phase_length INTEGER

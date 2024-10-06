@@ -10,6 +10,8 @@ FOREIGN KEY (note_date_id) REFERENCES note_date(id)
 -- SELECT QUERIES --
 --------------------
 
+getAllNoteDateCrossRefs:
+SELECT * FROM note_date_cross_ref;
 
 -- INSERT QUERIES --
 --------------------

@@ -10,6 +10,12 @@ class PredictionRepository(private val database: MensinatorDB, private val dispa
 
     //----- READ -----
 
+    suspend fun getAllPredictions(): List<Prediction> {
+        return withContext(dispatcher){
+            database.predictionQueries.getAllPredictions().executeAsList()
+        }
+    }
+
     suspend fun getPredictionsByType(type: String): List<Prediction> {
         return withContext(dispatcher){
             database.predictionQueries.getPredictionsByType(type).executeAsList()
