@@ -48,7 +48,6 @@ class DataSource(isDarkTheme: Boolean) {
         "Green" to Color(0xFF668E53),
         "Blue" to Color(0xFF5E71A1),
         "Yellow" to Color(0xFFB3974D),
-        "Cyan" to Color(0xFF5E8CA1),
         "Magenta" to Color(0xFF75568A),
         "Orange" to Color(0xFFB37E4D),
 

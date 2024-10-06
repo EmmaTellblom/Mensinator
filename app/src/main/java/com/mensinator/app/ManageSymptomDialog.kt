@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,7 +61,13 @@ fun ManageSymptom(
     val dbHelper = remember { PeriodDatabaseHelper(context) }
     var initialSymptoms = remember { dbHelper.getAllSymptoms() }
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
-
+    val colorMap = DataSource(isDarkMode()).colorMap
+    val colorsPerColumn = colorMap.size / 3
+    val colorColumns = listOf(
+        colorMap.entries.take(colorsPerColumn),
+        colorMap.entries.drop(colorsPerColumn).take(colorsPerColumn),
+        colorMap.entries.drop(colorsPerColumn * 2)
+    )
     // State to manage the rename dialog visibility
     var showRenameDialog by remember { mutableStateOf(false) }
     var symptomToRename by remember { mutableStateOf<Symptom?>(null) }
@@ -73,8 +76,6 @@ fun ManageSymptom(
     var showDeleteDialog by remember { mutableStateOf(false) }
     var symptomToDelete by remember { mutableStateOf<Symptom?>(null) }
 
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val menuHeight = screenHeight * 0.8f // 80% of the screen height
 
     Column(
         modifier = Modifier
@@ -193,39 +194,54 @@ fun ManageSymptom(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                             modifier = Modifier
-                                .width(50.dp)
-                                .height(menuHeight)
-                                .clip(RoundedCornerShape(100.dp))
+                                .wrapContentSize()
                         ) {
-                            DataSource(isDarkMode()).colorMap.forEach { (colorName, colorValue) ->
-                                //val keyColor = ResourceMapper.getStringResourceId(colorName)
-                                DropdownMenuItem(
-                                    onClick = {
-                                        selectedColorName = colorName
-                                        expanded = false
-                                        val updatedSymptom = symptom.copy(color = colorName)
-                                        savedSymptoms = savedSymptoms.map {
-                                            if (it.id == symptom.id) updatedSymptom else it
-                                        }
-                                        // Save settings to the database
-                                        savedSymptoms.forEach { symptom ->
-                                            dbHelper.updateSymptom(
-                                                symptom.id,
-                                                symptom.active,
-                                                symptom.color
+                            Row(
+                                modifier = Modifier.wrapContentSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                colorColumns.forEach { columnColors ->
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .wrapContentSize()
+                                    ) {
+                                        columnColors.forEach { (colorName, colorValue) ->
+                                            DropdownMenuItem(
+                                                modifier = Modifier
+                                                    .size(50.dp)
+                                                    .clip(RoundedCornerShape(100.dp)),
+                                                onClick = {
+                                                    selectedColorName = colorName
+                                                    expanded = false
+                                                    val updatedSymptom =
+                                                        symptom.copy(color = colorName)
+                                                    savedSymptoms = savedSymptoms.map {
+                                                        if (it.id == symptom.id) updatedSymptom else it
+                                                    }
+                                                    // Save settings to the database
+                                                    savedSymptoms.forEach { symptom ->
+                                                        dbHelper.updateSymptom(
+                                                            symptom.id,
+                                                            symptom.active,
+                                                            symptom.color
+                                                        )
+                                                    }
+                                                    onSave()
+                                                },
+                                                text = {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(25.dp)
+                                                            .clip(RoundedCornerShape(26.dp))
+                                                            .background(colorValue)  // Use the color from the map
+                                                    )
+                                                }
                                             )
                                         }
-                                        onSave()
-                                    },
-                                    text = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(25.dp)
-                                                .clip(RoundedCornerShape(26.dp))
-                                                .background(colorValue),  // Use the color from the map
-                                        )
                                     }
-                                )
+                                }
                             }
                         }
                     }
@@ -235,13 +251,18 @@ fun ManageSymptom(
                     Switch(
                         checked = symptom.active == 1,
                         onCheckedChange = { checked ->
-                            val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
+                            val updatedSymptom =
+                                symptom.copy(active = if (checked) 1 else 0)
                             savedSymptoms = savedSymptoms.map {
                                 if (it.id == symptom.id) updatedSymptom else it
                             }
                             // Save settings to the database
                             savedSymptoms.forEach { symptom ->
-                                dbHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
+                                dbHelper.updateSymptom(
+                                    symptom.id,
+                                    symptom.active,
+                                    symptom.color
+                                )
                             }
                             onSave()
                         },
@@ -288,7 +309,7 @@ fun ManageSymptom(
         )
     }
 
-// Show the delete confirmation dialog
+    // Show the delete confirmation dialog
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = {
