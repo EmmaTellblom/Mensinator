@@ -17,6 +17,10 @@
     <string name="success_saved_ovulation">Ovulația a fost salvată cu succes</string>
     <string name="no_date_selected_ovulation">Nicio zi selectată pentru ovulație</string>
 
+    <!-- navigation -->
+    <string name="home_page">Pagina principală</string>
+    <string name="statisic_page">Statistici</string>
+
     <!-- Settings -->
     <string name="app_settings">Setările Aplicației</string>
     <string name="colors">Culori</string>
@@ -50,16 +54,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistici</string>
-    <string name="period_count">Numărul ciclurilor menstruale introduse: %1$d</string>
-    <string name="average_cycle_length">Durata medie a ciclului: %1$.1f zile</string>
-    <string name="average_period_length">Durata medie a menstruației: %1$.1f zile</string>
-    <string name="next_period_start_past">Ziua estimată a următoarei menstruații: %1$s \n\nData estimată a trecut!</string>
-    <string name="next_period_start_future">Ziua estimată a următoarei menstruații: %1$s</string>
-    <string name="ovulation_count">Numărul de ovulații introduse: %1$d</string>
-    <string name="average_ovulation_day">Ziua medie de ovulație: %1$s</string>
-    <string name="next_predicted_ovulation">Ziua estimată a următoarei ovulații: %1$s</string>
+    <string name="period_count">Numărul ciclurilor menstruale introduse: </string>
+    <string name="average_cycle_length">Durata medie a ciclului: </string>
+    <string name="average_period_length">Durata medie a menstruației: </string>
+    <string name="next_period_start_past">Ziua estimată a următoarei menstruații: </string>
+    <string name="next_period_start_future">Ziua estimată a următoarei menstruații: </string>
+    <string name="ovulation_count">Numărul de ovulații introduse: </string>
+    <string name="average_ovulation_day">Ziua medie de ovulație: </string>
+    <string name="next_predicted_ovulation">Ziua estimată a următoarei ovulații: </string>
     <string name="next_predicted_ovulation_default">Date insuficiente pentru a prezice</string>
-    <string name="average_luteal_length">Durata medie a fazei luteale: %1$.1f zile</string>
+    <string name="average_luteal_length">Durata medie a fazei luteale: </string>
+    <string name="days"> zile</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Simptome la data %1$s</string>
@@ -88,6 +93,17 @@
     <string name="sun">Dum</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">Ianuarie</string>
+    <string name="february">Februarie</string>
+    <string name="march">Martie</string>
+    <string name="april">Aprilie</string>
+    <string name="may">Mai</string>
+    <string name="june">Iunie</string>
+    <string name="july">Iulie</string>
+    <string name="august">August</string>
+    <string name="september">Septembrie</string>
+    <string name="october">Octombrie</string>
+    <string name="november">Noiembrie</string>
     <string name="export_import_title">Exportă/Importă datele</string>
     <string name="export_button">Exportă</string>
     <string name="import_button">Importă</string>
@@ -122,4 +138,17 @@
 
     <!-- Universal/Repeated Strings -->
     <string name="close_button">Închide</string>
+    <string name="symptoms_page">Simptome</string>
+    <string name="settings_page">Setări</string>
+    <string name="delete_symptom">Șterge simptomul</string>
+    <string name="delete_question">Ești sigură că vrei să ștergi acest simptom?</string>
+    <string name="delete_button">Șterge</string>
+    <string name="data_settings">Setări de date</string>
+    <string name="import_export_data">Importă și exportă date</string>
+    <string name="export_data">Exportă date</string>
+    <string name="about_app">Despre aplicație</string>
+    <string name="screen_protection">preveni capturile de ecran</string>
+    <string name="rename_symptom" >Redenumește simptomul</string>
+    <string name="december">Decembrie</string>
+    <string name="calendar_title">Calendariu</string>
 </resources>

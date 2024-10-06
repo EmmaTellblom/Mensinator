@@ -7,7 +7,7 @@
     <string name="next">Next</string>
     <string name="period_button">Period</string>
     <string name="symptoms_button">Symptoms</string>
-    <string name="ovulation_button">ovulation</string>
+    <string name="ovulation_button">Ovulation</string>
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>
     <string name="successfully_saved_alert">Changes saved successfully</string>
@@ -16,24 +16,35 @@
     <string name="success_saved_ovulation">Ovulation saved successfully</string>
     <string name="no_date_selected_ovulation">No date selected for ovulation</string>
 
+    <!-- navigation -->
+    <string name="home_page">Home</string>
+    <string name="statisic_page">Statistics</string>
+    <string name="symptoms_page">Symptoms</string>
+    <string name="settings_page">Settings</string>
+
+    <!-- symptoms page -->
+    <string name="delete_symptom">Delete Symptom</string>
+    <string name="delete_question">Are you sure you want to delete this symptom?</string>
+    <string name="delete_button">Delete</string>
 
     <!-- Settings -->
     <string name="app_settings">App Settings</string>
     <string name="colors">Colors</string>
-    <string name="period_color">Period Color</string>
-    <string name="selection_color">Selection Color</string>
-    <string name="period_selection_color">Period Selection Color</string>
-    <string name="expected_period_color">Expected Period Color</string>
-    <string name="ovulation_color">Ovulation Color</string>
-    <string name="expected_ovulation_color">Expected Ovulation Color</string>
+    <string name="period_color">Period</string>
+    <string name="selection_color">Selection</string>
+    <string name="period_selection_color">Period Selection</string>
+    <string name="expected_period_color">Expected Period</string>
+    <string name="ovulation_color">Ovulation</string>
+    <string name="expected_ovulation_color">Expected Ovulation</string>
     <string name="reminders">Reminders</string>
     <string name="days_before_reminder">Days Before Reminder</string>
-    <string name="other_settings">Other settings</string>
+    <string name="other_settings">Other Settings</string>
     <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
-    <string name="period_history">Period history</string>
-    <string name="ovulation_history">Ovulation history</string>
+    <string name="period_history">Period History</string>
+    <string name="ovulation_history">Ovulation History</string>
     <string name="language">Language</string>
-    <string name="cycle_numbers_show">Show cycle numbers</string>
+    <string name="cycle_numbers_show">Show Cycle Numbers</string>
+    <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
     <!-- Color values -->
@@ -50,21 +61,22 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>
-    <string name="period_count">Number of periods tracked: %1$d</string>
-    <string name="average_cycle_length">Average cycle length: %1$.1f days</string>
-    <string name="average_period_length">Average period length: %1$.1f days</string>
-    <string name="next_period_start_past">Next assumed period: %1$s \n\nAssumed period date has passed!</string>
-    <string name="next_period_start_future">Next assumed period: %1$s</string>
-    <string name="ovulation_count">Number of ovulation tracked: %1$d</string>
-    <string name="average_ovulation_day">Average ovulation day: %1$s</string>
-    <string name="next_predicted_ovulation">Next predicted ovulation date: %1$s</string>
-    <string name="next_predicted_ovulation_default">Not enough data to predict next ovulation</string>
-    <string name="average_luteal_length">Average luteal phase length: %1$.1f days</string>
+    <string name="period_count">"Periods tracked: "</string>
+    <string name="average_cycle_length">"Average cycle:  "</string>
+    <string name="average_period_length">"Average period:  "</string>
+    <string name="next_period_start_past">Next predicted period: </string>
+    <string name="next_period_start_future">Next predicted period:  </string>
+    <string name="ovulation_count">"Ovulations tracked:  "</string>
+    <string name="average_ovulation_day">Average ovulation day:  </string>
+    <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
+    <string name="next_predicted_ovulation_default">-</string>
+    <string name="average_luteal_length">Average luteal phase length:  </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>
     <string name="create_new_symptom_button">Create New Symptom</string>
-    <string name="save_symptoms_button">Save symptoms</string>
+    <string name="save_symptoms_button">Save Symptoms</string>
     <string name="cancel_button">Cancel</string>
     <string name="heavy">Heavy Flow</string>
     <string name="medium">Medium Flow</string>
@@ -79,6 +91,7 @@
 
 
     <!-- Calender -->
+    <string name="calendar_title">Calendar</string>
     <string name="mon">Mon</string>
     <string name="tue">Tue</string>
     <string name="wed">Wed</string>
@@ -86,6 +99,21 @@
     <string name="fri">Fri</string>
     <string name="sat">Sat</string>
     <string name="sun">Sun</string>
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+
 
     <!-- Import Export Dialog -->
     <string name="export_import_title">Export/Import Data</string>
@@ -109,11 +137,11 @@
     <string name="add_or_remove_dates">• Add or Remove Dates for Period: Click the \'Add or Remove Dates\' button after selecting dates.</string>
     <string name="symptoms">• Symptoms: Click the \'Symptoms\' button to view or add symptoms for the selected date.</string>
     <string name="ovulation">• Ovulation: Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
-    <string name="statistics">• Statistics: Click the \'Burger menu\' and select statistics.</string>
-    <string name="import_export">• Import/Export: Click the \'Import/Export\' button to import or export your data. This is a MUST when moving the data to a new device!</string>
+    <string name="statistics">• Statistics: Click statistics in the bottom menu and select statistics.</string>
+    <string name="import_export">• Import/Export: Click the settings button in the bottom menu and then scroll down among the settings. Click import/export to import or export your data. This is a MUST when moving the data to a new device!</string>
     <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
     <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• New user interface (when I\'m in the mood). • Other small UI improvements</string>
+    <string name="upcoming_features">• Check our Github for the latest regarding the apps development!</string>
     <string name="our_story_header">Our Story</string>
     <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>
@@ -121,4 +149,9 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
+    <string name="data_settings">Data settings</string>
+    <string name="import_export_data">Import Export Data</string>
+    <string name="export_data">Export data</string>
+    <string name="about_app">About App</string>
+    <string name="rename_symptom" >Rename symptom</string>
 </resources>

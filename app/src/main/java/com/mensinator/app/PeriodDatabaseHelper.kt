@@ -16,7 +16,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 8
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -69,6 +69,10 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
         if(oldVersion < 7){
             DatabaseUtils.databaseVersion7(db)
+        }
+        if(oldVersion < 8){
+            DatabaseUtils.databaseVersion8(db)
+
         }
     }
 
@@ -165,20 +169,22 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
+            "SELECT $COLUMN_ID, SUBSTR($COLUMN_SYMPTOM_NAME, 1, 20) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
-                    val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
+                    val symptomName = it.getString(it.getColumnIndexOrThrow("truncated_name"))
                     val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
                     val color = it.getString(it.getColumnIndexOrThrow("color"))
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
                 } while (it.moveToNext())
             }
         }
+        cursor.close()
+        db.close()
         return symptoms
     }
 
@@ -187,20 +193,25 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
-            "SELECT $COLUMN_ID, $COLUMN_SYMPTOM_NAME, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS ORDER BY $COLUMN_SYMPTOM_NAME"
+            "SELECT $COLUMN_ID, SUBSTR($COLUMN_SYMPTOM_NAME, 1, 15) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS ORDER BY $COLUMN_SYMPTOM_NAME"
 
         val cursor = db.rawQuery(query, null)
         cursor.use {
             if (it.moveToFirst()) {
                 do {
                     val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
-                    val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
+                    val symptomName = it.getString(it.getColumnIndexOrThrow("truncated_name"))
                     val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
                     val color = it.getString(it.getColumnIndexOrThrow("color"))
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
                 } while (it.moveToNext())
             }
+
+
         }
+        cursor.close()
+        db.close()
+
         return symptoms
     }
 
@@ -380,6 +391,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             put(COLUMN_SETTING_VALUE, value)
         }
         val rowsUpdated = db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
+        db.close()
         return rowsUpdated > 0
     }
 
@@ -407,6 +419,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         }
 
         cursor.close()
+        db.close()
         return setting
     }
 
@@ -783,5 +796,46 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         cursor.close()
         db.close()
         return ovulationDates
+    }
+
+    //This function is used to remove a date from the periods table
+    fun deleteSymptom(symptomId: Int) {
+        val db = writableDatabase
+        val whereClause = "id = ?"
+        val whereArgs = arrayOf(symptomId.toString())
+        val rowsDeleted = db.delete("symptoms", whereClause, whereArgs)
+        if (rowsDeleted > 0) {
+            Log.d(TAG, "Deleted symptom from symptoms")
+        } else {
+            Log.d(TAG, "No symptoms to delete")
+        }
+        db.close()
+    }
+
+    fun getDBVersion(): String {
+        return DATABASE_VERSION.toString()
+    }
+
+    fun renameSymptom(symptomId: Int, newName: String) {
+        val db = writableDatabase
+        val contentValues = ContentValues().apply {
+            put("symptom_name", newName)
+        }
+        db.update("symptoms", contentValues, "id = ?", arrayOf(symptomId.toString()))
+
+    }
+
+    fun getLatestPeriodStart(): LocalDate {
+        val latestPeriodStart = LocalDate.parse("1900-01-01")
+        val db = readableDatabase
+        val query = "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
+        val cursor = db.rawQuery(query, null)
+        if (cursor.moveToFirst()) {
+            val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
+            return LocalDate.parse(dateString)
+        }
+        cursor.close()
+        db.close()
+        return latestPeriodStart
     }
 }

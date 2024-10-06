@@ -3,10 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS"/>
+
 
     <application
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -17,7 +20,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.Mensinator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +27,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name=".NotificationReceiver"
+            android:exported="true"
+            android:permission="com.mensinator.app.PERMISSION_SEND_NOTIFICATION">
+            <intent-filter>
+                <action android:name="com.mensinator.app.SEND_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

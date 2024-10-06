@@ -16,16 +16,19 @@
     <string name="success_saved_ovulation">அண்டவிடுப்பின் வெற்றிகரமாக சேமிக்கப்பட்டது</string>
     <string name="no_date_selected_ovulation">அண்டவிடுப்பின் தேதி எதுவும் தேர்ந்தெடுக்கப்படவில்லை</string>
 
+    <!-- navigation -->
+    <string name="home_page">முகப்பு பக்கம்</string>
+    <string name="statisic_page">புள்ளிவிவரங்கள்</string>
 
     <!-- Settings -->
     <string name="app_settings">பயன்பாட்டு அமைப்புகள்</string>
     <string name="colors">வண்ணங்கள்</string>
-    <string name="period_color">மாதவிடாய் நிறம்</string>
-    <string name="selection_color">தேர்வு நிறம்</string>
-    <string name="period_selection_color">மாதவிடாய் தேர்வு நிறம்</string>
-    <string name="expected_period_color">எதிர்பார்க்கப்படும் மாதவிடாய் நிறம்</string>
-    <string name="ovulation_color">அண்டவிடுப்பின் நிறம்</string>
-    <string name="expected_ovulation_color">எதிர்பார்க்கப்படும் அண்டவிடுப்பின் நிறம்</string>
+    <string name="period_color">மாதவிடாய்</string>
+    <string name="selection_color">தேர்வு</string>
+    <string name="period_selection_color">மாதவிடாய் தேர்வு</string>
+    <string name="expected_period_color">எதிர்பார்க்கப்படும் மாதவிடாய்</string>
+    <string name="ovulation_color">அண்டவிடுப்பின்</string>
+    <string name="expected_ovulation_color">எதிர்பார்க்கப்படும் அண்டவிடுப்பின்</string>
     <string name="reminders">நினைவூட்டல்கள்</string>
     <string name="days_before_reminder">நினைவூட்டலுக்கு நாட்களுக்கு முன்</string>
     <string name="other_settings">பிற அமைப்புகள்</string>
@@ -50,16 +53,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">புள்ளிவிவரங்கள்</string>
-    <string name="period_count">கண்காணிக்கப்பட்ட மாதவிடாய் எண்ணிக்கை: %1$d</string>
-    <string name="average_cycle_length">சராசரி சுழற்சி நீளம்: %1$.1f days</string>
-    <string name="average_period_length">சராசரி மாதவிடாய் நீளம்: %1$.1f days</string>
+    <string name="period_count">கண்காணிக்கப்பட்ட மாதவிடாய் எண்ணிக்கை: </string>
+    <string name="average_cycle_length">சராசரி சுழற்சி நீளம்: </string>
+    <string name="average_period_length">சராசரி மாதவிடாய் நீளம்: </string>
     <string name="next_period_start_past">\n\nஊகிக்கப்பட்ட காலக்கெடு கடந்துவிட்டது!</string>
-    <string name="next_period_start_future">அடுத்ததாகக் கருதப்படும் மாதவிடாய்: %1$s</string>
-    <string name="ovulation_count">கண்காணிக்கப்பட்ட அண்டவிடுப்பின் எண்ணிக்கை: %1$d</string>
-    <string name="average_ovulation_day">சராசரி அண்டவிடுப்பின் நாள்: %1$s</string>
-    <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: %1$s</string>
+    <string name="next_period_start_future">அடுத்ததாகக் கருதப்படும் மாதவிடாய்: </string>
+    <string name="ovulation_count">கண்காணிக்கப்பட்ட அண்டவிடுப்பின் எண்ணிக்கை: </string>
+    <string name="average_ovulation_day">சராசரி அண்டவிடுப்பின் நாள்: </string>
+    <string name="next_predicted_ovulation">அடுத்த கணிக்கப்பட்ட அண்டவிடுப்பின் தேதி: </string>
     <string name="next_predicted_ovulation_default">அடுத்த அண்டவிடுப்பின் கணிக்க போதுமான தரவு இல்லை</string>
-    <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: %1$.1f days</string>
+    <string name="average_luteal_length">சராசரி லூட்டல் கட்ட நீளம்: </string>
+    <string name="days">" நாட்கள்"</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">அறிகுறி %1$s</string>
@@ -87,6 +91,17 @@
     <string name="sun">சூ</string>
 
     <!-- Import Export Dialog -->
+    <string name="january">ஜனவரி</string>
+    <string name="february">பிப்ரவரி</string>
+    <string name="march">மார்ச்</string>
+    <string name="april">ஏப்ரல்</string>
+    <string name="may">மே</string>
+    <string name="june">ஜூன்</string>
+    <string name="july">ஜூலை</string>
+    <string name="august">ஆகஸ்ட்</string>
+    <string name="september">செப்டம்பர்</string>
+    <string name="october">அக்டோபர்</string>
+    <string name="november">நவம்பர்</string>
     <string name="export_import_title">ஏற்றுமதி/இறக்குமதி தரவு</string>
     <string name="export_button">ஏற்றுமதி</string>
     <string name="import_button">இறக்குமதி</string>
@@ -120,4 +135,17 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">மூடு</string>
+    <string name="symptoms_page">அறிகுறிகள்</string>
+    <string name="settings_page">அமைப்புகள்</string>
+    <string name="delete_symptom">அறிகுறியை நீக்கு</string>
+    <string name="delete_question">இந்த அறிகுறியை நிச்சயமாக நீக்க விரும்புகிறீர்களா?</string>
+    <string name="delete_button">நீக்கு</string>
+    <string name="data_settings">தரவுக் அமைப்புகள்</string>
+    <string name="import_export_data">தரவை இறக்குமதி மற்றும் ஏற்றுமதி செய்</string>
+    <string name="export_data">தரவை ஏற்றுமதி செய்</string>
+    <string name="about_app">செயலியின் பற்றிய</string>
+    <string name="screen_protection">ஸ்கிரீன் ஷாட்களைத் தடுக்கவும்</string>
+    <string name="rename_symptom" >அறிகுறியின் பெயரை மாற்றவும்</string>
+    <string name="december">டிசம்பர்</string>
+    <string name="calendar_title">கோஷ்டி</string>
 </resources>

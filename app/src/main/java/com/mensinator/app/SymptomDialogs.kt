@@ -21,8 +21,7 @@ fun SymptomsDialog(
     symptoms: List<Symptom>,
     dbHelper: PeriodDatabaseHelper,
     onSave: (List<Symptom>) -> Unit,
-    onCancel: () -> Unit,
-    onCreateNewSymptom: () -> Unit
+    onCancel: () -> Unit
 ) {
     var selectedSymptoms by remember { mutableStateOf(emptySet<Symptom>()) }
 
@@ -62,15 +61,15 @@ fun SymptomsDialog(
                         Text(text = symptomDisplayName, fontSize = 16.sp)
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        onCreateNewSymptom()
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = stringResource(id = R.string.create_new_symptom_button))
-                }
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Button(
+//                    onClick = {
+//                        onCreateNewSymptom()
+//                    },
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    Text(text = stringResource(id = R.string.create_new_symptom_button))
+//                }
             }
         },
         confirmButton = {
@@ -123,7 +122,8 @@ fun CreateNewSymptomDialog(
             Button(
                 onClick = {
                     onSave(symptomName)
-                }
+                },
+                modifier = Modifier.padding(end = 27.dp)
             ) {
                 Text(stringResource(id = R.string.save_button))
             }
@@ -132,7 +132,8 @@ fun CreateNewSymptomDialog(
             Button(
                 onClick = {
                     onCancel()
-                }
+                },
+                modifier = Modifier.padding(end = 30.dp)
             ) {
                 Text(stringResource(id = R.string.cancel_button))
             }

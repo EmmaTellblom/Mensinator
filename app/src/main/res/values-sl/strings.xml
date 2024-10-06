@@ -1,0 +1,154 @@
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+
+    <!-- Home -->
+    <string name="previous">Nazaj</string>
+    <string name="next">Naprej</string>
+    <string name="period_button">Menstruacija</string>
+    <string name="symptoms_button">Simptomi</string>
+    <string name="ovulation_button">Ovulacija</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Ni izbranih datumov za urejanje</string>
+    <string name="successfully_saved_alert">Spremembe shranjene</string>
+    <string name="no_data_selected">Ni izbranih datumov</string>
+    <string name="only_day_alert">Ovulacija je lahko le en dan</string>
+    <string name="success_saved_ovulation">Ovulacija shranjena</string>
+    <string name="no_date_selected_ovulation">Datum ovulacije ni izbran</string>
+
+    <!-- navigation -->
+    <string name="home_page">Doma</string>
+    <string name="statisic_page">Statistika</string>
+    <string name="symptoms_page">Simptomi</string>
+    <string name="settings_page">Nastavitve</string>
+
+    <!-- symptoms page -->
+    <string name="delete_symptom">Izbriši simptom</string>
+    <string name="delete_question">Ali si ziher?</string>
+    <string name="delete_button">Izbriši</string>
+
+    <!-- Settings -->
+    <string name="app_settings">Nastavitve programa</string>
+    <string name="colors">Barve</string>
+    <string name="period_color">Menstruacija</string>
+    <string name="selection_color">Izbor</string>
+    <string name="period_selection_color">Izbor menstruacije</string>
+    <string name="expected_period_color">Pričakovana menstruacija</string>
+    <string name="ovulation_color">Ovulacija</string>
+    <string name="expected_ovulation_color">Pričakovana ovulacija</string>
+    <string name="reminders">Opomniki</string>
+    <string name="days_before_reminder">Opomnik nekaj dni prej</string>
+    <string name="other_settings">Druge nastavitve</string>
+    <string name="luteal_phase_calculation">Izračun z lutealno fazo</string>
+    <string name="period_history">Zgodovina menstruacij</string>
+    <string name="ovulation_history">Zgodovina ovulacij</string>
+    <string name="language">Jezik</string>
+    <string name="cycle_numbers_show">Pokaži število dneva cikla</string>
+    <string name="screen_protection">Prepreči posnetke zaslona</string>
+    <string name="close">Zapri</string>
+    <string name="save">Shrani</string>
+    <!-- Color values -->
+    <string name="color_red">Rdeča</string>
+    <string name="color_green">Zelena</string>
+    <string name="color_blue">Modra</string>
+    <string name="color_yellow">Rumena</string>
+    <string name="color_cyan">Cijan</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_black">Črna</string>
+    <string name="color_white">Bela</string>
+    <string name="color_darkgray">Temna siva</string>
+    <string name="color_gray">Svetla siva</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statistika</string>
+    <string name="period_count">"Zabeleženih menstruacij: "</string>
+    <string name="average_cycle_length">"Povprečen cikel:  "</string>
+    <string name="average_period_length">"Povprečna menstruacija:  "</string>
+    <string name="next_period_start_past">Napovedana menstruacija: </string>
+    <string name="next_period_start_future">Napovedana menstruacija:  </string>
+    <string name="ovulation_count">"Zabeleženih ovulacij:  "</string>
+    <string name="average_ovulation_day">Povprečen dan ovulacije:  </string>
+    <string name="next_predicted_ovulation">Napovedana ovulacija:  </string>
+    <string name="next_predicted_ovulation_default">Ni dovolj podatkov za napoved ovulacije.</string>
+    <string name="average_luteal_length">Povprečna dolžina luteane faze:  </string>
+    <string name="days"> dni</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Simptomi za %1$s</string>
+    <string name="create_new_symptom_button">Ustvari nov simptom</string>
+    <string name="save_symptoms_button">Shrani simptome</string>
+    <string name="cancel_button">Prekliči</string>
+    <string name="heavy">Močan tok</string>
+    <string name="medium">Srednji tok</string>
+    <string name="light">Lahek tok</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Ustvari nov simptom</string>
+    <string name="symptom_name_label">Ime simptoma</string>
+    <string name="save_button">Shrani</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Urejanje simptomov</string>
+
+
+    <!-- Calender -->
+    <string name="mon">Pon</string>
+    <string name="tue">Tor</string>
+    <string name="wed">Sre</string>
+    <string name="thu">Čet</string>
+    <string name="fri">Pet</string>
+    <string name="sat">Sob</string>
+    <string name="sun">Ned</string>
+
+    <!-- Import Export Dialog -->
+    <string name="january">Januar</string>
+    <string name="february">Februar</string>
+    <string name="march">Marec</string>
+    <string name="april">April</string>
+    <string name="may">Maj</string>
+    <string name="june">Junij</string>
+    <string name="july">Julij</string>
+    <string name="august">Avgust</string>
+    <string name="september">September</string>
+    <string name="october">Oktober</string>
+    <string name="november">November</string>
+    <string name="export_import_title">Izvoz/Uvoz podatkov</string>
+    <string name="export_button">Izvozi</string>
+    <string name="import_button">Uvozi</string>
+    <string name="export_success_toast">Izvoženo v %1$s</string>
+    <string name="import_success_toast">Uvoz uspešen!</string>
+    <string name="import_failure_toast">Uvoz je spodletel!</string>
+    <string name="export_path_label">Lokacija izvoza: %1$s</string>
+    <string name="import_path_label">Lokacija uvoza: %1$s</string>
+
+
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Pogosta vprašanja</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">Navodila za uporabo</string>
+    <string name="how_to_use">Kako uporabljati:</string>
+    <string name="select_dates">• Izbira datumov: Dotakni se datuma da ga izbereš ali odizbereš.</string>
+    <string name="add_or_remove_dates">• Dodajanje in odstranjevanje datumov menstruacije: Po izbiri datumov tapni gumb \'Dodaj ali odstrani datume\'</string>
+    <string name="symptoms">• Simptomi: Pritisni gumb \'Simptomi\' da vidiš in urejaš simptome za izbrane datume.</string>
+    <string name="ovulation">• Ovulacija: Izberi dan in klikni gumb Ovulacija. Za odstranitev izberi datum in ponovno pritisni gumb Ovulacija.</string>
+    <string name="statistics">• Statistika: Za prikaz tapni zavihek Statistika.</string>
+    <string name="import_export">• Uvoz in izvoz: Na zavihku Nastavitve pojdi čisto na dno. Kikni Uvoz/izvoz. To je nujno kadar želiš premakniti podatke na novo napravo!</string>
+    <string name="calculations">• Izračuni: \nMenstruacijo napovemo glede na povprečno dolžino cikla in dolžino menstruacij.\nLahko se izbere tudi računanje s povprečjem lutealnih faz. V tem primeru račun upošteva zadnjih 5 ciklov. To lahko vklopiš v nastavivah.\nOvulacija se izračuna glede na povprečno dolžino cikla ovulacije.</string>
+    <string name="features_coming_soon">Prihajajoče funkcije:</string>
+    <string name="upcoming_features">• Preveri naš Github za zadnje novice glede razvoja Mensinatorja!</string>
+    <string name="our_story_header">Naša zgodba</string>
+    <string name="our_story">Aplikacijo sva začeli dve ženski naveličani prodaje svojih podatkov velikim korporacijam. Kmalu je v ekipo prišlo še kup prostovoljcev. Naša aplikacija hrani vse tvoje podatke lokalno, na tvoji napravi. Do njih nimamo &lt;b&gt;nobenega dostopa&lt;/b&gt;.\nCenimo tvojo zasebnost in ne shranjujemo ali posredujemo tvojih osebnih podatkov. Od splavitve aplikacije hitro rastemo. Sedaj imamo svoj Discord z ljudmi ki imajo zelo radi to aplikacijo in nam pomagajo!\n\nPridruži se nam tu: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Opozorilo:</string>
+    <string name="disclaimer">• To je amaterski projet. Ni namenjen za medicinsko rabo. Preprosto delamo to za lastne potrebe. Odprto sprejemamo ideje in žeje. Pridruži se nam na Discordu ali nam pošlji email na:\nmensinator.app@gmail.com</string>
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">Zapri</string>
+    <string name="data_settings">Nastavitve podatkov</string>
+    <string name="import_export_data">Izvoz in uvoz podatkov</string>
+    <string name="export_data">Izvozi podake</string>
+    <string name="about_app">O aplikaciji</string>
+    <string name="rename_symptom">Preimenuj simptom</string>
+    <string name="december">December</string>
+    <string name="calendar_title">Koledar</string>
+</resources>

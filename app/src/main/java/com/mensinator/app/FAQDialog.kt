@@ -30,7 +30,7 @@ fun FAQDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,  // Call the dismiss callback when dialog is dismissed
         title = {
-            Text(text = stringResource(id = R.string.faq_title))
+            Text(text = stringResource(id = R.string.about_app))
         },
         text = {
             Column(

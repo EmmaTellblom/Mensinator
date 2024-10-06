@@ -1,6 +1,5 @@
 package com.mensinator.app.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -58,4 +57,9 @@ fun MensinatorTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Composable
+fun isDarkMode(): Boolean {
+    return isSystemInDarkTheme()
 }

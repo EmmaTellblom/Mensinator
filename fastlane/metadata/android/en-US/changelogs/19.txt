@@ -1,0 +1,21 @@
+UI Changes:
+* New bottom menu!
+* Dark mode adaption!
+* Support for multiple symptoms on day
+* Other UI improvements
+
+New functionality:
+* Symptoms have their own colors
+* Symptoms can be renamed
+* Symptoms can be deleted
+* Setting to prevent screenshots in app
+
+Translations:
+* Hindi completed
+* French added
+* Spanish added
+* Polish added
+* Slovenian added
+
+Other improvements:
+* Notifications no longer requires network discovery

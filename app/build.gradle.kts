@@ -10,10 +10,10 @@ android {
 
     defaultConfig {
         applicationId = "com.mensinator.app"
-        minSdk = 30
+        minSdk = 26
         targetSdk = 34
-        versionCode = 12
-        versionName = "1.8.3"
+        versionCode = 20
+        versionName = "1.9.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.common.ktx)
+    implementation(libs.androidx.navigation.runtime.ktx)
 
     // AndroidX Compose Libraries
     implementation(libs.androidx.activity.compose)
@@ -89,10 +92,9 @@ dependencies {
     implementation("io.insert-koin:koin-core")
     implementation (libs.koin.android)
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
-
+    
     // Testing
     testImplementation(libs.junit)
-
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
