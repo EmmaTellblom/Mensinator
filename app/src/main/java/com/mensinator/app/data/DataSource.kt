@@ -22,7 +22,6 @@ class DataSource(isDarkTheme: Boolean) {
         "Orange" to Color(0xFFF2CBA6),
 
         "Black" to Color(0xFF212121),
-        "White" to Color(0xFFF5F5F5),
         "DarkGray" to Color(0xFFABABAB),
         "LightGray" to Color(0xFFDFDDDD),
 
@@ -48,6 +47,7 @@ class DataSource(isDarkTheme: Boolean) {
         "Green" to Color(0xFF668E53),
         "Blue" to Color(0xFF5E71A1),
         "Yellow" to Color(0xFFB3974D),
+        "Cyan" to Color(0xFF5E8CA1),
         "Magenta" to Color(0xFF75568A),
         "Orange" to Color(0xFFB37E4D),
 
@@ -59,7 +59,6 @@ class DataSource(isDarkTheme: Boolean) {
         "DarkMagenta" to Color(0xFF513663),
         "DarkOrange" to Color(0xFF6B4B2E),
 
-        "Black" to Color(0xFF212121),
         "White" to Color(0xFFF5F5F5),
         "DarkGray" to Color(0xFF585858),
         "LightGray" to Color(0xFF8F8F8F)
