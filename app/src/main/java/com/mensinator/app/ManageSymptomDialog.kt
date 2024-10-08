@@ -65,11 +65,8 @@ fun ManageSymptom(
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
     val colorMap = DataSource(isDarkMode()).colorMap
     val colorsPerColumn = colorMap.size / 3
-    val colorColumns = listOf(
-        colorMap.entries.take(colorsPerColumn),
-        colorMap.entries.drop(colorsPerColumn).take(colorsPerColumn),
-        colorMap.entries.drop(colorsPerColumn * 2)
-    )
+    val colorColumns = colorMap.entries.chunked(colorsPerColumn)
+
     // State to manage the rename dialog visibility
     var showRenameDialog by remember { mutableStateOf(false) }
     var symptomToRename by remember { mutableStateOf<Symptom?>(null) }
