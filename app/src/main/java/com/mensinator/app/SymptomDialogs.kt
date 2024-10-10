@@ -115,7 +115,7 @@ fun CreateNewSymptomDialog(
                 //value = symptomKey?.let { stringResource(id = it) } ?: "Not Found",
                 value = symptomName,
                 onValueChange = { symptomName = it },
-                label = { Text("Symptom Name") }
+                label = { Text(stringResource(R.string.symptom_name_label)) }
             )
         },
         confirmButton = {
