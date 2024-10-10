@@ -26,7 +26,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -188,60 +187,57 @@ fun ManageSymptom(
                                 )
                             }
                         }
-                        MaterialTheme(
-                            shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp))
+
+                        DropdownMenu(
+                            offset = DpOffset(x = (-50).dp, y = (10).dp),
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier
+                                .wrapContentSize()
                         ) {
-                            DropdownMenu(
-                                offset = DpOffset(x = (-50).dp, y = (10).dp),
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .wrapContentSize()
+                            Row(
+                                modifier = Modifier.wrapContentSize(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Row(
-                                    modifier = Modifier.wrapContentSize(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    colorColumns.forEach { columnColors ->
-                                        Column(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .wrapContentSize()
-                                        ) {
-                                            columnColors.forEach { (colorName, colorValue) ->
-                                                DropdownMenuItem(
-                                                    modifier = Modifier
-                                                        .size(50.dp)
-                                                        .clip(RoundedCornerShape(100.dp)),
-                                                    onClick = {
-                                                        selectedColorName = colorName
-                                                        expanded = false
-                                                        val updatedSymptom =
-                                                            symptom.copy(color = colorName)
-                                                        savedSymptoms = savedSymptoms.map {
-                                                            if (it.id == symptom.id) updatedSymptom else it
-                                                        }
-                                                        // Save settings to the database
-                                                        savedSymptoms.forEach { symptom ->
-                                                            dbHelper.updateSymptom(
-                                                                symptom.id,
-                                                                symptom.active,
-                                                                symptom.color
-                                                            )
-                                                        }
-                                                        onSave()
-                                                    },
-                                                    text = {
-                                                        Box(
-                                                            modifier = Modifier
-                                                                .size(25.dp)
-                                                                .clip(RoundedCornerShape(26.dp))
-                                                                .background(colorValue)  // Use the color from the map
+                                colorColumns.forEach { columnColors ->
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .wrapContentSize()
+                                    ) {
+                                        columnColors.forEach { (colorName, colorValue) ->
+                                            DropdownMenuItem(
+                                                modifier = Modifier
+                                                    .size(50.dp)
+                                                    .clip(RoundedCornerShape(100.dp)),
+                                                onClick = {
+                                                    selectedColorName = colorName
+                                                    expanded = false
+                                                    val updatedSymptom =
+                                                        symptom.copy(color = colorName)
+                                                    savedSymptoms = savedSymptoms.map {
+                                                        if (it.id == symptom.id) updatedSymptom else it
+                                                    }
+                                                    // Save settings to the database
+                                                    savedSymptoms.forEach { symptom ->
+                                                        dbHelper.updateSymptom(
+                                                            symptom.id,
+                                                            symptom.active,
+                                                            symptom.color
                                                         )
                                                     }
-                                                )
-                                            }
+                                                    onSave()
+                                                },
+                                                text = {
+                                                    Box(
+                                                        modifier = Modifier
+                                                            .size(25.dp)
+                                                            .clip(RoundedCornerShape(26.dp))
+                                                            .background(colorValue)  // Use the color from the map
+                                                    )
+                                                }
+                                            )
                                         }
                                     }
                                 }

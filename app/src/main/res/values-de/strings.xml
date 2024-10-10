@@ -153,4 +153,5 @@
     <string name="export_data">Daten Exportieren</string>
     <string name="about_app">Über die App</string>
     <string name="rename_symptom">Symptom bearbeiten</string>
+    <string name="change_language">Sprache ändern</string>
 </resources>
