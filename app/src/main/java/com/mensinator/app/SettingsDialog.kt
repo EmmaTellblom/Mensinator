@@ -76,7 +76,6 @@ object ResourceMapper {
 }
 
 
-
 @Composable
 fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
@@ -177,7 +176,7 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                     fontSize = 14.sp,
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
-                                Box{
+                                Box {
                                     Card(
                                         modifier = Modifier
                                             .clickable { }
@@ -217,48 +216,66 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                         onDismissRequest = { expanded = false },
                                         modifier = Modifier.wrapContentSize()
                                     ) {
-
+                                        // Retrieve the colorMap from DataSource
                                         val colorMap = DataSource(isDarkMode()).colorMap
-                                        val colorsPerColumn = colorMap.size / 3
-                                        val colorColumns = colorMap.entries.chunked(colorsPerColumn)
 
-                                        Row(
+                                        // Define color categories grouped by hue
+                                        val colorCategories = DataSource(isDarkMode()).colorCategories
+
+                                        // Use 8 rows for the color palettes
+                                        Column(
                                             modifier = Modifier.wrapContentSize(),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.Center
+                                            verticalArrangement = Arrangement.Center,
+                                            horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            colorColumns.forEach { columnColors ->
-                                                Column(
+                                            colorCategories.forEach { colorGroup ->
+                                                Row(
                                                     modifier = Modifier
-                                                        .weight(1f)
-                                                        .wrapContentSize()
+                                                        .wrapContentSize(),
+                                                    horizontalArrangement = Arrangement.Center,
+                                                    verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                    columnColors.forEach { (colorName, colorValue) ->
-                                                        DropdownMenuItem(
-                                                            modifier = Modifier
-                                                                .size(50.dp)
-                                                                .clip(RoundedCornerShape(100.dp)),
-                                                            onClick = {
-                                                                selectedColorName = colorName
-                                                                expanded = false
-                                                                savedSettings = savedSettings.map {
-                                                                    if (it.key == setting.key) it.copy(value = selectedColorName) else it
+                                                    colorGroup.forEach { colorName ->
+                                                        val colorValue = colorMap[colorName]
+                                                        if (colorValue != null) {
+                                                            DropdownMenuItem(
+                                                                modifier = Modifier
+                                                                    .size(50.dp)
+                                                                    .clip(RoundedCornerShape(100.dp)),
+                                                                onClick = {
+                                                                    selectedColorName = colorName
+                                                                    expanded = false
+                                                                    savedSettings =
+                                                                        savedSettings.map {
+                                                                            if (it.key == setting.key) it.copy(
+                                                                                value = selectedColorName
+                                                                            ) else it
+                                                                        }
+                                                                    // Save the data to the database
+                                                                    saveData(
+                                                                        savedSettings,
+                                                                        dbHelper,
+                                                                        context
+                                                                    )
+                                                                },
+                                                                text = {
+                                                                    Box(
+                                                                        modifier = Modifier
+                                                                            .size(25.dp)
+                                                                            .clip(
+                                                                                RoundedCornerShape(
+                                                                                    26.dp
+                                                                                )
+                                                                            )
+                                                                            .background(colorValue)  // Use the color from the map
+                                                                    )
                                                                 }
-                                                                // Save the data to the database
-                                                                saveData(savedSettings, dbHelper, context)
-                                                            },
-                                                            text = {
-                                                                Box(
-                                                                    modifier = Modifier
-                                                                        .size(25.dp)
-                                                                        .clip(RoundedCornerShape(26.dp))
-                                                                        .background(colorValue)  // Use the color from the map
-                                                                )
-                                                            }
-                                                        )
+                                                            )
+                                                        }
                                                     }
                                                 }
                                             }
+
                                         }
                                     }
                                 }
@@ -310,7 +327,7 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                                     savedSettings = savedSettings.map {
                                                         if (it.key == setting.key) it.copy(value = selectedReminder) else it
                                                     }
-                                                    saveData(savedSettings,dbHelper,context)
+                                                    saveData(savedSettings, dbHelper, context)
                                                     expanded = false
                                                 }
                                             )
@@ -350,14 +367,14 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                     Switch(
                                         checked = isChecked,
                                         onCheckedChange = { newValue ->
-                                            if(setting.label == "Protect screen"){
+                                            if (setting.label == "Protect screen") {
                                                 onSwitchProtectionScreen(newValue)
                                             }
                                             isChecked = newValue
                                             savedSettings = savedSettings.map {
                                                 if (it.key == setting.key) it.copy(value = if (newValue) "1" else "0") else it
                                             }
-                                            saveData(savedSettings,dbHelper,context)
+                                            saveData(savedSettings, dbHelper, context)
                                         },
                                         colors = SwitchDefaults.colors(
                                         )
@@ -365,7 +382,11 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                 } else if (setting.type == "NO") {
                                     Box(modifier = Modifier.alignByBaseline()) {
                                         var expanded by remember { mutableStateOf(false) }
-                                        var selectedReminder by remember { mutableStateOf(setting.value) }
+                                        var selectedReminder by remember {
+                                            mutableStateOf(
+                                                setting.value
+                                            )
+                                        }
                                         TextButton(onClick = { expanded = !expanded }) {
                                             Text(selectedReminder)
                                         }
@@ -379,9 +400,15 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                                     onClick = {
                                                         selectedReminder = reminder
                                                         savedSettings = savedSettings.map {
-                                                            if (it.key == setting.key) it.copy(value = selectedReminder) else it
+                                                            if (it.key == setting.key) it.copy(
+                                                                value = selectedReminder
+                                                            ) else it
                                                         }
-                                                        saveData(savedSettings,dbHelper,context)
+                                                        saveData(
+                                                            savedSettings,
+                                                            dbHelper,
+                                                            context
+                                                        )
                                                         expanded = false
                                                     }
                                                 )
@@ -411,9 +438,15 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                                     onClick = {
                                                         selectedLang = name
                                                         savedSettings = savedSettings.map {
-                                                            if (it.key == setting.key) it.copy(value = code) else it
+                                                            if (it.key == setting.key) it.copy(
+                                                                value = code
+                                                            ) else it
                                                         }
-                                                        saveData(savedSettings,dbHelper,context)
+                                                        saveData(
+                                                            savedSettings,
+                                                            dbHelper,
+                                                            context
+                                                        )
                                                         expanded = false
                                                     }
                                                 )
@@ -478,7 +511,7 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
 
         }
     }
-    // Showing the ExportImportDialog when the user triggers it
+// Showing the ExportImportDialog when the user triggers it
     if (showExportImportDialog) {
         ExportImportDialog(
             onDismissRequest = { showExportImportDialog = false },
@@ -500,7 +533,8 @@ fun handleExport(context: Context, exportPath: String) {
     try {
         val exportImport = ExportImport()
         exportImport.exportDatabase(context, exportPath)
-        Toast.makeText(context, "Data exported successfully to $exportPath", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Data exported successfully to $exportPath", Toast.LENGTH_SHORT)
+            .show()
     } catch (e: Exception) {
         Toast.makeText(context, "Error during export: ${e.message}", Toast.LENGTH_SHORT).show()
         Log.e("Export", "Export error: ${e.message}", e)
@@ -511,14 +545,19 @@ fun handleImport(context: Context, importPath: String) {
     try {
         val exportImport = ExportImport()
         exportImport.importDatabase(context, importPath)
-        Toast.makeText(context, "Data imported successfully from $importPath", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            "Data imported successfully from $importPath",
+            Toast.LENGTH_SHORT
+        )
+            .show()
     } catch (e: Exception) {
         Toast.makeText(context, "Error during import: ${e.message}", Toast.LENGTH_SHORT).show()
         Log.e("Import", "Import error: ${e.message}", e)
     }
 }
 
-fun saveData(savedSetting: List<Setting>,dbHelper: PeriodDatabaseHelper,context: Context) {
+fun saveData(savedSetting: List<Setting>, dbHelper: PeriodDatabaseHelper, context: Context) {
     Log.d("SettingsDialog", "Save button clicked")
     savedSetting.forEach { setting ->
         dbHelper.updateSetting(setting.key, setting.value)
