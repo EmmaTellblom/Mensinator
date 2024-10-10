@@ -26,7 +26,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -63,9 +62,6 @@ fun ManageSymptom(
     val dbHelper = remember { PeriodDatabaseHelper(context) }
     var initialSymptoms = remember { dbHelper.getAllSymptoms() }
     var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
-    val colorMap = DataSource(isDarkMode()).colorMap
-    val colorsPerColumn = colorMap.size / 3
-    val colorColumns = colorMap.entries.chunked(colorsPerColumn)
 
     // State to manage the rename dialog visibility
     var showRenameDialog by remember { mutableStateOf(false) }
@@ -188,28 +184,34 @@ fun ManageSymptom(
                                 )
                             }
                         }
-                        MaterialTheme(
-                            shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(16.dp))
+
+                        DropdownMenu(
+                            offset = DpOffset(x = (-50).dp, y = (10).dp),
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier
+                                .wrapContentSize()
                         ) {
-                            DropdownMenu(
-                                offset = DpOffset(x = (-50).dp, y = (10).dp),
-                                expanded = expanded,
-                                onDismissRequest = { expanded = false },
-                                modifier = Modifier
-                                    .wrapContentSize()
+                            // Retrieve the colorMap from DataSource
+                            val colorMap = DataSource(isDarkMode()).colorMap
+
+                            // Define color categories grouped by hue
+                            val colorCategories = DataSource(isDarkMode()).colorCategories
+                            Column(
+                                modifier = Modifier.wrapContentSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Row(
-                                    modifier = Modifier.wrapContentSize(),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    colorColumns.forEach { columnColors ->
-                                        Column(
-                                            modifier = Modifier
-                                                .weight(1f)
-                                                .wrapContentSize()
-                                        ) {
-                                            columnColors.forEach { (colorName, colorValue) ->
+                                colorCategories.forEach { colorGroup ->
+                                    Row(
+                                        modifier = Modifier
+                                            .wrapContentSize(),
+                                        horizontalArrangement = Arrangement.Center,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        colorGroup.forEach { colorName ->
+                                            val colorValue = colorMap[colorName]
+                                            if (colorValue != null) {
                                                 DropdownMenuItem(
                                                     modifier = Modifier
                                                         .size(50.dp)

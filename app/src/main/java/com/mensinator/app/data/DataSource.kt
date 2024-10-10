@@ -4,6 +4,17 @@ import androidx.compose.ui.graphics.Color
 
 class DataSource(isDarkTheme: Boolean) {
 
+    val colorCategories = listOf(
+        listOf("LightRed", "Red", "DarkRed"),       // Red shades
+        listOf("LightOrange", "Orange", "DarkOrange"), // Orange shades
+        listOf("LightYellow", "Yellow", "DarkYellow"), // Yellow shades
+        listOf("LightGreen", "Green", "DarkGreen"), // Green shades
+        listOf("LightCyan", "Cyan", "DarkCyan"),    // Cyan shades
+        listOf("LightBlue", "Blue", "DarkBlue"),    // Blue shades
+        listOf("LightMagenta", "Magenta", "DarkMagenta"), // Magenta shades
+        listOf("White","LightGray", "DarkGray")    // Gray and Black shades
+    )
+
     private val lightColorMap = mapOf(
         "LightRed" to Color(0xFFF9D3D3),
         "Red" to Color(0xFFF2A6A6),
