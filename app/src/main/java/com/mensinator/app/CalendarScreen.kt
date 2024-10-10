@@ -4,7 +4,6 @@ package com.mensinator.app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -28,7 +27,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.os.LocaleListCompat
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
 import java.time.DayOfWeek
@@ -137,10 +135,6 @@ fun CalendarScreen(
     LaunchedEffect(Unit) {
         updateCalculations() // Call updateCalculations on launch
         symptoms = dbHelper.getAllActiveSymptoms()
-        val newLocale = dbHelper.getSettingByKey("lang")?.value ?: "en"
-        AppCompatDelegate.setApplicationLocales(
-            LocaleListCompat.forLanguageTags(newLocale)
-        )
     }
 
     // Update button state based on selected dates
