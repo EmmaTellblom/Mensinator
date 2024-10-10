@@ -1,0 +1,36 @@
+CREATE TABLE note_date(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+date TEXT NOT NULL UNIQUE
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+getAllNoteDates:
+SELECT * FROM note_date;
+
+getAllDatesByNote:
+SELECT note_date.*
+FROM note_date
+INNER JOIN note_date_cross_ref nd_cr ON note_date.id = nd_cr.note_date_id
+INNER JOIN note ON nd_cr.note_id = note.id
+WHERE note.name = ?;
+
+
+-- INSERT QUERIES --
+--------------------
+
+insertNoteDate:
+INSERT OR REPLACE INTO note_date(date) VALUES (?);
+
+
+-- UPDATE QUERIES --
+--------------------
+
+
+-- DELETE QUERIES --
+--------------------
+
+deleteNoteDate:
+DELETE FROM note_date WHERE date = ?;
