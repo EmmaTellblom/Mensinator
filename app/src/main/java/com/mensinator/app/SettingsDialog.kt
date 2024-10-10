@@ -213,33 +213,52 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                         }
                                     }
                                     DropdownMenu(
-                                        modifier = Modifier
-                                            .width(50.dp)
-                                            .height(menuHeight),
                                         expanded = expanded,
-                                        onDismissRequest = { expanded = false }
+                                        onDismissRequest = { expanded = false },
+                                        modifier = Modifier.wrapContentSize()
                                     ) {
 
-                                        DataSource(isDarkMode()).colorMap.forEach { (name, colorValue) ->
-                                            //val colors = ResourceMapper.getStringResourceId(name)
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Box(
-                                                        modifier = Modifier
-                                                            .size(25.dp)
-                                                            .clip(RoundedCornerShape(26.dp))
-                                                            .background(colorValue),  // Use the color from the map
-                                                    )
-                                                },
-                                                onClick = {
-                                                    selectedColorName = name
-                                                    savedSettings = savedSettings.map {
-                                                        if (it.key == setting.key) it.copy(value = selectedColorName) else it
+                                        val colorMap = DataSource(isDarkMode()).colorMap
+                                        val colorsPerColumn = colorMap.size / 3
+                                        val colorColumns = colorMap.entries.chunked(colorsPerColumn)
+
+                                        Row(
+                                            modifier = Modifier.wrapContentSize(),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            colorColumns.forEach { columnColors ->
+                                                Column(
+                                                    modifier = Modifier
+                                                        .weight(1f)
+                                                        .wrapContentSize()
+                                                ) {
+                                                    columnColors.forEach { (colorName, colorValue) ->
+                                                        DropdownMenuItem(
+                                                            modifier = Modifier
+                                                                .size(50.dp)
+                                                                .clip(RoundedCornerShape(100.dp)),
+                                                            onClick = {
+                                                                selectedColorName = colorName
+                                                                expanded = false
+                                                                savedSettings = savedSettings.map {
+                                                                    if (it.key == setting.key) it.copy(value = selectedColorName) else it
+                                                                }
+                                                                // Save the data to the database
+                                                                saveData(savedSettings, dbHelper, context)
+                                                            },
+                                                            text = {
+                                                                Box(
+                                                                    modifier = Modifier
+                                                                        .size(25.dp)
+                                                                        .clip(RoundedCornerShape(26.dp))
+                                                                        .background(colorValue)  // Use the color from the map
+                                                                )
+                                                            }
+                                                        )
                                                     }
-                                                    saveData(savedSettings,dbHelper,context)
-                                                    expanded = false
                                                 }
-                                            )
+                                            }
                                         }
                                     }
                                 }
