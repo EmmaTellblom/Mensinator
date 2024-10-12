@@ -1,0 +1,50 @@
+CREATE TABLE cycle(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+start_date TEXT NOT NULL UNIQUE,
+end_date TEXT,
+length INTEGER,
+luteal_phase_length INTEGER
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+getAllCycles:
+SELECT * FROM cycle;
+
+getAllCyclesByInterval:
+SELECT * FROM cycle WHERE start_date BETWEEN ? AND ?;
+
+
+-- INSERT QUERIES --
+--------------------
+
+insertCycle:
+INSERT OR REPLACE INTO cycle(start_date, end_date, length, luteal_phase_length) VALUES (?,?,?,?);
+
+insertCycleByStartDate:
+INSERT OR REPLACE INTO cycle(start_date) VALUES (?);
+
+
+-- UPDATE QUERIES --
+--------------------
+
+setCycleEndDate:
+UPDATE cycle SET end_date = ? WHERE id = ?;
+
+setCycleLength:
+UPDATE cycle SET length = ? WHERE id = ?;
+
+setCycleLutealLength:
+UPDATE cycle SET luteal_phase_length = ? WHERE id = ?;
+
+
+-- DELETE QUERIES --
+--------------------
+
+deleteCycleById:
+DELETE FROM cycle WHERE id = ?;
+
+deleteCycleByStartDate:
+DELETE FROM cycle WHERE start_date = ?;

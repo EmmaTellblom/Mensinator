@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("app.cash.sqldelight")
 }
 
 android {
@@ -40,7 +41,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     androidResources {
         generateLocaleConfig = true
@@ -59,8 +60,20 @@ android {
 }
 
 dependencies {
+
+    // Versions
+    val sqlDelightVersion = "2.0.2"
+    val koinVersion = "4.0.0-RC1"
+
+    // AndroidX Core Libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.common.ktx)
+    implementation(libs.androidx.navigation.runtime.ktx)
+
+    // AndroidX Compose Libraries
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -68,15 +81,39 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.window)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.navigation.common.ktx)
+
+    //SQLDelight
+    implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+    implementation("app.cash.sqldelight:coroutines-extensions-jvm:$sqlDelightVersion")
+    implementation("app.cash.sqldelight:primitive-adapters:$sqlDelightVersion")
+
+    // GSON
+    implementation("com.google.code.gson:gson:2.11.0")
+
+
+    // Koin for Android
+    implementation(platform("io.insert-koin:koin-bom:$koinVersion"))
+    implementation("io.insert-koin:koin-core")
+    implementation (libs.koin.android)
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
+    
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    runtimeOnly("org.jetbrains.kotlin:kotlin-reflect:2.0.21-RC")
+}
+
+sqldelight {
+    databases {
+        create("MensinatorDB") {
+            packageName.set("com.mensinator.app.database")
+        }
+    }
 }

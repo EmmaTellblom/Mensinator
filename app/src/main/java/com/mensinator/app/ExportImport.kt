@@ -7,16 +7,16 @@ import android.database.sqlite.SQLiteDatabase
 import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import android.util.Log
-import org.json.JSONObject
+import com.mensinator.app.database.ImportExportManager
 import org.json.JSONArray
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileInputStream
-import java.io.InputStreamReader
+import org.json.JSONObject
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStreamReader
 import java.util.Date
 import java.util.Locale
-
 
 
 class ExportImport {
@@ -87,6 +87,9 @@ class ExportImport {
         fileOutputStream.close()
 
         db.close()
+
+        // Export function - to implement it better
+        ImportExportManager().exportDatabase("/storage/self/primary/Documents/")
     }
 
     private fun cursorToJsonArray(cursor: Cursor): JSONArray {
@@ -102,6 +105,8 @@ class ExportImport {
     }
 
     fun importDatabase(context: Context, filePath: String) {
+        ImportExportManager().importDatabase(filePath)
+
         val dbHelper = PeriodDatabaseHelper(context)
         val db = dbHelper.writableDatabase
 
@@ -157,6 +162,7 @@ class ExportImport {
         }
 
         db.close()
+
     }
 
     // This function will delete all period, ovulation, symptoms and symptomdates before importing the file
