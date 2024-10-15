@@ -88,7 +88,8 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
 
     // State to hold the settings to be saved
     var savedSettings by remember { mutableStateOf(settings) }
-    var showExportImportDialog by remember { mutableStateOf(false) }
+    var exportImportDialog by remember { mutableStateOf(false) }
+    var showImportDialog by remember { mutableStateOf(false) }
     var showFAQDialog by remember { mutableStateOf(false) }
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -220,7 +221,8 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                         val colorMap = DataSource(isDarkMode()).colorMap
 
                                         // Define color categories grouped by hue
-                                        val colorCategories = DataSource(isDarkMode()).colorCategories
+                                        val colorCategories =
+                                            DataSource(isDarkMode()).colorCategories
 
                                         // Use 8 rows for the color palettes
                                         Column(
@@ -472,21 +474,38 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(id = R.string.import_export_data),
+                    text = stringResource(id = R.string.data),
                     fontSize = 14.sp,
                 )
+                Spacer(modifier = Modifier.weight(1f))
                 TextButton(
                     onClick = {
-                        showExportImportDialog = true
+                        showImportDialog = true
                     },
                     contentPadding = PaddingValues(0.dp)
                 ) {
                     Text(
-                        text = stringResource(id = R.string.import_export_data),
+                        text = stringResource(id = R.string.Import),
+                        fontSize = 14.sp
+                    )
+                }
+                VerticalDivider(
+                    modifier = Modifier
+                        .height(14.dp)
+                        .padding(start = 2.dp, end = 2.dp)
+                )
+                TextButton(
+                    onClick = {
+                        exportImportDialog = true
+                    },
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.data_export),
                         fontSize = 14.sp
                     )
                 }
@@ -511,13 +530,20 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
 
         }
     }
-// Showing the ExportImportDialog when the user triggers it
-    if (showExportImportDialog) {
-        ExportImportDialog(
-            onDismissRequest = { showExportImportDialog = false },
+    // Showing the ExportImportDialog when the user triggers it
+    if (exportImportDialog) {
+        ExportDialog(
+            onDismissRequest = { exportImportDialog = false },
             onExportClick = { exportPath ->
                 handleExport(context, exportPath)
-            },
+            }
+        )
+    }
+
+    // Showing the ExportImportDialog when the user triggers it
+    if (showImportDialog) {
+        ImportDialog(
+            onDismissRequest = { showImportDialog = false },
             onImportClick = { importPath ->
                 handleImport(context, importPath)
             }

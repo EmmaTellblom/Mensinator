@@ -122,7 +122,7 @@
     <string name="export_success_toast">Exported to %1$s</string>
     <string name="import_success_toast">File was imported successfully</string>
     <string name="import_failure_toast">Failed to import file</string>
-    <string name="export_path_label">Export Path: %1$s</string>
+    <string name="export_path_label">Exporting file to: %1$s</string>
     <string name="import_path_label">Import Path: %1$s</string>
 
 
@@ -150,8 +150,14 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
     <string name="data_settings">Data settings</string>
+    <string name="data" translatable="false">Data</string> //translate this
+    <string name="Import" translatable="false">Import</string> //it doesn't accept import so i named it with I //translate this
+    <string name="data_export" translatable="false">Export</string> //translate this
+    <string name="select_file" translatable="false">Select file for import</string>//translate this
+    <string name="select_file_button" translatable="false">Select</string>//translate this
     <string name="import_export_data">Import Export Data</string>
-    <string name="export_data">Export data</string>
+    <string name="import_data" translatable="false">Import Data</string>//translate this
+    <string name="export_data">Export Data</string>
     <string name="about_app">About App</string>
     <string name="rename_symptom" >Rename symptom</string>
 </resources>
