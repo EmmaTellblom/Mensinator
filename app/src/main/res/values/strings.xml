@@ -150,8 +150,8 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
-    <string name="data_settings">Data settings</string>
-    <string name="data" translatable="false">Data</string> //translate this
+    <string name="data_settings">Backup</string>
+    <string name="data" translatable="false">Saved Data</string> //translate this
     <string name="Import" translatable="false">Import</string> //it doesn't accept import so i named it with I //translate this
     <string name="data_export" translatable="false">Export</string> //translate this
     <string name="select_file" translatable="false">Select file for import</string>//translate this
