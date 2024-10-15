@@ -3,10 +3,11 @@ package com.mensinator.app
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.os.LocaleListCompat
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
 import androidx.compose.ui.platform.LocalConfiguration
@@ -94,36 +94,6 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val menuHeight = screenHeight * 0.8f // 80% of the screen height
-
-    // Here is available languages of the app
-    // When more languages have been translated, add them here
-    val predefinedLang = mapOf(
-        "English" to "en",
-        "Swedish" to "sv",
-        "Tamil" to "ta",
-        "Romanian" to "ro",
-        "Hindi" to "hi",
-        "Bengali" to "bn",
-        "Spanish" to "es",
-        "French" to "fr",
-        "Polish" to "pl",
-        "Slovenian" to "sl",
-        "German" to "de",
-        /*"Chinese" to "zh",
-        "Portuguese" to "pt",
-        "Russian" to "ru",
-        "Japanese" to "ja",
-        "Western Punjabi" to "pa",
-        "Marathi" to "mr",
-        "Telugu" to "te",
-        "Wu Chinese" to "wuu",
-        "Turkish" to "tr",
-        "Korean" to "ko",
-        "Vietnamese" to "vi",
-        "Urdu" to "ur",
-        "Cantonese" to "yue"*/
-
-    )
 
     val predefinedReminders = (0..12).map { it.toString() }
 
@@ -418,42 +388,23 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                         }
                                     }
                                 } else if (setting.type == "LI" && setting.key == "lang") {
-                                    var expanded by remember { mutableStateOf(false) }
-                                    var selectedLang by remember {
-                                        mutableStateOf(
-                                            predefinedLang.entries.find { it.value == setting.value }?.key
-                                                ?: throw IllegalStateException("Locale code ${setting.value} not found in predefined languages.")
-                                        )
-                                    }
-
-                                    Box(modifier = Modifier.alignByBaseline()) {
-                                        TextButton(onClick = { expanded = !expanded }) {
-                                            Text(selectedLang)
-                                        }
-                                        DropdownMenu(
-                                            expanded = expanded,
-                                            onDismissRequest = { expanded = false }
-                                        ) {
-                                            predefinedLang.forEach { (name, code) ->
-                                                DropdownMenuItem(
-                                                    text = { Text(name) },
-                                                    onClick = {
-                                                        selectedLang = name
-                                                        savedSettings = savedSettings.map {
-                                                            if (it.key == setting.key) it.copy(
-                                                                value = code
-                                                            ) else it
-                                                        }
-                                                        saveData(
-                                                            savedSettings,
-                                                            dbHelper,
-                                                            context
-                                                        )
-                                                        expanded = false
-                                                    }
-                                                )
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        Box(modifier = Modifier.alignByBaseline()) {
+                                            TextButton(onClick = {
+                                                val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                                                val uri = Uri.fromParts("package", context.packageName, null)
+                                                intent.data = uri
+                                                context.startActivity(intent)
+                                            }) {
+                                                Text(stringResource(R.string.change_language))
                                             }
                                         }
+                                    } else {
+                                        /**
+                                         *  On lower Android versions, there is no possibility to
+                                         *  set app-specific languages.
+                                         *  The device language list is used automatically.
+                                         */
                                     }
                                 }
                             }
@@ -587,13 +538,6 @@ fun saveData(savedSetting: List<Setting>, dbHelper: PeriodDatabaseHelper, contex
     Log.d("SettingsDialog", "Save button clicked")
     savedSetting.forEach { setting ->
         dbHelper.updateSetting(setting.key, setting.value)
-        // Update the application locale if the language setting has changed
-        if (setting.key == "lang") {
-            val newLocale = setting.value
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(newLocale)
-            )
-        }
         Log.d("SettingsDialog", "Updated setting ${setting.key} to ${setting.value}")
         if (setting.key == "reminder_days" && setting.value.toInt() > 0) {
             Log.d("SettingsDialog", "Reminder days set and value > 0")

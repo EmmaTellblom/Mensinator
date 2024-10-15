@@ -43,6 +43,7 @@
     <string name="period_history">Period History</string>
     <string name="ovulation_history">Ovulation History</string>
     <string name="language">Language</string>
+    <string name="change_language">Change language</string>
     <string name="cycle_numbers_show">Show Cycle Numbers</string>
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
