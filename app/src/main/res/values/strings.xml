@@ -8,6 +8,7 @@
     <string name="period_button">Period</string>
     <string name="symptoms_button">Symptoms</string>
     <string name="ovulation_button">Ovulation</string>
+    
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>
     <string name="successfully_saved_alert">Changes saved successfully</string>
@@ -48,6 +49,7 @@
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
+    
     <!-- Color values -->
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -62,16 +64,16 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>
-    <string name="period_count">"Periods tracked: "</string>
-    <string name="average_cycle_length">"Average cycle:  "</string>
-    <string name="average_period_length">"Average period:  "</string>
+    <string name="period_count">Periods tracked: </string>
+    <string name="average_cycle_length">Average cycle: </string>
+    <string name="average_period_length">Average period: </string>
     <string name="next_period_start_past">Next predicted period: </string>
-    <string name="next_period_start_future">Next predicted period:  </string>
-    <string name="ovulation_count">"Ovulations tracked:  "</string>
-    <string name="average_ovulation_day">Average ovulation day:  </string>
-    <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
+    <string name="next_period_start_future">Next predicted period: </string>
+    <string name="ovulation_count">Ovulations tracked: </string>
+    <string name="average_ovulation_day">Average ovulation day: </string>
+    <string name="next_predicted_ovulation">Next predicted ovulation: </string>
     <string name="next_predicted_ovulation_default">-</string>
-    <string name="average_luteal_length">Average luteal phase length:  </string>
+    <string name="average_luteal_length">Average luteal phase length: </string>
     <string name="days"> days</string>
 
     <!-- Symptoms -->
@@ -87,9 +89,9 @@
     <string name="create_new_symptom_dialog_title">Create New Symptom</string>
     <string name="symptom_name_label">Symptom Name</string>
     <string name="save_button">Save</string>
+
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">Manage Symptoms</string>
-
 
     <!-- Calender -->
     <string name="calendar_title">Calendar</string>
@@ -114,8 +116,6 @@
     <string name="november">November</string>
     <string name="december">December</string>
 
-
-
     <!-- Import Export Dialog -->
     <string name="export_import_title">Export/Import Data</string>
     <string name="export_button">Export</string>
@@ -125,8 +125,6 @@
     <string name="import_failure_toast">Failed to import file</string>
     <string name="export_path_label">Exporting file to: %1$s</string>
     <string name="import_path_label">Import Path: %1$s</string>
-
-
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Frequently Asked Questions</string>
