@@ -64,17 +64,17 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>
-    <string name="period_count">Periods tracked:</string>
-    <string name="average_cycle_length">Average cycle:</string>
-    <string name="average_period_length">Average period:</string>
-    <string name="next_period_start_past">Next predicted period:</string>
-    <string name="next_period_start_future">Next predicted period:</string>
-    <string name="ovulation_count">Ovulations tracked:</string>
-    <string name="average_ovulation_day">Average ovulation day:</string>
-    <string name="next_predicted_ovulation">Next predicted ovulation:</string>
+    <string name="period_count">Periods tracked: </string>
+    <string name="average_cycle_length">Average cycle: </string>
+    <string name="average_period_length">Average period: </string>
+    <string name="next_period_start_past">Next predicted period: </string>
+    <string name="next_period_start_future">Next predicted period: </string>
+    <string name="ovulation_count">Ovulations tracked: </string>
+    <string name="average_ovulation_day">Average ovulation day: </string>
+    <string name="next_predicted_ovulation">Next predicted ovulation: </string>
     <string name="next_predicted_ovulation_default">-</string>
-    <string name="average_luteal_length">Average luteal phase length:</string>
-    <string name="days">days</string>
+    <string name="average_luteal_length">Average luteal phase length: </string>
+    <string name="days"> days</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptoms for %1$s</string>

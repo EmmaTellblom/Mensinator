@@ -8,6 +8,7 @@
     <string name="period_button">Periode</string>
     <string name="symptoms_button">Symptome</string>
     <string name="ovulation_button">Ovulation</string>
+    
     <!-- Home Alerts -->
     <string name="empty_click_alert">Keine Daten ausgewählt zum Speichern oder Löschen</string>
     <string name="successfully_saved_alert">Änderungen wurden gespeichert</string>
@@ -48,6 +49,7 @@
     <string name="screen_protection">Screenshots verhindern</string>
     <string name="close">Schließen</string>
     <string name="save">Speichern</string>
+    
     <!-- Color values -->
     <string name="color_red">Rot</string>
     <string name="color_green">Grün</string>
@@ -62,16 +64,16 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistiken</string>
-    <string name="period_count">Getrackte Perioden:</string>
-    <string name="average_cycle_length">Durchschnittlicher Zyklus:</string>
-    <string name="average_period_length">Durchschnittliche Periode:</string>
-    <string name="next_period_start_past">Vorauss. nächste Periode:</string>
-    <string name="next_period_start_future">Vorauss. nächste Periode:</string>
-    <string name="ovulation_count">Getrackte Ovulationen:</string>
-    <string name="average_ovulation_day">Durchschnittlicher Ovulationstag:</string>
-    <string name="next_predicted_ovulation">Vorauss. nächste Ovulation:</string>
+    <string name="period_count">Getrackte Perioden: </string>
+    <string name="average_cycle_length">Durchschnittlicher Zyklus: </string>
+    <string name="average_period_length">Durchschnittliche Periode: </string>
+    <string name="next_period_start_past">Vorauss. nächste Periode: </string>
+    <string name="next_period_start_future">Vorauss. nächste Periode: </string>
+    <string name="ovulation_count">Getrackte Ovulationen: </string>
+    <string name="average_ovulation_day">Durchschnittlicher Ovulationstag: </string>
+    <string name="next_predicted_ovulation">Vorauss. nächste Ovulation: </string>
     <string name="next_predicted_ovulation_default">-</string>
-    <string name="average_luteal_length">Durchschn. Länge Lutealphase:</string>
+    <string name="average_luteal_length">Durchschn. Länge Lutealphase: </string>
     <string name="days"> Tage</string>
 
     <!-- Symptoms -->
@@ -87,9 +89,9 @@
     <string name="create_new_symptom_dialog_title">Symptom Erstellen</string>
     <string name="symptom_name_label">Symptom-Name</string>
     <string name="save_button">Speichern</string>
+    
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">Symptome Bearbeiten</string>
-
 
     <!-- Calender -->
     <string name="calendar_title">Kalendar</string>
@@ -114,7 +116,6 @@
     <string name="november">November</string>
     <string name="december">Dezember</string>
 
-
     <!-- Import Export Dialog -->
     <string name="export_import_title">Daten-Import/Export</string>
     <string name="export_button">Exportieren</string>
@@ -124,7 +125,6 @@
     <string name="import_failure_toast">Datei konnte nicht importiert werden</string>
     <string name="export_path_label">Export-Pfad: %1$s</string>
     <string name="import_path_label">Import-Pfad: %1$s</string>
-
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Frequently Asked Questions</string>
@@ -145,7 +145,6 @@
     <string name="our_story">Wir sind zwei Frauen die kein Bock mehr darauf hatten, dass unsere Daten an große Firmen geteilt bzw. durch diese verkauft werden. Alle Daten der App werden nur lokal gespeichert und &lt;b&gt;wir haben keinen Zugriff darauf&lt;/b&gt;.\nWir schätzen deine Privatsphäre und speichern oder teilen keine persönlichen Informationen. Seit der Veröffentlichung der App sind wir gewachsen und haben unseren eigenen Discord-Server, bei dem sich begeisterte Leute wie du uns helfen, die App zu verbessern!\n\nMach bei unserem Discord mit: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>
     <string name="disclaimer">• Dies ist ein Hobby-Projekt und ist nicht für medizinische Zwecke geeignet. Wir haben diese App für unsere eigene entwickelt, weil wir selbst eine brauchten. Aber wir freuen uns auf eure Ideen und euer Feedback. Besuch unser Discord oder send uns eine E-Mail:\nmensinator.app@gmail.com</string>
-
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Schließen</string>
