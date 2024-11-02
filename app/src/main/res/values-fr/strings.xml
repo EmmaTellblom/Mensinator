@@ -143,7 +143,6 @@
     <string name="data_settings">Paramètres des données</string>
     <string name="import_export_data">Importer Exporter des données</string>
     <string name="import_data">Importer les données</string>
-    <string name="import_data">I</string>
     <string name="export_data">Exporter les données</string>
     <string name="about_app">À propos de l\'application</string>
     <string name="screen_protection">empêcher les captures d\'écran</string>
@@ -152,7 +151,5 @@
     <string name="calendar_title">Calendrier</string>
     <string name="data">Données Enregistrées</string>
     <string name="Import">Importer</string>
-    <string name="Import">I</string>
     <string name="data_export">Exporter</string>
-    <string name="data_export">E</string>
 </resources>

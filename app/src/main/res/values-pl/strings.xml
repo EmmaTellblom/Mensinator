@@ -45,7 +45,6 @@
     <string name="ovulation_history">Historia Owulacji</string>
     <string name="language">Język</string>
     <string name="change_language">Zmień Język</string>
-    <string name="change_language">Z</string>
     <string name="cycle_numbers_show">Wykaż Numery Cyklu</string>
     <string name="screen_protection">Zapobiegaj Zrzuty Ekranu</string>
     <string name="close">Zamknij</string>
@@ -145,10 +144,8 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Zamknij</string>
     <string name="select_file_button">Wybierz</string>
-    <string name="select_file_button">W</string>
     <string name="import_export_data">Importuj/Eksportuj Dane</string>
     <string name="import_data">Importuj Dane</string>
-    <string name="import_data">I</string>
     <string name="export_data">Eksportuj Dane</string>
     <string name="about_app">O Aplikacji</string>
     <string name="rename_symptom">Zmień Nazwę Objawu</string>
@@ -157,10 +154,6 @@
     <string name="data_settings">Zarządz Kopią Zapasową</string>
     <string name="data">Zapisane Dane</string>
     <string name="Import">Importuj</string>
-    <string name="Import">I</string>
     <string name="data_export">Eksportuj</string>
-    <string name="data_export">E</string>
     <string name="select_file">Wybierz plik do zaimportowania</string>
-    <string name="select_file">W</string>
-    <string name="select_file">W</string>
 </resources>
