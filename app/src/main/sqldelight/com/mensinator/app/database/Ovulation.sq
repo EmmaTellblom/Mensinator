@@ -1,0 +1,40 @@
+CREATE TABLE ovulation(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+date TEXT NOT NULL,
+cycle_id INTEGER,
+FOREIGN KEY (cycle_id) REFERENCES cycle(id)
+);
+
+
+-- SELECT QUERIES --
+--------------------
+
+getAllOvulations:
+SELECT * FROM ovulation;
+
+getOvulationByDate:
+SELECT * FROM ovulation WHERE date = ?;
+
+getOvulationByCycle:
+SELECT * FROM ovulation WHERE cycle_id = ?;
+
+
+-- INSERT QUERIES --
+--------------------
+
+insertOvulation:
+INSERT OR REPLACE INTO ovulation(date, cycle_id) VALUES (?,?);
+
+
+-- UPDATE QUERIES --
+--------------------
+
+
+-- DELETE QUERIES --
+--------------------
+
+deleteOvulationByDate:
+DELETE FROM ovulation WHERE date = ?;
+
+deleteOvulationByCycle:
+DELETE FROM ovulation WHERE cycle_id = ?;
