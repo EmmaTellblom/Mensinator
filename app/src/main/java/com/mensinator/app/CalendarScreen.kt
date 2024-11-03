@@ -255,13 +255,14 @@ fun CalendarScreen() {
         Column(modifier = Modifier.pointerInput(Unit) {
             var initial: Offset? = null
             var current: Offset? = null
+            val minimumDragDistance = 50f
             detectHorizontalDragGestures(
                 onDragStart = { initialOffset ->
                     initial = initialOffset
                 },
                 onDragEnd = {
                     val deltaX = (current?.x ?: 0f) - (initial?.x ?: 0f)
-                    if (abs(deltaX) <= 50f) return@detectHorizontalDragGestures
+                    if (abs(deltaX) <= minimumDragDistance) return@detectHorizontalDragGestures
                     if (deltaX > 0) {
                         currentMonth.value = currentMonth.value.minusMonths(1)
                     } else {
