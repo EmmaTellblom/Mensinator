@@ -77,7 +77,7 @@ object ResourceMapper {
 
 
 @Composable
-fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
+fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
 
     val context = LocalContext.current

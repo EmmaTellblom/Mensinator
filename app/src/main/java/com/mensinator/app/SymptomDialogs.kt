@@ -10,9 +10,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import java.time.LocalDate
 import androidx.compose.ui.res.stringResource
-
-
-
+import androidx.compose.ui.tooling.preview.Preview
+import com.mensinator.app.ui.theme.MensinatorTheme
 
 
 @Composable
@@ -21,7 +20,8 @@ fun SymptomsDialog(
     symptoms: List<Symptom>,
     dbHelper: PeriodDatabaseHelper,
     onSave: (List<Symptom>) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var selectedSymptoms by remember { mutableStateOf(emptySet<Symptom>()) }
 
@@ -32,6 +32,27 @@ fun SymptomsDialog(
 
     AlertDialog(
         onDismissRequest = { onCancel() },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onSave(selectedSymptoms.toList())
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.save_symptoms_button))
+            }
+        },
+        modifier = modifier,
+        dismissButton = {
+            Button(
+                onClick = {
+                    onCancel()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(id = R.string.cancel_button))
+            }
+        },
         title = {
             Text(text = stringResource(id = R.string.symptoms_dialog_title, date))
         },
@@ -72,26 +93,6 @@ fun SymptomsDialog(
 //                }
             }
         },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onSave(selectedSymptoms.toList())
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.save_symptoms_button))
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = {
-                    onCancel()
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = stringResource(id = R.string.cancel_button))
-            }
-        }
     )
 }
 
@@ -100,13 +101,31 @@ fun SymptomsDialog(
 fun CreateNewSymptomDialog(
     newSymptom: String,
     onSave: (String) -> Unit,
-    onCancel: () -> Unit
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var symptomName by remember { mutableStateOf(newSymptom) }
     //val symptomKey = ResourceMapper.getStringResourceId(symptomName)
 
     AlertDialog(
-        onDismissRequest = { onCancel() },
+        onDismissRequest = onCancel,
+        confirmButton = {
+            Button(
+                onClick = {
+                    onSave(symptomName)
+                },
+            ) {
+                Text(stringResource(id = R.string.save_button))
+            }
+        },
+        modifier = modifier,
+        dismissButton = {
+            Button(
+                onClick = onCancel,
+            ) {
+                Text(stringResource(id = R.string.cancel_button))
+            }
+        },
         title = {
             Text(text = stringResource(id = R.string.create_new_symptom_dialog_title))
         },
@@ -118,25 +137,116 @@ fun CreateNewSymptomDialog(
                 label = { Text(stringResource(R.string.symptom_name_label)) }
             )
         },
+    )
+}
+
+@Composable
+fun RenameSymptomDialog(
+    symptomDisplayName: String,
+    onRename: (String) -> Unit,
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var newName by remember { mutableStateOf(symptomDisplayName) }
+
+    AlertDialog(
+        onDismissRequest = onCancel,
         confirmButton = {
             Button(
                 onClick = {
-                    onSave(symptomName)
+                    onRename(newName)
                 },
-                modifier = Modifier.padding(end = 27.dp)
             ) {
-                Text(stringResource(id = R.string.save_button))
+                Text(text = stringResource(id = R.string.save_button))
             }
         },
+        modifier = modifier,
         dismissButton = {
             Button(
-                onClick = {
-                    onCancel()
-                },
-                modifier = Modifier.padding(end = 30.dp)
+                onClick = onCancel,
             ) {
-                Text(stringResource(id = R.string.cancel_button))
+                Text(text = stringResource(id = R.string.cancel_button))
             }
-        }
+        },
+        title = {
+            Text(text = stringResource(id = R.string.rename_symptom))
+        },
+        text = {
+            Column {
+                TextField(
+                    value = newName,
+                    onValueChange = { newName = it },
+                    label = { Text(stringResource(R.string.symptom_name_label)) }
+                )
+            }
+        },
+
     )
+}
+
+@Composable
+fun DeleteSymptomDialog(
+    onSave: () -> Unit,
+    onCancel: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    AlertDialog(
+        onDismissRequest = onCancel,
+        confirmButton = {
+            Button(
+                onClick = onSave,
+            ) {
+                Text(text = stringResource(id = R.string.delete_button))
+            }
+        },
+        modifier = modifier,
+        dismissButton = {
+            Button(
+                onClick = onCancel,
+            ) {
+                Text(text = stringResource(id = R.string.cancel_button))
+            }
+        },
+        title = {
+            Text(text = stringResource(id = R.string.delete_symptom))
+        },
+        text = {
+            Text(text = stringResource(id = R.string.delete_question))
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun CreateNewSymptomDialogPreview() {
+    MensinatorTheme {
+        CreateNewSymptomDialog(
+            newSymptom = "preview",
+            onSave = {},
+            onCancel = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun RenameSymptomDialogPreview() {
+    MensinatorTheme {
+        RenameSymptomDialog(
+            symptomDisplayName = "preview",
+            onRename = {},
+            onCancel = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DeleteSymptomDialogPreview() {
+    MensinatorTheme {
+        DeleteSymptomDialog(
+            onSave = {},
+            onCancel = {}
+        )
+    }
 }
