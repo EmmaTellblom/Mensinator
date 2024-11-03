@@ -99,15 +99,14 @@ fun ManageSymptomScreen(
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
             val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
             Card(
+                onClick = {
+                    symptomToRename = symptom
+                    showRenameDialog = true
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp)
-                    .clickable {
-                        symptomToRename = symptom
-                        showRenameDialog = true
-                    },
+                    .padding(top = 15.dp),
                 shape = RoundedCornerShape(25.dp),
-                colors = CardDefaults.cardColors(),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
