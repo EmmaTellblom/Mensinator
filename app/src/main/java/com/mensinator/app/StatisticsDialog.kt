@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import java.time.LocalDate
 
-
 @Composable
 fun StatisticsDialog(
 ) {
