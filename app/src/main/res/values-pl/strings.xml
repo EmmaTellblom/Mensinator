@@ -44,6 +44,7 @@
     <string name="period_history">Historia Okresów</string>
     <string name="ovulation_history">Historia Owulacji</string>
     <string name="language">Język</string>
+    <string name="change_language">Zmień Język</string>
     <string name="cycle_numbers_show">Wykaż Numery Cyklu</string>
     <string name="screen_protection">Zapobiegaj Zrzuty Ekranu</string>
     <string name="close">Zamknij</string>
@@ -142,11 +143,17 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Zamknij</string>
-    <string name="data_settings">Ustawienia Danych</string>
+    <string name="select_file_button">Wybierz</string>
     <string name="import_export_data">Importuj/Eksportuj Dane</string>
+    <string name="import_data">Importuj Dane</string>
     <string name="export_data">Eksportuj Dane</string>
     <string name="about_app">O Aplikacji</string>
     <string name="rename_symptom">Zmień Nazwę Objawu</string>
     <string name="december">Grudzień</string>
     <string name="calendar_title">Kalendarz</string>
+    <string name="data_settings">Zarządz Kopią Zapasową</string>
+    <string name="data">Zapisane Dane</string>
+    <string name="Import">Importuj</string>
+    <string name="data_export">Eksportuj</string>
+    <string name="select_file">Wybierz plik do zaimportowania</string>
 </resources>

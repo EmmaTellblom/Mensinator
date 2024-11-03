@@ -8,6 +8,7 @@
     <string name="period_button">Period</string>
     <string name="symptoms_button">Symptoms</string>
     <string name="ovulation_button">Ovulation</string>
+    
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>
     <string name="successfully_saved_alert">Changes saved successfully</string>
@@ -48,6 +49,7 @@
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
+    
     <!-- Color values -->
     <string name="color_red">Red</string>
     <string name="color_green">Green</string>
@@ -62,16 +64,16 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistics</string>
-    <string name="period_count">"Periods tracked: "</string>
-    <string name="average_cycle_length">"Average cycle:  "</string>
-    <string name="average_period_length">"Average period:  "</string>
+    <string name="period_count">Periods tracked: </string>
+    <string name="average_cycle_length">Average cycle: </string>
+    <string name="average_period_length">Average period: </string>
     <string name="next_period_start_past">Next predicted period: </string>
-    <string name="next_period_start_future">Next predicted period:  </string>
-    <string name="ovulation_count">"Ovulations tracked:  "</string>
-    <string name="average_ovulation_day">Average ovulation day:  </string>
-    <string name="next_predicted_ovulation">Next predicted ovulation:  </string>
+    <string name="next_period_start_future">Next predicted period: </string>
+    <string name="ovulation_count">Ovulations tracked: </string>
+    <string name="average_ovulation_day">Average ovulation day: </string>
+    <string name="next_predicted_ovulation">Next predicted ovulation: </string>
     <string name="next_predicted_ovulation_default">-</string>
-    <string name="average_luteal_length">Average luteal phase length:  </string>
+    <string name="average_luteal_length">Average luteal phase length: </string>
     <string name="days"> days</string>
 
     <!-- Symptoms -->
@@ -87,9 +89,9 @@
     <string name="create_new_symptom_dialog_title">Create New Symptom</string>
     <string name="symptom_name_label">Symptom Name</string>
     <string name="save_button">Save</string>
+
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">Manage Symptoms</string>
-
 
     <!-- Calender -->
     <string name="calendar_title">Calendar</string>
@@ -114,8 +116,6 @@
     <string name="november">November</string>
     <string name="december">December</string>
 
-
-
     <!-- Import Export Dialog -->
     <string name="export_import_title">Export/Import Data</string>
     <string name="export_button">Export</string>
@@ -123,10 +123,8 @@
     <string name="export_success_toast">Exported to %1$s</string>
     <string name="import_success_toast">File was imported successfully</string>
     <string name="import_failure_toast">Failed to import file</string>
-    <string name="export_path_label">Export Path: %1$s</string>
+    <string name="export_path_label">Exporting file to: %1$s</string>
     <string name="import_path_label">Import Path: %1$s</string>
-
-
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Frequently Asked Questions</string>
@@ -150,9 +148,15 @@
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
-    <string name="data_settings">Data settings</string>
+    <string name="data_settings">Backup</string>
+    <string name="data">Saved Data</string> //translate this
+    <string name="Import">Import</string> //it doesn't accept import so i named it with I //translate this
+    <string name="data_export">Export</string> //translate this
+    <string name="select_file">Select file for import</string>//translate this
+    <string name="select_file_button">Select</string>//translate this
     <string name="import_export_data">Import Export Data</string>
-    <string name="export_data">Export data</string>
+    <string name="import_data">Import Data</string>//translate this
+    <string name="export_data">Export Data</string>
     <string name="about_app">About App</string>
     <string name="rename_symptom" >Rename symptom</string>
 </resources>
