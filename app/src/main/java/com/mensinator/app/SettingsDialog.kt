@@ -567,7 +567,7 @@ fun openNotificationSettings(context: Context) {
 fun getAppVersion(context: Context): String {
     return try {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        packageInfo.versionName // Returns the version name, e.g., "1.8.4"
+        packageInfo.versionName ?: throw PackageManager.NameNotFoundException() // Returns the version name, e.g., "1.8.4"
     } catch (e: PackageManager.NameNotFoundException) {
         "Unknown" // Fallback if the version name is not found
     }

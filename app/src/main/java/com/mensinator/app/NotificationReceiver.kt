@@ -17,9 +17,12 @@ class NotificationReceiver : BroadcastReceiver() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-
-        Log.d("NotificationReceiver", "Notification sent")
+        try {
+            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+            Log.d("NotificationReceiver", "Notification sent")
+        } catch (e: SecurityException) {
+            Log.e("NotificationReceiver", "Notification permission not available", e)
+        }
     }
 
     companion object {
