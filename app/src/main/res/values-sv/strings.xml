@@ -147,6 +147,7 @@
     <string name="select_file">Välj fil för import</string>
     <string name="select_file_button">Välj</string>
     <string name="import_export_data">Importera Exportera Data</string>
+    <string name="import_data">Importera data</string>
     <string name="export_data">Exportera data</string>
     <string name="about_app">Om Appen</string>
     <string name="screen_protection">Blockera screenshots</string>
