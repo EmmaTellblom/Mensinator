@@ -18,8 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -27,9 +25,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -54,9 +50,8 @@ import com.mensinator.app.ui.theme.isDarkMode
 
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
-fun ManageSymptom(
+fun ManageSymptomScreen(
     showCreateSymptom: MutableState<Boolean>,
-    onSave: () -> Unit
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }
@@ -103,15 +98,14 @@ fun ManageSymptom(
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
             val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
             Card(
+                onClick = {
+                    symptomToRename = symptom
+                    showRenameDialog = true
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 15.dp)
-                    .clickable {
-                        symptomToRename = symptom
-                        showRenameDialog = true
-                    },
+                    .padding(top = 15.dp),
                 shape = RoundedCornerShape(25.dp),
-                colors = CardDefaults.cardColors(),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -132,7 +126,6 @@ fun ManageSymptom(
                                     symptom.let { symptom ->
                                         savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
                                         dbHelper.deleteSymptom(symptom.id)
-                                        onSave()
                                     }
                                 }
                             },
@@ -232,7 +225,6 @@ fun ManageSymptom(
                                                                 symptom.color
                                                             )
                                                         }
-                                                        onSave()
                                                     },
                                                     text = {
                                                         Box(
@@ -269,10 +261,7 @@ fun ManageSymptom(
                                     symptom.color
                                 )
                             }
-                            onSave()
                         },
-                        colors = SwitchDefaults.colors(
-                        )
                     )
                     Spacer(modifier = Modifier.weight(0.05f))
                 }
@@ -316,85 +305,15 @@ fun ManageSymptom(
 
     // Show the delete confirmation dialog
     if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = {
+        DeleteSymptomDialog(
+            onSave = {
+                symptomToDelete?.let { symptom ->
+                    savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
+                    dbHelper.deleteSymptom(symptom.id)
+                }
                 showDeleteDialog = false
             },
-            title = {
-                Text(text = stringResource(id = R.string.delete_symptom))
-            },
-            text = {
-                Text(text = stringResource(id = R.string.delete_question))
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        symptomToDelete?.let { symptom ->
-                            savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
-                            dbHelper.deleteSymptom(symptom.id)
-                            onSave()
-                        }
-
-                        showDeleteDialog = false
-                    },
-                    modifier = Modifier.padding(end = 27.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.delete_button))
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        showDeleteDialog = false
-                    },
-                    modifier = Modifier.padding(end = 30.dp)
-                ) {
-                    Text(text = stringResource(id = R.string.cancel_button))
-                }
-            }
+            onCancel = { showDeleteDialog = false },
         )
     }
-}
-
-@Composable
-fun RenameSymptomDialog(
-    symptomDisplayName: String,
-    onRename: (String) -> Unit,
-    onCancel: () -> Unit
-) {
-    var newName by remember { mutableStateOf(symptomDisplayName) }
-
-    AlertDialog(
-        onDismissRequest = onCancel,
-        title = {
-            Text(text = stringResource(id = R.string.rename_symptom))
-        },
-        text = {
-            Column {
-                Spacer(modifier = Modifier.size(8.dp))
-                TextField(
-                    value = newName,
-                    onValueChange = { newName = it },
-                )
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = {
-                    onRename(newName)
-                },
-                modifier = Modifier.padding(end = 27.dp)
-            ) {
-                Text(text = stringResource(id = R.string.save_button))
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = onCancel,
-                modifier = Modifier.padding(end = 30.dp)
-            ) {
-                Text(text = stringResource(id = R.string.cancel_button))
-            }
-        }
-    )
 }

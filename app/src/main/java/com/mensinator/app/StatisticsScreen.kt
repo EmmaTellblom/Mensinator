@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import java.time.LocalDate
 
 @Composable
-fun StatisticsDialog(
+fun StatisticsScreen(
 ) {
     val context = LocalContext.current
     val dbHelper = remember { PeriodDatabaseHelper(context) }

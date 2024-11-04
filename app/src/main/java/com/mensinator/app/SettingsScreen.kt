@@ -29,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.core.app.NotificationManagerCompat
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
-import androidx.compose.ui.platform.LocalConfiguration
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -77,7 +76,7 @@ object ResourceMapper {
 
 
 @Composable
-fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
+fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
 
     val context = LocalContext.current
@@ -91,9 +90,6 @@ fun SettingsDialog(onSwitchProtectionScreen: (Boolean) -> Unit) {
     var exportImportDialog by remember { mutableStateOf(false) }
     var showImportDialog by remember { mutableStateOf(false) }
     var showFAQDialog by remember { mutableStateOf(false) }
-
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val menuHeight = screenHeight * 0.8f // 80% of the screen height
 
     val predefinedReminders = (0..12).map { it.toString() }
 

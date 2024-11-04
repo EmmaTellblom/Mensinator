@@ -34,11 +34,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.CalendarScreen
-import com.mensinator.app.ManageSymptom
+import com.mensinator.app.ManageSymptomScreen
 import com.mensinator.app.PeriodDatabaseHelper
 import com.mensinator.app.R
-import com.mensinator.app.SettingsDialog
-import com.mensinator.app.StatisticsDialog
+import com.mensinator.app.SettingsScreen
+import com.mensinator.app.StatisticsScreen
 
 enum class Screens {
     Calendar,
@@ -48,7 +48,7 @@ enum class Screens {
 }
 
 @Composable
-fun BottomBar(
+fun MensinatorBottomBar(
     navController: NavHostController = rememberNavController(),
     onScreenProtectionChanged: (Boolean) -> Unit?,
 ) {
@@ -205,7 +205,7 @@ fun BottomBar(
             }
             composable(route = Screens.Statistic.name) {
                 // here you add the page that you want to open(Statistic)
-                StatisticsDialog(
+                StatisticsScreen(
 //                    nextPeriodStart = GlobalState.nextPeriodStartCalculated,
 //                    follicleGrowthDays = GlobalState.follicleGrowthDays,
 //                    nextPredictedOvulation = GlobalState.nextOvulationCalculated,
@@ -213,12 +213,11 @@ fun BottomBar(
             }
             composable(route = Screens.Symptoms.name) {
                 // here you add the page that you want to open(Symptoms)
-                ManageSymptom(showCreateSymptom) {
-                }
+                ManageSymptomScreen(showCreateSymptom)
             }
             composable(route = Screens.Settings.name) {
                 // here you add the page that you want to open(Settings)
-                SettingsDialog(onSwitchProtectionScreen = { newValue ->
+                SettingsScreen(onSwitchProtectionScreen = { newValue ->
                     onScreenProtectionChanged(newValue)
                 })
             }

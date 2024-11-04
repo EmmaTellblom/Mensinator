@@ -1,4 +1,5 @@
 package com.mensinator.app
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -7,26 +8,26 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.mensinator.app.navigation.BottomBar
+import com.mensinator.app.navigation.MensinatorBottomBar
 import com.mensinator.app.ui.theme.MensinatorTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             MensinatorTheme {
-                BottomBar {
-                    isScreenProtectionEnabled ->
+                MensinatorBottomBar { isScreenProtectionEnabled ->
                     // Sets the flags for screen protection if
                     // isScreenProtectionEnabled == true
                     // If isScreenProtectionEnabled == false it removes the flags
-                    if(isScreenProtectionEnabled){
+                    if (isScreenProtectionEnabled) {
                         window?.setFlags(
                             WindowManager.LayoutParams.FLAG_SECURE,
                             WindowManager.LayoutParams.FLAG_SECURE
                         )
-                    }else{
+                    } else {
                         window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
                     }
                 }
