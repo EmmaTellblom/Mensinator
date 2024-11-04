@@ -53,7 +53,7 @@
 
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
-    <string name="period_count">Antal cykler: %1$d</string>
+    <string name="period_count">Antal cykler: </string>
     <string name="average_cycle_length">Medellängd cykel: days</string>
     <string name="average_period_length">Medellängd mens:  days</string>
     <string name="next_period_start_past">Nästa beräknade mens: </string>
