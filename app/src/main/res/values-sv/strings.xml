@@ -9,6 +9,7 @@
     <string name="symptoms_button">Symptom</string>
     <string name="ovulation_button">Ägglossning</string>
     <!-- Home Alerts -->
+    <string name="ovulation_button_not_selected">Lägg till ägglossning</string>
     <string name="empty_click_alert">Inga datum att spara eller ta bort</string>
     <string name="successfully_saved_alert">Ändringarna sparades</string>
     <string name="no_data_selected">Inga datum är valda</string>
@@ -36,6 +37,7 @@
     <string name="period_history">Menshistorik</string>
     <string name="ovulation_history">Ägglossningshistorik</string>
     <string name="language">Språk</string>
+    <string name="change_language">Välj språk</string>
     <string name="cycle_numbers_show">Visa cykelnummer</string>
     <string name="close">Stäng</string>
     <string name="save">Spara</string>
@@ -142,6 +144,8 @@
     <string name="delete_question">Är du säker på att du vill radera detta symptom?</string>
     <string name="delete_button">Radera</string>
     <string name="data_settings">Datainställningar</string>
+    <string name="select_file">Välj fil för import</string>
+    <string name="select_file_button">Välj</string>
     <string name="import_export_data">Importera Exportera Data</string>
     <string name="export_data">Exportera data</string>
     <string name="about_app">Om Appen</string>
@@ -149,4 +153,10 @@
     <string name="rename_symptom" >Döp om symptom</string>
     <string name="december">December</string>
     <string name="calendar_title">Kalender</string>
+    <string name="data">Sparad data</string>
+    <string name="Import">Import</string>
+    <string name="data_export">Export</string>
+    <string name="period_button_selected">Ta bort mens</string>
+    <string name="period_button_not_selected">Lägg till mens</string>
+    <string name="ovulation_button_selected">Ta bort ägglossning</string>
 </resources>

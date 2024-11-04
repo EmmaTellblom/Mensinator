@@ -8,6 +8,12 @@
     <string name="period_button">Period</string>
     <string name="symptoms_button">Symptoms</string>
     <string name="ovulation_button">Ovulation</string>
+
+    <string name="period_button_selected">Remove Period</string>
+    <string name="period_button_not_selected">Add Period</string>
+
+    <string name="ovulation_button_selected">Remove Ovulation</string>
+    <string name="ovulation_button_not_selected">Add Ovulation</string>
     
     <!-- Home Alerts -->
     <string name="empty_click_alert">No dates to save or remove</string>

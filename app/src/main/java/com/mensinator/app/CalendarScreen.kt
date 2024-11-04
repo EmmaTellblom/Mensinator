@@ -110,6 +110,9 @@ fun CalendarScreen(
     // Initializing symptom indicator color
     var symptomColor: Color
 
+    var selectedIsOvulation = false
+    var selectedIsPeriod = false
+
     // Function to refresh symptom dates
     fun refreshSymptomDates() {
         val year = currentMonth.value.year
@@ -139,8 +142,8 @@ fun CalendarScreen(
 
     // Update button state based on selected dates
     val isSymptomsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
-    val isOvulationButtonEnabled by remember { derivedStateOf { selectedDates.value.size == 1 } } // Ovulation can only occur on one day
-    val isPeriodsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
+    val isOvulationButtonEnabled by remember { derivedStateOf { selectedDates.value.size == 1  && (containsOvulationDate(selectedDates.value, ovulationDates.value) || !containsPeriodDate(selectedDates.value, periodDates.value))} } // Ovulation can only occur on one day
+    val isPeriodsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() && (containsPeriodDate(selectedDates.value, periodDates.value) || !containsOvulationDate(selectedDates.value, ovulationDates.value))} }
 
     // Here is where the calendar is generated
     LaunchedEffect(currentMonth.value) {
@@ -462,7 +465,25 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-            Text(text = stringResource(id = R.string.period_button))
+
+            for(selectedDate in selectedDates.value){
+                if(selectedDate in periodDates.value){
+                    selectedIsPeriod = true
+                    break
+                }
+            }
+            if(selectedIsPeriod && isPeriodsButtonEnabled){
+                Text(text = stringResource(id = R.string.period_button_selected))
+
+            }
+            else if(!selectedIsPeriod && isPeriodsButtonEnabled){
+                Text(text = stringResource(id = R.string.period_button_not_selected))
+            }
+            else{
+                Text(text = stringResource(id = R.string.period_button))
+            }
+
+            //Text(text = stringResource(id = R.string.period_button))
         }
 
         val noDataSelected = stringResource(id = R.string.no_data_selected)
@@ -517,7 +538,24 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-            Text(text = stringResource(id = R.string.ovulation_button))
+
+            for(selectedDate in selectedDates.value){
+                if(selectedDate in ovulationDates.value){
+                    selectedIsOvulation = true
+                    break
+                }
+            }
+            if(selectedIsOvulation && isOvulationButtonEnabled){
+                Text(text = stringResource(id = R.string.ovulation_button_selected))
+
+            }
+            else if(!selectedIsOvulation && isOvulationButtonEnabled){
+                Text(text = stringResource(id = R.string.ovulation_button_not_selected))
+
+            }
+            else {
+                Text(text = stringResource(id = R.string.ovulation_button))
+            }
         }
 
         // Show the SymptomsDialog
@@ -548,6 +586,19 @@ fun CalendarScreen(
     }
 }
 
+//Return true if selected dates
+fun containsPeriodDate(selectedDates: Set<LocalDate>, periodDates: Map<LocalDate, Int>): Boolean {
+    return selectedDates.any { selectedDate ->
+        periodDates.containsKey(selectedDate)
+    }
+}
+
+fun containsOvulationDate(selectedDates: Set<LocalDate>, ovulationDates: Set<LocalDate>): Boolean {
+    return selectedDates.any { selectedDate ->
+        ovulationDates.contains(selectedDate)
+    }
+}
+
 fun newSendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
 
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
@@ -568,5 +619,4 @@ fun newSendNotification(context: Context, daysForReminding: Int, periodDate: Loc
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
 
     }
-
 }
