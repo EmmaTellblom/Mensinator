@@ -137,7 +137,7 @@ fun CalendarScreen(
     // Fetch symptoms from the database AND update data for calculations in stats screen
     LaunchedEffect(Unit) {
         updateCalculations() // Call updateCalculations on launch
-        symptoms = dbHelper.getAllActiveSymptoms()
+        symptoms = dbHelper.getAllSymptoms().filter { it.isActive }
     }
 
     // Update button state based on selected dates
@@ -560,7 +560,7 @@ fun CalendarScreen(
 
         // Show the SymptomsDialog
         if (showSymptomsDialog && selectedDates.value.isNotEmpty()) {
-            val activeSymptoms = dbHelper.getAllActiveSymptoms()
+            val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
 
             SymptomsDialog(
                 date = selectedDates.value.last(),  // Pass the last selected date
