@@ -247,9 +247,9 @@ fun CalendarScreen(
                         val hasSymptomDate = dayDate in symptomDates.value
                         val hasOvulationDate = dayDate in ovulationDates.value
                         val hasOvulationDateCalculated =
-                            dayDate == if(ovulationPredictionDate != LocalDate.parse("1900-01-01")) ovulationPredictionDate else false
+                            dayDate == if (ovulationPredictionDate != LocalDate.parse("1900-01-01")) ovulationPredictionDate else false
                         val hasPeriodDateCalculated =
-                            dayDate == if(nextPeriodDate != LocalDate.parse("1900-01-01")) nextPeriodDate else false
+                            dayDate == if (nextPeriodDate != LocalDate.parse("1900-01-01")) nextPeriodDate else false
 
                         Box(
                             modifier = Modifier
@@ -419,46 +419,51 @@ fun CalendarScreen(
             onClick = {
                 if (selectedDates.value.isEmpty()) {
                     Toast.makeText(context, emptyClick, Toast.LENGTH_SHORT).show()
-                } else {
-                    for (date in selectedDates.value) {
-                        if (date in periodDates.value) {
-                            dbHelper.removeDateFromPeriod(date)
-                        } else {
-                            val periodId = dbHelper.newFindOrCreatePeriodID(date)
-                            dbHelper.addDateToPeriod(date, periodId)
-                        }
-                    }
-
-                    selectedDates.value = setOf()
-
-                    val year = currentMonth.value.year
-                    val month = currentMonth.value.monthValue
-                    periodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
-
-                    // Calculate the first day of the next month
-                    val firstDayOfNextMonth = if (month == 12) {
-                        LocalDate.of(year + 1, 1, 1) // January 1st of next year
-                    } else {
-                        LocalDate.of(year, month + 1, 1) // First of the next month in the same year
-                    }
-                    // Recalculate the previous periods first day the first day of the next month
-                    previousFirstPeriodDate =
-                        dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
-
-                    updateCalculations()
-
-                    // Schedule notification for reminder
-                    // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
-                    // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
-                    if (reminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
-                        newSendNotification(
-                            context,
-                            reminderDays,
-                            nextPeriodDate
-                        )
-                    }
-                    Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
+                    return@Button
                 }
+
+                /**
+                 * Make sure that if two or more days are selected (and at least one is already marked as period),
+                 * we should make sure that all days are removed.
+                 */
+                val datesAlreadyMarkedAsPeriod = selectedDates.value.intersect(periodDates.value.keys)
+                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                    selectedDates.value.forEach {
+                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                        dbHelper.addDateToPeriod(it, periodId)
+                    }
+                } else {
+                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                }
+
+                selectedDates.value = setOf()
+
+                val year = currentMonth.value.year
+                val month = currentMonth.value.monthValue
+                periodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
+
+                // Calculate the first day of the next month
+                val firstDayOfNextMonth = if (month == 12) {
+                    LocalDate.of(year + 1, 1, 1) // January 1st of next year
+                } else {
+                    LocalDate.of(year, month + 1, 1) // First of the next month in the same year
+                }
+                // Recalculate the previous periods first day the first day of the next month
+                previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
+
+                updateCalculations()
+
+                // Schedule notification for reminder
+                // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
+                // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
+                if (reminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
+                    newSendNotification(
+                        context,
+                        reminderDays,
+                        nextPeriodDate
+                    )
+                }
+                Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
             },
             enabled = isPeriodsButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
@@ -466,24 +471,23 @@ fun CalendarScreen(
                 .padding(top = 8.dp)
         ) {
 
-            for(selectedDate in selectedDates.value){
-                if(selectedDate in periodDates.value){
+            for (selectedDate in selectedDates.value) {
+                if (selectedDate in periodDates.value) {
                     selectedIsPeriod = true
                     break
                 }
             }
-            if(selectedIsPeriod && isPeriodsButtonEnabled){
-                Text(text = stringResource(id = R.string.period_button_selected))
 
+            val text = when {
+                selectedIsPeriod && isPeriodsButtonEnabled -> {
+                    stringResource(id = R.string.period_button_selected)
+                }
+                !selectedIsPeriod && isPeriodsButtonEnabled -> {
+                    stringResource(id = R.string.period_button_not_selected)
+                }
+                else -> stringResource(id = R.string.period_button)
             }
-            else if(!selectedIsPeriod && isPeriodsButtonEnabled){
-                Text(text = stringResource(id = R.string.period_button_not_selected))
-            }
-            else{
-                Text(text = stringResource(id = R.string.period_button))
-            }
-
-            //Text(text = stringResource(id = R.string.period_button))
+            Text(text = text)
         }
 
         val noDataSelected = stringResource(id = R.string.no_data_selected)
@@ -538,24 +542,22 @@ fun CalendarScreen(
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-
-            for(selectedDate in selectedDates.value){
-                if(selectedDate in ovulationDates.value){
+            for (selectedDate in selectedDates.value) {
+                if (selectedDate in ovulationDates.value) {
                     selectedIsOvulation = true
                     break
                 }
             }
-            if(selectedIsOvulation && isOvulationButtonEnabled){
-                Text(text = stringResource(id = R.string.ovulation_button_selected))
-
+            val text = when {
+                selectedIsOvulation && isOvulationButtonEnabled -> {
+                    stringResource(id = R.string.ovulation_button_selected)
+                }
+                !selectedIsOvulation && isOvulationButtonEnabled -> {
+                    stringResource(id = R.string.ovulation_button_not_selected)
+                }
+                else -> stringResource(id = R.string.ovulation_button)
             }
-            else if(!selectedIsOvulation && isOvulationButtonEnabled){
-                Text(text = stringResource(id = R.string.ovulation_button_not_selected))
-
-            }
-            else {
-                Text(text = stringResource(id = R.string.ovulation_button))
-            }
+            Text(text = text)
         }
 
         // Show the SymptomsDialog
@@ -582,7 +584,6 @@ fun CalendarScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
     }
 }
 
