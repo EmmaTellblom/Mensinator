@@ -185,10 +185,11 @@ fun CalendarScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .verticalScroll(rememberScrollState())
-    )
-    {
+            .displayCutoutPadding()
+            .statusBarsPadding()
+            .padding(16.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,

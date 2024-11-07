@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -69,8 +72,10 @@ fun ManageSymptomScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp)
-            .verticalScroll(rememberScrollState()),  // Make the column scrollable
+            .verticalScroll(rememberScrollState())  // Make the column scrollable
+            .displayCutoutPadding()
+            .statusBarsPadding()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -262,6 +267,7 @@ fun ManageSymptomScreen(
                 }
             }
         }
+        Spacer(modifier = Modifier.height(50.dp)) // To be able to overscroll the list, to not have the FloatingActionButton overlapping
     }
     if (showCreateSymptom.value) {
         CreateNewSymptomDialog(
