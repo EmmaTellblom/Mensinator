@@ -164,30 +164,6 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
     }
 
-    //This function is used to get all active symptoms from the database
-    fun getAllActiveSymptoms(): List<Symptom> {
-        val db = readableDatabase
-        val symptoms = mutableListOf<Symptom>()
-        val query =
-            "SELECT $COLUMN_ID, SUBSTR($COLUMN_SYMPTOM_NAME, 1, 20) AS truncated_name, $COLUMN_SYMPTOM_ACTIVE, color FROM $TABLE_SYMPTOMS WHERE $COLUMN_SYMPTOM_ACTIVE = '1'"
-
-        val cursor = db.rawQuery(query, null)
-        cursor.use {
-            if (it.moveToFirst()) {
-                do {
-                    val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
-                    val symptomName = it.getString(it.getColumnIndexOrThrow("truncated_name"))
-                    val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
-                    val color = it.getString(it.getColumnIndexOrThrow("color"))
-                    symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
-                } while (it.moveToNext())
-            }
-        }
-        cursor.close()
-        db.close()
-        return symptoms
-    }
-
     //This function is used to get all symptoms from the database
     fun getAllSymptoms(): List<Symptom> {
         val db = readableDatabase

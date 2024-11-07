@@ -1,6 +1,5 @@
 package com.mensinator.app
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -117,11 +116,10 @@ fun ManageSymptomScreen(
                     if (savedSymptoms.size > 1) {
                         IconButton(
                             onClick = {
-                                if (dbHelper.getAllActiveSymptoms().contains(symptom)) {
-                                    Log.d("test2", dbHelper.getAllActiveSymptoms().toString())
+                                val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+                                if (activeSymptoms.contains(symptom)) {
                                     showDeleteDialog = true
                                     symptomToDelete = symptom
-
                                 } else {
                                     symptom.let { symptom ->
                                         savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
@@ -169,10 +167,7 @@ fun ManageSymptomScreen(
                                 )
                                 Icon(
                                     painter = painterResource(id = R.drawable.keyboard_arrow_down_24px),
-                                    contentDescription = stringResource(
-                                        id =
-                                        R.string.selection_color
-                                    ),
+                                    contentDescription = stringResource(id = R.string.selection_color),
                                     modifier = Modifier.wrapContentSize()
                                 )
                             }
@@ -273,8 +268,7 @@ fun ManageSymptomScreen(
             newSymptom = "",  // Pass an empty string for new symptoms
             onSave = { newSymptomName ->
                 dbHelper.createNewSymptom(newSymptomName)
-                initialSymptoms =
-                    dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
+                initialSymptoms = dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
                 savedSymptoms = initialSymptoms
                 showCreateSymptom.value = false  // Close the new symptom dialog
             },
