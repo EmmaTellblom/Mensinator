@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.mensinator.app"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 20
         versionName = "1.9.1"
 
