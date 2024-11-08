@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.settings
 
 import android.content.Context
 import android.content.Intent
@@ -12,6 +12,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -30,6 +31,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mensinator.app.*
+import com.mensinator.app.R
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
@@ -105,11 +110,21 @@ private fun SettingSectionHeaderPreview() {
 @Composable
 private fun SettingColorSelection(
     text: String,
+    color: Color,
+    onColorChange: (ColorSetting, Color) -> Unit = { x, y -> },
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier.fillMaxWidth()) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = text)
         Row {
+            Box(
+                modifier = Modifier
+                    .background(color = color, shape = CircleShape)
+                    .size(24.dp)
+                    .clickable {
+                        onColorChange(ColorSetting.PERIOD, Color.Black)
+                    }
+            )
             // color display + chevron
         }
     }
@@ -118,6 +133,8 @@ private fun SettingColorSelection(
 @Composable
 private fun SettingNumberSelection(
     text: String,
+    number: Int,
+    onNumberChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
@@ -129,29 +146,46 @@ private fun SettingNumberSelection(
 }
 
 @Composable
-private fun SettingLanguagePicker() {
-    val context = LocalContext.current
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        Row {
-            Text(text = stringResource(R.string.language))
-            TextButton(
-                onClick = {
-                    val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                    val uri = Uri.fromParts("package", context.packageName, null)
-                    intent.data = uri
-                    context.startActivity(intent)
-                }
-            ) {
-                Text(stringResource(R.string.change_language))
-            }
-        }
+private fun SettingSwitch(
+    text: String,
+    checked: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier.fillMaxWidth()) {
+        Text(text = text)
+        Switch(
+            checked = checked,
+            onCheckedChange = {
 
-    } else {
+            }
+        )
+    }
+}
+
+@Composable
+private fun SettingLanguagePicker() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         /**
          *  On lower Android versions, there is no possibility to
          *  set app-specific languages.
          *  The device language list is used automatically.
          */
+        return
+    }
+
+    val context = LocalContext.current
+    Row {
+        Text(text = stringResource(R.string.language))
+        TextButton(
+            onClick = {
+                val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                val uri = Uri.fromParts("package", context.packageName, null)
+                intent.data = uri
+                context.startActivity(intent)
+            }
+        ) {
+            Text(stringResource(R.string.change_language))
+        }
     }
 }
 
@@ -159,40 +193,87 @@ private fun SettingLanguagePicker() {
 @Composable
 private fun SettingColorSelectionPreview() {
     MensinatorTheme {
-        SettingColorSelection(text = stringResource(R.string.period_selection_color))
+        SettingColorSelection(
+            text = stringResource(R.string.period_selection_color),
+            color = Color.Red
+        )
     }
 }
 
 @Composable
-private fun NewScreen() {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+fun NewScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = viewModel()
+) {
+    val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
+
+    Column(modifier = modifier.padding(horizontal = 16.dp)) {
         SettingSectionHeader(text = stringResource(R.string.colors))
-        SettingColorSelection(text = stringResource(R.string.period_color))
-        SettingColorSelection(text = stringResource(R.string.selection_color))
-        SettingColorSelection(text = stringResource(R.string.period_selection_color))
-        SettingColorSelection(text = stringResource(R.string.expected_period_color))
-        SettingColorSelection(text = stringResource(R.string.ovulation_color))
-        SettingColorSelection(text = stringResource(R.string.expected_ovulation_color))
+        SettingColorSelection(
+            text = stringResource(R.string.period_color),
+            color = viewState.periodColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
+        )
+        SettingColorSelection(
+            text = stringResource(R.string.selection_color),
+            color = Color.Red
+        )
+        SettingColorSelection(
+            text = stringResource(R.string.period_selection_color),
+            color = Color.Red
+        )
+        SettingColorSelection(
+            text = stringResource(R.string.expected_period_color),
+            color = Color.Red
+        )
+        SettingColorSelection(
+            text = stringResource(R.string.ovulation_color),
+            color = Color.Red
+        )
+        SettingColorSelection(
+            text = stringResource(R.string.expected_ovulation_color),
+            color = Color.Red
+        )
 
         SettingSectionHeader(text = stringResource(R.string.reminders))
-        SettingNumberSelection(text = stringResource(R.string.days_before_reminder))
+        SettingNumberSelection(
+            text = stringResource(R.string.days_before_reminder),
+            number = viewState.daysBeforeReminder,
+            onNumberChange = {}
+        )
 
         SettingSectionHeader(text = stringResource(R.string.other_settings))
-        // switch
-        SettingNumberSelection(text = stringResource(R.string.period_history))
-        SettingNumberSelection(text = stringResource(R.string.ovulation_history))
+        SettingSwitch(
+            text = stringResource(R.string.luteal_phase_calculation),
+            checked = viewState.lutealPhaseCalculationEnabled
+        )
+        SettingNumberSelection(text = stringResource(R.string.period_history),
+            number = Int.MAX_VALUE,
+            onNumberChange = {}
+        )
+        SettingNumberSelection(text = stringResource(R.string.ovulation_history),
+            number = Int.MAX_VALUE,
+            onNumberChange = {}
+        )
         SettingLanguagePicker()
-        // switch
-        // switch
-
+        SettingSwitch(
+            text = stringResource(R.string.cycle_numbers_show),
+            checked = false
+        )
+        SettingSwitch(
+            text = stringResource(R.string.screen_protection),
+            checked = false
+        )
 
         SettingSectionHeader(text = stringResource(R.string.data_settings))
-        // saved data + 2 buttons
+        // TODO: saved data + 2 buttons
 
         Row(horizontalArrangement = Arrangement.Absolute.SpaceAround) {
             TextButton(
                 onClick = {
-                    // Show FAQDialog
+                    // TODO: Show FAQDialog
                 }
             ) {
                 Text(text = stringResource(R.string.about_app))
