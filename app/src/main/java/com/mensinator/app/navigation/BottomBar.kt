@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -92,7 +94,9 @@ fun MensinatorBottomBar(
                 FloatingActionButton(
                     onClick = { showCreateSymptom.value = true },
                     shape = CircleShape,
-                    modifier = Modifier.padding(5.dp)
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .padding(5.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -178,7 +182,8 @@ fun MensinatorBottomBar(
                     )
                 }
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0) // We want to handle insets ourselves at child screens
     ) { paddingValues ->
         NavHost(
             navController = navController,

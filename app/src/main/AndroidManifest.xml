@@ -13,12 +13,10 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Mensinator"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Mensinator">
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/Theme.Mensinator">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

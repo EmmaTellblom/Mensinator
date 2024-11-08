@@ -2,6 +2,8 @@ package com.mensinator.app
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -57,7 +59,7 @@ fun SymptomsDialog(
             Text(text = stringResource(id = R.string.symptoms_dialog_title, date))
         },
         text = {
-            Column {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 symptoms.forEach { symptom ->
                     val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
                     val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
@@ -180,7 +182,6 @@ fun RenameSymptomDialog(
                 )
             }
         },
-
     )
 }
 
