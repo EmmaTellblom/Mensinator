@@ -23,11 +23,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
@@ -76,6 +80,136 @@ object ResourceMapper {
     }
 }
 
+@Composable
+private fun SettingSectionHeader(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = text,
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics { heading() },
+        style = MaterialTheme.typography.headlineMedium
+    )
+}
+
+@Preview
+@Composable
+private fun SettingSectionHeaderPreview() {
+    MensinatorTheme {
+        SettingSectionHeader(text = stringResource(R.string.colors))
+    }
+}
+
+@Composable
+private fun SettingColorSelection(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier.fillMaxWidth()) {
+        Text(text = text)
+        Row {
+            // color display + chevron
+        }
+    }
+}
+
+@Composable
+private fun SettingNumberSelection(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    Row(modifier = modifier.fillMaxWidth()) {
+        Text(text = text)
+        Row {
+            // color display + chevron
+        }
+    }
+}
+
+@Composable
+private fun SettingLanguagePicker() {
+    val context = LocalContext.current
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        Row {
+            Text(text = stringResource(R.string.language))
+            TextButton(
+                onClick = {
+                    val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                    val uri = Uri.fromParts("package", context.packageName, null)
+                    intent.data = uri
+                    context.startActivity(intent)
+                }
+            ) {
+                Text(stringResource(R.string.change_language))
+            }
+        }
+
+    } else {
+        /**
+         *  On lower Android versions, there is no possibility to
+         *  set app-specific languages.
+         *  The device language list is used automatically.
+         */
+    }
+}
+
+@Preview
+@Composable
+private fun SettingColorSelectionPreview() {
+    MensinatorTheme {
+        SettingColorSelection(text = stringResource(R.string.period_selection_color))
+    }
+}
+
+@Composable
+private fun NewScreen() {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        SettingSectionHeader(text = stringResource(R.string.colors))
+        SettingColorSelection(text = stringResource(R.string.period_color))
+        SettingColorSelection(text = stringResource(R.string.selection_color))
+        SettingColorSelection(text = stringResource(R.string.period_selection_color))
+        SettingColorSelection(text = stringResource(R.string.expected_period_color))
+        SettingColorSelection(text = stringResource(R.string.ovulation_color))
+        SettingColorSelection(text = stringResource(R.string.expected_ovulation_color))
+
+        SettingSectionHeader(text = stringResource(R.string.reminders))
+        SettingNumberSelection(text = stringResource(R.string.days_before_reminder))
+
+        SettingSectionHeader(text = stringResource(R.string.other_settings))
+        // switch
+        SettingNumberSelection(text = stringResource(R.string.period_history))
+        SettingNumberSelection(text = stringResource(R.string.ovulation_history))
+        SettingLanguagePicker()
+        // switch
+        // switch
+
+
+        SettingSectionHeader(text = stringResource(R.string.data_settings))
+        // saved data + 2 buttons
+
+        Row(horizontalArrangement = Arrangement.Absolute.SpaceAround) {
+            TextButton(
+                onClick = {
+                    // Show FAQDialog
+                }
+            ) {
+                Text(text = stringResource(R.string.about_app))
+            }
+            Text(text = stringResource(R.string.about_app)) // TODO: app version
+            Text(text = stringResource(R.string.about_app)) // TODO: db version
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NewScreenPreview() {
+    MensinatorTheme {
+        NewScreen()
+    }
+}
 
 @Composable
 fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
@@ -380,8 +514,13 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                         Box(modifier = Modifier.alignByBaseline()) {
                                             TextButton(onClick = {
-                                                val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
-                                                val uri = Uri.fromParts("package", context.packageName, null)
+                                                val intent =
+                                                    Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
+                                                val uri = Uri.fromParts(
+                                                    "package",
+                                                    context.packageName,
+                                                    null
+                                                )
                                                 intent.data = uri
                                                 context.startActivity(intent)
                                             }) {
@@ -555,7 +694,8 @@ fun openNotificationSettings(context: Context) {
 fun getAppVersion(context: Context): String {
     return try {
         val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-        packageInfo.versionName ?: throw PackageManager.NameNotFoundException() // Returns the version name, e.g., "1.8.4"
+        packageInfo.versionName
+            ?: throw PackageManager.NameNotFoundException() // Returns the version name, e.g., "1.8.4"
     } catch (e: PackageManager.NameNotFoundException) {
         "Unknown" // Fallback if the version name is not found
     }
