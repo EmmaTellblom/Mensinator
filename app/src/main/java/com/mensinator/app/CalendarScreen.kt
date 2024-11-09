@@ -4,17 +4,15 @@ package com.mensinator.app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
+import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -36,20 +35,16 @@ import java.time.temporal.ChronoUnit
 /*
 This file creates the calendar. A sort of "main screen".
  */
-
 @Composable
-fun CalendarScreen(
-) {
+fun CalendarScreen() {
     val context = LocalContext.current
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val ovulationPrediction: IOvulationPrediction = koinInject()
+    val periodPrediction: IPeriodPrediction = koinInject()
+    val notificationScheduler: INotificationScheduler = koinInject()
 
-    // new objects for prediction
-    val periodPrediction = PeriodPrediction(context)
     var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
-    val ovulationPrediction = OvulationPrediction(context)
     var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
-
-    // For accessing database functions
-    val dbHelper = remember { PeriodDatabaseHelper(context) }
 
     val currentMonth = remember { mutableStateOf(LocalDate.now().withDayOfMonth(1)) }
     // Days selected in the calendar
@@ -142,8 +137,22 @@ fun CalendarScreen(
 
     // Update button state based on selected dates
     val isSymptomsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() } }
-    val isOvulationButtonEnabled by remember { derivedStateOf { selectedDates.value.size == 1  && (containsOvulationDate(selectedDates.value, ovulationDates.value) || !containsPeriodDate(selectedDates.value, periodDates.value))} } // Ovulation can only occur on one day
-    val isPeriodsButtonEnabled by remember { derivedStateOf { selectedDates.value.isNotEmpty() && (containsPeriodDate(selectedDates.value, periodDates.value) || !containsOvulationDate(selectedDates.value, ovulationDates.value))} }
+    val isOvulationButtonEnabled by remember {
+        derivedStateOf {
+            selectedDates.value.size == 1 && (containsOvulationDate(
+                selectedDates.value,
+                ovulationDates.value
+            ) || !containsPeriodDate(selectedDates.value, periodDates.value))
+        }
+    } // Ovulation can only occur on one day
+    val isPeriodsButtonEnabled by remember {
+        derivedStateOf {
+            selectedDates.value.isNotEmpty() && (containsPeriodDate(
+                selectedDates.value,
+                periodDates.value
+            ) || !containsOvulationDate(selectedDates.value, ovulationDates.value))
+        }
+    }
 
     // Here is where the calendar is generated
     LaunchedEffect(currentMonth.value) {
@@ -427,7 +436,8 @@ fun CalendarScreen(
                  * Make sure that if two or more days are selected (and at least one is already marked as period),
                  * we should make sure that all days are removed.
                  */
-                val datesAlreadyMarkedAsPeriod = selectedDates.value.intersect(periodDates.value.keys)
+                val datesAlreadyMarkedAsPeriod =
+                    selectedDates.value.intersect(periodDates.value.keys)
                 if (datesAlreadyMarkedAsPeriod.isEmpty()) {
                     selectedDates.value.forEach {
                         val periodId = dbHelper.newFindOrCreatePeriodID(it)
@@ -460,6 +470,7 @@ fun CalendarScreen(
                 if (reminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
                     newSendNotification(
                         context,
+                        notificationScheduler,
                         reminderDays,
                         nextPeriodDate
                     )
@@ -533,6 +544,7 @@ fun CalendarScreen(
                 if (reminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
                     newSendNotification(
                         context,
+                        notificationScheduler,
                         reminderDays,
                         nextPeriodDate
                     )
@@ -601,8 +613,7 @@ fun containsOvulationDate(selectedDates: Set<LocalDate>, ovulationDates: Set<Loc
     }
 }
 
-fun newSendNotification(context: Context, daysForReminding: Int, periodDate: LocalDate) {
-
+fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate) {
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
     if (notificationDate.isBefore(LocalDate.now())) {
         Log.d(
@@ -616,9 +627,7 @@ fun newSendNotification(context: Context, daysForReminding: Int, periodDate: Loc
         ).show()
     } else {
         //Schedule notification
-        val scheduler = NotificationScheduler(context)
         scheduler.scheduleNotification(notificationDate)
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
-
     }
 }

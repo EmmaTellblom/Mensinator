@@ -11,8 +11,9 @@ import java.time.LocalDate
 This file contains functions to get/set data into the database
 For handling database structure, see DatabaseUtils
  */
-
-class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class PeriodDatabaseHelper(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
+    IPeriodDatabaseHelper {
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
@@ -23,6 +24,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         private const val COLUMN_PERIOD_ID = "period_id"
 
         private const val TABLE_SYMPTOMS = "symptoms"
+
         //we are using variable COLUMN_ID for ID
         private const val COLUMN_SYMPTOM_NAME = "symptom_name"
         private const val COLUMN_SYMPTOM_ACTIVE = "active"
@@ -32,6 +34,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         private const val COLUMN_SYMPTOM_ID = "symptom_id"
 
         private const val TABLE_APP_SETTINGS = "app_settings"
+
         //we use $COLUMN_ID
         private const val COLUMN_SETTING_KEY = "setting_key"
         private const val COLUMN_SETTING_LABEL = "setting_label"
@@ -41,6 +44,12 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         private const val TAG = "PeriodDatabaseHelper"
     }
 
+    override val readableDb: SQLiteDatabase
+        get() = readableDatabase
+
+    override val writableDb: SQLiteDatabase
+        get() = writableDatabase
+
     //See DatabaseUtils
     override fun onCreate(db: SQLiteDatabase) {
         DatabaseUtils.createDatabase(db)
@@ -49,35 +58,34 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     //See DatabaseUtils
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
 
-        if(oldVersion < 3){
+        if (oldVersion < 3) {
             DatabaseUtils.createAppSettings(db)
         }
 
-        if(oldVersion <4){
+        if (oldVersion < 4) {
             db.execSQL("DROP TABLE IF EXISTS $TABLE_APP_SETTINGS")
             DatabaseUtils.createAppSettingsGroup(db)
             DatabaseUtils.createAppSettings(db)
         }
 
-        if(oldVersion < 5){
+        if (oldVersion < 5) {
             DatabaseUtils.createOvulationStructure(db)
         }
 
-        if(oldVersion < 6){
+        if (oldVersion < 6) {
             DatabaseUtils.insertLutealSetting(db)
         }
 
-        if(oldVersion < 7){
+        if (oldVersion < 7) {
             DatabaseUtils.databaseVersion7(db)
         }
-        if(oldVersion < 8){
+        if (oldVersion < 8) {
             DatabaseUtils.databaseVersion8(db)
-
         }
     }
 
     //This function is used to add a date together with a period id to the periods table
-    fun addDateToPeriod(date: LocalDate, periodId: Int) {
+    override fun addDateToPeriod(date: LocalDate, periodId: Int) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_DATE, date.toString())
@@ -93,7 +101,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //Get all period dates for a given month
-    fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
+    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
         val dates = mutableMapOf<LocalDate, Int>()
         val db = readableDatabase
 
@@ -137,7 +145,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //Returns how many periods that are in the database
-    fun getPeriodCount(): Int {
+    override fun getPeriodCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT $COLUMN_PERIOD_ID) FROM $TABLE_PERIODS"
         val cursor = db.rawQuery(countQuery, null)
@@ -151,7 +159,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to remove a date from the periods table
-    fun removeDateFromPeriod(date: LocalDate) {
+    override fun removeDateFromPeriod(date: LocalDate) {
         val db = writableDatabase
         val whereClause = "$COLUMN_DATE = ?"
         val whereArgs = arrayOf(date.toString())
@@ -165,7 +173,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get all symptoms from the database
-    fun getAllSymptoms(): List<Symptom> {
+    override fun getAllSymptoms(): List<Symptom> {
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
@@ -192,7 +200,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function inserts new symptom into the Database
-    fun createNewSymptom(symptomName: String) {
+    override fun createNewSymptom(symptomName: String) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_SYMPTOM_NAME, symptomName)  // Set the symptom name
@@ -204,7 +212,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function returns all Symptom dates for given month
-    fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
+    override fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
 
@@ -250,7 +258,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to update symptom dates in the database
-    fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
+    override fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
         val db = writableDatabase
 
         // Convert dates to strings for database operations
@@ -261,7 +269,11 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
             // Delete existing symptoms for the specified dates
             db.execSQL(
                 """
-                DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${dateStrings.joinToString(",") { "?" }})
+                DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${
+                    dateStrings.joinToString(
+                        ","
+                    ) { "?" }
+                })
             """,
                 dateStrings.toTypedArray()
             )
@@ -291,7 +303,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get symptoms for a given date
-    fun getSymptomsFromDate(date: LocalDate): List<Int> {
+    override fun getSymptomsFromDate(date: LocalDate): List<Int> {
         val db = readableDatabase
         val symptoms = mutableListOf<Int>()
 
@@ -316,7 +328,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return symptoms
     }
 
-    fun getSymptomColorForDate(date: LocalDate): List<String> {
+    override fun getSymptomColorForDate(date: LocalDate): List<String> {
         val db = readableDatabase
         val query = """
         SELECT s.color
@@ -343,7 +355,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get all settings from the database
-    fun getAllSettings(): List<Setting> {
+    override fun getAllSettings(): List<Setting> {
         val settings = mutableListOf<Setting>()
         val db = readableDatabase
         val cursor = db.query(TABLE_APP_SETTINGS, null, null, null, null, null, null)
@@ -361,18 +373,19 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used for updating settings in the database
-    fun updateSetting(key: String, value: String): Boolean {
+    override fun updateSetting(key: String, value: String): Boolean {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
             put(COLUMN_SETTING_VALUE, value)
         }
-        val rowsUpdated = db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
+        val rowsUpdated =
+            db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
         db.close()
         return rowsUpdated > 0
     }
 
     //This function is used to get a setting from the database
-    fun getSettingByKey(key: String): Setting? {
+    override fun getSettingByKey(key: String): Setting? {
         val db = readableDatabase
         val cursor = db.query(
             TABLE_APP_SETTINGS,
@@ -400,7 +413,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used for adding/removing ovulation dates from the database
-    fun updateOvulationDate(date: LocalDate) {
+    override fun updateOvulationDate(date: LocalDate) {
         val db = writableDatabase
 
         // Convert LocalDate to String for SQLite compatibility
@@ -425,7 +438,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get ovulation date for a given month
-    fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
+    override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
 
@@ -467,7 +480,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get the number of ovulations in the database
-    fun getOvulationCount(): Int {
+    override fun getOvulationCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT DATE) FROM OVULATIONS"
         val cursor = db.rawQuery(countQuery, null)
@@ -482,7 +495,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     //This function checks if date input should be included in existing period
     //or if a new periodId should be created
-    fun newFindOrCreatePeriodID(date: LocalDate): Int {
+    override fun newFindOrCreatePeriodID(date: LocalDate): Int {
         val db = readableDatabase
         val dateStr = date.toString()
         var periodId = 1
@@ -504,7 +517,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
                     // Merge periods
                     val updateQuery = "UPDATE PERIODS SET PERIOD_ID = ? WHERE PERIOD_ID = ?"
-                    val updateArgs = arrayOf(primaryPeriodID.toString(), secondaryPeriodID.toString())
+                    val updateArgs =
+                        arrayOf(primaryPeriodID.toString(), secondaryPeriodID.toString())
                     db.execSQL(updateQuery, updateArgs)
 
                     periodId = primaryPeriodID
@@ -515,9 +529,11 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                     //Log.d(TAG, "Found existing periodId $periodId for date $date")
                 } else {
                     // Create a new period ID
-                    val maxPeriodIdCursor = db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
+                    val maxPeriodIdCursor =
+                        db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
                     if (maxPeriodIdCursor.moveToFirst()) {
-                        val maxPeriodId = if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
+                        val maxPeriodId =
+                            if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
                         periodId = maxPeriodId + 1
                         //Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
                     }
@@ -535,7 +551,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to get the previous period start date from given input date
-    fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate? {
+    override fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate? {
         val db = readableDatabase
         var firstLatestDate: LocalDate? = null
 
@@ -556,7 +572,8 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         val cursor = db.rawQuery(query, arrayOf(date.toString()))
 
         if (cursor.moveToFirst()) {
-            firstLatestDate = LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow("date")))
+            firstLatestDate =
+                LocalDate.parse(cursor.getString(cursor.getColumnIndexOrThrow("date")))
         }
 
         cursor.close()
@@ -566,7 +583,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is to get the oldest period date in the database
-    fun getOldestPeriodDate(): LocalDate?{
+    override fun getOldestPeriodDate(): LocalDate? {
         val db = readableDatabase
         var oldestPeriodDate: LocalDate? = null
 
@@ -585,7 +602,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is to get the oldest period date in the database
-    fun getNewestOvulationDate(): LocalDate?{
+    override fun getNewestOvulationDate(): LocalDate? {
         val db = readableDatabase
         var newestOvulationDate: LocalDate? = null
 
@@ -605,11 +622,12 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
 
     //This function is used for updating symptom active status
-    fun updateSymptom(id: Int, active: Int, color: String) {
+    override fun updateSymptom(id: Int, active: Int, color: String) {
         val db = writableDatabase
 
         // Ensure that active is either 0 or 1
-        val newActiveStatus = if (active in 0..1) active else throw IllegalArgumentException("Active status must be 0 or 1")
+        val newActiveStatus =
+            if (active in 0..1) active else throw IllegalArgumentException("Active status must be 0 or 1")
 
         val contentValues = ContentValues().apply {
             put("active", newActiveStatus)
@@ -633,7 +651,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     // This function is used to get the latest X ovulation dates where they are followed by a period
     // Used for calculations
-    fun getLatestXOvulationsWithPeriod(number: Int): List<LocalDate> {
+    override fun getLatestXOvulationsWithPeriod(number: Int): List<LocalDate> {
         val ovulationDates = mutableListOf<LocalDate>()
         val db = readableDatabase
         // only include ovulations that has a period coming afterwards
@@ -661,7 +679,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return ovulationDates
     }
 
-    fun getLastOvulation(): LocalDate? {
+    override fun getLastOvulation(): LocalDate? {
         val db = readableDatabase
         val query = """
         SELECT DATE FROM OVULATIONS ORDER BY DATE DESC LIMIT 1
@@ -680,7 +698,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return ovulationDate
     }
 
-    fun getLatestXPeriodStart(number: Int): List<LocalDate> {
+    override fun getLatestXPeriodStart(number: Int): List<LocalDate> {
         val dateList = mutableListOf<LocalDate>()
         val db = readableDatabase
         val numberOfPeriods = number + 1 // Include the current ongoing period if applicable
@@ -714,7 +732,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return dateList
     }
 
-    fun getFirstNextPeriodDate(date: LocalDate): LocalDate? {
+    override fun getFirstNextPeriodDate(date: LocalDate): LocalDate? {
         val db = readableDatabase
         var firstNextDate: LocalDate? = null
 
@@ -739,7 +757,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return firstNextDate
     }
 
-    fun getNoOfDatesInPeriod(date: LocalDate): Int {
+    override fun getNoOfDatesInPeriod(date: LocalDate): Int {
         val db = readableDatabase
         val query = """
             SELECT COUNT(DATE) FROM PERIODS WHERE period_id in (SELECT period_id FROM PERIODS WHERE date = ?)
@@ -755,7 +773,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         return count
     }
 
-    fun getXLatestOvulationsDates(number: Int): List<LocalDate> {
+    override fun getXLatestOvulationsDates(number: Int): List<LocalDate> {
         val db = readableDatabase
         val ovulationDates = mutableListOf<LocalDate>()
         val query = """
@@ -767,7 +785,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
                 val dateString = cursor.getString(0)
                 val date = LocalDate.parse(dateString)
                 ovulationDates.add(date)
-            }while (cursor.moveToNext())
+            } while (cursor.moveToNext())
         }
         cursor.close()
         db.close()
@@ -775,7 +793,7 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     //This function is used to remove a date from the periods table
-    fun deleteSymptom(symptomId: Int) {
+    override fun deleteSymptom(symptomId: Int) {
         val db = writableDatabase
         val whereClause = "id = ?"
         val whereArgs = arrayOf(symptomId.toString())
@@ -788,11 +806,11 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
         db.close()
     }
 
-    fun getDBVersion(): String {
+    override fun getDBVersion(): String {
         return DATABASE_VERSION.toString()
     }
 
-    fun renameSymptom(symptomId: Int, newName: String) {
+    override fun renameSymptom(symptomId: Int, newName: String) {
         val db = writableDatabase
         val contentValues = ContentValues().apply {
             put("symptom_name", newName)
@@ -801,10 +819,11 @@ class PeriodDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
 
     }
 
-    fun getLatestPeriodStart(): LocalDate {
+    override fun getLatestPeriodStart(): LocalDate {
         val latestPeriodStart = LocalDate.parse("1900-01-01")
         val db = readableDatabase
-        val query = "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
+        val query =
+            "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))

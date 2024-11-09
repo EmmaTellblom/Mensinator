@@ -7,21 +7,19 @@ import android.database.sqlite.SQLiteDatabase
 import android.icu.text.SimpleDateFormat
 import android.os.Environment
 import android.util.Log
-import org.json.JSONObject
 import org.json.JSONArray
-import java.io.File
-import java.io.FileOutputStream
-import java.io.FileInputStream
-import java.io.InputStreamReader
-import java.io.BufferedReader
+import org.json.JSONObject
+import java.io.*
 import java.util.Date
 import java.util.Locale
 
 
+class ExportImport(
+    private val context: Context,
+    private val dbHelper: IPeriodDatabaseHelper,
+) : IExportImport {
 
-class ExportImport {
-
-    fun getDocumentsExportFilePath(): String {
+    override fun getDocumentsExportFilePath(): String {
         val documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
 
         // Create a date formatter to include the current date in the filename
@@ -46,12 +44,12 @@ class ExportImport {
         return exportFile.absolutePath
     }
 
-    fun getDefaultImportFilePath(context: Context): String {
+    override fun getDefaultImportFilePath(): String {
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
     }
-    fun exportDatabase(context: Context, filePath: String) {
-        val dbHelper = PeriodDatabaseHelper(context)
-        val db = dbHelper.readableDatabase
+
+    override fun exportDatabase(filePath: String) {
+        val db = dbHelper.readableDb
 
         val exportData = JSONObject()
 
@@ -101,9 +99,8 @@ class ExportImport {
         return jsonArray
     }
 
-    fun importDatabase(context: Context, filePath: String) {
-        val dbHelper = PeriodDatabaseHelper(context)
-        val db = dbHelper.writableDatabase
+    override fun importDatabase(filePath: String) {
+        val db = dbHelper.writableDb
 
         // Read JSON data from file
         val file = File(filePath)
@@ -197,5 +194,4 @@ class ExportImport {
 
         }
     }
-
 }

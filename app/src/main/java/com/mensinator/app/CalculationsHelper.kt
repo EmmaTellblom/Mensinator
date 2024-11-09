@@ -1,51 +1,40 @@
 package com.mensinator.app
 
-import android.content.Context
 import android.util.Log
 import java.time.LocalDate
 import kotlin.math.round
 
-/**
- * The `Calculations` class provides methods to calculate menstrual cycle related data
- * such as next period date, average cycle length, and average luteal length.
- *
- * @param context The context used to access the database.
- */
-
-class Calculations (context: Context){
-    private val dbHelper = PeriodDatabaseHelper(context)
+class CalculationsHelper(
+    private val dbHelper: IPeriodDatabaseHelper,
+) : ICalculationsHelper {
     private val periodHistory = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
     private val ovulationHistory = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
     private val lutealCalculation = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
 
-
-    /**
-     * Calculates the next expected period date.
-     *
-     * @return The next expected period date as a string.
-     */
-    fun calculateNextPeriod(): LocalDate {
+    override fun calculateNextPeriod(): LocalDate {
         val expectedPeriodDate: LocalDate
 
-        if(lutealCalculation==1){
+        if (lutealCalculation == 1) {
             //go to advanced calculation using X latest ovulations (set by user in settings)
             Log.d("TAG", "Advanced calculation")
             expectedPeriodDate = advancedNextPeriod()
-        } else{
+        } else {
             // Basic calculation using latest period start dates
             Log.d("TAG", "Basic calculation")
             //do basic calculation here
             //Use X latest periodstartdates (will return list of X+1)
             val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
-            if(listPeriodDates.isEmpty()){
+            if (listPeriodDates.isEmpty()) {
                 expectedPeriodDate = LocalDate.parse("1900-01-01")
-            }
-            else{
+            } else {
                 // Calculate the cycle lengths between consecutive periods
                 val cycleLengths = mutableListOf<Long>()
                 for (i in 0 until listPeriodDates.size - 1) {
-                    val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(listPeriodDates[i], listPeriodDates[i + 1])
+                    val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(
+                        listPeriodDates[i],
+                        listPeriodDates[i + 1]
+                    )
                     cycleLengths.add(cycleLength)
                 }
                 // Calculate the average cycle length
@@ -57,11 +46,10 @@ class Calculations (context: Context){
         return expectedPeriodDate
     }
 
-
     /**
      * Advanced calculation for the next expected period date using ovulation data.
      *
-     * @return The next expected period date as a string.
+     * @return The next expected period date.
      */
     private fun advancedNextPeriod(): LocalDate {
         // Get the list of the latest ovulation dates
@@ -94,8 +82,9 @@ class Calculations (context: Context){
             Log.d("TAG", "Ovulation is null")
             return LocalDate.parse("1900-01-01")
         }
-        val periodDates = dbHelper.getLatestXPeriodStart(ovulationHistory) //This always returns no+1 period dates
-        if(periodDates.isNotEmpty() && periodDates.last() > lastOvulation){ //Check the latest first periodDate
+        val periodDates =
+            dbHelper.getLatestXPeriodStart(ovulationHistory) //This always returns no+1 period dates
+        if (periodDates.isNotEmpty() && periodDates.last() > lastOvulation) { //Check the latest first periodDate
             //There is a period start date after last ovulation date
             //We need to recalculate according to next calculated ovulation
             val avgGrowthRate = averageFollicalGrowthInDays()
@@ -103,8 +92,7 @@ class Calculations (context: Context){
             val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong())
             Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
             return expectedPeriodDate
-        }
-        else{
+        } else {
             val expectedPeriodDate = lastOvulation.plusDays(averageLutealLength.toLong())
             Log.d("TAG", "Next expected period: $expectedPeriodDate")
             // Calculate the expected period date
@@ -112,13 +100,8 @@ class Calculations (context: Context){
         }
     }
 
-    //Returns average no of days from first last period to ovulation for passed X periods
-    /**
-     * Calculates the average number of days from the first day of the last period to ovulation.
-     *
-     * @return The average follicular phase length as a string.
-     */
-    fun averageFollicalGrowthInDays(): Double {
+    //Returns average number of days from first last period to ovulation for passed X periods
+    override fun averageFollicalGrowthInDays(): Double {
         val ovulationDates = dbHelper.getXLatestOvulationsDates(ovulationHistory)
         if (ovulationDates.isEmpty()) {
             // Return a meaningful message or handle the case where no ovulations are available
@@ -128,7 +111,9 @@ class Calculations (context: Context){
             for (d in ovulationDates) {
                 val firstDatePreviousPeriod = dbHelper.getFirstPreviousPeriodDate(d)
                 if (firstDatePreviousPeriod != null) {
-                    growthRate.add(d.toEpochDay().toInt() - firstDatePreviousPeriod.toEpochDay().toInt())
+                    growthRate.add(
+                        d.toEpochDay().toInt() - firstDatePreviousPeriod.toEpochDay().toInt()
+                    )
                 }
             }
             if (growthRate.isEmpty()) {
@@ -140,12 +125,7 @@ class Calculations (context: Context){
 
     // Takes the X (periodHistory) latest period start dates and calculates the average cycle length
     // X comes from app_settings in the database
-    /**
-     * Calculates the average cycle length using the latest period start dates.
-     * X comes from app_settings in the database
-     * @return The average cycle length as a double.
-     */
-    fun averageCycleLength(): Double{
+    override fun averageCycleLength(): Double {
         val periodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
         // Check if there are enough dates to calculate cycle lengths
@@ -159,7 +139,8 @@ class Calculations (context: Context){
 
         // Calculate the cycle lengths between consecutive periods
         for (i in 0 until periodDates.size - 1) {
-            val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(periodDates[i], periodDates[i + 1])
+            val cycleLength =
+                java.time.temporal.ChronoUnit.DAYS.between(periodDates[i], periodDates[i + 1])
             cycleLengths.add(cycleLength)
         }
 
@@ -169,13 +150,7 @@ class Calculations (context: Context){
         return cycleLengthAverage
     }
 
-
-    /**
-     * Calculates the average period length using the latest period start dates.
-     *
-     * @return The average period length as a double.
-     */
-    fun averagePeriodLength(): Double {
+    override fun averagePeriodLength(): Double {
         val daysInPeriod = mutableListOf<Int>()
 
         // Retrieve the start dates of the latest periods
@@ -200,14 +175,9 @@ class Calculations (context: Context){
         }
     }
 
-    /**
-     * Calculates the average luteal phase length using the latest ovulation dates.
-     *
-     * @return The average luteal phase length as a double.
-     */
     // Takes the X (ovulationHistory) latest ovulation dates and calculates the average luteal length
     // X comes from app_settings in the database
-    fun averageLutealLength(): Double{
+    override fun averageLutealLength(): Double {
         // List to hold the luteal lengths
         val lutealLengths = mutableListOf<Long>()
 
@@ -222,11 +192,11 @@ class Calculations (context: Context){
             // Check if the nextPeriodDate is not null
             if (nextPeriodDate != null) {
                 // Calculate the number of days between the ovulation date and the next period date
-                val daysBetween = java.time.temporal.ChronoUnit.DAYS.between(ovulationDate, nextPeriodDate)
+                val daysBetween =
+                    java.time.temporal.ChronoUnit.DAYS.between(ovulationDate, nextPeriodDate)
                 // Add the result to the list
                 lutealLengths.add(daysBetween)
-            }
-            else{
+            } else {
                 Log.d("TAG", "Next period date is null")
                 return 0.0
             }
@@ -236,23 +206,17 @@ class Calculations (context: Context){
     }
 
 
-    /**
-     * Calculates the luteal phase length for a specific cycle.
-     *
-     * @param date The ovulation date.
-     * @return The luteal phase length as an integer.
-     */
     // This function is used to get the luteal length of a cycle.
     // Date input should only be ovulation date
     // To be used with setting for calculating periods according to ovulation
-    fun getLutealLengthForPeriod(date: LocalDate): Int {
+    override fun getLutealLengthForPeriod(date: LocalDate): Int {
         val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
-        if(firstNextPeriodDate != null){
-            val lutealLength = java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+        if (firstNextPeriodDate != null) {
+            val lutealLength =
+                java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
             Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
             return lutealLength
-        }
-        else{
+        } else {
             return 0
         }
 
