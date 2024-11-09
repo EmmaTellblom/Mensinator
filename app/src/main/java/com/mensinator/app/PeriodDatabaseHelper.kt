@@ -84,7 +84,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
     }
 
-    //This function is used to add a date together with a period id to the periods table
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -100,7 +99,6 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
     }
 
-    //Get all period dates for a given month
     override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
         val dates = mutableMapOf<LocalDate, Int>()
         val db = readableDatabase
@@ -144,7 +142,6 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
-    //Returns how many periods that are in the database
     override fun getPeriodCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT $COLUMN_PERIOD_ID) FROM $TABLE_PERIODS"
@@ -158,7 +155,6 @@ class PeriodDatabaseHelper(context: Context) :
         return count
     }
 
-    //This function is used to remove a date from the periods table
     override fun removeDateFromPeriod(date: LocalDate) {
         val db = writableDatabase
         val whereClause = "$COLUMN_DATE = ?"
@@ -172,7 +168,6 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
     }
 
-    //This function is used to get all symptoms from the database
     override fun getAllSymptoms(): List<Symptom> {
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
@@ -199,7 +194,6 @@ class PeriodDatabaseHelper(context: Context) :
         return symptoms
     }
 
-    //This function inserts new symptom into the Database
     override fun createNewSymptom(symptomName: String) {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -211,7 +205,6 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()  // Close the database connection to free up resources
     }
 
-    //This function returns all Symptom dates for given month
     override fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
@@ -257,7 +250,6 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
-    //This function is used to update symptom dates in the database
     override fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
         val db = writableDatabase
 
@@ -302,7 +294,6 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
     }
 
-    //This function is used to get symptoms for a given date
     override fun getSymptomsFromDate(date: LocalDate): List<Int> {
         val db = readableDatabase
         val symptoms = mutableListOf<Int>()
@@ -354,7 +345,6 @@ class PeriodDatabaseHelper(context: Context) :
         return symptomColors
     }
 
-    //This function is used to get all settings from the database
     override fun getAllSettings(): List<Setting> {
         val settings = mutableListOf<Setting>()
         val db = readableDatabase
@@ -372,7 +362,6 @@ class PeriodDatabaseHelper(context: Context) :
         return settings
     }
 
-    //This function is used for updating settings in the database
     override fun updateSetting(key: String, value: String): Boolean {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
@@ -384,7 +373,6 @@ class PeriodDatabaseHelper(context: Context) :
         return rowsUpdated > 0
     }
 
-    //This function is used to get a setting from the database
     override fun getSettingByKey(key: String): Setting? {
         val db = readableDatabase
         val cursor = db.query(
@@ -412,7 +400,6 @@ class PeriodDatabaseHelper(context: Context) :
         return setting
     }
 
-    //This function is used for adding/removing ovulation dates from the database
     override fun updateOvulationDate(date: LocalDate) {
         val db = writableDatabase
 
@@ -437,7 +424,6 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
     }
 
-    //This function is used to get ovulation date for a given month
     override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
@@ -479,7 +465,6 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
-    //This function is used to get the number of ovulations in the database
     override fun getOvulationCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT DATE) FROM OVULATIONS"
@@ -493,8 +478,7 @@ class PeriodDatabaseHelper(context: Context) :
         return count
     }
 
-    //This function checks if date input should be included in existing period
-    //or if a new periodId should be created
+
     override fun newFindOrCreatePeriodID(date: LocalDate): Int {
         val db = readableDatabase
         val dateStr = date.toString()
