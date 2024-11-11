@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
 import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.isDarkMode
+import org.koin.compose.koinInject
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -80,7 +81,8 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     Log.d("SettingsDialog", "SettingsDialog recomposed")
 
     val context = LocalContext.current
-    val dbHelper = remember { PeriodDatabaseHelper(context) }
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val exportImport: IExportImport = koinInject()
 
     // Fetch current settings from the database
     val settings by remember { mutableStateOf(dbHelper.getAllSettings()) }
@@ -481,9 +483,10 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     // Showing the ExportImportDialog when the user triggers it
     if (exportImportDialog) {
         ExportDialog(
+            exportImport = exportImport,
             onDismissRequest = { exportImportDialog = false },
             onExportClick = { exportPath ->
-                handleExport(context, exportPath)
+                handleExport(context, exportImport, exportPath)
             }
         )
     }
@@ -491,9 +494,10 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     // Showing the ExportImportDialog when the user triggers it
     if (showImportDialog) {
         ImportDialog(
+            exportImport = exportImport,
             onDismissRequest = { showImportDialog = false },
             onImportClick = { importPath ->
-                handleImport(context, importPath)
+                handleImport(context, exportImport, importPath)
             }
         )
     }
@@ -503,10 +507,9 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     }
 }
 
-fun handleExport(context: Context, exportPath: String) {
+fun handleExport(context: Context, exportImport: IExportImport, exportPath: String) {
     try {
-        val exportImport = ExportImport()
-        exportImport.exportDatabase(context, exportPath)
+        exportImport.exportDatabase(exportPath)
         Toast.makeText(context, "Data exported successfully to $exportPath", Toast.LENGTH_SHORT)
             .show()
     } catch (e: Exception) {
@@ -515,23 +518,21 @@ fun handleExport(context: Context, exportPath: String) {
     }
 }
 
-fun handleImport(context: Context, importPath: String) {
+fun handleImport(context: Context, exportImport: IExportImport, importPath: String) {
     try {
-        val exportImport = ExportImport()
-        exportImport.importDatabase(context, importPath)
+        exportImport.importDatabase(importPath)
         Toast.makeText(
             context,
             "Data imported successfully from $importPath",
             Toast.LENGTH_SHORT
-        )
-            .show()
+        ).show()
     } catch (e: Exception) {
         Toast.makeText(context, "Error during import: ${e.message}", Toast.LENGTH_SHORT).show()
         Log.e("Import", "Import error: ${e.message}", e)
     }
 }
 
-fun saveData(savedSetting: List<Setting>, dbHelper: PeriodDatabaseHelper, context: Context) {
+fun saveData(savedSetting: List<Setting>, dbHelper: IPeriodDatabaseHelper, context: Context) {
     Log.d("SettingsDialog", "Save button clicked")
     savedSetting.forEach { setting ->
         dbHelper.updateSetting(setting.key, setting.value)

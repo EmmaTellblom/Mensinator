@@ -1,24 +1,18 @@
 package com.mensinator.app
 
-import android.content.Context
 import java.time.LocalDate
 
-class PeriodPrediction(context: Context) : Prediction(context) {
-    private lateinit var periodDatePrediction: LocalDate
+class PeriodPrediction(
+    private val dbHelper: IPeriodDatabaseHelper,
+    private val calcHelper: ICalculationsHelper,
+) : IPeriodPrediction {
 
-    fun getPredictedPeriodDate() : LocalDate{
-
-        if(periodCount>=2){
-            periodDatePrediction = calcHelper.calculateNextPeriod()
+    override fun getPredictedPeriodDate(): LocalDate {
+        val periodCount = dbHelper.getPeriodCount()
+        return if (periodCount >= 2) {
+            calcHelper.calculateNextPeriod()
+        } else {
+            LocalDate.parse("1900-01-01")
         }
-        else{
-            periodDatePrediction = LocalDate.parse("1900-01-01")
-        }
-        return periodDatePrediction
     }
-
-//    fun getPredictedPeriodDate(date: Date): LocalDate {
-//        return periodDatePrediction
-//    }
-
 }

@@ -10,22 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -35,12 +24,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mensinator.app.CalendarScreen
-import com.mensinator.app.ManageSymptomScreen
-import com.mensinator.app.PeriodDatabaseHelper
+import com.mensinator.app.*
 import com.mensinator.app.R
-import com.mensinator.app.SettingsScreen
-import com.mensinator.app.StatisticsScreen
+import org.koin.compose.koinInject
 
 enum class Screens {
     Calendar,
@@ -54,9 +40,7 @@ fun MensinatorBottomBar(
     navController: NavHostController = rememberNavController(),
     onScreenProtectionChanged: (Boolean) -> Unit?,
 ) {
-    val context = LocalContext.current
-    // For accessing database functions
-    val dbHelper = remember { PeriodDatabaseHelper(context) }
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
     // If protectScreen is 1, it should protect the screen
     // If protectScreen is 0, should not protect screen(allows prints and screen visibility in recent apps)
     val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1

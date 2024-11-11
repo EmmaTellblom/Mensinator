@@ -21,12 +21,12 @@ import java.io.FileOutputStream
 
 @Composable
 fun ExportDialog(
+    exportImport: IExportImport,
     onDismissRequest: () -> Unit,
     onExportClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val exportImport = remember { ExportImport() }
     val isBeingPreviewed = LocalInspectionMode.current
 
     val exportPath = remember {
@@ -72,12 +72,12 @@ fun ExportDialog(
 
 @Composable
 fun ImportDialog(
+    exportImport: IExportImport,
     onDismissRequest: () -> Unit,
     onImportClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val exportImport = remember { ExportImport() }
 
     val importPath = remember { mutableStateOf("") }
     val impSuccess = stringResource(id = R.string.import_success_toast)
@@ -88,7 +88,7 @@ fun ImportDialog(
             if (uri == null) return@rememberLauncherForActivityResult
 
             val inputStream = context.contentResolver.openInputStream(uri)
-            val file = File(exportImport.getDefaultImportFilePath(context))
+            val file = File(exportImport.getDefaultImportFilePath())
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
@@ -146,11 +146,21 @@ fun ImportDialog(
 }
 
 
+private val fakeExportImport = object : IExportImport {
+    override fun getDocumentsExportFilePath() = "ExportPath"
+    override fun getDefaultImportFilePath() = "ImportPath"
+    override fun exportDatabase(filePath: String) {}
+    override fun importDatabase(filePath: String) {}
+}
+
 @Preview
 @Composable
 private fun ExportDialogPreview() {
     MensinatorTheme {
-        ExportDialog(onDismissRequest = {}, onExportClick = {})
+        ExportDialog(
+            exportImport = fakeExportImport,
+            onDismissRequest = {},
+            onExportClick = {})
     }
 }
 
@@ -158,6 +168,10 @@ private fun ExportDialogPreview() {
 @Composable
 private fun ImportDialogPreview() {
     MensinatorTheme {
-        ImportDialog(onDismissRequest = {}, onImportClick = {})
+        ImportDialog(
+            exportImport = fakeExportImport,
+            onDismissRequest = {},
+            onImportClick = {}
+        )
     }
 }

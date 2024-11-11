@@ -1,19 +1,23 @@
 package com.mensinator.app
 
-import android.content.Context
 import android.util.Log
 import java.time.LocalDate
 
-class OvulationPrediction (context: Context) : Prediction(context) {
-    private val periodPrediction = PeriodPrediction(context)
-    private var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
-    private lateinit var ovulationDatePrediction: LocalDate
-    private val lastOvulationDate = dbHelper.getNewestOvulationDate()
-    private val firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1)
-    private val previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
+class OvulationPrediction(
+    private val dbHelper: IPeriodDatabaseHelper,
+    private val calcHelper: ICalculationsHelper,
+    private val periodPrediction: IPeriodPrediction,
+) : IOvulationPrediction {
 
-    fun getPredictedOvulationDate(): LocalDate {
+    override fun getPredictedOvulationDate(): LocalDate {
+        val periodCount = dbHelper.getPeriodCount()
         val ovulationCount = dbHelper.getOvulationCount()
+        val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
+        val lastOvulationDate = dbHelper.getNewestOvulationDate()
+        val firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1)
+        val previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
+
+        val ovulationDatePrediction: LocalDate
 
         // No data at all in database
         if (lastOvulationDate == null || previousFirstPeriodDate == null) {
@@ -40,15 +44,14 @@ class OvulationPrediction (context: Context) : Prediction(context) {
             val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
             val follicleGrowthDaysLong = follicleGrowthDays.toLong()
 
-            if(follicleGrowthDaysLong > 0){
+            if (follicleGrowthDaysLong > 0) {
                 ovulationDatePrediction = periodPredictionDate.plusDays(follicleGrowthDaysLong)
-            }
-            else{
+            } else {
                 // Return a default value, not enough data to predict ovulation, averageFollicalGrowthInDays() returns 0
                 ovulationDatePrediction = LocalDate.parse("1900-01-01")
             }
         }
-        else{
+        else {
             Log.d("TAG", "THERE ARE NOW OVULATIONS")
             // Return a default value, not enough data to predict ovulation, ovulationCount < 2
             ovulationDatePrediction = LocalDate.parse("1900-01-01")
@@ -56,8 +59,4 @@ class OvulationPrediction (context: Context) : Prediction(context) {
         // Valid prediction
         return ovulationDatePrediction
     }
-
-//    fun getOvulationDatePrediction(): LocalDate {
-//        return ovulationDatePrediction
-//    }
 }

@@ -1,45 +1,33 @@
 package com.mensinator.app
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.displayCutoutPadding
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.koin.compose.koinInject
 import java.time.LocalDate
 
 @Composable
-fun StatisticsScreen(
-) {
-    val context = LocalContext.current
-    val dbHelper = remember { PeriodDatabaseHelper(context) }
-    val calcHelper = remember { Calculations(context) }
+fun StatisticsScreen() {
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val calcHelper: ICalculationsHelper = koinInject()
+    val ovulationPrediction: IOvulationPrediction = koinInject()
+    val periodPrediction: IPeriodPrediction = koinInject()
+
     val averageCycleLength = calcHelper.averageCycleLength()
     val periodCount = dbHelper.getPeriodCount()
     val ovulationCount = dbHelper.getOvulationCount()
     val averagePeriodLength = calcHelper.averagePeriodLength()
     val avgLutealLength = calcHelper.averageLutealLength()
     val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
-
-    val ovulationPrediction = OvulationPrediction(context)
     val ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
-
-    val periodPrediction = PeriodPrediction(context)
     val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
 
     val scrollState = rememberScrollState()
@@ -102,7 +90,6 @@ fun StatisticsScreen(
             stringResource(id = R.string.average_luteal_length),
             (Math.round(avgLutealLength * 10) / 10.0).toString() + " " + stringResource(id = R.string.days)
         )
-
     }
 }
 

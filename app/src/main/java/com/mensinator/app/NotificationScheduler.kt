@@ -10,9 +10,15 @@ import androidx.core.app.NotificationManagerCompat
 import java.time.LocalDate
 import java.time.ZoneId
 
-class NotificationScheduler(private val context: Context) {
+class NotificationScheduler(
+    private val context: Context
+) : INotificationScheduler {
 
-    fun scheduleNotification(notificationDate: LocalDate) {
+    companion object {
+        private const val ACTION_NOTIFICATION = "com.mensinator.app.SEND_NOTIFICATION"
+    }
+
+    override fun scheduleNotification(notificationDate: LocalDate) {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll()
         Log.d("NotificationScheduler", "Notification canceled")
@@ -38,11 +44,7 @@ class NotificationScheduler(private val context: Context) {
         Log.d("NotificationScheduler", "Notification scheduled for $notificationDate")
     }
 
-    companion object {
-        private const val ACTION_NOTIFICATION = "com.mensinator.app.SEND_NOTIFICATION"
-    }
-
-    fun cancelNotification(notificationId: Int) {
+    override fun cancelNotification(notificationId: Int) {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(notificationId)
     }
