@@ -9,6 +9,10 @@
     <string name="symptoms_button">அறிகுறிகள்</string>
     <string name="ovulation_button">அறிகுறிகள்</string>
     <!-- Home Alerts -->
+    <string name="period_button_selected">மாதவிடாயை அகற்றவும்</string>
+    <string name="period_button_not_selected">மாதவிடாயை சேர்க்கவும்</string>
+    <string name="ovulation_button_selected">ஓவுலேஷனை அகற்றவும்</string>
+    <string name="ovulation_button_not_selected">овுலேஷன் சேர்க்கவும்</string>
     <string name="empty_click_alert">சேமிக்க அல்லது அகற்ற தேதிகள் இல்லை</string>
     <string name="successfully_saved_alert">மாற்றங்கள் வெற்றிகரமாக சேமிக்கப்பட்டன</string>
     <string name="no_data_selected">மாற்றங்கள் வெற்றிகரமாக சேமிக்கப்பட்டன</string>
@@ -36,6 +40,7 @@
     <string name="period_history">கால வரலாறு</string>
     <string name="ovulation_history">அண்டவிடுப்பின் வரலாறு</string>
     <string name="language">மொழி</string>
+    <string name="change_language">மொழியை மாற்றவும்</string>
     <string name="cycle_numbers_show">சுழற்சி எண்களைக் காட்டு</string>
     <string name="close">மூடு</string>
     <string name="save">சேமிக்கவும்</string>
@@ -141,11 +146,17 @@
     <string name="delete_question">இந்த அறிகுறியை நிச்சயமாக நீக்க விரும்புகிறீர்களா?</string>
     <string name="delete_button">நீக்கு</string>
     <string name="data_settings">தரவுக் அமைப்புகள்</string>
+    <string name="select_file_button">தேர்ந்தெடுக்கவும்</string>
     <string name="import_export_data">தரவை இறக்குமதி மற்றும் ஏற்றுமதி செய்</string>
+    <string name="import_data">இறக்குமதி செய்க</string>
     <string name="export_data">தரவை ஏற்றுமதி செய்</string>
     <string name="about_app">செயலியின் பற்றிய</string>
     <string name="screen_protection">ஸ்கிரீன் ஷாட்களைத் தடுக்கவும்</string>
     <string name="rename_symptom" >அறிகுறியின் பெயரை மாற்றவும்</string>
     <string name="december">டிசம்பர்</string>
     <string name="calendar_title">கோஷ்டி</string>
+    <string name="data">சேமிக்கப்பட்ட தரவுகள்</string>
+    <string name="Import">இறக்குமதி செய்யவும்</string>
+    <string name="data_export">ஏற்றுமதி செய்யவும்</string>
+    <string name="select_file">இறக்குமதி செய்ய கோப்பைத் தேர்ந்தெடுக்கவும்</string>
 </resources>

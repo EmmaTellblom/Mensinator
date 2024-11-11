@@ -10,6 +10,10 @@
     <string name="ovulation_button">Ovulație</string>
    
     <!-- Home Alerts -->
+    <string name="period_button_selected">Elimină menstruația</string>
+    <string name="period_button_not_selected">Adaugă menstruație</string>
+    <string name="ovulation_button_selected">Elimină ovulația</string>
+    <string name="ovulation_button_not_selected">Adaugă ovulație</string>
     <string name="empty_click_alert">Nu există zile de salvat sau șters</string>
     <string name="successfully_saved_alert">Schimbările au fost salvate cu succes</string>
     <string name="no_data_selected">Nicio zi selectată</string>
@@ -37,6 +41,7 @@
     <string name="period_history">Istoric menstrual</string>
     <string name="ovulation_history">Istoric ovulație</string>
     <string name="language">Limbă</string>
+    <string name="change_language">Schimbă limba</string>
     <string name="cycle_numbers_show">Arată numărul ciclurilor</string>
     <string name="close">Închide</string>
     <string name="save">Salvează</string>
@@ -144,11 +149,17 @@
     <string name="delete_question">Ești sigură că vrei să ștergi acest simptom?</string>
     <string name="delete_button">Șterge</string>
     <string name="data_settings">Setări de date</string>
+    <string name="select_file_button">Selectează</string>
     <string name="import_export_data">Importă și exportă date</string>
+    <string name="import_data">Importă date</string>
     <string name="export_data">Exportă date</string>
     <string name="about_app">Despre aplicație</string>
     <string name="screen_protection">preveni capturile de ecran</string>
     <string name="rename_symptom" >Redenumește simptomul</string>
     <string name="december">Decembrie</string>
     <string name="calendar_title">Calendariu</string>
+    <string name="data">Date salvate</string>
+    <string name="Import">Importă</string>
+    <string name="data_export">Exportă</string>
+    <string name="select_file">Selectează fișierul pentru import</string>
 </resources>

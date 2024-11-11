@@ -9,6 +9,7 @@
     <string name="symptoms_button">লক্ষণ</string>
     <string name="ovulation_button">ওভুলেশন</string>
     <!-- Home Alerts -->
+    <string name="ovulation_button_not_selected">ওভুলেশন বোতাম নির্বাচিত নয়</string>
     <string name="empty_click_alert">সংরক্ষণ বা মুছে ফেলার জন্য কোনো তারিখ নেই</string>
     <string name="successfully_saved_alert">পরিবর্তনগুলি সফলভাবে সংরক্ষিত হয়েছে</string>
     <string name="no_data_selected">কোনো তারিখ নির্বাচিত হয়নি</string>
@@ -36,6 +37,7 @@
     <string name="period_history">মাসিক ইতিহাস</string>
     <string name="ovulation_history">ওভুলেশন ইতিহাস</string>
     <string name="language">ভাষা</string>
+    <string name="change_language">ভাষা পরিবর্তন করুন</string>
     <string name="cycle_numbers_show">চক্র সংখ্যা দেখান</string>
     <string name="close">বন্ধ করুন</string>
     <string name="save">সংরক্ষণ করুন</string>
@@ -142,11 +144,20 @@
     <string name="delete_question">আপনি কি নিশ্চিত যে আপনি এই লক্ষণটি মুছতে চান?</string>
     <string name="delete_button">মুছুন</string>
     <string name="data_settings">ডেটা সেটিংস</string>
+    <string name="select_file_button">ফাইল নির্বাচন বোতাম</string>
     <string name="import_export_data">ডেটা আমদানি এবং রপ্তানি করুন</string>
+    <string name="import_data">তথ্য আমদানি</string>
     <string name="export_data">ডেটা রপ্তানি করুন</string>
     <string name="about_app">অ্যাপ সম্পর্কে</string>
     <string name="screen_protection">স্ক্রিনশট প্রতিরোধ করুন</string>
     <string name="rename_symptom" >লক্ষণের নাম পরিবর্তন করুন</string>
     <string name="december">ডিসেম্বর</string>
     <string name="calendar_title">পঞ্জিকা</string>
+    <string name="period_button_selected">পিরিয়ড বোতাম নির্বাচন করা হয়েছে</string>
+    <string name="period_button_not_selected">পিরিয়ড বোতাম নির্বাচিত নয়</string>
+    <string name="ovulation_button_selected">ওভুলেশন বোতাম নির্বাচন করা হয়েছে</string>
+    <string name="data">তথ্য</string>
+    <string name="Import">আমদানি</string>
+    <string name="data_export">তথ্য রপ্তানি</string>
+    <string name="select_file">ফাইল নির্বাচন করুন</string>
 </resources>

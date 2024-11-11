@@ -10,6 +10,10 @@
     <string name="symptoms_button">Objawy</string>
     <string name="ovulation_button">Owulacja</string>
     <!-- Home Alerts -->
+    <string name="period_button_selected">Usuń okres</string>
+    <string name="period_button_not_selected">Dodaj okres</string>
+    <string name="ovulation_button_selected">Usuń owulację</string>
+    <string name="ovulation_button_not_selected">Dodaj owulację</string>
     <string name="empty_click_alert">Brak dat do zapisania lub usunięcia</string>
     <string name="successfully_saved_alert">Zmiany zapisane</string>
     <string name="no_data_selected">Nie wybrano żadnych dat</string>

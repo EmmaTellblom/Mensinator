@@ -10,6 +10,7 @@
     <string name="symptoms_button">लक्षण</string>
     <string name="ovulation_button">ओव्यूलेशन</string>
     <!-- Home Alerts -->
+    <string name="ovulation_button_not_selected">ओव्यूलेशन बटन चयनित नहीं जोड़ें</string>
     <string name="empty_click_alert">सहेजने या हटाने के लिए कोई तारीख नहीं</string>
     <string name="successfully_saved_alert">परिवर्तन सफलतापूर्वक सहेजे गए</string>
     <string name="no_data_selected">कोई तारीख़ नहीं चुनी गई</string>
@@ -37,6 +38,7 @@
     <string name="period_history">पिरियड् इतिहास</string>
     <string name="ovulation_history">ओव्यूलेशन इतिहास</string>
     <string name="language">भाषा</string>
+    <string name="change_language">भाषा बदलें</string>
     <string name="cycle_numbers_show">चक्र संख्या दिखाएं</string>
     <string name="close">बंद करना</string>
     <string name="save">लक्षण सेव करें</string>
@@ -142,11 +144,20 @@
     <string name="delete_question">क्या आप सुनिश्चित हैं कि आप इस लक्षण को हटाना चाहते हैं?</string>
     <string name="delete_button">हटाएं</string>
     <string name="data_settings">डेटा सेटिंग्स</string>
+    <string name="select_file_button">फ़ाइल चयन बटन</string>
     <string name="import_export_data">डेटा आयात और निर्यात करें</string>
+    <string name="import_data">डेटा आयात</string>
     <string name="export_data">डेटा निर्यात करें</string>
     <string name="about_app">ऐप के बारे में</string>
     <string name="screen_protection">स्क्रीनशॉट रोकें</string>
     <string name="rename_symptom" >लक्षण का नाम बदलें</string>
     <string name="december">दिसंबर</string>
     <string name="calendar_title">कैलेंडर</string>
+    <string name="period_button_selected">पीरियड बटन चयनित</string>
+    <string name="period_button_not_selected">पीरियड बटन चयनित नहीं</string>
+    <string name="ovulation_button_selected">ओव्यूलेशन बटन चयनित</string>
+    <string name="data">डेटा</string>
+    <string name="Import">आयात</string>
+    <string name="data_export">डेटा निर्यात</string>
+    <string name="select_file">फ़ाइल चुनें</string>
 </resources>

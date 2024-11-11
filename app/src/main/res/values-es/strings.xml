@@ -9,6 +9,10 @@
     <string name="symptoms_button">Síntomas</string>
     <string name="ovulation_button">Ovulación</string>
     <!-- Home Alerts -->
+    <string name="period_button_selected">Eliminar período</string>
+    <string name="period_button_not_selected">Agregar periodo</string>
+    <string name="ovulation_button_selected">Eliminar ovulación</string>
+    <string name="ovulation_button_not_selected">Agregar ovulación</string>
     <string name="empty_click_alert">No hay fechas para guardar o borrar</string>
     <string name="successfully_saved_alert">Cambios guardados con éxito</string>
     <string name="no_data_selected">No se han seleccionado ningunas fechas</string>
@@ -43,6 +47,7 @@
     <string name="period_history">Historial menstrual</string>
     <string name="ovulation_history">Historial de ovulación</string>
     <string name="language">Idioma</string>
+    <string name="change_language">Cambiar idioma</string>
     <string name="cycle_numbers_show">Mostrar números de ciclo</string>
     <string name="close">Cerrar</string>
     <string name="save">Guardar</string>
@@ -144,11 +149,17 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Cerrar</string>
     <string name="data_settings">Configuración de datos</string>
+    <string name="select_file_button">Seleccionar</string>
     <string name="import_export_data">Importar/Exportar datos</string>
+    <string name="import_data">Importar datos</string>
     <string name="export_data">Exportar los datos</string>
     <string name="about_app">Acerca de la aplicación</string>
     <string name="screen_protection">evitar capturas de pantalla</string>
     <string name="rename_symptom" >Renombrar síntoma</string>
     <string name="december">Diciembre</string>
     <string name="calendar_title">Calendario</string>
+    <string name="data">Datos guardados</string>
+    <string name="Import">Importar</string>
+    <string name="data_export">Exportar</string>
+    <string name="select_file">Seleccionar archivo para importar</string>
 </resources>

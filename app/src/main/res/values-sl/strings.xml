@@ -9,6 +9,10 @@
     <string name="symptoms_button">Simptomi</string>
     <string name="ovulation_button">Ovulacija</string>
     <!-- Home Alerts -->
+    <string name="period_button_selected">Odstrani menstruacijo</string>
+    <string name="period_button_not_selected">Dodaj menstruacijo</string>
+    <string name="ovulation_button_selected">Odstrani ovulacijo</string>
+    <string name="ovulation_button_not_selected">Dodaj ovulacijo</string>
     <string name="empty_click_alert">Ni izbranih datumov za urejanje</string>
     <string name="successfully_saved_alert">Spremembe shranjene</string>
     <string name="no_data_selected">Ni izbranih datumov</string>
@@ -43,6 +47,7 @@
     <string name="period_history">Zgodovina menstruacij</string>
     <string name="ovulation_history">Zgodovina ovulacij</string>
     <string name="language">Jezik</string>
+    <string name="change_language">Spremeni jezik</string>
     <string name="cycle_numbers_show">Pokaži število dneva cikla</string>
     <string name="screen_protection">Prepreči posnetke zaslona</string>
     <string name="close">Zapri</string>
@@ -145,10 +150,16 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Zapri</string>
     <string name="data_settings">Nastavitve podatkov</string>
+    <string name="select_file_button">Izberi</string>
     <string name="import_export_data">Izvoz in uvoz podatkov</string>
+    <string name="import_data">Uvozi podatke</string>
     <string name="export_data">Izvozi podake</string>
     <string name="about_app">O aplikaciji</string>
     <string name="rename_symptom">Preimenuj simptom</string>
     <string name="december">December</string>
     <string name="calendar_title">Koledar</string>
+    <string name="data">Shranjeni podatki</string>
+    <string name="Import">Uvozi</string>
+    <string name="data_export">Izvozi</string>
+    <string name="select_file">Izberite datoteko za uvoz</string>
 </resources>

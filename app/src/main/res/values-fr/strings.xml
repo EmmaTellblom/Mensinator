@@ -9,6 +9,7 @@
     <string name="symptoms_button">Symptômes</string>
     <string name="ovulation_button">Ovulation</string>
     <!-- Home Alerts -->
+    <string name="ovulation_button_not_selected">Ajouter l\'ovulation</string>
     <string name="empty_click_alert">Aucune date à enregistrer ou supprimer</string>
     <string name="successfully_saved_alert">Modifications enregistrées avec succès</string>
     <string name="no_data_selected">Aucune date sélectionnée</string>
@@ -43,6 +44,7 @@
     <string name="period_history">Historique des règles</string>
     <string name="ovulation_history">Historique d\'ovulation</string>
     <string name="language">Langue</string>
+    <string name="change_language">Changer de langue</string>
     <string name="cycle_numbers_show">Afficher les numéros de cycle</string>
     <string name="close">Fermer</string>
     <string name="save">Enregistrer</string>
@@ -141,6 +143,7 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Fermer</string>
     <string name="data_settings">Paramètres des données</string>
+    <string name="select_file_button">Sélectionner</string>
     <string name="import_export_data">Importer Exporter des données</string>
     <string name="import_data">Importer les données</string>
     <string name="export_data">Exporter les données</string>
@@ -152,4 +155,8 @@
     <string name="data">Données Enregistrées</string>
     <string name="Import">Importer</string>
     <string name="data_export">Exporter</string>
+    <string name="period_button_selected">Supprimer la période</string>
+    <string name="period_button_not_selected">Ajouter la période</string>
+    <string name="ovulation_button_selected">Supprimer l\'ovulation</string>
+    <string name="select_file">Sélectionner le fichier</string>
 </resources>
