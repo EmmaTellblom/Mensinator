@@ -138,8 +138,6 @@ fun MensinatorApp(
                 }
             }
         },
-        // We want to handle insets ourselves at child screens
-        //contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         NavHost(
             navController = navController,
