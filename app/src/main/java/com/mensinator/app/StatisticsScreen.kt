@@ -8,9 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import org.koin.compose.koinInject
 import java.time.LocalDate
 
@@ -30,22 +31,13 @@ fun StatisticsScreen() {
     val ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
     val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
 
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
-            .displayCutoutPadding()
-            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .displayCutoutExcludingStatusBarsPadding()
             .padding(16.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.statistics_title),
-            fontSize = 25.sp,
-            modifier = Modifier.padding(start = 5.dp, bottom = 5.dp),
-            fontWeight = FontWeight.Bold
-        )
         RowOfText(
             stringResource(id = R.string.period_count),
             periodCount.toString()
@@ -98,7 +90,7 @@ fun RowOfText(stringOne: String, stringTwo: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 15.dp, start = 5.dp, end = 5.dp, bottom = 20.dp),
+            .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -112,4 +104,10 @@ fun RowOfText(stringOne: String, stringTwo: String) {
             fontSize = 17.sp,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun RowOfTextPreview() {
+    RowOfText("firstString", "secondstring")
 }

@@ -195,14 +195,14 @@ fun CalendarScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .displayCutoutPadding()
-            .statusBarsPadding()
-            .padding(16.dp)
+            .windowInsetsPadding(WindowInsets.displayCutout.exclude(WindowInsets.statusBars))
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
         ) {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
@@ -216,6 +216,7 @@ fun CalendarScreen() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
             )
+
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
             }) {
@@ -225,6 +226,7 @@ fun CalendarScreen() {
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(12.dp))
 
         Row {

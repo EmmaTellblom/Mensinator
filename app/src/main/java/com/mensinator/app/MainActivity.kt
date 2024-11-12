@@ -8,7 +8,7 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.mensinator.app.navigation.MensinatorBottomBar
+import com.mensinator.app.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
 
 class MainActivity : AppCompatActivity() {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             MensinatorTheme {
-                MensinatorBottomBar { isScreenProtectionEnabled ->
+                MensinatorApp { isScreenProtectionEnabled ->
                     // Sets the flags for screen protection if
                     // isScreenProtectionEnabled == true
                     // If isScreenProtectionEnabled == false it removes the flags

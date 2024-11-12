@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 
@@ -101,24 +102,13 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .displayCutoutPadding()
-            .statusBarsPadding(),
+            .displayCutoutExcludingStatusBarsPadding(),
     ) {//we have 2 columns so the scroll animation does get cut by the padding of the second column
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.Start
         ) {
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(id = R.string.app_settings),
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 10.dp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-            }
             groupedSettings.forEach { (groupId, settingsInGroup) ->
                 when (groupId) {
                     1 -> {
