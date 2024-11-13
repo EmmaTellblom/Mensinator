@@ -16,12 +16,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mensinator.app.data.DataSource
+import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 
@@ -48,25 +47,12 @@ fun ManageSymptomScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())  // Make the column scrollable
-            .displayCutoutPadding()
-            .statusBarsPadding()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top,
+            .displayCutoutExcludingStatusBarsPadding()
+            .padding (16.dp)
+            .padding(bottom = 50.dp), // To be able to overscroll the list, to not have the FloatingActionButton overlapping
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 10.dp, end = 10.dp)
-        ) {
-            Text(
-                text = stringResource(id = R.string.symptoms_button),
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.weight(1f)) //cover available space
-        }
-        Spacer(modifier = Modifier.padding(3.dp))
         savedSymptoms.forEach { symptom ->
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
@@ -81,9 +67,7 @@ fun ManageSymptomScreen(
                     symptomToRename = symptom
                     showRenameDialog = true
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 15.dp),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(25.dp),
             ) {
                 Row(
@@ -242,7 +226,6 @@ fun ManageSymptomScreen(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(50.dp)) // To be able to overscroll the list, to not have the FloatingActionButton overlapping
     }
     if (showCreateSymptom.value) {
         CreateNewSymptomDialog(
