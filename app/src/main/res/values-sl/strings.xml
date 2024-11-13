@@ -143,7 +143,7 @@
     <string name="features_coming_soon">Prihajajoče funkcije:</string>
     <string name="upcoming_features">• Preveri naš Github za zadnje novice glede razvoja Mensinatorja!</string>
     <string name="our_story_header">Naša zgodba</string>
-    <string name="our_story">Aplikacijo sva začeli dve ženski naveličani prodaje svojih podatkov velikim korporacijam. Kmalu je v ekipo prišlo še kup prostovoljcev. Naša aplikacija hrani vse tvoje podatke lokalno, na tvoji napravi. Do njih nimamo &lt;b&gt;nobenega dostopa&lt;/b&gt;.\nCenimo tvojo zasebnost in ne shranjujemo ali posredujemo tvojih osebnih podatkov. Od splavitve aplikacije hitro rastemo. Sedaj imamo svoj Discord z ljudmi ki imajo zelo radi to aplikacijo in nam pomagajo!\n\nPridruži se nam tu: https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">Aplikacijo sva začeli dve ženski naveličani prodaje svojih podatkov velikim korporacijam. Kmalu je v ekipo prišlo še kup prostovoljcev. Naša aplikacija hrani vse tvoje podatke lokalno, na tvoji napravi. Do njih nimamo nobenega dostopa.\nCenimo tvojo zasebnost in ne shranjujemo ali posredujemo tvojih osebnih podatkov. Od splavitve aplikacije hitro rastemo. Sedaj imamo svoj Discord z ljudmi ki imajo zelo radi to aplikacijo in nam pomagajo!\n\nPridruži se nam tu: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Opozorilo:</string>
     <string name="disclaimer">• To je amaterski projet. Ni namenjen za medicinsko rabo. Preprosto delamo to za lastne potrebe. Odprto sprejemamo ideje in žeje. Pridruži se nam na Discordu ali nam pošlji email na:\nmensinator.app@gmail.com</string>
 
