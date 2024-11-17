@@ -2,6 +2,8 @@ package com.mensinator.app.data
 
 import androidx.compose.ui.graphics.Color
 
+// TODO: isDarkTheme can change, should not be specified as class variable
+// TODO: Rename class
 class DataSource(isDarkTheme: Boolean) {
 
     val colorCategories = listOf(
@@ -84,4 +86,11 @@ class DataSource(isDarkTheme: Boolean) {
     )
 
     val colorMap: Map<String, Color> = if (isDarkTheme) darkColorMap else lightColorMap
+
+    fun getColor(isDarkTheme: Boolean, colorName: String): Color {
+        return when (isDarkTheme) {
+            true -> darkColorMap[colorName] ?: Color.Red
+            false -> lightColorMap[colorName] ?: Color.Red
+        }
+    }
 }

@@ -39,6 +39,7 @@ import com.mensinator.app.data.DataSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 //Maps Database keys to res/strings.xml for multilanguage support
@@ -109,23 +110,28 @@ private fun SettingSectionHeaderPreview() {
 
 @Composable
 private fun SettingColorSelection(
-    text: String,
-    color: Color,
-    onColorChange: (ColorSetting, Color) -> Unit = { x, y -> },
+    colorSetting: ColorSetting,
+    currentColor: Color,
     modifier: Modifier = Modifier,
+    onColorChange: (setting: ColorSetting, colorName: String) -> Unit,
 ) {
-    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = text)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = stringResource(colorSetting.stringResId))
         Row {
             Box(
                 modifier = Modifier
-                    .background(color = color, shape = CircleShape)
+                    .background(color = currentColor, shape = CircleShape)
                     .size(24.dp)
                     .clickable {
-                        onColorChange(ColorSetting.PERIOD, Color.Black)
+                        onColorChange(colorSetting, "Blue")
                     }
             )
-            // color display + chevron
+            // TODO color display
         }
     }
 }
@@ -137,10 +143,20 @@ private fun SettingNumberSelection(
     onNumberChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier.fillMaxWidth()) {
-        Text(text = text)
-        Row {
-            // color display + chevron
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(text = text, modifier = Modifier.weight(1f))
+        TextButton(
+            onClick = {
+                // TODO
+            },
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) {
+            Text("$number ${stringResource(R.string.days)}")
         }
     }
 }
@@ -151,12 +167,17 @@ private fun SettingSwitch(
     checked: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier.fillMaxWidth()) {
-        Text(text = text)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = text, modifier = Modifier.weight(1f))
         Switch(
             checked = checked,
             onCheckedChange = {
-
+                // TODO
             }
         )
     }
@@ -174,15 +195,18 @@ private fun SettingLanguagePicker() {
     }
 
     val context = LocalContext.current
-    Row {
-        Text(text = stringResource(R.string.language))
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = stringResource(R.string.language), modifier = Modifier.weight(1f))
         TextButton(
             onClick = {
                 val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
                 val uri = Uri.fromParts("package", context.packageName, null)
                 intent.data = uri
                 context.startActivity(intent)
-            }
+            },
+            colors = ButtonDefaults.filledTonalButtonColors()
         ) {
             Text(stringResource(R.string.change_language))
         }
@@ -194,8 +218,9 @@ private fun SettingLanguagePicker() {
 private fun SettingColorSelectionPreview() {
     MensinatorTheme {
         SettingColorSelection(
-            text = stringResource(R.string.period_selection_color),
-            color = Color.Red
+            colorSetting = ColorSetting.PERIOD,
+            currentColor = Color.Red,
+            onColorChange = { _, _ -> }
         )
     }
 }
@@ -203,46 +228,76 @@ private fun SettingColorSelectionPreview() {
 @Composable
 fun NewScreen(
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = viewModel()
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
+    val isDarkMode = isDarkMode()
+    LaunchedEffect(isDarkMode) {
+        viewModel.updateDarkModeStatus(isDarkMode)
+    }
+    LaunchedEffect(Unit) {
+        viewModel.refreshColors()
+    }
 
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.colors))
         SettingColorSelection(
-            text = stringResource(R.string.period_color),
-            color = viewState.periodColor,
+            colorSetting = ColorSetting.PERIOD,
+            currentColor = viewState.periodColor,
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
             }
         )
         SettingColorSelection(
-            text = stringResource(R.string.selection_color),
-            color = Color.Red
+            colorSetting = ColorSetting.SELECTION,
+            currentColor = viewState.selectionColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
         )
         SettingColorSelection(
-            text = stringResource(R.string.period_selection_color),
-            color = Color.Red
+            colorSetting = ColorSetting.PERIOD_SELECTION,
+            currentColor = viewState.periodSelectionColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
         )
         SettingColorSelection(
-            text = stringResource(R.string.expected_period_color),
-            color = Color.Red
+            colorSetting = ColorSetting.EXPECTED_PERIOD,
+            currentColor = viewState.expectedPeriodColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
         )
         SettingColorSelection(
-            text = stringResource(R.string.ovulation_color),
-            color = Color.Red
+            colorSetting = ColorSetting.OVULATION,
+            currentColor = viewState.ovulationColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
         )
         SettingColorSelection(
-            text = stringResource(R.string.expected_ovulation_color),
-            color = Color.Red
+            colorSetting = ColorSetting.EXPECTED_OVULATION,
+            currentColor = viewState.expectedOvulationColor,
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            }
         )
 
+        Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.reminders))
         SettingNumberSelection(
             text = stringResource(R.string.days_before_reminder),
             number = viewState.daysBeforeReminder,
             onNumberChange = {}
         )
+
+        Spacer(Modifier.height(16.dp))
 
         SettingSectionHeader(text = stringResource(R.string.other_settings))
         SettingSwitch(
@@ -267,6 +322,7 @@ fun NewScreen(
             checked = false
         )
 
+        Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.data_settings))
         // TODO: saved data + 2 buttons
 
@@ -744,7 +800,7 @@ fun handleImport(context: Context, exportImport: IExportImport, importPath: Stri
 
 fun saveData(savedSetting: List<Setting>, dbHelper: IPeriodDatabaseHelper, context: Context) {
     Log.d("SettingsDialog", "Save button clicked")
-    savedSetting.forEach { setting ->
+    savedSetting.forEach { setting: Setting ->
         dbHelper.updateSetting(setting.key, setting.value)
         Log.d("SettingsDialog", "Updated setting ${setting.key} to ${setting.value}")
         if (setting.key == "reminder_days" && setting.value.toInt() > 0) {

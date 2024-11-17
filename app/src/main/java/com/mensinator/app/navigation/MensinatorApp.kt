@@ -6,7 +6,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -27,6 +29,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.*
 import com.mensinator.app.R
+import com.mensinator.app.settings.NewScreen
+import com.mensinator.app.settings.SettingsScreen
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -156,9 +160,13 @@ fun MensinatorApp(
                 ManageSymptomScreen(showCreateSymptom)
             }
             composable(route = Screen.Settings.name) {
-                SettingsScreen(onSwitchProtectionScreen = { newValue ->
-                    onScreenProtectionChanged(newValue)
-                })
+                Column {
+                    NewScreen()
+                    SettingsScreen(onSwitchProtectionScreen = { newValue ->
+                        onScreenProtectionChanged(newValue)
+                    })
+                }
+
             }
         }
     }

@@ -1,11 +1,13 @@
 package com.mensinator.app
 
 import android.app.Application
+import com.mensinator.app.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 class App : Application() {
@@ -18,6 +20,8 @@ class App : Application() {
         singleOf(::PeriodPrediction) { bind<IPeriodPrediction>() }
         singleOf(::ExportImport) { bind<IExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
+
+        viewModel { SettingsViewModel(get(), get()) }
     }
 
     override fun onCreate() {
