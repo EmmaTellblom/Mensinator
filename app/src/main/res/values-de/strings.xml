@@ -165,7 +165,4 @@
     <string name="export_data">Daten Exportieren</string>
     <string name="about_app">Über die App</string>
     <string name="rename_symptom">Symptom bearbeiten</string>
-    <string name="period_button_selected">Periode entfernen</string>
-    <string name="period_button_not_selected">Periode hinzufügen</string>
-    <string name="ovulation_button_selected">Eisprung löschen</string>
 </resources>
