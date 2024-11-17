@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mensinator.app.*
 import com.mensinator.app.R
 import com.mensinator.app.data.DataSource
@@ -41,6 +40,8 @@ import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+
+private val colorCircleSize = 24.dp
 
 //Maps Database keys to res/strings.xml for multilanguage support
 object ResourceMapper {
@@ -112,27 +113,111 @@ private fun SettingSectionHeaderPreview() {
 private fun SettingColorSelection(
     colorSetting: ColorSetting,
     currentColor: Color,
+    openColorPickerForSetting: ColorSetting?,
     modifier: Modifier = Modifier,
+    onClosePicker: () -> Unit,
     onColorChange: (setting: ColorSetting, colorName: String) -> Unit,
+    onOpenColorPicker: (setting: ColorSetting) -> Unit,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = stringResource(colorSetting.stringResId))
+        Text(text = stringResource(colorSetting.stringResId), modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(4.dp))
         Row {
             Box(
                 modifier = Modifier
+                    .size(colorCircleSize)
                     .background(color = currentColor, shape = CircleShape)
-                    .size(24.dp)
-                    .clickable {
-                        onColorChange(colorSetting, "Blue")
-                    }
+                    .clip(CircleShape)
+                    .clickable { onOpenColorPicker(colorSetting) }
             )
-            // TODO color display
+
+            if (openColorPickerForSetting != colorSetting) return
+            ColorPicker(
+                colorSetting = colorSetting,
+                onClosePicker = onClosePicker,
+                onSelectColor = onColorChange
+            )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun SettingColorSelectionPreview() {
+    MensinatorTheme {
+        SettingColorSelection(
+            colorSetting = ColorSetting.PERIOD,
+            currentColor = Color.Red,
+            openColorPickerForSetting = null,
+            onClosePicker = {},
+            onColorChange = { _, _ -> },
+            onOpenColorPicker = {},
+        )
+    }
+}
+
+@Composable
+private fun ColorPicker(
+    modifier: Modifier = Modifier,
+    colorSetting: ColorSetting,
+    onClosePicker: () -> Unit,
+    onSelectColor: (setting: ColorSetting, colorName: String) -> Unit
+) {
+    DropdownMenu(
+        expanded = true,
+        onDismissRequest = { onClosePicker() },
+        modifier = Modifier.wrapContentSize()
+    ) {
+        val colorMap = DataSource(isDarkMode()).colorMap
+        // Define color categories grouped by hue
+        val colorCategories = DataSource(isDarkMode()).colorCategories
+
+        Column(
+            modifier = modifier.wrapContentSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            colorCategories.forEach { colorGroup ->
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    colorGroup.forEach InnerLoop@{ colorName ->
+                        val colorValue = colorMap[colorName] ?: return@InnerLoop
+                        DropdownMenuItem(
+                            text = {
+                                Box(
+                                    modifier = Modifier
+                                        .size(colorCircleSize)
+                                        .background(colorValue, CircleShape)
+                                )
+                            },
+                            modifier = Modifier
+                                .size(colorCircleSize * 2),
+                            onClick = { onSelectColor(colorSetting, colorName) },
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ColorPickerPreview() {
+    MensinatorTheme {
+        ColorPicker(
+            colorSetting = ColorSetting.PERIOD,
+            onClosePicker = {},
+            onSelectColor = { _, _ -> }
+        )
     }
 }
 
@@ -150,6 +235,7 @@ private fun SettingNumberSelection(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = text, modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(4.dp))
         TextButton(
             onClick = {
                 // TODO
@@ -174,6 +260,7 @@ private fun SettingSwitch(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(4.dp))
         Switch(
             checked = checked,
             onCheckedChange = {
@@ -199,6 +286,7 @@ private fun SettingLanguagePicker() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = stringResource(R.string.language), modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(4.dp))
         TextButton(
             onClick = {
                 val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS)
@@ -213,20 +301,9 @@ private fun SettingLanguagePicker() {
     }
 }
 
-@Preview
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SettingColorSelectionPreview() {
-    MensinatorTheme {
-        SettingColorSelection(
-            colorSetting = ColorSetting.PERIOD,
-            currentColor = Color.Red,
-            onColorChange = { _, _ -> }
-        )
-    }
-}
-
-@Composable
-fun NewScreen(
+fun NewSettingsScreen(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
@@ -249,44 +326,62 @@ fun NewScreen(
         SettingColorSelection(
             colorSetting = ColorSetting.PERIOD,
             currentColor = viewState.periodColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
         SettingColorSelection(
             colorSetting = ColorSetting.SELECTION,
             currentColor = viewState.selectionColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
         SettingColorSelection(
             colorSetting = ColorSetting.PERIOD_SELECTION,
             currentColor = viewState.periodSelectionColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
         SettingColorSelection(
             colorSetting = ColorSetting.EXPECTED_PERIOD,
             currentColor = viewState.expectedPeriodColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
         SettingColorSelection(
             colorSetting = ColorSetting.OVULATION,
             currentColor = viewState.ovulationColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
         SettingColorSelection(
             colorSetting = ColorSetting.EXPECTED_OVULATION,
             currentColor = viewState.expectedOvulationColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
             onColorChange = { colorSetting, newColor ->
                 viewModel.updateColorSetting(colorSetting, newColor)
-            }
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
         )
 
         Spacer(Modifier.height(16.dp))
@@ -326,7 +421,11 @@ fun NewScreen(
         SettingSectionHeader(text = stringResource(R.string.data_settings))
         // TODO: saved data + 2 buttons
 
-        Row(horizontalArrangement = Arrangement.Absolute.SpaceAround) {
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.Center
+        ) {
             TextButton(
                 onClick = {
                     // TODO: Show FAQDialog
@@ -344,7 +443,8 @@ fun NewScreen(
 @Composable
 private fun NewScreenPreview() {
     MensinatorTheme {
-        NewScreen()
+        // Doesn't work yet, we can't preview when depending on ViewModel
+        NewSettingsScreen()
     }
 }
 

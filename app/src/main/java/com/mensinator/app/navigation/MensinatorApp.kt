@@ -6,9 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
@@ -29,7 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.*
 import com.mensinator.app.R
-import com.mensinator.app.settings.NewScreen
+import com.mensinator.app.settings.NewSettingsScreen
 import com.mensinator.app.settings.SettingsScreen
 import org.koin.compose.koinInject
 
@@ -161,7 +159,7 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Column {
-                    NewScreen()
+                    NewSettingsScreen()
                     SettingsScreen(onSwitchProtectionScreen = { newValue ->
                         onScreenProtectionChanged(newValue)
                     })

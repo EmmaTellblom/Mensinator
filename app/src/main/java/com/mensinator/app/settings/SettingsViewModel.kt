@@ -28,6 +28,7 @@ class SettingsViewModel(
             periodSelectionColor = Color.Yellow,
             ovulationColor = Color.Yellow,
             expectedOvulationColor = Color.Yellow,
+            openColorPickerForSetting = null,
 
             daysBeforeReminder = 300,
 
@@ -45,6 +46,7 @@ class SettingsViewModel(
         val periodSelectionColor: Color,
         val ovulationColor: Color,
         val expectedOvulationColor: Color,
+        val openColorPickerForSetting: ColorSetting? = null,
 
         val daysBeforeReminder: Int,
 
@@ -78,7 +80,20 @@ class SettingsViewModel(
 
     fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) {
         periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
+        hideColorPicker()
         refreshColors()
+    }
+
+    fun openColorPicker(colorSetting: ColorSetting) {
+        _viewState.update {
+            it.copy(openColorPickerForSetting = colorSetting)
+        }
+    }
+
+    fun hideColorPicker() {
+        _viewState.update {
+            it.copy(openColorPickerForSetting = null)
+        }
     }
 }
 
