@@ -1,0 +1,9 @@
+UI fixes:
+* Color selection in grid
+* Consistency of popups
+* Improved texts on main buttons
+* Update of import/export buttons
+
+Added languages:
+* German
+* Translation corrections
