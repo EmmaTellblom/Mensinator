@@ -136,7 +136,7 @@
     <string name="symptoms">• Objawy: Kliknij \'Objawy\', aby wyświetlić lub dodać objawy do wybranej daty.</string>
     <string name="ovulation">• Owulacja: Wybierz pojedynczą datę i kliknij \’Owulacja\’. Aby usunąć, wybierz datę i znów kliknij to samo </string>
     <string name="statistics">• Statystyki: Kliknij \’Statystyki\’ na dolnym menu.</string>
-    <string name="import_export">• Import/Eksport: Kliknij \'Import/Eksport\', aby zaimportować lub wyeksportować swoje dane. Jest to KONIECZNE przy przenoszeniu danych na nowe urządzenie!</string>
+    <string name="import_export">• Import/Eksport: Kliknij \'Importuj/Eksportuj\', aby zaimportować lub wyeksportować swoje dane. Jest to KONIECZNE przy przenoszeniu danych na nowe urządzenie!</string>
     <string name="calculations">• Obliczenia: \nOkresy są obliczane na podstawie średniej długości cyklu i okresu.\nOkresy mogą być obliczane na podstawie średniej fazy lutealnej. Obliczenie będzie wtedy analizować ostatnie 5 cykli, aby obliczyć średnią fazę lutealną i wykorzystać ją do obliczenia okresu. Można to aktywować w ustawieniach.\nOwulacja jest obliczana na podstawie średniej długości cyklu owulacyjnego.</string>
     <string name="features_coming_soon">Funkcje Wkrótce Dostępne:</string>
     <string name="upcoming_features">• Nowy interfejs użytkowania (gdy będziemy w nastroju). • Inne drobne ulepszenia UI</string>
