@@ -35,8 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.*
 import com.mensinator.app.R
 import com.mensinator.app.data.DataSource
-import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -101,7 +101,7 @@ private fun SettingSectionHeader(
     )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SettingSectionHeaderPreview() {
     MensinatorTheme {
@@ -146,7 +146,7 @@ private fun SettingColorSelection(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SettingColorSelectionPreview() {
     MensinatorTheme {
@@ -163,22 +163,22 @@ private fun SettingColorSelectionPreview() {
 
 @Composable
 private fun ColorPicker(
-    modifier: Modifier = Modifier,
     colorSetting: ColorSetting,
     onClosePicker: () -> Unit,
-    onSelectColor: (setting: ColorSetting, colorName: String) -> Unit
+    onSelectColor: (setting: ColorSetting, colorName: String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     DropdownMenu(
         expanded = true,
         onDismissRequest = { onClosePicker() },
-        modifier = Modifier.wrapContentSize()
+        modifier = modifier.wrapContentSize()
     ) {
         val colorMap = DataSource(isDarkMode()).colorMap
         // Define color categories grouped by hue
         val colorCategories = DataSource(isDarkMode()).colorCategories
 
         Column(
-            modifier = modifier.wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -198,8 +198,7 @@ private fun ColorPicker(
                                         .background(colorValue, CircleShape)
                                 )
                             },
-                            modifier = Modifier
-                                .size(colorCircleSize * 2),
+                            modifier = Modifier.size(colorCircleSize * 2),
                             onClick = { onSelectColor(colorSetting, colorName) },
                         )
                     }
@@ -209,24 +208,29 @@ private fun ColorPicker(
     }
 }
 
-@Preview
+@Preview(widthDp = 300, heightDp = 500, showBackground = true, showSystemUi = true)
 @Composable
 private fun ColorPickerPreview() {
     MensinatorTheme {
-        ColorPicker(
-            colorSetting = ColorSetting.PERIOD,
-            onClosePicker = {},
-            onSelectColor = { _, _ -> }
-        )
+       Box(modifier = Modifier.fillMaxSize()) {
+           ColorPicker(
+               colorSetting = ColorSetting.PERIOD,
+               onClosePicker = {},
+               onSelectColor = { _, _ -> },
+           )
+       }
     }
 }
 
 @Composable
 private fun SettingNumberSelection(
-    text: String,
-    number: Int,
-    onNumberChange: (Int) -> Unit,
+    intSetting: IntSetting,
+    currentNumber: Int,
+    openIntPickerForSetting: IntSetting?,
     modifier: Modifier = Modifier,
+    onClosePicker: () -> Unit,
+    onNumberChange: (IntSetting, Int) -> Unit,
+    onOpenIntPicker: (setting: IntSetting) -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -234,16 +238,62 @@ private fun SettingNumberSelection(
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = text, modifier = Modifier.weight(1f))
+        Text(text = stringResource(intSetting.stringResId), modifier = Modifier.weight(1f))
         Spacer(Modifier.width(4.dp))
         TextButton(
-            onClick = {
-                // TODO
-            },
+            onClick = { onOpenIntPicker(intSetting) },
             colors = ButtonDefaults.filledTonalButtonColors()
         ) {
-            Text("$number ${stringResource(R.string.days)}")
+            Text("$currentNumber ${stringResource(R.string.days)}")
         }
+
+        if (openIntPickerForSetting != intSetting) return
+        Column {
+            IntPicker(
+                intSetting = intSetting,
+                onClosePicker = onClosePicker,
+                onNumberChange = onNumberChange,
+                modifier = Modifier.align(Alignment.End)
+            )
+        }
+    }
+}
+
+@Composable
+fun IntPicker(
+    intSetting: IntSetting,
+    onClosePicker: () -> Unit,
+    onNumberChange: (IntSetting, Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val pickableNumbers = 1..12
+    DropdownMenu(
+        expanded = true,
+        onDismissRequest = { onClosePicker() },
+        modifier = modifier
+    ) {
+        pickableNumbers.forEach {
+            DropdownMenuItem(
+                text = { Text(it.toString()) },
+                onClick = { onNumberChange(intSetting, it) },
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingNumberSelectionPreview() {
+    MensinatorTheme {
+        SettingNumberSelection(
+            intSetting = IntSetting.PERIOD_HISTORY,
+            currentNumber = 3,
+            openIntPickerForSetting = null,
+            onClosePicker = {  },
+            onNumberChange = { _: IntSetting, _: Int -> },
+            onOpenIntPicker = { }
+        )
     }
 }
 
@@ -313,7 +363,7 @@ fun NewSettingsScreen(
         viewModel.updateDarkModeStatus(isDarkMode)
     }
     LaunchedEffect(Unit) {
-        viewModel.refreshColors()
+        viewModel.init()
     }
 
     Column(
@@ -387,9 +437,14 @@ fun NewSettingsScreen(
         Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.reminders))
         SettingNumberSelection(
-            text = stringResource(R.string.days_before_reminder),
-            number = viewState.daysBeforeReminder,
-            onNumberChange = {}
+            intSetting = IntSetting.REMINDER_DAYS,
+            currentNumber = viewState.daysBeforeReminder,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
         )
 
         Spacer(Modifier.height(16.dp))
@@ -399,13 +454,25 @@ fun NewSettingsScreen(
             text = stringResource(R.string.luteal_phase_calculation),
             checked = viewState.lutealPhaseCalculationEnabled
         )
-        SettingNumberSelection(text = stringResource(R.string.period_history),
-            number = Int.MAX_VALUE,
-            onNumberChange = {}
+        SettingNumberSelection(
+            intSetting = IntSetting.PERIOD_HISTORY,
+            currentNumber = viewState.daysForPeriodHistory,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
         )
-        SettingNumberSelection(text = stringResource(R.string.ovulation_history),
-            number = Int.MAX_VALUE,
-            onNumberChange = {}
+        SettingNumberSelection(
+            intSetting = IntSetting.OVULATION_HISTORY,
+            currentNumber = viewState.daysForOvulationHistory,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
         )
         SettingLanguagePicker()
         SettingSwitch(

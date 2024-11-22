@@ -30,9 +30,14 @@ class SettingsViewModel(
             expectedOvulationColor = Color.Yellow,
             openColorPickerForSetting = null,
 
-            daysBeforeReminder = 300,
+            daysBeforeReminder = -1,
+            daysForPeriodHistory = -1,
+            daysForOvulationHistory = -1,
+            openIntPickerForSetting = null,
 
-            lutealPhaseCalculationEnabled = true,
+            lutealPhaseCalculationEnabled = false,
+            showCycleNumbers = false,
+            preventScreenshots = false,
         )
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
@@ -49,22 +54,26 @@ class SettingsViewModel(
         val openColorPickerForSetting: ColorSetting? = null,
 
         val daysBeforeReminder: Int,
+        val daysForPeriodHistory: Int,
+        val daysForOvulationHistory: Int,
+        val openIntPickerForSetting: IntSetting? = null,
 
         val lutealPhaseCalculationEnabled: Boolean,
+        val showCycleNumbers: Boolean,
+        val preventScreenshots: Boolean,
     )
+
+    fun init() {
+        refreshColors()
+        refreshInts()
+    }
 
     fun updateDarkModeStatus(isDarkMode: Boolean) {
         _viewState.update { it.copy(isDarkMode = isDarkMode) }
         refreshColors()
     }
 
-    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
-        // TODO: Database calls block the UI!
-        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
-        return dataSource.getColor(isDarkMode, colorName)
-    }
-
-    fun refreshColors() {
+    private fun refreshColors() {
         val isDarkMode = viewState.value.isDarkMode
         _viewState.update {
             it.copy(
@@ -74,6 +83,16 @@ class SettingsViewModel(
                 periodSelectionColor = getColor(isDarkMode, PERIOD_SELECTION.settingDbKey),
                 ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
+            )
+        }
+    }
+
+    private fun refreshInts() {
+        _viewState.update {
+            it.copy(
+                daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
+                daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
+                daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
             )
         }
     }
@@ -95,6 +114,31 @@ class SettingsViewModel(
             it.copy(openColorPickerForSetting = null)
         }
     }
+
+    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
+        // TODO: Database calls block the UI!
+        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
+        return dataSource.getColor(isDarkMode, colorName)
+    }
+
+    private fun getInt(settingKey: String): Int {
+        val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
+        return int.toIntOrNull() ?: 0
+    }
+
+    fun hideIntPicker() {
+        _viewState.update { it.copy(openIntPickerForSetting = null) }
+    }
+
+    fun openIntPicker(intSetting: IntSetting) {
+        _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
+    }
+
+    fun updateIntSetting(intSetting: IntSetting, newNumber: Int) {
+        periodDatabaseHelper.updateSetting(intSetting.settingDbKey, newNumber.toString())
+        hideIntPicker()
+        refreshInts()
+    }
 }
 
 enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
@@ -104,4 +148,10 @@ enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
     PERIOD_SELECTION(R.string.period_selection_color, "period_selection_color"),
     OVULATION(R.string.ovulation_color, "ovulation_color"),
     EXPECTED_OVULATION(R.string.expected_ovulation_color, "expected_ovulation_color"),
+}
+
+enum class IntSetting(val stringResId: Int, val settingDbKey: String) {
+    REMINDER_DAYS(R.string.days_before_reminder, "reminder_days"),
+    PERIOD_HISTORY(R.string.period_history, "period_history"),
+    OVULATION_HISTORY(R.string.ovulation_history, "ovulation_history"),
 }
