@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+// TODO: Currently, all database calls block the UI. The impact is negligible as we are only
+//       retrieving a few values, but this should be refactored.
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
@@ -85,17 +87,15 @@ class SettingsViewModel(
     )
 
     fun init() {
-        refreshColors()
-        refreshInts()
-        refreshBooleans()
+        refreshData()
     }
 
     fun updateDarkModeStatus(isDarkMode: Boolean) {
         _viewState.update { it.copy(isDarkMode = isDarkMode) }
-        refreshColors()
+        refreshData()
     }
 
-    private fun refreshColors() {
+    private fun refreshData() {
         val isDarkMode = viewState.value.isDarkMode
         _viewState.update {
             it.copy(
@@ -105,23 +105,11 @@ class SettingsViewModel(
                 periodSelectionColor = getColor(isDarkMode, PERIOD_SELECTION.settingDbKey),
                 ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
-            )
-        }
-    }
 
-    private fun refreshInts() {
-        _viewState.update {
-            it.copy(
                 daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
                 daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
                 daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
-            )
-        }
-    }
 
-    private fun refreshBooleans() {
-        _viewState.update {
-            it.copy(
                 lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
                 showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
                 preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
@@ -131,73 +119,34 @@ class SettingsViewModel(
 
     fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) {
         periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
-        hideColorPicker()
-        refreshColors()
-    }
-
-    fun openColorPicker(colorSetting: ColorSetting) {
-        _viewState.update {
-            it.copy(openColorPickerForSetting = colorSetting)
-        }
-    }
-
-    fun hideColorPicker() {
-        _viewState.update {
-            it.copy(openColorPickerForSetting = null)
-        }
-    }
-
-    fun hideIntPicker() {
-        _viewState.update { it.copy(openIntPickerForSetting = null) }
-    }
-
-    fun openIntPicker(intSetting: IntSetting) {
-        _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
+        showColorPicker(null)
+        refreshData()
     }
 
     fun updateIntSetting(intSetting: IntSetting, newNumber: Int) {
         periodDatabaseHelper.updateSetting(intSetting.settingDbKey, newNumber.toString())
-        hideIntPicker()
-        refreshInts()
+        showIntPicker(null)
+        refreshData()
     }
 
     fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) {
         val dbValue = if (newValue) "1" else "0"
         periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
-        refreshBooleans()
+        refreshData()
     }
 
+    fun showColorPicker(colorSetting: ColorSetting?) {
+        _viewState.update {
+            it.copy(openColorPickerForSetting = colorSetting)
+        }
+    }
+
+    fun showIntPicker(intSetting: IntSetting?) {
+        _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
+    }
 
     fun showFaqDialog(show: Boolean) {
         _viewState.update { it.copy(showFaqDialog = show) }
-    }
-
-    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
-        // TODO: Database calls block the UI!
-        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
-        return ColorSource.getColor(isDarkMode, colorName)
-    }
-
-    private fun getInt(settingKey: String): Int {
-        val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
-        return int.toIntOrNull() ?: 0
-    }
-
-    private fun getBoolean(booleanSetting: BooleanSetting): Boolean {
-        val dbValue =
-            periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
-        val value = dbValue == "1" //
-        return value
-    }
-
-    private fun getAppVersion(context: Context): String {
-        return try {
-            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
-            // Returns the version name, e.g., "1.8.4"
-            packageInfo.versionName ?: throw PackageManager.NameNotFoundException()
-        } catch (e: PackageManager.NameNotFoundException) {
-            "Unknown" // Fallback if the version name is not found
-        }
     }
 
     fun showImportDialog(show: Boolean) {
@@ -241,6 +190,33 @@ class SettingsViewModel(
                 Toast.LENGTH_SHORT
             ).show()
             Log.e("Export", "Export error: ${e.message}", e)
+        }
+    }
+
+    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
+        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
+        return ColorSource.getColor(isDarkMode, colorName)
+    }
+
+    private fun getInt(settingKey: String): Int {
+        val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
+        return int.toIntOrNull() ?: 0
+    }
+
+    private fun getBoolean(booleanSetting: BooleanSetting): Boolean {
+        val dbValue =
+            periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
+        val value = dbValue == "1" //
+        return value
+    }
+
+    private fun getAppVersion(context: Context): String {
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            // Returns the version name, e.g., "1.8.4"
+            packageInfo.versionName ?: throw PackageManager.NameNotFoundException()
+        } catch (e: PackageManager.NameNotFoundException) {
+            "Unknown" // Fallback if the version name is not found
         }
     }
 }

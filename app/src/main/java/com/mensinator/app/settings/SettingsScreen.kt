@@ -13,7 +13,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mensinator.app.*
+import com.mensinator.app.ExportDialog
+import com.mensinator.app.FaqDialog
+import com.mensinator.app.ImportDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -112,7 +115,7 @@ fun SettingsScreen(
             intSetting = IntSetting.REMINDER_DAYS,
             currentNumber = viewState.daysBeforeReminder,
             openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
+            onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
 
@@ -121,7 +124,7 @@ fun SettingsScreen(
                     openNotificationSettings(context)
                 }
             },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
 
         Spacer(Modifier.height(16.dp))
@@ -138,21 +141,21 @@ fun SettingsScreen(
             intSetting = IntSetting.PERIOD_HISTORY,
             currentNumber = viewState.daysForPeriodHistory,
             openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
+            onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
             },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingNumberSelection(
             intSetting = IntSetting.OVULATION_HISTORY,
             currentNumber = viewState.daysForOvulationHistory,
             openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
+            onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
             },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingLanguagePicker()
         SettingSwitch(
@@ -247,61 +250,61 @@ private fun ColorSection(
         colorSetting = ColorSetting.PERIOD,
         currentColor = viewState.periodColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
     SettingColorSelection(
         colorSetting = ColorSetting.SELECTION,
         currentColor = viewState.selectionColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
     SettingColorSelection(
         colorSetting = ColorSetting.PERIOD_SELECTION,
         currentColor = viewState.periodSelectionColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
     SettingColorSelection(
         colorSetting = ColorSetting.EXPECTED_PERIOD,
         currentColor = viewState.expectedPeriodColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
     SettingColorSelection(
         colorSetting = ColorSetting.OVULATION,
         currentColor = viewState.ovulationColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
     SettingColorSelection(
         colorSetting = ColorSetting.EXPECTED_OVULATION,
         currentColor = viewState.expectedOvulationColor,
         openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.hideColorPicker() },
+        onClosePicker = { viewModel.showColorPicker(null) },
         onColorChange = { colorSetting, newColor ->
             viewModel.updateColorSetting(colorSetting, newColor)
         },
-        onOpenColorPicker = { viewModel.openColorPicker(it) },
+        onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
 }
 
