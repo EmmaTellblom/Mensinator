@@ -21,7 +21,7 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 
 
 @Composable
-fun FAQDialog(
+fun FaqDialog(
     onDismissRequest: () -> Unit, // Callback to handle the close action
     modifier: Modifier = Modifier
 ) {
@@ -132,6 +132,6 @@ private fun FAQDialogContent() {
 @Composable
 private fun FAQDialogPreview() {
     MensinatorTheme {
-        FAQDialog(onDismissRequest = {})
+        FaqDialog(onDismissRequest = {})
     }
 }

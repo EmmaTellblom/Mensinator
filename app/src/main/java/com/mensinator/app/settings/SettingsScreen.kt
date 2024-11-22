@@ -87,6 +87,177 @@ object ResourceMapper {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun NewSettingsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = koinViewModel(),
+    onSwitchProtectionScreen: (Boolean) -> Unit,
+) {
+    val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
+    val isDarkMode = isDarkMode()
+    LaunchedEffect(isDarkMode) {
+        viewModel.updateDarkModeStatus(isDarkMode)
+    }
+    LaunchedEffect(Unit) {
+        viewModel.init()
+    }
+
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Spacer(Modifier.height(16.dp))
+        SettingSectionHeader(text = stringResource(R.string.colors))
+        SettingColorSelection(
+            colorSetting = ColorSetting.PERIOD,
+            currentColor = viewState.periodColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+        SettingColorSelection(
+            colorSetting = ColorSetting.SELECTION,
+            currentColor = viewState.selectionColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+        SettingColorSelection(
+            colorSetting = ColorSetting.PERIOD_SELECTION,
+            currentColor = viewState.periodSelectionColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+        SettingColorSelection(
+            colorSetting = ColorSetting.EXPECTED_PERIOD,
+            currentColor = viewState.expectedPeriodColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+        SettingColorSelection(
+            colorSetting = ColorSetting.OVULATION,
+            currentColor = viewState.ovulationColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+        SettingColorSelection(
+            colorSetting = ColorSetting.EXPECTED_OVULATION,
+            currentColor = viewState.expectedOvulationColor,
+            openColorPickerForSetting = viewState.openColorPickerForSetting,
+            onClosePicker = { viewModel.hideColorPicker() },
+            onColorChange = { colorSetting, newColor ->
+                viewModel.updateColorSetting(colorSetting, newColor)
+            },
+            onOpenColorPicker = { viewModel.openColorPicker(it) },
+        )
+
+        Spacer(Modifier.height(16.dp))
+        SettingSectionHeader(text = stringResource(R.string.reminders))
+        SettingNumberSelection(
+            intSetting = IntSetting.REMINDER_DAYS,
+            currentNumber = viewState.daysBeforeReminder,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        SettingSectionHeader(text = stringResource(R.string.other_settings))
+        SettingSwitch(
+            text = stringResource(BooleanSetting.LUTEAL_PHASE_CALCULATION.stringResId),
+            checked = viewState.lutealPhaseCalculationEnabled,
+            onCheckedChange = {
+                viewModel.updateBooleanSetting(
+                    BooleanSetting.LUTEAL_PHASE_CALCULATION,
+                    it
+                )
+            }
+        )
+        SettingNumberSelection(
+            intSetting = IntSetting.PERIOD_HISTORY,
+            currentNumber = viewState.daysForPeriodHistory,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
+        )
+        SettingNumberSelection(
+            intSetting = IntSetting.OVULATION_HISTORY,
+            currentNumber = viewState.daysForOvulationHistory,
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.hideIntPicker() },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.openIntPicker(it) }
+        )
+        SettingLanguagePicker()
+        SettingSwitch(
+            text = stringResource(BooleanSetting.SHOW_CYCLE_NUMBERS.stringResId),
+            checked = viewState.showCycleNumbers,
+            onCheckedChange = {
+                viewModel.updateBooleanSetting(BooleanSetting.SHOW_CYCLE_NUMBERS, it)
+            }
+        )
+        SettingSwitch(
+            text = stringResource(BooleanSetting.PREVENT_SCREENSHOTS.stringResId),
+            checked = viewState.preventScreenshots,
+            onCheckedChange = { newValue ->
+                viewModel.updateBooleanSetting(BooleanSetting.PREVENT_SCREENSHOTS, newValue)
+                onSwitchProtectionScreen(newValue)
+            }
+        )
+
+        Spacer(Modifier.height(16.dp))
+        SettingSectionHeader(text = stringResource(R.string.data_settings))
+        // TODO: saved data + 2 buttons
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.Center
+        ) {
+            TextButton(
+                onClick = { viewModel.showFaqDialog(true) }
+            ) {
+                Text(text = stringResource(R.string.about_app))
+            }
+            Text(text = stringResource(R.string.about_app)) // TODO: app version
+            Text(text = stringResource(R.string.about_app)) // TODO: db version
+        }
+
+        if (viewState.showFaqDialog) {
+            FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
+        }
+    }
+}
+
 @Composable
 private fun SettingSectionHeader(
     text: String,
@@ -212,13 +383,13 @@ private fun ColorPicker(
 @Composable
 private fun ColorPickerPreview() {
     MensinatorTheme {
-       Box(modifier = Modifier.fillMaxSize()) {
-           ColorPicker(
-               colorSetting = ColorSetting.PERIOD,
-               onClosePicker = {},
-               onSelectColor = { _, _ -> },
-           )
-       }
+        Box(modifier = Modifier.fillMaxSize()) {
+            ColorPicker(
+                colorSetting = ColorSetting.PERIOD,
+                onClosePicker = {},
+                onSelectColor = { _, _ -> },
+            )
+        }
     }
 }
 
@@ -290,7 +461,7 @@ private fun SettingNumberSelectionPreview() {
             intSetting = IntSetting.PERIOD_HISTORY,
             currentNumber = 3,
             openIntPickerForSetting = null,
-            onClosePicker = {  },
+            onClosePicker = { },
             onNumberChange = { _: IntSetting, _: Int -> },
             onOpenIntPicker = { }
         )
@@ -301,6 +472,7 @@ private fun SettingNumberSelectionPreview() {
 private fun SettingSwitch(
     text: String,
     checked: Boolean,
+    onCheckedChange: (newValue: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -313,9 +485,7 @@ private fun SettingSwitch(
         Spacer(Modifier.width(4.dp))
         Switch(
             checked = checked,
-            onCheckedChange = {
-                // TODO
-            }
+            onCheckedChange = onCheckedChange
         )
     }
 }
@@ -351,167 +521,12 @@ private fun SettingLanguagePicker() {
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun NewSettingsScreen(
-    modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = koinViewModel(),
-) {
-    val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
-    val isDarkMode = isDarkMode()
-    LaunchedEffect(isDarkMode) {
-        viewModel.updateDarkModeStatus(isDarkMode)
-    }
-    LaunchedEffect(Unit) {
-        viewModel.init()
-    }
-
-    Column(
-        modifier = modifier
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Spacer(Modifier.height(16.dp))
-        SettingSectionHeader(text = stringResource(R.string.colors))
-        SettingColorSelection(
-            colorSetting = ColorSetting.PERIOD,
-            currentColor = viewState.periodColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-        SettingColorSelection(
-            colorSetting = ColorSetting.SELECTION,
-            currentColor = viewState.selectionColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-        SettingColorSelection(
-            colorSetting = ColorSetting.PERIOD_SELECTION,
-            currentColor = viewState.periodSelectionColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-        SettingColorSelection(
-            colorSetting = ColorSetting.EXPECTED_PERIOD,
-            currentColor = viewState.expectedPeriodColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-        SettingColorSelection(
-            colorSetting = ColorSetting.OVULATION,
-            currentColor = viewState.ovulationColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-        SettingColorSelection(
-            colorSetting = ColorSetting.EXPECTED_OVULATION,
-            currentColor = viewState.expectedOvulationColor,
-            openColorPickerForSetting = viewState.openColorPickerForSetting,
-            onClosePicker = { viewModel.hideColorPicker() },
-            onColorChange = { colorSetting, newColor ->
-                viewModel.updateColorSetting(colorSetting, newColor)
-            },
-            onOpenColorPicker = { viewModel.openColorPicker(it) },
-        )
-
-        Spacer(Modifier.height(16.dp))
-        SettingSectionHeader(text = stringResource(R.string.reminders))
-        SettingNumberSelection(
-            intSetting = IntSetting.REMINDER_DAYS,
-            currentNumber = viewState.daysBeforeReminder,
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-            },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
-        )
-
-        Spacer(Modifier.height(16.dp))
-
-        SettingSectionHeader(text = stringResource(R.string.other_settings))
-        SettingSwitch(
-            text = stringResource(R.string.luteal_phase_calculation),
-            checked = viewState.lutealPhaseCalculationEnabled
-        )
-        SettingNumberSelection(
-            intSetting = IntSetting.PERIOD_HISTORY,
-            currentNumber = viewState.daysForPeriodHistory,
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-            },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
-        )
-        SettingNumberSelection(
-            intSetting = IntSetting.OVULATION_HISTORY,
-            currentNumber = viewState.daysForOvulationHistory,
-            openIntPickerForSetting = viewState.openIntPickerForSetting,
-            onClosePicker = { viewModel.hideIntPicker() },
-            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
-                viewModel.updateIntSetting(intSetting, newNumber)
-            },
-            onOpenIntPicker = { viewModel.openIntPicker(it) }
-        )
-        SettingLanguagePicker()
-        SettingSwitch(
-            text = stringResource(R.string.cycle_numbers_show),
-            checked = false
-        )
-        SettingSwitch(
-            text = stringResource(R.string.screen_protection),
-            checked = false
-        )
-
-        Spacer(Modifier.height(16.dp))
-        SettingSectionHeader(text = stringResource(R.string.data_settings))
-        // TODO: saved data + 2 buttons
-
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalArrangement = Arrangement.Center
-        ) {
-            TextButton(
-                onClick = {
-                    // TODO: Show FAQDialog
-                }
-            ) {
-                Text(text = stringResource(R.string.about_app))
-            }
-            Text(text = stringResource(R.string.about_app)) // TODO: app version
-            Text(text = stringResource(R.string.about_app)) // TODO: db version
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun NewScreenPreview() {
     MensinatorTheme {
         // Doesn't work yet, we can't preview when depending on ViewModel
-        NewSettingsScreen()
+        NewSettingsScreen(onSwitchProtectionScreen = {})
     }
 }
 
@@ -936,7 +951,7 @@ fun SettingsScreen(onSwitchProtectionScreen: (Boolean) -> Unit) {
     }
 
     if (showFAQDialog) {
-        FAQDialog(onDismissRequest = { showFAQDialog = false })
+        FaqDialog(onDismissRequest = { showFAQDialog = false })
     }
 }
 

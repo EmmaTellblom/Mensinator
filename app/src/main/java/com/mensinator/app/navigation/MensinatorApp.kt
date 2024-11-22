@@ -159,12 +159,10 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Column {
-                    NewSettingsScreen()
-                    SettingsScreen(onSwitchProtectionScreen = { newValue ->
+                    NewSettingsScreen(onSwitchProtectionScreen = { newValue ->
                         onScreenProtectionChanged(newValue)
                     })
                 }
-
             }
         }
     }

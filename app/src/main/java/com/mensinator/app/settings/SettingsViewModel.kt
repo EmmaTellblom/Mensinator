@@ -38,6 +38,8 @@ class SettingsViewModel(
             lutealPhaseCalculationEnabled = false,
             showCycleNumbers = false,
             preventScreenshots = false,
+
+            showFaqDialog = false,
         )
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
@@ -61,11 +63,14 @@ class SettingsViewModel(
         val lutealPhaseCalculationEnabled: Boolean,
         val showCycleNumbers: Boolean,
         val preventScreenshots: Boolean,
+
+        val showFaqDialog: Boolean,
     )
 
     fun init() {
         refreshColors()
         refreshInts()
+        refreshBooleans()
     }
 
     fun updateDarkModeStatus(isDarkMode: Boolean) {
@@ -97,6 +102,16 @@ class SettingsViewModel(
         }
     }
 
+    private fun refreshBooleans() {
+        _viewState.update {
+            it.copy(
+                lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
+                showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
+                preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
+            )
+        }
+    }
+
     fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) {
         periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
         hideColorPicker()
@@ -115,17 +130,6 @@ class SettingsViewModel(
         }
     }
 
-    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
-        // TODO: Database calls block the UI!
-        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
-        return dataSource.getColor(isDarkMode, colorName)
-    }
-
-    private fun getInt(settingKey: String): Int {
-        val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
-        return int.toIntOrNull() ?: 0
-    }
-
     fun hideIntPicker() {
         _viewState.update { it.copy(openIntPickerForSetting = null) }
     }
@@ -139,6 +143,35 @@ class SettingsViewModel(
         hideIntPicker()
         refreshInts()
     }
+
+    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) {
+        val dbValue = if (newValue) "1" else "0"
+        periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
+        refreshBooleans()
+    }
+
+
+    fun showFaqDialog(show: Boolean) {
+        _viewState.update { it.copy(showFaqDialog = show) }
+    }
+
+    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
+        // TODO: Database calls block the UI!
+        val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
+        return dataSource.getColor(isDarkMode, colorName)
+    }
+
+    private fun getInt(settingKey: String): Int {
+        val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
+        return int.toIntOrNull() ?: 0
+    }
+
+    private fun getBoolean(booleanSetting: BooleanSetting): Boolean {
+        val dbValue = periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
+        val value = dbValue == "1" //
+        return value
+    }
+
 }
 
 enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
@@ -154,4 +187,10 @@ enum class IntSetting(val stringResId: Int, val settingDbKey: String) {
     REMINDER_DAYS(R.string.days_before_reminder, "reminder_days"),
     PERIOD_HISTORY(R.string.period_history, "period_history"),
     OVULATION_HISTORY(R.string.ovulation_history, "ovulation_history"),
+}
+
+enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
+    LUTEAL_PHASE_CALCULATION(R.string.luteal_phase_calculation, "luteal_period_calculation"),
+    SHOW_CYCLE_NUMBERS(R.string.cycle_numbers_show, "cycle_numbers_show"),
+    PREVENT_SCREENSHOTS(R.string.screen_protection, "screen_protection"),
 }
