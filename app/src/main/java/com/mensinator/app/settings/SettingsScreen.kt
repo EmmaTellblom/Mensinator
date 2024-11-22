@@ -172,7 +172,7 @@ fun SettingsScreen(
 
         Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.data_settings))
-
+        Spacer(Modifier.height(4.dp))
         ImportExportRow(viewModel)
         Spacer(Modifier.height(32.dp))
         AboutSection(viewModel, viewState)
@@ -212,7 +212,7 @@ private fun AboutSection(
 ) {
     FlowRow(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {
         TextButton(
@@ -232,7 +232,7 @@ private fun AboutSection(
         Text(
             text = "DB Version: ${viewState.dbVersion}",
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.align(Alignment.CenterVertically)
+            modifier = Modifier.align(Alignment.CenterVertically),
         )
     }
 }
@@ -426,7 +426,7 @@ private fun ColorPicker(
     }
 }
 
-@Preview(widthDp = 300, heightDp = 500, showBackground = true, showSystemUi = true)
+@Preview(widthDp = 200, heightDp = 300, showBackground = true)
 @Composable
 private fun ColorPickerPreview() {
     MensinatorTheme {
@@ -568,6 +568,7 @@ private fun SettingLanguagePicker() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ImportExportRow(viewModel: SettingsViewModel) {
     Row(
@@ -575,22 +576,26 @@ private fun ImportExportRow(viewModel: SettingsViewModel) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = stringResource(R.string.data))
-        Row {
+        Text(
+            text = stringResource(R.string.data),
+            modifier = Modifier.widthIn(max = 200.dp)
+        )
+        Spacer(Modifier.width(4.dp))
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+        ) {
             TextButton(
                 onClick = { viewModel.showImportDialog(true) },
                 colors = ButtonDefaults.filledTonalButtonColors()
             ) {
                 Text(text = stringResource(R.string.Import))
             }
-
-            Spacer(Modifier.width(16.dp))
-
             TextButton(
                 onClick = { viewModel.showExportDialog(true) },
                 colors = ButtonDefaults.filledTonalButtonColors()
             ) {
-                Text(text = stringResource(R.string.export_data))
+                Text(text = stringResource(R.string.data_export))
             }
         }
     }

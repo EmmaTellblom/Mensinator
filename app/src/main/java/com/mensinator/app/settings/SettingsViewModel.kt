@@ -1,5 +1,6 @@
 package com.mensinator.app.settings
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.update
 
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
+    @SuppressLint("StaticFieldLeak")
     private val context: Context,
     private val exportImport: IExportImport,
 ) : ViewModel() {
