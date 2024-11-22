@@ -21,7 +21,7 @@ class App : Application() {
         singleOf(::ExportImport) { bind<IExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
 
-        viewModel { SettingsViewModel(get(), get()) }
+        viewModel { SettingsViewModel(get(), get(), get()) }
     }
 
     override fun onCreate() {

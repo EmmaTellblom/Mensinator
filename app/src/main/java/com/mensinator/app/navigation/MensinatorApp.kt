@@ -27,7 +27,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.*
 import com.mensinator.app.R
-import com.mensinator.app.settings.NewSettingsScreen
 import com.mensinator.app.settings.SettingsScreen
 import org.koin.compose.koinInject
 
@@ -159,7 +158,7 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Column {
-                    NewSettingsScreen(onSwitchProtectionScreen = { newValue ->
+                    SettingsScreen(onSwitchProtectionScreen = { newValue ->
                         onScreenProtectionChanged(newValue)
                     })
                 }

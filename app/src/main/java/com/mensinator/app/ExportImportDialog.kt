@@ -21,29 +21,20 @@ import java.io.FileOutputStream
 
 @Composable
 fun ExportDialog(
-    exportImport: IExportImport,
+    exportFilePath: String,
     onDismissRequest: () -> Unit,
     onExportClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val isBeingPreviewed = LocalInspectionMode.current
 
-    val exportPath = remember {
-        if (isBeingPreviewed) {
-            "/preview/path/example"
-        } else {
-            exportImport.getDocumentsExportFilePath()
-        }
-    }
-
-    val expSuccess = stringResource(id = R.string.export_success_toast, exportPath)
+    val expSuccess = stringResource(id = R.string.export_success_toast, exportFilePath)
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(
                 onClick = {
-                    onExportClick(exportPath) // Calls the exported function
+                    onExportClick(exportFilePath) // Calls the exported function
                     Toast.makeText(context, expSuccess, Toast.LENGTH_SHORT).show()
                     onDismissRequest()
                 },
@@ -65,14 +56,14 @@ fun ExportDialog(
             Text(stringResource(id = R.string.export_data))
         },
         text = {
-            Text(stringResource(id = R.string.export_path_label, exportPath))
+            Text(stringResource(id = R.string.export_path_label, exportFilePath))
         }
     )
 }
 
 @Composable
 fun ImportDialog(
-    exportImport: IExportImport,
+    defaultImportFilePath: String,
     onDismissRequest: () -> Unit,
     onImportClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -88,7 +79,7 @@ fun ImportDialog(
             if (uri == null) return@rememberLauncherForActivityResult
 
             val inputStream = context.contentResolver.openInputStream(uri)
-            val file = File(exportImport.getDefaultImportFilePath())
+            val file = File(defaultImportFilePath)
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
@@ -158,9 +149,10 @@ private val fakeExportImport = object : IExportImport {
 private fun ExportDialogPreview() {
     MensinatorTheme {
         ExportDialog(
-            exportImport = fakeExportImport,
+            exportFilePath = "/preview/path/example",
             onDismissRequest = {},
-            onExportClick = {})
+            onExportClick = {}
+        )
     }
 }
 
@@ -169,7 +161,7 @@ private fun ExportDialogPreview() {
 private fun ImportDialogPreview() {
     MensinatorTheme {
         ImportDialog(
-            exportImport = fakeExportImport,
+            defaultImportFilePath = "",
             onDismissRequest = {},
             onImportClick = {}
         )

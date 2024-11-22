@@ -1,5 +1,9 @@
 package com.mensinator.app.settings
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.mensinator.app.IExportImport
@@ -14,6 +18,7 @@ import kotlinx.coroutines.flow.update
 
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
+    private val context: Context,
     private val exportImport: IExportImport,
 ) : ViewModel() {
 
@@ -39,7 +44,14 @@ class SettingsViewModel(
             showCycleNumbers = false,
             preventScreenshots = false,
 
+            showImportDialog = false,
+            showExportDialog = false,
+            defaultImportFilePath = exportImport.getDefaultImportFilePath(),
+            exportFilePath = exportImport.getDocumentsExportFilePath(),
+
             showFaqDialog = false,
+            appVersion = getAppVersion(context),
+            dbVersion = periodDatabaseHelper.getDBVersion(),
         )
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
@@ -64,7 +76,14 @@ class SettingsViewModel(
         val showCycleNumbers: Boolean,
         val preventScreenshots: Boolean,
 
+        val showImportDialog: Boolean,
+        val showExportDialog: Boolean,
+        val defaultImportFilePath: String,
+        val exportFilePath: String,
+
         val showFaqDialog: Boolean,
+        val appVersion: String,
+        val dbVersion: String,
     )
 
     fun init() {
@@ -172,6 +191,53 @@ class SettingsViewModel(
         return value
     }
 
+    private fun getAppVersion(context: Context): String {
+        return try {
+            val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+            // Returns the version name, e.g., "1.8.4"
+            packageInfo.versionName ?: throw PackageManager.NameNotFoundException()
+        } catch (e: PackageManager.NameNotFoundException) {
+            "Unknown" // Fallback if the version name is not found
+        }
+    }
+
+    fun showImportDialog(show: Boolean) {
+        _viewState.update { it.copy(showImportDialog = show) }
+    }
+
+    fun showExportDialog(show: Boolean) {
+        _viewState.update { it.copy(showExportDialog = show) }
+    }
+
+    fun handleImport(importPath: String) {
+        try {
+            exportImport.importDatabase(importPath)
+            Toast.makeText(
+                context,
+                "Data imported successfully from $importPath",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error during import: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
+            Log.e("Import", "Import error: ${e.message}", e)
+        }
+    }
+
+    fun handleExport(exportPath: String) {
+        try {
+            exportImport.exportDatabase(exportPath)
+            Toast.makeText(
+                context,
+                "Data exported successfully to $exportPath",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error during export: ${e.message}", Toast.LENGTH_SHORT)
+                .show()
+            Log.e("Export", "Export error: ${e.message}", e)
+        }
+    }
 }
 
 enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
