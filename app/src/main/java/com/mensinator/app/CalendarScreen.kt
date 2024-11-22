@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mensinator.app.data.ColorSource
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
@@ -87,7 +88,7 @@ fun CalendarScreen() {
 
     // The first date of previous period
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
-    val colorMap = DataSource(isDarkMode()).colorMap
+    val colorMap = ColorSource.getColorMap(isDarkMode())
 
     val circleSize = 30.dp
 
