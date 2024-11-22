@@ -12,7 +12,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -134,14 +133,6 @@ fun ImportDialog(
             )
         }
     )
-}
-
-
-private val fakeExportImport = object : IExportImport {
-    override fun getDocumentsExportFilePath() = "ExportPath"
-    override fun getDefaultImportFilePath() = "ImportPath"
-    override fun exportDatabase(filePath: String) {}
-    override fun importDatabase(filePath: String) {}
 }
 
 @Preview
