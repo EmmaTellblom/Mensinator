@@ -2,11 +2,20 @@ package com.mensinator.app.data
 
 import androidx.compose.ui.graphics.Color
 
-// TODO: isDarkTheme can change, should not be specified as class variable
-// TODO: Rename class
-class DataSource(isDarkTheme: Boolean) {
+object ColorSource {
 
-    val colorCategories = listOf(
+    fun getColorMap(isDarkTheme: Boolean): Map<String, Color> {
+        return if (isDarkTheme) darkColorMap else lightColorMap
+    }
+
+    fun getColor(isDarkTheme: Boolean, colorName: String): Color {
+        return when (isDarkTheme) {
+            true -> darkColorMap[colorName] ?: Color.Red
+            false -> lightColorMap[colorName] ?: Color.Red
+        }
+    }
+
+    val colorsGroupedByHue = listOf(
         listOf("LightRed", "Red", "DarkRed"),       // Red shades
         listOf("LightOrange", "Orange", "DarkOrange"), // Orange shades
         listOf("LightYellow", "Yellow", "DarkYellow"), // Yellow shades
@@ -14,7 +23,7 @@ class DataSource(isDarkTheme: Boolean) {
         listOf("LightCyan", "Cyan", "DarkCyan"),    // Cyan shades
         listOf("LightBlue", "Blue", "DarkBlue"),    // Blue shades
         listOf("LightMagenta", "Magenta", "DarkMagenta"), // Magenta shades
-        listOf("White","LightGray", "DarkGray")    // Gray and Black shades
+        listOf("White", "LightGray", "DarkGray")    // Gray and Black shades
     )
 
     private val lightColorMap = mapOf(
@@ -84,13 +93,4 @@ class DataSource(isDarkTheme: Boolean) {
         "DarkGray" to Color(0xFF585858),
         "LightGray" to Color(0xFF8F8F8F)
     )
-
-    val colorMap: Map<String, Color> = if (isDarkTheme) darkColorMap else lightColorMap
-
-    fun getColor(isDarkTheme: Boolean, colorName: String): Color {
-        return when (isDarkTheme) {
-            true -> darkColorMap[colorName] ?: Color.Red
-            false -> lightColorMap[colorName] ?: Color.Red
-        }
-    }
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import com.mensinator.app.IExportImport
 import com.mensinator.app.IPeriodDatabaseHelper
 import com.mensinator.app.R
-import com.mensinator.app.data.DataSource
+import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,13 +19,9 @@ import kotlinx.coroutines.flow.update
 
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
-    @SuppressLint("StaticFieldLeak")
-    private val context: Context,
+    @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IExportImport,
 ) : ViewModel() {
-
-    private val dataSource = DataSource(isDarkTheme = false)
-
     private val _viewState = MutableStateFlow(
         ViewState(
             isDarkMode = false,
@@ -52,7 +48,7 @@ class SettingsViewModel(
             exportFilePath = exportImport.getDocumentsExportFilePath(),
 
             showFaqDialog = false,
-            appVersion = getAppVersion(context),
+            appVersion = getAppVersion(appContext),
             dbVersion = periodDatabaseHelper.getDBVersion(),
         )
     )
@@ -179,7 +175,7 @@ class SettingsViewModel(
     private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
         // TODO: Database calls block the UI!
         val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
-        return dataSource.getColor(isDarkMode, colorName)
+        return ColorSource.getColor(isDarkMode, colorName)
     }
 
     private fun getInt(settingKey: String): Int {
@@ -188,7 +184,8 @@ class SettingsViewModel(
     }
 
     private fun getBoolean(booleanSetting: BooleanSetting): Boolean {
-        val dbValue = periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
+        val dbValue =
+            periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
         val value = dbValue == "1" //
         return value
     }
@@ -215,13 +212,16 @@ class SettingsViewModel(
         try {
             exportImport.importDatabase(importPath)
             Toast.makeText(
-                context,
+                appContext,
                 "Data imported successfully from $importPath",
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
-            Toast.makeText(context, "Error during import: ${e.message}", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                appContext,
+                "Error during import: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
             Log.e("Import", "Import error: ${e.message}", e)
         }
     }
@@ -230,13 +230,16 @@ class SettingsViewModel(
         try {
             exportImport.exportDatabase(exportPath)
             Toast.makeText(
-                context,
+                appContext,
                 "Data exported successfully to $exportPath",
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
-            Toast.makeText(context, "Error during export: ${e.message}", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                appContext,
+                "Error during export: ${e.message}",
+                Toast.LENGTH_SHORT
+            ).show()
             Log.e("Export", "Export error: ${e.message}", e)
         }
     }

@@ -29,7 +29,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.*
 import com.mensinator.app.R
-import com.mensinator.app.data.DataSource
+import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
@@ -395,15 +395,13 @@ private fun ColorPicker(
         onDismissRequest = { onClosePicker() },
         modifier = modifier.wrapContentSize()
     ) {
-        val colorMap = DataSource(isDarkMode()).colorMap
-        // Define color categories grouped by hue
-        val colorCategories = DataSource(isDarkMode()).colorCategories
+        val colorMap = ColorSource.getColorMap(isDarkMode())
 
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            colorCategories.forEach { colorGroup ->
+            ColorSource.colorsGroupedByHue.forEach { colorGroup ->
                 Row(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
