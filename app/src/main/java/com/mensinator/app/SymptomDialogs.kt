@@ -136,7 +136,8 @@ fun CreateNewSymptomDialog(
                 //value = symptomKey?.let { stringResource(id = it) } ?: "Not Found",
                 value = symptomName,
                 onValueChange = { symptomName = it },
-                label = { Text(stringResource(R.string.symptom_name_label)) }
+                label = { Text(stringResource(R.string.symptom_name_label)) },
+                singleLine = true,
             )
         },
     )
@@ -178,7 +179,8 @@ fun RenameSymptomDialog(
                 TextField(
                     value = newName,
                     onValueChange = { newName = it },
-                    label = { Text(stringResource(R.string.symptom_name_label)) }
+                    label = { Text(stringResource(R.string.symptom_name_label)) },
+                    singleLine = true,
                 )
             }
         },

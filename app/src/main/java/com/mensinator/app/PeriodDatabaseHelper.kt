@@ -196,8 +196,9 @@ class PeriodDatabaseHelper(context: Context) :
 
     override fun createNewSymptom(symptomName: String) {
         val db = writableDatabase
+        val trimmedSymptomName = symptomName.trim()
         val values = ContentValues().apply {
-            put(COLUMN_SYMPTOM_NAME, symptomName)  // Set the symptom name
+            put(COLUMN_SYMPTOM_NAME, trimmedSymptomName)  // Set the symptom name
             put(COLUMN_SYMPTOM_ACTIVE, 1)  // Set the active column to 1 (true)
         }
         // Insert the new symptom into the symptoms table
@@ -796,8 +797,9 @@ class PeriodDatabaseHelper(context: Context) :
 
     override fun renameSymptom(symptomId: Int, newName: String) {
         val db = writableDatabase
+        val trimmedSymptomName = newName.trim()
         val contentValues = ContentValues().apply {
-            put("symptom_name", newName)
+            put("symptom_name", trimmedSymptomName)
         }
         db.update("symptoms", contentValues, "id = ?", arrayOf(symptomId.toString()))
 
