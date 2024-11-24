@@ -4,6 +4,10 @@ package com.mensinator.app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +37,7 @@ import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import kotlin.math.abs
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -248,184 +254,208 @@ fun CalendarScreen() {
 
         Spacer(modifier = Modifier.padding(5.dp))
 
-        for (week in 0..5) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                for (day in 0..6) {
-                    val dayOfMonth = week * 7 + day - dayOffset + 1
-                    if (dayOfMonth in 1..daysInMonth) {
-                        val dayDate = currentMonth.value.withDayOfMonth(dayOfMonth)
-                        val isSelected = dayDate in selectedDates.value
-                        val hasPeriodDate = dayDate in periodDates.value
-                        val hasSymptomDate = dayDate in symptomDates.value
-                        val hasOvulationDate = dayDate in ovulationDates.value
-                        val hasOvulationDateCalculated =
-                            dayDate == if (ovulationPredictionDate != LocalDate.parse("1900-01-01")) ovulationPredictionDate else false
-                        val hasPeriodDateCalculated =
-                            dayDate == if (nextPeriodDate != LocalDate.parse("1900-01-01")) nextPeriodDate else false
-
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clickable {
-                                    if (isSelected) {
-                                        selectedDates.value -= dayDate
-                                    } else {
-                                        selectedDates.value += dayDate
-                                    }
-                                }
-                                .drawWithContent {
-                                    drawContent() // Draw the content first
-                                    val strokeWidth = 1.dp.toPx()
-                                    val y = strokeWidth / 2 // Adjust y to start from the top
-                                    drawLine(
-                                        color = Color.LightGray, // Replace with your desired color
-                                        strokeWidth = strokeWidth,
-                                        start = Offset(0f, y),
-                                        end = Offset(size.width, y)
-                                    )
-                                }
-                                .padding(bottom = 15.dp, top = 4.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            // If date is a calculated period date
-                            if (dayDate == nextPeriodDate && !hasPeriodDate) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(circleSize)
-                                        .background(nextPeriodColor, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = dayOfMonth.toString(),
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
-                            // If date is a calculated ovulation date (and not an ovulation by user)
-                            if (dayDate.toString() == ovulationPredictionDate.toString() && !hasOvulationDate) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(circleSize)
-                                        .background(nextOvulationColor, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = dayOfMonth.toString(),
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
-
-                            val backgroundColor = when {
-                                hasPeriodDateCalculated && isSelected -> selectedPeriodColor
-                                hasOvulationDateCalculated && isSelected -> selectedPeriodColor
-                                hasPeriodDate && isSelected -> selectedPeriodColor
-                                hasOvulationDate && isSelected -> selectedPeriodColor
-                                hasPeriodDate -> periodColor
-                                hasOvulationDate -> ovulationColor
-                                isSelected -> selectedColor
-                                else -> Color.Transparent
-                            }
+        Column(modifier = Modifier.pointerInput(Unit) {
+            var initial: Offset? = null
+            var current: Offset? = null
+            val minimumDragDistance = 50f
+            detectHorizontalDragGestures(
+                onDragStart = { initialOffset ->
+                    initial = initialOffset
+                },
+                onDragEnd = {
+                    val deltaX = (current?.x ?: 0f) - (initial?.x ?: 0f)
+                    if (abs(deltaX) <= minimumDragDistance) return@detectHorizontalDragGestures
+                    if (deltaX > 0) {
+                        currentMonth.value = currentMonth.value.minusMonths(1)
+                    } else {
+                        currentMonth.value = currentMonth.value.plusMonths(1)
+                    }
+                }
+            ) { change, _ ->
+                change.consume()
+                current = change.position
+            }
+        }) {
+            for (week in 0..5) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    for (day in 0..6) {
+                        val dayOfMonth = week * 7 + day - dayOffset + 1
+                        if (dayOfMonth in 1..daysInMonth) {
+                            val dayDate = currentMonth.value.withDayOfMonth(dayOfMonth)
+                            val isSelected = dayDate in selectedDates.value
+                            val hasPeriodDate = dayDate in periodDates.value
+                            val hasSymptomDate = dayDate in symptomDates.value
+                            val hasOvulationDate = dayDate in ovulationDates.value
+                            val hasOvulationDateCalculated =
+                                dayDate == if (ovulationPredictionDate != LocalDate.parse("1900-01-01")) ovulationPredictionDate else false
+                            val hasPeriodDateCalculated =
+                                dayDate == if (nextPeriodDate != LocalDate.parse("1900-01-01")) nextPeriodDate else false
 
                             Box(
                                 modifier = Modifier
-                                    .size(circleSize)
-                                    .background(backgroundColor, CircleShape)
-                            )
+                                    .weight(1f)
+                                    .clickable {
+                                        if (isSelected) {
+                                            selectedDates.value -= dayDate
+                                        } else {
+                                            selectedDates.value += dayDate
+                                        }
+                                    }
+                                    .drawWithContent {
+                                        drawContent() // Draw the content first
+                                        val strokeWidth = 1.dp.toPx()
+                                        val y = strokeWidth / 2 // Adjust y to start from the top
+                                        drawLine(
+                                            color = Color.LightGray, // Replace with your desired color
+                                            strokeWidth = strokeWidth,
+                                            start = Offset(0f, y),
+                                            end = Offset(size.width, y)
+                                        )
+                                    }
+                                    .padding(bottom = 15.dp, top = 4.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
 
-                            // Symptom indicator in the top right corner
-                            if (hasSymptomDate) {
-                                val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
-
-                                Row(
-                                    modifier = Modifier
-                                        .offset(y = 12.dp)
-                                        .align(Alignment.BottomCenter),
-                                    horizontalArrangement = Arrangement.spacedBy((-5).dp)  // Negative spacing for overlap
-                                ) {
-                                    noSymptomsForDay.forEach { symp ->
-                                        symptomColor = colorMap[symp] ?: Color.Black
-
-                                        Box(
-                                            modifier = Modifier
-                                                .size(11.dp)  // Size of the small bubble
-                                                .background(symptomColor, CircleShape)
+                                // If date is a calculated period date
+                                if (dayDate == nextPeriodDate && !hasPeriodDate) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(circleSize)
+                                            .background(nextPeriodColor, CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = dayOfMonth.toString(),
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
+                                // If date is a calculated ovulation date (and not an ovulation by user)
+                                if (dayDate.toString() == ovulationPredictionDate.toString() && !hasOvulationDate) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(circleSize)
+                                            .background(nextOvulationColor, CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = dayOfMonth.toString(),
+                                            textAlign = TextAlign.Center
                                         )
                                     }
                                 }
 
-                            }
+                                val backgroundColor = when {
+                                    hasPeriodDateCalculated && isSelected -> selectedPeriodColor
+                                    hasOvulationDateCalculated && isSelected -> selectedPeriodColor
+                                    hasPeriodDate && isSelected -> selectedPeriodColor
+                                    hasOvulationDate && isSelected -> selectedPeriodColor
+                                    hasPeriodDate -> periodColor
+                                    hasOvulationDate -> ovulationColor
+                                    isSelected -> selectedColor
+                                    else -> Color.Transparent
+                                }
 
-                            // Mark today's date with a black border and bold font
-                            if (dayDate == LocalDate.now()) {
                                 Box(
                                     modifier = Modifier
                                         .size(circleSize)
-                                        .border(1.dp, Color.LightGray, CircleShape)
-                                        .background(Color.Transparent, CircleShape),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = dayOfMonth.toString(),
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            } else { // Regular dates
-                                Text(
-                                    text = dayOfMonth.toString(),
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .background(Color.Transparent)
+                                        .background(backgroundColor, CircleShape)
                                 )
-                            }
 
-                            // Here is cycle numbers
-                            if (oldestPeriodDate != null && showCycleNumbersSetting == 1) {
-                                if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
-                                    previousFirstPeriodDate =
-                                        dbHelper.getFirstPreviousPeriodDate(dayDate)
-                                    if (previousFirstPeriodDate != null) {
-                                        // Calculate the number of days between the firstLastPeriodDate and dayDate
-                                        cycleNumber = ChronoUnit.DAYS.between(
-                                            previousFirstPeriodDate,
-                                            dayDate
-                                        )
-                                            .toInt() + 1
+                                // Symptom indicator in the top right corner
+                                if (hasSymptomDate) {
+                                    val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
 
-                                        // Render UI elements based on cycleNumber or other logic
-                                        Box(
-                                            modifier = Modifier
-                                                .size(18.dp)
-                                                .background(
-                                                    Color.Transparent,
-                                                )
-                                                .align(Alignment.TopStart)
-                                        ) {
-                                            Text(
-                                                text = cycleNumber.toString(),
-                                                style = androidx.compose.ui.text.TextStyle(
-                                                    fontSize = 8.sp,
-                                                    textAlign = TextAlign.Left
-                                                ),
-                                                modifier = Modifier.padding(2.dp)
+                                    Row(
+                                        modifier = Modifier
+                                            .offset(y = 12.dp)
+                                            .align(Alignment.BottomCenter),
+                                        horizontalArrangement = Arrangement.spacedBy((-5).dp)  // Negative spacing for overlap
+                                    ) {
+                                        noSymptomsForDay.forEach { symp ->
+                                            symptomColor = colorMap[symp] ?: Color.Black
+
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(11.dp)  // Size of the small bubble
+                                                    .background(symptomColor, CircleShape)
                                             )
                                         }
                                     }
-                                }
-                            }
 
+                                }
+
+                                // Mark today's date with a black border and bold font
+                                if (dayDate == LocalDate.now()) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(circleSize)
+                                            .border(1.dp, Color.LightGray, CircleShape)
+                                            .background(Color.Transparent, CircleShape),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = dayOfMonth.toString(),
+                                            fontWeight = FontWeight.Bold,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                } else { // Regular dates
+                                    Text(
+                                        text = dayOfMonth.toString(),
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .background(Color.Transparent)
+                                    )
+                                }
+
+                                // Here is cycle numbers
+                                if (oldestPeriodDate != null && showCycleNumbersSetting == 1) {
+                                    if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
+                                        previousFirstPeriodDate =
+                                            dbHelper.getFirstPreviousPeriodDate(dayDate)
+                                        if (previousFirstPeriodDate != null) {
+                                            // Calculate the number of days between the firstLastPeriodDate and dayDate
+                                            cycleNumber = ChronoUnit.DAYS.between(
+                                                previousFirstPeriodDate,
+                                                dayDate
+                                            )
+                                                .toInt() + 1
+
+                                            // Render UI elements based on cycleNumber or other logic
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(18.dp)
+                                                    .background(
+                                                        Color.Transparent,
+                                                    )
+                                                    .align(Alignment.TopStart)
+                                            ) {
+                                                Text(
+                                                    text = cycleNumber.toString(),
+                                                    style = androidx.compose.ui.text.TextStyle(
+                                                        fontSize = 8.sp,
+                                                        textAlign = TextAlign.Left
+                                                    ),
+                                                    modifier = Modifier.padding(2.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
                         }
-                    } else {
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
+                Spacer(modifier = Modifier.weight(0.2f))
             }
-            Spacer(modifier = Modifier.weight(0.2f))
+
         }
 
         val emptyClick = stringResource(id = R.string.statistics_title)
