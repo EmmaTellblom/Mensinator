@@ -207,6 +207,7 @@ fun CalendarScreen() {
         ) {
             Button(onClick = {
                 currentMonth.value = currentMonth.value.minusMonths(1)
+                selectedDates.value = setOf()
             }) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
             }
@@ -220,6 +221,7 @@ fun CalendarScreen() {
 
             Button(onClick = {
                 currentMonth.value = currentMonth.value.plusMonths(1)
+                selectedDates.value = setOf()
             }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
