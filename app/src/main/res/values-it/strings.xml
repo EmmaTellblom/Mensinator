@@ -3,166 +3,166 @@
     <string name="app_name">Mensinator</string>
 
     <!-- Home -->
-    <string name="previous">Previous</string>
-    <string name="next">Next</string>
-    <string name="period_button">Period</string>
-    <string name="symptoms_button">Symptoms</string>
-    <string name="ovulation_button">Ovulation</string>
+    <string name="previous">Precedente</string>
+    <string name="next">Successivo</string>
+    <string name="period_button">Periodo</string>
+    <string name="symptoms_button">Sintomi</string>
+    <string name="ovulation_button">Ovulazione</string>
 
-    <string name="period_button_selected">Remove Period</string>
-    <string name="period_button_not_selected">Add Period</string>
+    <string name="period_button_selected"> Periodo selezionato</string>
+    <string name="period_button_not_selected">Aggiungi Periodo</string>
 
-    <string name="ovulation_button_selected">Remove Ovulation</string>
-    <string name="ovulation_button_not_selected">Add Ovulation</string>
+    <string name="ovulation_button_selected">Elimina  Ovulazione</string>
+    <string name="ovulation_button_not_selected">Aggiungi Ovulazione</string>
 
     <!-- Home Alerts -->
-    <string name="empty_click_alert">No dates to save or remove</string>
-    <string name="successfully_saved_alert">Changes saved successfully</string>
-    <string name="no_data_selected">No dates selected</string>
-    <string name="only_day_alert">Only one day can be ovulation!</string>
-    <string name="success_saved_ovulation">Ovulation saved successfully</string>
-    <string name="no_date_selected_ovulation">No date selected for ovulation</string>
+    <string name="empty_click_alert">Nessuna data da salvare o da rimuovere</string>
+    <string name="successfully_saved_alert">Modifiche salvate con successo</string>
+    <string name="no_data_selected">Nessuna data selezionata</string>
+    <string name="only_day_alert">Un solo giorno può essere indicato per l\'ovulazione!</string>
+    <string name="success_saved_ovulation">Ovulazione salvata con successo</string>
+    <string name="no_date_selected_ovulation">Nessuna data salvata per l\'ovulazione</string>
 
     <!-- navigation -->
     <string name="home_page">Home</string>
-    <string name="statisic_page">Statistics</string>
-    <string name="symptoms_page">Symptoms</string>
-    <string name="settings_page">Settings</string>
+    <string name="statisic_page">Statistiche</string>
+    <string name="symptoms_page">Sintomi</string>
+    <string name="settings_page">Impostazioni</string>
 
     <!-- symptoms page -->
-    <string name="delete_symptom">Delete Symptom</string>
-    <string name="delete_question">Are you sure you want to delete this symptom?</string>
-    <string name="delete_button">Delete</string>
+    <string name="delete_symptom">Elimina Sintomi</string>
+    <string name="delete_question">Sei sicura di voler eliminare questo sintomo?</string>
+    <string name="delete_button">Elimina</string>
 
     <!-- Settings -->
-    <string name="app_settings">App Settings</string>
-    <string name="colors">Colors</string>
-    <string name="period_color">Period</string>
-    <string name="selection_color">Selection</string>
-    <string name="period_selection_color">Period Selection</string>
-    <string name="expected_period_color">Expected Period</string>
-    <string name="ovulation_color">Ovulation</string>
-    <string name="expected_ovulation_color">Expected Ovulation</string>
-    <string name="reminders">Reminders</string>
-    <string name="days_before_reminder">Days Before Reminder</string>
-    <string name="other_settings">Other Settings</string>
-    <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
-    <string name="period_history">Period History</string>
-    <string name="ovulation_history">Ovulation History</string>
-    <string name="language">Language</string>
-    <string name="change_language">Change language</string>
-    <string name="cycle_numbers_show">Show Cycle Numbers</string>
-    <string name="screen_protection">Prevent Screenshots</string>
-    <string name="close">Close</string>
-    <string name="save">Save</string>
+    <string name="app_settings">Impostazioni dell\'app</string>
+    <string name="colors">Colori</string>
+    <string name="period_color">Periodo</string>
+    <string name="selection_color">Selezione</string>
+    <string name="period_selection_color">Selezione del colore per il periodo</string>
+    <string name="expected_period_color">Periodo atteso</string>
+    <string name="ovulation_color">Ovulazione</string>
+    <string name="expected_ovulation_color">Ovulazione attesa</string>
+    <string name="reminders">Promemoria</string>
+    <string name="days_before_reminder">Avvisami (quanti) giorni prima</string>
+    <string name="other_settings">Altre impostazioni</string>
+    <string name="luteal_phase_calculation">Calcolo della fase luteale</string>
+    <string name="period_history">Cronologia del periodo</string>
+    <string name="ovulation_history">Cronologia dell\'ovulazione</string>
+    <string name="language">Lingua</string>
+    <string name="change_language">Cambia lingua</string>
+    <string name="cycle_numbers_show">Mostra i numeri dei cicli</string>
+    <string name="screen_protection">Blocca Screenshots</string>
+    <string name="close">Chiudi</string>
+    <string name="save">Salva</string>
 
     <!-- Color values -->
-    <string name="color_red">Red</string>
-    <string name="color_green">Green</string>
-    <string name="color_blue">Blue</string>
-    <string name="color_yellow">Yellow</string>
-    <string name="color_cyan">Cyan</string>
+    <string name="color_red">Rosso</string>
+    <string name="color_green">Verde</string>
+    <string name="color_blue">Blu</string>
+    <string name="color_yellow">Giallo</string>
+    <string name="color_cyan">Ciano</string>
     <string name="color_magenta">Magenta</string>
-    <string name="color_black">Black</string>
-    <string name="color_white">White</string>
-    <string name="color_darkgray">Dark Gray</string>
-    <string name="color_gray">Light Gray</string>
+    <string name="color_black">Nero</string>
+    <string name="color_white">Bianco</string>
+    <string name="color_darkgray">Grigio scuro</string>
+    <string name="color_gray">Grigio chiaro</string>
 
     <!-- Statistics -->
-    <string name="statistics_title">Statistics</string>
-    <string name="period_count">Periods tracked: </string>
-    <string name="average_cycle_length">Average cycle: </string>
-    <string name="average_period_length">Average period: </string>
-    <string name="next_period_start_past">Next predicted period: </string>
-    <string name="next_period_start_future">Next predicted period: </string>
-    <string name="ovulation_count">Ovulations tracked: </string>
-    <string name="average_ovulation_day">Average ovulation day: </string>
-    <string name="next_predicted_ovulation">Next predicted ovulation: </string>
+    <string name="statistics_title">Statistiche</string>
+    <string name="period_count">Periodi tracciati: </string>
+    <string name="average_cycle_length">Media del ciclo: </string>
+    <string name="average_period_length">Media del periodo: </string>
+    <string name="next_period_start_past">Stima del prossimo periodo: </string>
+    <string name="next_period_start_future">Stima del prossimo periodo: </string>
+    <string name="ovulation_count">Ovulazioni tracciate: </string>
+    <string name="average_ovulation_day">Media del giorno di ovulazione: </string>
+    <string name="next_predicted_ovulation">Stima della prossima ovulazione: </string>
     <string name="next_predicted_ovulation_default">-</string>
-    <string name="average_luteal_length">Average luteal phase length: </string>
-    <string name="days"> days</string>
+    <string name="average_luteal_length">Lunghezza media della fase luteale: </string>
+    <string name="days"> giorni</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Symptoms for %1$s</string>
-    <string name="create_new_symptom_button">Create New Symptom</string>
-    <string name="save_symptoms_button">Save Symptoms</string>
-    <string name="cancel_button">Cancel</string>
-    <string name="heavy">Heavy Flow</string>
-    <string name="medium">Medium Flow</string>
-    <string name="light">Light Flow</string>
+    <string name="symptoms_dialog_title">Sintomi per %1$s</string>
+    <string name="create_new_symptom_button">Crea un nuovo sintomo</string>
+    <string name="save_symptoms_button">Salva i sintomi</string>
+    <string name="cancel_button">Annulla</string>
+    <string name="heavy">Flusso abbondante</string>
+    <string name="medium">Flusso normale</string>
+    <string name="light">Flusso leggero</string>
 
     <!-- CreateNewSymptomDialog -->
-    <string name="create_new_symptom_dialog_title">Create New Symptom</string>
-    <string name="symptom_name_label">Symptom Name</string>
-    <string name="save_button">Save</string>
+    <string name="create_new_symptom_dialog_title">Crea un nuovo sintomo</string>
+    <string name="symptom_name_label">Denominazione del sintomo</string>
+    <string name="save_button">Salva</string>
 
     <!-- CreateNewSymptomDialog -->
-    <string name="manage_symptoms">Manage Symptoms</string>
+    <string name="manage_symptoms">Gestisci i sintomi</string>
 
     <!-- Calender -->
     <string name="calendar_title">Calendario</string>
-    <string name="mon">Mon</string>
-    <string name="tue">Tue</string>
-    <string name="wed">Wed</string>
-    <string name="thu">Thu</string>
-    <string name="fri">Fri</string>
-    <string name="sat">Sat</string>
-    <string name="sun">Sun</string>
+    <string name="mon">Lun</string>
+    <string name="tue">Mar</string>
+    <string name="wed">Mer</string>
+    <string name="thu">Gio</string>
+    <string name="fri">Ven</string>
+    <string name="sat">Sab</string>
+    <string name="sun">Dom</string>
 
-    <string name="january">January</string>
-    <string name="february">February</string>
-    <string name="march">March</string>
-    <string name="april">April</string>
-    <string name="may">May</string>
-    <string name="june">June</string>
-    <string name="july">July</string>
-    <string name="august">August</string>
-    <string name="september">September</string>
-    <string name="october">October</string>
-    <string name="november">November</string>
-    <string name="december">December</string>
+    <string name="january">Gennaio</string>
+    <string name="february">Febbraio</string>
+    <string name="march">Marzo</string>
+    <string name="april">Aprile</string>
+    <string name="may">Maggio</string>
+    <string name="june">Giugno</string>
+    <string name="july">Luglio</string>
+    <string name="august">Agosto</string>
+    <string name="september">Settembre</string>
+    <string name="october">Ottobre</string>
+    <string name="november">Novembre</string>
+    <string name="december">Dicembre</string>
 
     <!-- Import Export Dialog -->
-    <string name="export_import_title">Export/Import Data</string>
-    <string name="export_button">Export</string>
-    <string name="import_button">Import</string>
-    <string name="export_success_toast">Exported to %1$s</string>
-    <string name="import_success_toast">File was imported successfully</string>
-    <string name="import_failure_toast">Failed to import file</string>
-    <string name="export_path_label">Exporting file to: %1$s</string>
-    <string name="import_path_label">Import Path: %1$s</string>
+    <string name="export_import_title">Esporta/Importa i dati</string>
+    <string name="export_button">Esporta</string>
+    <string name="import_button">Importa</string>
+    <string name="export_success_toast">Esportato a %1$s</string>
+    <string name="import_success_toast">Il file è stato importato con successo</string>
+    <string name="import_failure_toast">L\'importazione del file non è andata a buon fine</string>
+    <string name="export_path_label">Esporta il file a: %1$s</string>
+    <string name="import_path_label">Percorso di importazione: %1$s</string>
 
     <!-- Frequently Asked Questions -->
-    <string name="faq_title">Frequently Asked Questions</string>
+    <string name="faq_title">Domande poste frequentemente</string>
 
     <!-- User Manual Section -->
-    <string name="user_manual_header">User Manual</string>
-    <string name="how_to_use">How to Use:</string>
-    <string name="select_dates">• Select Dates: Tap on a date to select or deselect it.</string>
-    <string name="add_or_remove_dates">• Add or Remove Dates for Period: Click the \'Add or Remove Dates\' button after selecting dates.</string>
-    <string name="symptoms">• Symptoms: Click the \'Symptoms\' button to view or add symptoms for the selected date.</string>
-    <string name="ovulation">• Ovulation: Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
-    <string name="statistics">• Statistics: Click statistics in the bottom menu and select statistics.</string>
-    <string name="import_export">• Import/Export: Click the settings button in the bottom menu and then scroll down among the settings. Click import/export to import or export your data. This is a MUST when moving the data to a new device!</string>
-    <string name="calculations">• Calculations: \nPeriods are calculated according to average cycle length and period length.\nPeriods can be calculated using average luteal phase. The calculations will then look at the last 5 cycles to make an average luteal phase and use that to calculate the period. This is activated in the settings.\nOvulation is calculated according to average ovulation cycle length.</string>
-    <string name="features_coming_soon">Features Coming Soon:</string>
-    <string name="upcoming_features">• Check our Github for the latest regarding the apps development!</string>
-    <string name="our_story_header">Our Story</string>
-    <string name="our_story">We are two women who were tired of selling our data to big corporations. Our app stores all your data locally on your device and we have &lt;b&gt;no access to it whatsoever&lt;/b&gt;.\nWe value your privacy and do not save or share any personal information. Since launching this app we have grown and now have our own Discord server with people who are passionate about this app and want to help us out!\n\nJoin us on Discord here: https://discord.gg/tHA2k3bFRN</string>
-    <string name="disclaimer_header">Disclaimer:</string>
-    <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
+    <string name="user_manual_header">Manuale d\'uso</string>
+    <string name="how_to_use">Modalità d\'uso</string>
+    <string name="select_dates">• Seleziona le date: Tocca su una data per selezionarla o deselezionarla</string>
+    <string name="add_or_remove_dates">• Aggiungi o rimuovi le date per periodo: Clicca su \'Aggiungi o rimuovi le date\' pulsante dopo aver selezionato le date.</string>
+    <string name="symptoms">• Sintomi: Clicca il pulsante \'Sintomi\' per vedere o aggiungere i sintomi per le date selezionate.</string>
+    <string name="ovulation">• Ovulazione: Seleziona la singola data e premi sul pulsante Ovulazione. Per rimuovere, seleziona la data e premi il pulsante di nuovo.</string>
+    <string name="statistics">• Statistiche: Clicca su statistiche nel menù in basso e seleziona statistiche.</string>
+    <string name="import_export">• Importa/Esporta: Clicca il pulsante Impostazioni nel menù in basso e scrolla in basso tra le voci. Clicca importa/esporta per importare o esportare i tuoi dati. Questa è un\'azione raccomandata quando vuoi spostare i tuoi dati in un nuovo dispositivo!</string>
+    <string name="calculations">• Calcoli:\nI Periodi sono calcolati tenendo in considerazione la media della lunghezza del ciclo e quella del periodo.\nI Periodi possono essere calcolati usando la media del periodo luteale. In tal caso i calcoli si riferiranno agli ultimi 5 cicli per ottennere una media della fase luteale e verrà usata quest\'ultima per calcolare il periodo. Questo è attivato nelle impostazioni.\nL\'Ovulazione è calcolata tenendo in considerazione la media della lunghezza del ciclo di ovulazione.</string>
+    <string name="features_coming_soon">Funzioni in arrivo:</string>
+    <string name="upcoming_features">• Tieni d\'occhio il nostro Github per conoscere le ultime notizie sugli sviluppi delle nostre app</string>
+    <string name="our_story_header">La nostra storia</string>
+    <string name="our_story">Siamo due donne stanche di vedere venduti i nostri dati alle grandi aziende contro la nostra volontà. La nostra app memorizza tutti i tuoi dati localmente sul tuo dispositivo e noi non abbiamo alcun accesso a essi.\nDiamo valore alla tua privacy e non salviamo o condividiamo alcuna informazione personale.\nDa quando abbiamo lanciato l\'app siamo cresciute e ora abbiamo il nostro server con persone che si sono appassionate alla nostra app e che ci aiutano nel vederla crescere ancora di più.\n\nEntra nel nostro Discord qui: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Avvertenze:</string>
+    <string name="disclaimer">• Questo è un progetto nato per hobby e non è inteso come la sostituzione totale o parziale della consulenza del medico. Facciamo questo semplicemente per sopperire ai nostri bisogni. Ma siamo disponibili nel valutare nuove idee e richieste. Raggiungici su Discord o inviaci un\'email:\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
-    <string name="close_button">Close</string>
+    <string name="close_button">Chiudi</string>
     <string name="data_settings">Backup</string>
-    <string name="data">Saved Data</string> //translate this
-    <string name="Import">Import</string> //it doesn't accept import so i named it with I //translate this
-    <string name="data_export">Export</string> //translate this
-    <string name="select_file">Select file for import</string>//translate this
-    <string name="select_file_button">Select</string>//translate this
-    <string name="import_export_data">Import Export Data</string>
-    <string name="import_data">Import Data</string>//translate this
-    <string name="export_data">Export Data</string>
-    <string name="about_app">About App</string>
-    <string name="rename_symptom" >Rename symptom</string>
+    <string name="data">Dati salvati</string>
+    <string name="Import">Importa</string>
+    <string name="data_export">Esporta</string>
+    <string name="select_file">Seleziona il file da importare</string>
+    <string name="select_file_button">Seleziona</string>
+    <string name="import_export_data">Importa Esporta i dati</string>
+    <string name="import_data">Importa i Dati</string>
+    <string name="export_data">Esporta i Dati</string>
+    <string name="about_app">Sull\'App</string>
+    <string name="rename_symptom">Rinomina il sintomo</string>
 </resources>
