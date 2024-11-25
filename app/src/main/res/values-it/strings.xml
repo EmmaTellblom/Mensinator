@@ -9,7 +9,7 @@
     <string name="symptoms_button">Sintomi</string>
     <string name="ovulation_button">Ovulazione</string>
 
-    <string name="period_button_selected"> Periodo selezionato</string>
+    <string name="period_button_selected">Periodo selezionato</string>
     <string name="period_button_not_selected">Aggiungi Periodo</string>
 
     <string name="ovulation_button_selected">Elimina  Ovulazione</string>
