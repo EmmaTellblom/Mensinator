@@ -138,15 +138,15 @@
     <!-- User Manual Section -->
     <string name="user_manual_header">Manuale d\'uso</string>
     <string name="how_to_use">Modalità d\'uso</string>
-    <string name="select_dates">• Seleziona le date: Tocca su una data per selezionarla o deselezionarla</string>
-    <string name="add_or_remove_dates">• Aggiungi o rimuovi le date per periodo: Clicca su \'Aggiungi o rimuovi le date\' pulsante dopo aver selezionato le date.</string>
+    <string name="select_dates">• Seleziona le date: Tocca su una data per selezionarla o deselezionarla.</string>
+    <string name="add_or_remove_dates">• Aggiungi o rimuovi le date per periodo: Clicca il pulsante \'Aggiungi o rimuovi le date\' dopo aver selezionato le date.</string>
     <string name="symptoms">• Sintomi: Clicca il pulsante \'Sintomi\' per vedere o aggiungere i sintomi per le date selezionate.</string>
     <string name="ovulation">• Ovulazione: Seleziona la singola data e premi sul pulsante Ovulazione. Per rimuovere, seleziona la data e premi il pulsante di nuovo.</string>
     <string name="statistics">• Statistiche: Clicca su statistiche nel menù in basso e seleziona statistiche.</string>
     <string name="import_export">• Importa/Esporta: Clicca il pulsante Impostazioni nel menù in basso e scrolla in basso tra le voci. Clicca importa/esporta per importare o esportare i tuoi dati. Questa è un\'azione raccomandata quando vuoi spostare i tuoi dati in un nuovo dispositivo!</string>
     <string name="calculations">• Calcoli:\nI Periodi sono calcolati tenendo in considerazione la media della lunghezza del ciclo e quella del periodo.\nI Periodi possono essere calcolati usando la media del periodo luteale. In tal caso i calcoli si riferiranno agli ultimi 5 cicli per ottennere una media della fase luteale e verrà usata quest\'ultima per calcolare il periodo. Questo è attivato nelle impostazioni.\nL\'Ovulazione è calcolata tenendo in considerazione la media della lunghezza del ciclo di ovulazione.</string>
     <string name="features_coming_soon">Funzioni in arrivo:</string>
-    <string name="upcoming_features">• Tieni d\'occhio il nostro Github per conoscere le ultime notizie sugli sviluppi delle nostre app</string>
+    <string name="upcoming_features">• Tieni d\'occhio il nostro Github per conoscere le ultime notizie sugli sviluppi delle nostre app.</string>
     <string name="our_story_header">La nostra storia</string>
     <string name="our_story">Siamo due donne stanche di vedere venduti i nostri dati alle grandi aziende contro la nostra volontà. La nostra app memorizza tutti i tuoi dati localmente sul tuo dispositivo e noi non abbiamo alcun accesso a essi.\nDiamo valore alla tua privacy e non salviamo o condividiamo alcuna informazione personale.\nDa quando abbiamo lanciato l\'app siamo cresciute e ora abbiamo il nostro server con persone che si sono appassionate alla nostra app e che ci aiutano nel vederla crescere ancora di più.\n\nEntra nel nostro Discord qui: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Avvertenze:</string>
