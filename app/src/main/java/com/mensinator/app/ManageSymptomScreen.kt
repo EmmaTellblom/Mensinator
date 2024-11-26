@@ -19,7 +19,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.mensinator.app.data.DataSource
+import com.mensinator.app.data.ColorSource
+import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
@@ -57,7 +58,7 @@ fun ManageSymptomScreen(
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
-            val selectedColor = DataSource(isDarkMode()).colorMap[selectedColorName] ?: Color.Gray
+            val selectedColor = ColorSource.getColorMap(isDarkMode())[selectedColorName] ?: Color.Gray
 
 
             val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
@@ -145,16 +146,14 @@ fun ManageSymptomScreen(
                                 .wrapContentSize()
                         ) {
                             // Retrieve the colorMap from DataSource
-                            val colorMap = DataSource(isDarkMode()).colorMap
+                            val colorMap = ColorSource.getColorMap(isDarkMode())
 
-                            // Define color categories grouped by hue
-                            val colorCategories = DataSource(isDarkMode()).colorCategories
                             Column(
                                 modifier = Modifier.wrapContentSize(),
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                colorCategories.forEach { colorGroup ->
+                                ColorSource.colorsGroupedByHue.forEach { colorGroup ->
                                     Row(
                                         modifier = Modifier
                                             .wrapContentSize(),

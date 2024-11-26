@@ -1,6 +1,7 @@
 package com.mensinator.app
 
 import android.database.sqlite.SQLiteDatabase
+import androidx.annotation.WorkerThread
 import java.time.LocalDate
 
 interface IPeriodDatabaseHelper {
@@ -49,6 +50,7 @@ interface IPeriodDatabaseHelper {
     fun updateSetting(key: String, value: String): Boolean
 
     // This function is used to get a setting from the database
+    @WorkerThread
     fun getSettingByKey(key: String): Setting?
 
     // This function is used for adding/removing ovulation dates from the database
