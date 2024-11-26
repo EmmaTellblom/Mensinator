@@ -22,7 +22,7 @@ If applicable, add screenshots to help explain your problem.
 **Smartphone information (please complete the following information):**
  - Device: [e.g. S24]
  - Android version: [14]
- - App-Version [22]
+ - App version: [22]
 
 **Additional context**
 Add any other context about the problem here.
