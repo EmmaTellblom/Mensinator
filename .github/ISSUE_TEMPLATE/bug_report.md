@@ -20,7 +20,7 @@ A clear and concise description of what was expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Smartphone information (please complete the following information):**
- - Device: [e.g. S24]
+ - Device: [e.g. Samsung Galaxy S24]
  - Android version: [14]
  - App version: [22]
 
