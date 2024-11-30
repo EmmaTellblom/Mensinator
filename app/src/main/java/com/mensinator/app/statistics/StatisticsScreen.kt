@@ -94,7 +94,6 @@ fun RowOfText(stringOne: String, stringTwo: String?) {
             modifier = Modifier
                 .weight(0.7f)
                 .padding(end = 8.dp),
-            style = MaterialTheme.typography.bodyLarge
         )
         stringTwo?.let {
             Text(
