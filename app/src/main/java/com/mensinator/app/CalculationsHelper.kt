@@ -3,7 +3,6 @@ package com.mensinator.app
 import android.util.Log
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
 import java.time.LocalDate
-import kotlin.math.round
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
