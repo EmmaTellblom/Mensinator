@@ -1,15 +1,18 @@
 package com.mensinator.app
 
 import android.util.Log
+import com.mensinator.app.extensions.roundToTwoDecimalPoints
 import java.time.LocalDate
-import kotlin.math.round
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : ICalculationsHelper {
-    private val periodHistory = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
-    private val ovulationHistory = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
-    private val lutealCalculation = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
+    private val periodHistory
+        get() = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
+    private val ovulationHistory
+        get() = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
+    private val lutealCalculation
+        get() = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
 
     override fun calculateNextPeriod(): LocalDate {
         val expectedPeriodDate: LocalDate
@@ -119,7 +122,7 @@ class CalculationsHelper(
             if (growthRate.isEmpty()) {
                 return 0.0
             }
-            return growthRate.average().roundTo2Decimals()
+            return growthRate.average().roundToTwoDecimalPoints()
         }
     }
 
@@ -220,9 +223,5 @@ class CalculationsHelper(
             return 0
         }
 
-    }
-
-    private fun Double.roundTo2Decimals(): Double {
-        return (round(this * 100) / 100)
     }
 }

@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mensinator.app.*
 import com.mensinator.app.R
 import com.mensinator.app.settings.SettingsScreen
+import com.mensinator.app.statistics.StatisticsScreen
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {

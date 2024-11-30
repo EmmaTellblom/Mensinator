@@ -2,6 +2,7 @@ package com.mensinator.app
 
 import android.app.Application
 import com.mensinator.app.settings.SettingsViewModel
+import com.mensinator.app.statistics.StatisticsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -22,6 +23,7 @@ class App : Application() {
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
 
         viewModel { SettingsViewModel(get(), get(), get()) }
+        viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }
 
     override fun onCreate() {
