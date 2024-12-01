@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.mensinator.app.*
+import com.mensinator.app.business.ICalculationsHelper
+import com.mensinator.app.business.IOvulationPrediction
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.extensions.formatToOneDecimalPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
