@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.business
 
 import java.time.LocalDate
 

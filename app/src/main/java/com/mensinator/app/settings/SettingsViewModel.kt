@@ -7,8 +7,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.mensinator.app.IExportImport
-import com.mensinator.app.IPeriodDatabaseHelper
+import com.mensinator.app.business.IExportImport
+import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*

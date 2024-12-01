@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.symptoms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,10 +19,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.mensinator.app.*
+import com.mensinator.app.R
+import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.data.Symptom
+import com.mensinator.app.data.isActive
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.settings.SettingsViewModel
 import com.mensinator.app.ui.theme.isDarkMode
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 
@@ -30,7 +37,8 @@ import org.koin.compose.koinInject
 @Composable
 fun ManageSymptomScreen(
     showCreateSymptom: MutableState<Boolean>,
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    //viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     var initialSymptoms = remember { dbHelper.getAllSymptoms() }

@@ -25,10 +25,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mensinator.app.*
 import com.mensinator.app.R
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
+import com.mensinator.app.symptoms.ManageSymptomScreen
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -187,6 +189,5 @@ fun MensinatorApp(
             }
         }
     }
-
 }
 

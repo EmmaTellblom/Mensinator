@@ -1,10 +1,12 @@
-package com.mensinator.app
+package com.mensinator.app.business
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.mensinator.app.data.Symptom
+import com.mensinator.app.data.Setting
 import java.time.LocalDate
 
 /*
@@ -298,7 +300,7 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
     }
 
-    override fun getSymptomsFromDate(date: LocalDate): List<Int> {
+    override fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> {
         val db = readableDatabase
         val symptoms = mutableListOf<Int>()
 
