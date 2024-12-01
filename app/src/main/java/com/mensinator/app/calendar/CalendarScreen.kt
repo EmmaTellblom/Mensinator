@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.calendar
 
 
 import android.content.Context
@@ -30,7 +30,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mensinator.app.R
+import com.mensinator.app.data.Symptom
+import com.mensinator.app.business.INotificationScheduler
+import com.mensinator.app.business.IOvulationPrediction
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.data.isActive
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
@@ -611,11 +618,12 @@ fun CalendarScreen() {
         // Show the SymptomsDialog
         if (showSymptomsDialog && selectedDates.value.isNotEmpty()) {
             val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+            val date = selectedDates.value.last()
 
-            SymptomsDialog(
-                date = selectedDates.value.last(),  // Pass the last selected date
+            EditSymptomsForDaysDialog(
+                date = date,  // Pass the last selected date
                 symptoms = activeSymptoms,
-                dbHelper = dbHelper,
+                currentlyActiveSymptomIds = dbHelper.getActiveSymptomIdsForDate(date).toSet(),
                 onSave = { selectedSymptoms ->
                     val selectedSymptomIds = selectedSymptoms.map { it.id }
                     val datesToUpdate = selectedDates.value.toList()

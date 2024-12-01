@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.settings
 
 import android.util.Log
 import android.widget.Toast
@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
 import java.io.FileOutputStream
