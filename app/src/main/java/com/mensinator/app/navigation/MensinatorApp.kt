@@ -88,7 +88,6 @@ fun MensinatorApp(
                 }
             }
         },
-        topBar = { MensinatorTopBar(currentScreen) },
         bottomBar = {
             val barItems = listOf(
                 BarItem(
@@ -145,23 +144,45 @@ fun MensinatorApp(
             navController = navController,
             startDestination = Screen.Calendar.name,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn(animationSpec = tween(50)) },
+            enterTransition = { fadeIn(animationSpec = tween(5000)) },
             exitTransition = { fadeOut(animationSpec = tween(50)) },
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screen.Calendar.name) {
-                CalendarScreen()
+                Scaffold(
+                    topBar = { MensinatorTopBar(currentScreen) }
+                ) { topBarPadding ->
+                    CalendarScreen(modifier = Modifier.padding(topBarPadding))
+                }
             }
             composable(route = Screen.Statistic.name) {
-                StatisticsScreen()
+                Scaffold(
+                    topBar = { MensinatorTopBar(currentScreen) }
+                ) { topBarPadding ->
+                    StatisticsScreen(modifier = Modifier.padding(topBarPadding))
+                }
             }
             composable(route = Screen.Symptoms.name) {
-                ManageSymptomScreen(showCreateSymptom)
+                Scaffold(
+                    topBar = { MensinatorTopBar(currentScreen) }
+                ) { topBarPadding ->
+                    ManageSymptomScreen(
+                        showCreateSymptom,
+                        modifier = Modifier.padding(topBarPadding)
+                    )
+                }
             }
             composable(route = Screen.Settings.name) {
-                Column {
-                    SettingsScreen(onSwitchProtectionScreen = { newValue ->
-                        onScreenProtectionChanged(newValue)
-                    })
+                Scaffold(
+                    topBar = { MensinatorTopBar(currentScreen) }
+                ) { topBarPadding ->
+                    Column {
+                        SettingsScreen(
+                            onSwitchProtectionScreen = { newValue ->
+                                onScreenProtectionChanged(newValue)
+                            },
+                            modifier = Modifier.padding(topBarPadding)
+                        )
+                    }
                 }
             }
         }

@@ -17,7 +17,6 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 fun MensinatorTopBar(screen: Screen) {
     Column(
         modifier = Modifier
-            .statusBarsPadding()
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
