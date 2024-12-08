@@ -51,6 +51,7 @@ object ResourceMapper {
         "expected_period_color" to R.string.expected_period_color,
         "ovulation_color" to R.string.ovulation_color,
         "expected_ovulation_color" to R.string.expected_ovulation_color,
+        "period_notification_message" to R.string.period_notification_message,
         "reminders" to R.string.reminders,
         "reminder_days" to R.string.days_before_reminder,
         "other_settings" to R.string.other_settings,
@@ -125,6 +126,13 @@ fun SettingsScreen(
                 }
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
+        )
+        SettingSwitch(
+            text = stringResource(BooleanSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+            checked = viewState.periodNotificationMessage,
+            onCheckedChange = {
+                viewModel.updateBooleanSetting(BooleanSetting.PERIOD_NOTIFICATION_MESSAGE, it)
+            }
         )
 
         Spacer(Modifier.height(16.dp))

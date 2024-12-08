@@ -36,6 +36,7 @@ class SettingsViewModel(
             openColorPickerForSetting = null,
 
             daysBeforeReminder = -1,
+            periodNotificationMessage = false,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
             openIntPickerForSetting = null,
@@ -68,6 +69,7 @@ class SettingsViewModel(
         val openColorPickerForSetting: ColorSetting? = null,
 
         val daysBeforeReminder: Int,
+        val periodNotificationMessage: Boolean,
         val daysForPeriodHistory: Int,
         val daysForOvulationHistory: Int,
         val openIntPickerForSetting: IntSetting? = null,
@@ -107,6 +109,7 @@ class SettingsViewModel(
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
                 daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
+                periodNotificationMessage = getBoolean(BooleanSetting.PERIOD_NOTIFICATION_MESSAGE), // TODO
                 daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
                 daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
 
@@ -237,6 +240,7 @@ enum class IntSetting(val stringResId: Int, val settingDbKey: String) {
 }
 
 enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
+    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_message, "period_notification_message"),
     LUTEAL_PHASE_CALCULATION(R.string.luteal_phase_calculation, "luteal_period_calculation"),
     SHOW_CYCLE_NUMBERS(R.string.cycle_numbers_show, "cycle_numbers_show"),
     PREVENT_SCREENSHOTS(R.string.screen_protection, "screen_protection"),
