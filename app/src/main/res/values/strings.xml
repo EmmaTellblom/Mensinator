@@ -45,7 +45,7 @@
     <string name="expected_ovulation_color">Expected Ovulation</string>
     <string name="reminders">Reminders</string>
     <string name="days_before_reminder">Days Before Reminder</string>
-    <string name="period_notification_message">Period Notification Message CHANGE</string>
+    <string name="period_notification_message">Period Notification Message</string>
     <string name="other_settings">Other Settings</string>
     <string name="luteal_phase_calculation">Luteal Phase Calculation</string>
     <string name="period_history">Period History</string>

@@ -127,12 +127,8 @@ fun SettingsScreen(
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
-        SettingSwitch(
-            text = stringResource(BooleanSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
-            checked = viewState.periodNotificationMessage,
-            onCheckedChange = {
-                viewModel.updateBooleanSetting(BooleanSetting.PERIOD_NOTIFICATION_MESSAGE, it)
-            }
+        SettingText(
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId)
         )
 
         Spacer(Modifier.height(16.dp))
@@ -447,6 +443,32 @@ private fun ColorPickerPreview() {
                 onClosePicker = {},
                 onSelectColor = { _, _ -> },
             )
+        }
+    }
+}
+
+@Composable
+private fun SettingText(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        onClick = {
+            println("SETTING IS CLICKED")
+        },
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+            contentColor = if (isDarkMode()) Color.White else Color.Black // not great
+        )
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = text, modifier = Modifier.weight(1f))
         }
     }
 }
