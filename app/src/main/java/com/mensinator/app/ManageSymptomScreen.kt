@@ -30,6 +30,7 @@ import org.koin.compose.koinInject
 @Composable
 fun ManageSymptomScreen(
     showCreateSymptom: MutableState<Boolean>,
+    modifier: Modifier,
 ) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     var initialSymptoms = remember { dbHelper.getAllSymptoms() }
@@ -45,7 +46,7 @@ fun ManageSymptomScreen(
 
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())  // Make the column scrollable
             .displayCutoutExcludingStatusBarsPadding()

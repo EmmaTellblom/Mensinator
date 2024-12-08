@@ -43,7 +43,7 @@ import kotlin.math.abs
 This file creates the calendar. A sort of "main screen".
  */
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(modifier: Modifier) {
     val context = LocalContext.current
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     val ovulationPrediction: IOvulationPrediction = koinInject()
@@ -199,7 +199,7 @@ fun CalendarScreen() {
 
     //UI Implementation
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .displayCutoutExcludingStatusBarsPadding()
