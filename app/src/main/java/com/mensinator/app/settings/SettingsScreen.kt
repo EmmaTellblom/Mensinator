@@ -93,7 +93,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
     onSwitchProtectionScreen: (Boolean) -> Unit,
 ) {
-    val dbHelper: IPeriodDatabaseHelper = koinInject()
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
     val isDarkMode = isDarkMode()
     LaunchedEffect(isDarkMode) {
@@ -133,7 +132,7 @@ fun SettingsScreen(
         )
         SettingText(
             text = stringResource(R.string.period_notification_message),
-            message = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
+            key = "period_notification_message"
         )
 
         Spacer(Modifier.height(16.dp))
@@ -456,8 +455,10 @@ private fun ColorPickerPreview() {
 private fun SettingText(
     text: String,
     modifier: Modifier = Modifier,
-    message: String,
+    key: String,
 ) {
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val message = dbHelper.getSettingByKey(key)?.value.toString()
     var showDialog by remember { mutableStateOf(false) }
     var newMessage by remember { mutableStateOf(message) }
 
@@ -487,7 +488,7 @@ private fun SettingText(
             },
             confirmButton = {
                 Button(onClick = {
-                    // TODO save text field to DB
+                    dbHelper.updateSetting(key = key, value = newMessage)
                     showDialog = false
                 }) {
                     Text(text = stringResource(id = R.string.save_button))
