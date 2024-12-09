@@ -128,7 +128,8 @@ fun SettingsScreen(
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingText(
-            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId)
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+            onClick = { println("Setting is clicked!") }
         )
 
         Spacer(Modifier.height(16.dp))
@@ -450,26 +451,17 @@ private fun ColorPickerPreview() {
 @Composable
 private fun SettingText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
-    Card(
-        onClick = {
-            println("SETTING IS CLICKED")
-        },
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent,
-            contentColor = if (isDarkMode()) Color.White else Color.Black // not great
-        )
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = text, modifier = Modifier.weight(1f))
-        }
+        Text(text = text, modifier = Modifier.weight(1f))
     }
 }
 
