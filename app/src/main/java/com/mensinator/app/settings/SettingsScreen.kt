@@ -31,12 +31,14 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
+import com.mensinator.app.IPeriodDatabaseHelper
 import com.mensinator.app.ImportDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 private val colorCircleSize = 24.dp
 
@@ -91,6 +93,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
     onSwitchProtectionScreen: (Boolean) -> Unit,
 ) {
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
     val isDarkMode = isDarkMode()
     LaunchedEffect(isDarkMode) {
@@ -130,7 +133,7 @@ fun SettingsScreen(
         )
         SettingText(
             text = stringResource(R.string.period_notification_message),
-            message = "TEST notifMessage"
+            message = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
         )
 
         Spacer(Modifier.height(16.dp))
