@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +33,7 @@ import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
 import com.mensinator.app.ImportDialog
 import com.mensinator.app.R
+import com.mensinator.app.RenameSymptomDialog
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
@@ -128,8 +130,7 @@ fun SettingsScreen(
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingText(
-            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
-            onClick = { println("Setting is clicked!") }
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId)
         )
 
         Spacer(Modifier.height(16.dp))
@@ -451,17 +452,29 @@ private fun ColorPickerPreview() {
 @Composable
 private fun SettingText(
     text: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    modifier: Modifier = Modifier
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable(onClick = onClick),
+            .clickable{ showDialog = true },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, modifier = Modifier.weight(1f))
+    }
+
+    if (showDialog) {
+        RenameSymptomDialog(
+            symptomDisplayName = "EXAMPLE_DISPLAY",
+            onRename = {
+                showDialog = false
+            },
+            onCancel = {
+                showDialog = false
+            }
+        )
     }
 }
 
