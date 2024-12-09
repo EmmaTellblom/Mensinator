@@ -130,7 +130,7 @@ fun SettingsScreen(
         )
         SettingText(
             text = stringResource(R.string.period_notification_message),
-            notifMessage = "TEST notifMessage"
+            message = "TEST notifMessage"
         )
 
         Spacer(Modifier.height(16.dp))
@@ -453,10 +453,10 @@ private fun ColorPickerPreview() {
 private fun SettingText(
     text: String,
     modifier: Modifier = Modifier,
-    notifMessage: String,
+    message: String,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var newNotifMessage by remember { mutableStateOf(notifMessage) }
+    var newMessage by remember { mutableStateOf(message) }
 
     Row(
         modifier = modifier
@@ -471,14 +471,14 @@ private fun SettingText(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = {
-                newNotifMessage = notifMessage
+                newMessage = message
                 showDialog = false
             },
             title = { Text(text = text) },
             text = {
                 TextField(
-                    value = newNotifMessage,
-                    onValueChange = { newNotifMessage = it },
+                    value = newMessage,
+                    onValueChange = { newMessage = it },
                     singleLine = false
                 )
             },
@@ -492,7 +492,7 @@ private fun SettingText(
             },
             dismissButton = {
                 Button(onClick = {
-                    newNotifMessage = notifMessage
+                    newMessage = message
                     showDialog = false
                 }) {
                     Text(text = stringResource(id = R.string.cancel_button))
