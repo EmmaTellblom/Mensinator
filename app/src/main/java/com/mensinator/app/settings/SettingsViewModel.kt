@@ -142,12 +142,22 @@ class SettingsViewModel(
         refreshData()
     }
 
+    fun updateStringSetting(stringSetting: StringSetting, newString: String) {
+        periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
+        showTextInput(null) // TODO
+        refreshData()
+    }
+
     fun showColorPicker(colorSetting: ColorSetting?) {
         _viewState.update { it.copy(openColorPickerForSetting = colorSetting) }
     }
 
     fun showIntPicker(intSetting: IntSetting?) {
         _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
+    }
+
+    fun showTextInput(stringSetting: StringSetting?) {
+        _viewState.update { it.copy(openTextInputForSetting = stringSetting) }
     }
 
     fun showFaqDialog(show: Boolean) {
