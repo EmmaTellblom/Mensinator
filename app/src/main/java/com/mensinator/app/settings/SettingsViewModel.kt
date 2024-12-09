@@ -35,9 +35,6 @@ class SettingsViewModel(
             expectedOvulationColor = Color.Yellow,
             openColorPickerForSetting = null,
 
-            periodNotificationMessage = "Your period is about to start",
-            openTextInputForSetting = null,
-
             daysBeforeReminder = -1,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
@@ -69,9 +66,6 @@ class SettingsViewModel(
         val ovulationColor: Color,
         val expectedOvulationColor: Color,
         val openColorPickerForSetting: ColorSetting? = null,
-
-        val periodNotificationMessage: String,
-        val openTextInputForSetting: StringSetting? = null,
 
         val daysBeforeReminder: Int,
         val daysForPeriodHistory: Int,
@@ -113,7 +107,6 @@ class SettingsViewModel(
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
                 daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
-                periodNotificationMessage = getText(StringSetting.PERIOD_NOTIFICATION_MESSAGE), // TODO unnecessary? see other lines too
                 daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
                 daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
 
@@ -142,22 +135,12 @@ class SettingsViewModel(
         refreshData()
     }
 
-    fun updateStringSetting(stringSetting: StringSetting, newString: String) {
-        periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
-        showTextInput(null) // TODO
-        refreshData()
-    }
-
     fun showColorPicker(colorSetting: ColorSetting?) {
         _viewState.update { it.copy(openColorPickerForSetting = colorSetting) }
     }
 
     fun showIntPicker(intSetting: IntSetting?) {
         _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
-    }
-
-    fun showTextInput(stringSetting: StringSetting?) {
-        _viewState.update { it.copy(openTextInputForSetting = stringSetting) }
     }
 
     fun showFaqDialog(show: Boolean) {
@@ -226,11 +209,6 @@ class SettingsViewModel(
         return value
     }
 
-    private fun getText(stringSetting: StringSetting): String {
-        val text = periodDatabaseHelper.getSettingByKey(stringSetting.settingDbKey)?.value ?: "Text"
-        return text
-    }
-
     private fun getAppVersion(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -261,8 +239,4 @@ enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
     LUTEAL_PHASE_CALCULATION(R.string.luteal_phase_calculation, "luteal_period_calculation"),
     SHOW_CYCLE_NUMBERS(R.string.cycle_numbers_show, "cycle_numbers_show"),
     PREVENT_SCREENSHOTS(R.string.screen_protection, "screen_protection"),
-}
-
-enum class StringSetting(val stringResId: Int, val settingDbKey: String) {
-    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_message, "period_notification_message")
 }

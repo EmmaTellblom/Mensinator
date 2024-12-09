@@ -129,7 +129,7 @@ fun SettingsScreen(
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingText(
-            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+            text = stringResource(R.string.period_notification_message),
             notifMessage = "TEST notifMessage"
         )
 
