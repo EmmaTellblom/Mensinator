@@ -33,7 +33,6 @@ import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
 import com.mensinator.app.ImportDialog
 import com.mensinator.app.R
-import com.mensinator.app.RenameSymptomDialog
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
@@ -130,7 +129,8 @@ fun SettingsScreen(
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingText(
-            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId)
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+            notifMessage = "TEST notifMessage"
         )
 
         Spacer(Modifier.height(16.dp))
@@ -452,9 +452,12 @@ private fun ColorPickerPreview() {
 @Composable
 private fun SettingText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    notifMessage: String,
 ) {
     var showDialog by remember { mutableStateOf(false) }
+    var newNotifMessage by remember { mutableStateOf(notifMessage) }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -466,13 +469,34 @@ private fun SettingText(
     }
 
     if (showDialog) {
-        RenameSymptomDialog(
-            symptomDisplayName = "EXAMPLE_DISPLAY",
-            onRename = {
+        AlertDialog(
+            onDismissRequest = {
+                newNotifMessage = notifMessage
                 showDialog = false
             },
-            onCancel = {
-                showDialog = false
+            title = { Text(text = text) },
+            text = {
+                TextField(
+                    value = newNotifMessage,
+                    onValueChange = { newNotifMessage = it },
+                    singleLine = false
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    // TODO save text field to DB
+                    showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.save_button))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    newNotifMessage = notifMessage
+                    showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.cancel_button))
+                }
             }
         )
     }
