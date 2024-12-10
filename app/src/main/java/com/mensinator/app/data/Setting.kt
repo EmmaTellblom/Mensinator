@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.data
 
 data class Setting(
     val key: String,
