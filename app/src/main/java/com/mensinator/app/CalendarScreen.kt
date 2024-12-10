@@ -90,6 +90,8 @@ fun CalendarScreen() {
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
+    val periodNotificationMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
+
     val circleSize = 30.dp
 
     // Colors from app_settings in the database
@@ -501,13 +503,14 @@ fun CalendarScreen() {
 
                 // Schedule notification for reminder
                 // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
-                // and that its more then reminderDays left (do not schedule notifications where there's to few reminderdays left until period)
+                // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
                 if (reminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
                     newSendNotification(
                         context,
                         notificationScheduler,
                         reminderDays,
-                        nextPeriodDate
+                        nextPeriodDate,
+                        periodNotificationMessage
                     )
                 }
                 Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
@@ -581,7 +584,8 @@ fun CalendarScreen() {
                         context,
                         notificationScheduler,
                         reminderDays,
-                        nextPeriodDate
+                        nextPeriodDate,
+                        periodNotificationMessage
                     )
                 }
             },
@@ -648,7 +652,7 @@ fun containsOvulationDate(selectedDates: Set<LocalDate>, ovulationDates: Set<Loc
     }
 }
 
-fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate) {
+fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
     if (notificationDate.isBefore(LocalDate.now())) {
         Log.d(
@@ -662,7 +666,7 @@ fun newSendNotification(context: Context, scheduler: INotificationScheduler, day
         ).show()
     } else {
         //Schedule notification
-        scheduler.scheduleNotification(notificationDate)
+        scheduler.scheduleNotification(notificationDate, messageText)
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
     }
 }
