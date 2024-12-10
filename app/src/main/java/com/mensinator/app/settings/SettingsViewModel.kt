@@ -136,7 +136,9 @@ class SettingsViewModel(
     }
 
     fun showColorPicker(colorSetting: ColorSetting?) {
-        _viewState.update { it.copy(openColorPickerForSetting = colorSetting) }
+        _viewState.update {
+            it.copy(openColorPickerForSetting = colorSetting)
+        }
     }
 
     fun showIntPicker(intSetting: IntSetting?) {
@@ -154,7 +156,6 @@ class SettingsViewModel(
     fun showExportDialog(show: Boolean) {
         _viewState.update { it.copy(showExportDialog = show) }
     }
-
 
     fun handleImport(importPath: String) {
         try {
