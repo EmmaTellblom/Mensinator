@@ -465,11 +465,17 @@ private fun SettingText(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable{ showDialog = true },
+            .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, modifier = Modifier.weight(1f))
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = { showDialog = true },
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) {
+            Text(text = stringResource(id = R.string.change_text))
+        }
     }
 
     if (showDialog) {
