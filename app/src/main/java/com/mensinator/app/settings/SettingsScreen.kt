@@ -132,7 +132,7 @@ fun SettingsScreen(
         )
         SettingText(
             text = stringResource(R.string.period_notification_message),
-            key = "period_notification_message"
+            dbKey = "period_notification_message"
         )
 
         Spacer(Modifier.height(16.dp))
@@ -455,10 +455,10 @@ private fun ColorPickerPreview() {
 private fun SettingText(
     text: String,
     modifier: Modifier = Modifier,
-    key: String,
+    dbKey: String,
 ) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
-    val message = dbHelper.getSettingByKey(key)?.value.toString()
+    val message = dbHelper.getSettingByKey(dbKey)?.value.toString()
     var showDialog by remember { mutableStateOf(false) }
     var newMessage by remember { mutableStateOf(message) }
 
@@ -488,7 +488,7 @@ private fun SettingText(
             },
             confirmButton = {
                 Button(onClick = {
-                    dbHelper.updateSetting(key = key, value = newMessage)
+                    dbHelper.updateSetting(key = dbKey, value = newMessage)
                     showDialog = false
                 }) {
                     Text(text = stringResource(id = R.string.save_button))
