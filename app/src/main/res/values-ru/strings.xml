@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+    <!-- Home -->
+    <string name="previous">Предыдущий</string>
+    <string name="next">Далее</string>
+    <string name="period_button">Период</string>
+    <string name="symptoms_button">Симптомы</string>
+    <string name="ovulation_button">Овуляция</string>
+    <string name="period_button_selected">Удалить период</string>
+    <string name="period_button_not_selected">Добавить период</string>
+    <string name="ovulation_button_selected">Удалить овуляцию</string>
+    <string name="ovulation_button_not_selected">Добавить овуляцию</string>
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Нет дат для сохранения или удаления</string>
+    <string name="successfully_saved_alert">Изменения успешно сохранены</string>
+    <string name="no_data_selected">Даты не выбраны</string>
+    <string name="only_day_alert">Только один день может быть овуляцией!</string>
+    <string name="success_saved_ovulation">Овуляция успешно сохранена</string>
+    <string name="no_date_selected_ovulation">Дата овуляции не выбрана</string>
+    <!-- navigation -->
+    <string name="home_page">Главная</string>
+    <string name="statisic_page">Статистика</string>
+    <string name="symptoms_page">Симптомы</string>
+    <string name="settings_page">Настройки</string>
+    <!-- symptoms page -->
+    <string name="delete_symptom">Удалить симптом</string>
+    <string name="delete_question">Вы уверены, что хотите удалить этот симптом?</string>
+    <string name="delete_button">Удалить</string>
+    <!-- Settings -->
+    <string name="app_settings">Настройки</string>
+    <string name="colors">Цвета</string>
+    <string name="period_color">Период</string>
+    <string name="selection_color">Выделение</string>
+    <string name="period_selection_color">Выбранный период</string>
+    <string name="expected_period_color">Ожидаемый период</string>
+    <string name="ovulation_color">Овуляция</string>
+    <string name="expected_ovulation_color">Ожидаемая овуляция</string>
+    <string name="reminders">Напоминания</string>
+    <string name="days_before_reminder">Дни до напоминания</string>
+    <string name="other_settings">Другие настройки</string>
+    <string name="luteal_phase_calculation">Расчет лютеиновой фазы</string>
+    <string name="period_history">История периодов</string>
+    <string name="ovulation_history">История овуляций</string>
+    <string name="language">Язык</string>
+    <string name="change_language">Сменить язык</string>
+    <string name="cycle_numbers_show">Показать номера циклов</string>
+    <string name="screen_protection">Запретить скриншоты</string>
+    <string name="close">Закрыть</string>
+    <string name="save">Сохранить</string>
+    <!-- Color values -->
+    <string name="color_red">Красный</string>
+    <string name="color_green">Зеленый</string>
+    <string name="color_blue">Синий</string>
+    <string name="color_yellow">Желтый</string>
+    <string name="color_cyan">Голубой</string>
+    <string name="color_magenta">Розовый</string>
+    <string name="color_black">Черный</string>
+    <string name="color_white">Белый</string>
+    <string name="color_darkgray">Темно-серый</string>
+    <string name="color_gray">Светло-серый</string>
+    <!-- Statistics -->
+    <string name="statistics_title">Статистика</string>
+    <string name="period_count">Отслеживаемые периоды: </string>
+    <string name="average_cycle_length">Средний цикл: </string>
+    <string name="average_period_length">Средний период: </string>
+    <string name="next_period_start_past">Следующий прогнозируемый период: </string>
+    <string name="next_period_start_future">Следующий прогнозируемый период: </string>
+    <string name="ovulation_count">Отслеживание овуляций: </string>
+    <string name="average_ovulation_day">Средний день овуляции: </string>
+    <string name="next_predicted_ovulation">Следующая прогнозируемая овуляция: </string>
+    <string name="next_predicted_ovulation_default">-</string>
+    <string name="average_luteal_length">Средняя продолжительность лютеиновой фазы: </string>
+    <string name="days">дней</string>
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Симптомы для %1$s</string>
+    <string name="create_new_symptom_button">Добавить новый симптом</string>
+    <string name="save_symptoms_button">Сохранить симптомы</string>
+    <string name="cancel_button">Отмена</string>
+    <string name="heavy">Обильное выделение</string>
+    <string name="medium">Обычное выделение</string>
+    <string name="light">Слабое выделение</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Добавить новый симптом</string>
+    <string name="symptom_name_label">Название симптома</string>
+    <string name="save_button">Сохранить</string>
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Управление симптомами</string>
+    <!-- Calender -->
+    <string name="calendar_title">Календарь</string>
+    <string name="mon">Пн</string>
+    <string name="tue">Вт</string>
+    <string name="wed">Ср</string>
+    <string name="thu">Чт</string>
+    <string name="fri">Пт</string>
+    <string name="sat">Сб</string>
+    <string name="sun">Вс</string>
+    <string name="january">Январь</string>
+    <string name="february">Февраль</string>
+    <string name="march">Март</string>
+    <string name="april">Апрель</string>
+    <string name="may">Май</string>
+    <string name="june">Июнь</string>
+    <string name="july">Июль</string>
+    <string name="august">Август</string>
+    <string name="september">Сентябрь</string>
+    <string name="october">Октябрь</string>
+    <string name="november">Ноябрь</string>
+    <string name="december">Декабрь</string>
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">Экспорт/Импорт данных</string>
+    <string name="export_button">Экспорт</string>
+    <string name="import_button">Импорт</string>
+    <string name="export_success_toast">Экспорт в %1$s</string>
+    <string name="import_success_toast">Файл был успешно импортирован</string>
+    <string name="import_failure_toast">Не удалось импортировать файл</string>
+    <string name="export_path_label">Экспорт файла в: %1$s</string>
+    <string name="import_path_label">Путь импорта: %1$s</string>
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Часто задаваемые вопросы</string>
+    <!-- User Manual Section -->
+    <string name="user_manual_header">Руководство пользователя</string>
+    <string name="how_to_use">Как использовать:</string>
+    <string name="select_dates">• Выберите даты: Нажмите на дату, чтобы выбрать или отменить ее выбор.</string>
+    <string name="add_or_remove_dates">• Добавьте или удалите даты для периода: После выбора дат нажмите кнопку \'Добавить или удалить даты\'.</string>
+    <string name="symptoms">• Симптомы: Нажмите кнопку \'Симптомы\', чтобы просмотреть или добавить симптомы для выбранной даты.</string>
+    <string name="ovulation">• Овуляция: Выберите одну дату и нажмите кнопку овуляции. Чтобы удалить, выберите дату и нажмите кнопку еще раз.</string>
+    <string name="statistics">• Статистика: Нажмите кнопку Статистика в нижнем меню и выберите пункт Статистика.</string>
+    <string name="import_export">• Импорт/экспорт: Нажмите кнопку настроек в нижнем меню, а затем прокрутите вниз список настроек. Нажмите импорт/экспорт, чтобы импортировать или экспортировать данные. Это ОБЯЗАТЕЛЬНО при переносе данных на новое устройство!</string>
+    <string name="calculations">• Расчеты: \nПериоды рассчитываются в соответствии со средней продолжительностью цикла и продолжительностью периода.\nПериоды могут быть рассчитаны с использованием средней лютеиновой фазы. В этом случае расчеты будут проводиться по 5 последним циклам, чтобы определить среднюю лютеиновую фазу и использовать ее для расчета периода. Это активируется в настройках.\nОвуляция рассчитывается в соответствии со средней продолжительностью цикла овуляции.
+</string>
+    <string name="features_coming_soon">Будущие возможности:</string>
+    <string name="upcoming_features">• Проверьте наш Github, чтобы узнать последние новости о разработке приложений!</string>
+    <string name="our_story_header">Наша история</string>
+    <string name="our_story">Мы - две женщины, которым надоело продавать свои данные крупным корпорациям. Наше приложение хранит все ваши данные локально на вашем устройстве, и у нас нет к ним никакого доступа.\nМы ценим вашу конфиденциальность и не сохраняем и не передаем никакую личную информацию. С момента запуска этого приложения мы выросли и теперь у нас есть свой собственный сервер Discord с людьми, которые увлечены этим приложением и хотят помочь нам!\n\nПрисоединяйтесь к нам в Discord здесь: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Отказ от ответственности:</string>
+    <string name="disclaimer">• Это проект для хобби и не предназначен для использования в медицинских целях. Мы просто делаем это для собственных нужд. Но мы приветствуем идеи и пожелания. Присоединяйтесь к нам в Discord или пишите нам на почту:\nmensinator.app@gmail.com</string>
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">Закрыть</string>
+    <string name="data_settings">Бекап</string>
+    <string name="data">Данные</string>
+    <string name="Import">Импорт</string>
+    <string name="data_export">Экспорт</string>
+    <string name="select_file">Выберите файл для импорта</string>
+    <string name="select_file_button">Выбор</string>
+    <string name="import_export_data">Импорт Экспорт данных</string><string name="import_data">Импорт данных</string>
+    <string name="export_data">Экспорт данных</string><string name="about_app">О приложении</string><string name="rename_symptom">Переименовать симптом</string></resources>
