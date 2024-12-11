@@ -132,8 +132,17 @@ fun SettingsScreen(
         )
         SettingText(
             text = stringResource(R.string.period_notification_message),
-            dbKey = "period_notification_message"
+            onClick = { viewModel.showPeriodNotificationDialog(true) }
         )
+
+        if (viewState.showPeriodNotificationDialog) {
+            NotificationDialog(
+                title = stringResource(R.string.period_notification_message),
+                messageText = viewState.periodNotificationMessage,
+                onSave = { viewModel.updateStringSetting(StringSetting.PERIOD_NOTIFICATION_MESSAGE, it) },
+                onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -214,6 +223,45 @@ fun SettingsScreen(
             )
         }
     }
+}
+
+@Composable
+fun NotificationDialog(
+    title: String,
+    messageText: String,
+    onDismissRequest: () -> Unit,
+    onSave: (String) -> Unit
+) {
+    var newMessageText by remember { mutableStateOf(messageText) }
+
+    AlertDialog(
+        title = { Text(title) },
+        text = {
+            TextField(
+                value = newMessageText,
+                onValueChange = { newMessageText = it },
+                singleLine = false
+            )
+        },
+        confirmButton = {
+            Button(onClick = {
+                onSave(newMessageText)
+                onDismissRequest()
+            }) {
+                Text(text = stringResource(id = R.string.save_button))
+            }
+        },
+        onDismissRequest = onDismissRequest,
+        dismissButton = {
+            Button(
+                onClick = {
+                    onDismissRequest()
+                }
+            ) {
+                Text(text = stringResource(id = R.string.cancel_button))
+            }
+        }
+    )
 }
 
 @Composable
@@ -454,16 +502,10 @@ private fun ColorPickerPreview() {
 @Composable
 private fun SettingText(
     text: String,
-    modifier: Modifier = Modifier,
-    dbKey: String,
+    onClick: () -> Unit
 ) {
-    val dbHelper: IPeriodDatabaseHelper = koinInject()
-    val message = dbHelper.getSettingByKey(dbKey)?.value.toString()
-    var showDialog by remember { mutableStateOf(false) }
-    var newMessage by remember { mutableStateOf(message) }
-
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -471,44 +513,11 @@ private fun SettingText(
         Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
         Spacer(Modifier.width(4.dp))
         TextButton(
-            onClick = { showDialog = true },
+            onClick = onClick,
             colors = ButtonDefaults.filledTonalButtonColors()
         ) {
             Text(text = stringResource(id = R.string.change_text))
         }
-    }
-
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = {
-                newMessage = message
-                showDialog = false
-            },
-            title = { Text(text = text) },
-            text = {
-                TextField(
-                    value = newMessage,
-                    onValueChange = { newMessage = it },
-                    singleLine = false
-                )
-            },
-            confirmButton = {
-                Button(onClick = {
-                    dbHelper.updateSetting(key = dbKey, value = newMessage)
-                    showDialog = false
-                }) {
-                    Text(text = stringResource(id = R.string.save_button))
-                }
-            },
-            dismissButton = {
-                Button(onClick = {
-                    newMessage = message
-                    showDialog = false
-                }) {
-                    Text(text = stringResource(id = R.string.cancel_button))
-                }
-            }
-        )
     }
 }
 
