@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,12 +31,14 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
+import com.mensinator.app.IPeriodDatabaseHelper
 import com.mensinator.app.ImportDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 private val colorCircleSize = 24.dp
 
@@ -51,6 +54,7 @@ object ResourceMapper {
         "expected_period_color" to R.string.expected_period_color,
         "ovulation_color" to R.string.ovulation_color,
         "expected_ovulation_color" to R.string.expected_ovulation_color,
+        "period_notification_message" to R.string.period_notification_message,
         "reminders" to R.string.reminders,
         "reminder_days" to R.string.days_before_reminder,
         "other_settings" to R.string.other_settings,
@@ -125,6 +129,10 @@ fun SettingsScreen(
                 }
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
+        )
+        SettingText(
+            text = stringResource(R.string.period_notification_message),
+            dbKey = "period_notification_message"
         )
 
         Spacer(Modifier.height(16.dp))
@@ -440,6 +448,61 @@ private fun ColorPickerPreview() {
                 onSelectColor = { _, _ -> },
             )
         }
+    }
+}
+
+@Composable
+private fun SettingText(
+    text: String,
+    modifier: Modifier = Modifier,
+    dbKey: String,
+) {
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val message = dbHelper.getSettingByKey(dbKey)?.value.toString()
+    var showDialog by remember { mutableStateOf(false) }
+    var newMessage by remember { mutableStateOf(message) }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable{ showDialog = true },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = text, modifier = Modifier.weight(1f))
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                newMessage = message
+                showDialog = false
+            },
+            title = { Text(text = text) },
+            text = {
+                TextField(
+                    value = newMessage,
+                    onValueChange = { newMessage = it },
+                    singleLine = false
+                )
+            },
+            confirmButton = {
+                Button(onClick = {
+                    dbHelper.updateSetting(key = dbKey, value = newMessage)
+                    showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.save_button))
+                }
+            },
+            dismissButton = {
+                Button(onClick = {
+                    newMessage = message
+                    showDialog = false
+                }) {
+                    Text(text = stringResource(id = R.string.cancel_button))
+                }
+            }
+        )
     }
 }
 

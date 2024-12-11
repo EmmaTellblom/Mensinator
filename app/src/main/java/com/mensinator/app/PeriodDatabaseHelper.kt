@@ -17,7 +17,7 @@ class PeriodDatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 8
+        private const val DATABASE_VERSION = 9
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -81,6 +81,9 @@ class PeriodDatabaseHelper(context: Context) :
         }
         if (oldVersion < 8) {
             DatabaseUtils.databaseVersion8(db)
+        }
+        if (oldVersion < 9) {
+            DatabaseUtils.databaseVersion9(db)
         }
     }
 
