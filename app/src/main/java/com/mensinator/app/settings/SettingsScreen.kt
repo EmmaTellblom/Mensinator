@@ -468,7 +468,7 @@ private fun SettingText(
             .padding(vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = text, modifier = Modifier.weight(1f))
+        Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
         Spacer(Modifier.width(4.dp))
         TextButton(
             onClick = { showDialog = true },
