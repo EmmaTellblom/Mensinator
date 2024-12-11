@@ -15,7 +15,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,14 +30,13 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
-import com.mensinator.app.IPeriodDatabaseHelper
 import com.mensinator.app.ImportDialog
+import com.mensinator.app.NotificationDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 private val colorCircleSize = 24.dp
 
@@ -223,45 +221,6 @@ fun SettingsScreen(
             )
         }
     }
-}
-
-@Composable
-fun NotificationDialog(
-    title: String,
-    messageText: String,
-    onDismissRequest: () -> Unit,
-    onSave: (String) -> Unit
-) {
-    var newMessageText by remember { mutableStateOf(messageText) }
-
-    AlertDialog(
-        title = { Text(title) },
-        text = {
-            TextField(
-                value = newMessageText,
-                onValueChange = { newMessageText = it },
-                singleLine = false
-            )
-        },
-        confirmButton = {
-            Button(onClick = {
-                onSave(newMessageText)
-                onDismissRequest()
-            }) {
-                Text(text = stringResource(id = R.string.save_button))
-            }
-        },
-        onDismissRequest = onDismissRequest,
-        dismissButton = {
-            Button(
-                onClick = {
-                    onDismissRequest()
-                }
-            ) {
-                Text(text = stringResource(id = R.string.cancel_button))
-            }
-        }
-    )
 }
 
 @Composable
