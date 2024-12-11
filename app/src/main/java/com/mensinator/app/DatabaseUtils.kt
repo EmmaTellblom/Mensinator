@@ -49,7 +49,7 @@ object DatabaseUtils {
         createOvulationStructure(db)
         databaseVersion7(db)
         databaseVersion8(db)
-
+        databaseVersion9(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
