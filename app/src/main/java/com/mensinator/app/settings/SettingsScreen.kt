@@ -129,15 +129,19 @@ fun SettingsScreen(
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
         SettingText(
-            text = stringResource(R.string.period_notification_message),
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
             onClick = { viewModel.showPeriodNotificationDialog(true) }
         )
 
         if (viewState.showPeriodNotificationDialog) {
             NotificationDialog(
-                title = stringResource(R.string.period_notification_message),
                 messageText = viewState.periodNotificationMessage,
-                onSave = { viewModel.updateStringSetting(StringSetting.PERIOD_NOTIFICATION_MESSAGE, it) },
+                onSave = {
+                    viewModel.updateStringSetting(
+                        StringSetting.PERIOD_NOTIFICATION_MESSAGE,
+                        it
+                    )
+                },
                 onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
             )
         }
@@ -466,7 +470,7 @@ private fun SettingText(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
@@ -638,6 +642,14 @@ private fun ImportExportRow(viewModel: SettingsViewModel) {
                 Text(text = stringResource(R.string.data_export))
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingTextPreview() {
+    MensinatorTheme {
+        SettingText(text = "Example settings text", onClick = {})
     }
 }
 
