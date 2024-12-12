@@ -18,7 +18,7 @@ class NotificationScheduler(
         private const val ACTION_NOTIFICATION = "com.mensinator.app.SEND_NOTIFICATION"
     }
 
-    override fun scheduleNotification(notificationDate: LocalDate) {
+    override fun scheduleNotification(notificationDate: LocalDate, messageText: String) {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll()
         Log.d("NotificationScheduler", "Notification canceled")
@@ -26,6 +26,7 @@ class NotificationScheduler(
 
         val intent = Intent(context, NotificationReceiver::class.java).apply {
             action = ACTION_NOTIFICATION
+            putExtra("messageText", messageText)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,

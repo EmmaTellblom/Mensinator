@@ -32,6 +32,7 @@
     <string name="expected_ovulation_color">Förväntad ägglossning</string>
     <string name="reminders">Påminnelser</string>
     <string name="days_before_reminder">Dagar före påminnelse</string>
+    <string name="period_notification_message">Notifieringstext för mens</string>
     <string name="other_settings">Andra inställningar</string>
     <string name="luteal_phase_calculation">Lutealberäkning</string>
     <string name="period_history">Menshistorik</string>

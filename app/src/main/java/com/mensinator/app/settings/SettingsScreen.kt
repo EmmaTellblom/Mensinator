@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
 import com.mensinator.app.ImportDialog
+import com.mensinator.app.NotificationDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -51,6 +52,7 @@ object ResourceMapper {
         "expected_period_color" to R.string.expected_period_color,
         "ovulation_color" to R.string.ovulation_color,
         "expected_ovulation_color" to R.string.expected_ovulation_color,
+        "period_notification_message" to R.string.period_notification_message,
         "reminders" to R.string.reminders,
         "reminder_days" to R.string.days_before_reminder,
         "other_settings" to R.string.other_settings,
@@ -126,6 +128,19 @@ fun SettingsScreen(
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
+        SettingText(
+            text = stringResource(R.string.period_notification_message),
+            onClick = { viewModel.showPeriodNotificationDialog(true) }
+        )
+
+        if (viewState.showPeriodNotificationDialog) {
+            NotificationDialog(
+                title = stringResource(R.string.period_notification_message),
+                messageText = viewState.periodNotificationMessage,
+                onSave = { viewModel.updateStringSetting(StringSetting.PERIOD_NOTIFICATION_MESSAGE, it) },
+                onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -439,6 +454,28 @@ private fun ColorPickerPreview() {
                 onClosePicker = {},
                 onSelectColor = { _, _ -> },
             )
+        }
+    }
+}
+
+@Composable
+private fun SettingText(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = onClick,
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) {
+            Text(text = stringResource(id = R.string.change_text))
         }
     }
 }
