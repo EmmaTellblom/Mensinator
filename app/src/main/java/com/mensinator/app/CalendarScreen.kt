@@ -90,7 +90,12 @@ fun CalendarScreen() {
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
-    val periodNotificationMessage = dbHelper.getSettingByKey("period_notification_message")?.value ?: stringResource(R.string.period_notification_default)
+    val initPeriodNotificationMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
+    val periodNotificationMessage: String = if (initPeriodNotificationMessage == "") {
+        stringResource(R.string.period_notification_default)
+    } else {
+        initPeriodNotificationMessage
+    }
 
     val circleSize = 30.dp
 

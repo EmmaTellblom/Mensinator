@@ -36,7 +36,7 @@ class SettingsViewModel(
             openColorPickerForSetting = null,
 
             daysBeforeReminder = -1,
-            periodNotificationMessage = null,
+            periodNotificationMessage = "",
             showPeriodNotificationDialog = false,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
@@ -70,7 +70,7 @@ class SettingsViewModel(
         val openColorPickerForSetting: ColorSetting? = null,
 
         val daysBeforeReminder: Int,
-        val periodNotificationMessage: String?,
+        val periodNotificationMessage: String,
         val showPeriodNotificationDialog: Boolean,
         val daysForPeriodHistory: Int,
         val daysForOvulationHistory: Int,
@@ -222,8 +222,8 @@ class SettingsViewModel(
         return value
     }
 
-    private fun getString(settingKey: String): String? {
-        val string = periodDatabaseHelper.getSettingByKey(settingKey)?.value
+    private fun getString(settingKey: String): String {
+        val string = periodDatabaseHelper.getSettingByKey(settingKey)?.value.toString()
         return string
     }
 
