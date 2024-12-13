@@ -135,7 +135,7 @@ fun SettingsScreen(
 
         if (viewState.showPeriodNotificationDialog) {
             NotificationDialog(
-                messageText = viewState.periodNotificationMessage,
+                messageText = viewState.periodNotificationMessage ?: stringResource(R.string.period_notification_default),
                 onSave = {
                     viewModel.updateStringSetting(
                         StringSetting.PERIOD_NOTIFICATION_MESSAGE,
