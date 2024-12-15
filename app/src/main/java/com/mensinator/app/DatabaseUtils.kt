@@ -188,7 +188,7 @@ object DatabaseUtils {
             """
             INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id, setting_type)
             VALUES
-            ('period_notification_message', 'Period Notification Message', 'period_notification_message', '2', 'TX')
+            ('period_notification_message', 'Period Notification Message', 'Period_Notification_Message', '2', 'TX')
         """
         )
     }

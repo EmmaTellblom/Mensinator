@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
@@ -90,12 +91,9 @@ fun CalendarScreen() {
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
-    val initPeriodNotificationMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
-    val periodNotificationMessage: String = if (initPeriodNotificationMessage == "period_notification_message") {
-        stringResource(R.string.period_notification_message)
-    } else {
-        initPeriodNotificationMessage
-    }
+    val initPeriodMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
+    val periodMessageKey = ResourceMapper.getStringResourceId(initPeriodMessage)
+    val periodMessageText = periodMessageKey?.let { stringResource(id = it) } ?: initPeriodMessage
 
     val circleSize = 30.dp
 
@@ -515,7 +513,7 @@ fun CalendarScreen() {
                         notificationScheduler,
                         reminderDays,
                         nextPeriodDate,
-                        periodNotificationMessage
+                        periodMessageText
                     )
                 }
                 Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
@@ -590,7 +588,7 @@ fun CalendarScreen() {
                         notificationScheduler,
                         reminderDays,
                         nextPeriodDate,
-                        periodNotificationMessage
+                        periodMessageText
                     )
                 }
             },

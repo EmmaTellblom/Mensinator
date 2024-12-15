@@ -36,7 +36,7 @@ class SettingsViewModel(
             openColorPickerForSetting = null,
 
             daysBeforeReminder = -1,
-            periodNotificationMessage = "",
+            periodNotificationMessage = "Period_Notification_Message",
             showPeriodNotificationDialog = false,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
@@ -260,5 +260,5 @@ enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
 }
 
 enum class StringSetting(val stringResId: Int, val settingDbKey: String) {
-    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_title, "period_notification_message"), // TODO CHECK THIS
+    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_title, "period_notification_message"),
 }
