@@ -27,7 +27,7 @@ fun NotificationDialog(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
         title = {
-            Text(text = stringResource(R.string.period_notification_message))
+            Text(text = stringResource(R.string.period_notification_title))
         },
         text = {
             TextField(

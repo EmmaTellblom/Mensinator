@@ -260,5 +260,5 @@ enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
 }
 
 enum class StringSetting(val stringResId: Int, val settingDbKey: String) {
-    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_message, "period_notification_message"),
+    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_title, "period_notification_message"), // TODO CHECK THIS
 }

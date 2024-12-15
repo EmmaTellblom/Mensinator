@@ -52,7 +52,7 @@ object ResourceMapper {
         "expected_period_color" to R.string.expected_period_color,
         "ovulation_color" to R.string.ovulation_color,
         "expected_ovulation_color" to R.string.expected_ovulation_color,
-        "period_notification_message" to R.string.period_notification_message,
+        "period_notification_message" to R.string.period_notification_message, // TODO CHECK THIS
         "reminders" to R.string.reminders,
         "reminder_days" to R.string.days_before_reminder,
         "other_settings" to R.string.other_settings,
@@ -135,8 +135,8 @@ fun SettingsScreen(
 
         if (viewState.showPeriodNotificationDialog) {
             val initMessageText = viewState.periodNotificationMessage
-            val messageText: String = if (initMessageText == "") {
-                stringResource(R.string.period_notification_default)
+            val messageText: String = if (initMessageText == "period_notification_message") {
+                stringResource(R.string.period_notification_message)
             } else {
                 initMessageText
             }

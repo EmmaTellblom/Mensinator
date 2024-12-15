@@ -91,8 +91,8 @@ fun CalendarScreen() {
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
     val initPeriodNotificationMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
-    val periodNotificationMessage: String = if (initPeriodNotificationMessage == "") {
-        stringResource(R.string.period_notification_default)
+    val periodNotificationMessage: String = if (initPeriodNotificationMessage == "period_notification_message") {
+        stringResource(R.string.period_notification_message)
     } else {
         initPeriodNotificationMessage
     }
