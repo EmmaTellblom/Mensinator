@@ -404,6 +404,15 @@ class PeriodDatabaseHelper(context: Context) :
         return setting
     }
 
+    override fun getStringSettingByKey(key: String): String {
+        var string = getSettingByKey(key)?.value
+        if (string == null) {
+            Log.d("getStringSettingByKey", "$key is null")
+            string = "Unknown"
+        }
+        return string
+    }
+
     override fun updateOvulationDate(date: LocalDate) {
         val db = writableDatabase
 
