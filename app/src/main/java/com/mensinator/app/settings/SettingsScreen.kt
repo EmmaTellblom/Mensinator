@@ -136,7 +136,7 @@ fun SettingsScreen(
         if (viewState.showPeriodNotificationDialog) {
             val initMessage = viewState.periodNotificationMessage
             val messageKey = ResourceMapper.getStringResourceId(initMessage)
-            val messageText = messageKey?.let { stringResource(id = it) } ?: initMessage
+            val messageText = messageKey?.let { stringResource(id = messageKey) } ?: initMessage
             NotificationDialog(
                 messageText = messageText,
                 onSave = {

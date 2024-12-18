@@ -91,9 +91,10 @@ fun CalendarScreen() {
     var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
+    // Trigger notification with custom message
     val initPeriodMessage = dbHelper.getSettingByKey("period_notification_message")?.value.toString()
     val periodMessageKey = ResourceMapper.getStringResourceId(initPeriodMessage)
-    val periodMessageText = periodMessageKey?.let { stringResource(id = it) } ?: initPeriodMessage
+    val periodMessageText = periodMessageKey?.let { stringResource(id = periodMessageKey) } ?: initPeriodMessage
 
     val circleSize = 30.dp
 
