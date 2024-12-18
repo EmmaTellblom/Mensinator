@@ -93,8 +93,7 @@ fun CalendarScreen() {
 
     // Trigger notification with custom message
     val initPeriodMessage = dbHelper.getStringSettingByKey("period_notification_message")
-    val periodMessageKey = ResourceMapper.getStringResourceId(initPeriodMessage)
-    val periodMessageText = periodMessageKey?.let { stringResource(id = periodMessageKey) } ?: initPeriodMessage
+    val periodMessageText = ResourceMapper.getStringResourceOrNew(initPeriodMessage)
 
     val circleSize = 30.dp
 
