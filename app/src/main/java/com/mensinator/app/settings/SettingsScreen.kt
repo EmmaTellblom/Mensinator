@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.ExportDialog
 import com.mensinator.app.FaqDialog
 import com.mensinator.app.ImportDialog
+import com.mensinator.app.NotificationDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -51,6 +52,7 @@ object ResourceMapper {
         "expected_period_color" to R.string.expected_period_color,
         "ovulation_color" to R.string.ovulation_color,
         "expected_ovulation_color" to R.string.expected_ovulation_color,
+        "Period_Notification_Message" to R.string.period_notification_message,
         "reminders" to R.string.reminders,
         "reminder_days" to R.string.days_before_reminder,
         "other_settings" to R.string.other_settings,
@@ -80,6 +82,15 @@ object ResourceMapper {
 
     fun getStringResourceId(key: String): Int? {
         return resourceMap[key]
+    }
+
+    @Composable
+    fun getStringResourceOrNew(key: String): String {
+        // If key is unchanged, return the R.string value
+        // If key has changed (null), return user-set value
+        val id = getStringResourceId(key)
+        val text = id?.let { stringResource(id = id) } ?: key
+        return text
     }
 }
 
@@ -126,6 +137,25 @@ fun SettingsScreen(
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
+        SettingText(
+            text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
+            onClick = { viewModel.showPeriodNotificationDialog(true) }
+        )
+
+        if (viewState.showPeriodNotificationDialog) {
+            val initMessage = viewState.periodNotificationMessage
+            val messageText = ResourceMapper.getStringResourceOrNew(initMessage)
+            NotificationDialog(
+                messageText = messageText,
+                onSave = {
+                    viewModel.updateStringSetting(
+                        StringSetting.PERIOD_NOTIFICATION_MESSAGE,
+                        it
+                    )
+                },
+                onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
+            )
+        }
 
         Spacer(Modifier.height(16.dp))
 
@@ -444,6 +474,28 @@ private fun ColorPickerPreview() {
 }
 
 @Composable
+private fun SettingText(
+    text: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = text, modifier = Modifier.weight(1f), maxLines = 1)
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = onClick,
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) {
+            Text(text = stringResource(id = R.string.change_text))
+        }
+    }
+}
+
+@Composable
 private fun SettingNumberSelection(
     intSetting: IntSetting,
     currentNumber: Int,
@@ -601,6 +653,14 @@ private fun ImportExportRow(viewModel: SettingsViewModel) {
                 Text(text = stringResource(R.string.data_export))
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingTextPreview() {
+    MensinatorTheme {
+        SettingText(text = "Example settings text", onClick = {})
     }
 }
 
