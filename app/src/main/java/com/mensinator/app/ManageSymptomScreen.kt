@@ -60,9 +60,7 @@ fun ManageSymptomScreen(
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
             val selectedColor = ColorSource.getColorMap(isDarkMode())[selectedColorName] ?: Color.Gray
 
-
-            val symptomKey = ResourceMapper.getStringResourceId(symptom.name)
-            val symptomDisplayName = symptomKey?.let { stringResource(id = it) } ?: symptom.name
+            val symptomDisplayName = ResourceMapper.getStringResourceOrNew(symptom.name)
             Card(
                 onClick = {
                     symptomToRename = symptom
