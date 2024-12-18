@@ -33,7 +33,7 @@ fun NotificationDialog(
             TextField(
                 value = newMessageText,
                 onValueChange = { newMessageText = it },
-                singleLine = false
+                singleLine = true
             )
         },
         confirmButton = {
