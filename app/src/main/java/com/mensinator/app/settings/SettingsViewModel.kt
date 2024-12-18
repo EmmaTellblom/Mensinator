@@ -36,7 +36,7 @@ class SettingsViewModel(
             openColorPickerForSetting = null,
 
             daysBeforeReminder = -1,
-            periodNotificationMessage = "Period_Notification_Message",
+            periodNotificationMessage = "",
             showPeriodNotificationDialog = false,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
