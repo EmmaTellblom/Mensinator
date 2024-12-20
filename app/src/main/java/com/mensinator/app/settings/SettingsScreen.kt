@@ -85,7 +85,7 @@ object ResourceMapper {
     }
 
     @Composable
-    fun getStringResourceOrNew(key: String): String {
+    fun getStringResourceOrCustom(key: String): String {
         // If key is unchanged, return the R.string value
         // If key has changed (null), return user-set value
         val id = getStringResourceId(key)
@@ -144,7 +144,7 @@ fun SettingsScreen(
 
         if (viewState.showPeriodNotificationDialog) {
             val initMessage = viewState.periodNotificationMessage
-            val messageText = ResourceMapper.getStringResourceOrNew(initMessage)
+            val messageText = ResourceMapper.getStringResourceOrCustom(initMessage)
             NotificationDialog(
                 messageText = messageText,
                 onSave = {
