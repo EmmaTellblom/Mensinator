@@ -87,7 +87,7 @@ object ResourceMapper {
     @Composable
     fun getStringResourceOrCustom(key: String): String {
         /**
-         * - If key is unchanged, return the R.string value
+         * - If key is unchanged, return the stringResource value
          * - If key has changed (null), return user-set value
          */
         val id = getStringResourceId(key)
