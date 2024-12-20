@@ -405,10 +405,10 @@ class PeriodDatabaseHelper(context: Context) :
     }
 
     override fun getStringSettingByKey(key: String): String {
-        var string = getSettingByKey(key)?.value
+        val string = getSettingByKey(key)?.value
         if (string == null) {
-            Log.d("getStringSettingByKey", "$key is null")
-            string = "Unknown"
+            Log.e("getStringSettingByKey", "key '$key' is null")
+            return "Unknown"
         }
         return string
     }
