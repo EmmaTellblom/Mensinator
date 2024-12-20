@@ -151,8 +151,8 @@ fun SettingsScreen(
                 messageText = messageText,
                 onSave = {
                     viewModel.updateStringSetting(
-                        StringSetting.PERIOD_NOTIFICATION_MESSAGE,
-                        it
+                        stringSetting = StringSetting.PERIOD_NOTIFICATION_MESSAGE,
+                        newString = it
                     )
                 },
                 onDismissRequest = { viewModel.showPeriodNotificationDialog(false) },
