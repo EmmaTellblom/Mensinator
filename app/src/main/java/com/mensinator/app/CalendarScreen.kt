@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
+import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
@@ -92,7 +93,7 @@ fun CalendarScreen() {
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
     // Trigger notification with custom message
-    val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey("period_notification_message")
+    val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
     val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
 
     val circleSize = 30.dp
