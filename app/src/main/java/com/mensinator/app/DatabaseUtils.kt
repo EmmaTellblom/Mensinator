@@ -49,7 +49,7 @@ object DatabaseUtils {
         createOvulationStructure(db)
         databaseVersion7(db)
         databaseVersion8(db)
-
+        databaseVersion9(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -120,6 +120,7 @@ object DatabaseUtils {
         // LI == List
         // NO == Number
         // SW == Switch
+        // TX == Text
         db.execSQL("""
             ALTER TABLE app_settings ADD COLUMN setting_type TEXT
         """)
@@ -180,7 +181,15 @@ object DatabaseUtils {
             VALUES
             ('screen_protection', 'Protect screen', '1', '3', 'SW')
         """)
-
-
+    }
+    fun databaseVersion9(db: SQLiteDatabase) {
+        //Insert new row for custom period notification message
+        db.execSQL(
+            """
+            INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id, setting_type)
+            VALUES
+            ('period_notification_message', 'Period Notification Message', 'Period_Notification_Message', '2', 'TX')
+        """
+        )
     }
 }
