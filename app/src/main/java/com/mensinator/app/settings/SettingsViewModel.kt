@@ -223,8 +223,7 @@ class SettingsViewModel(
     }
 
     private fun getString(settingKey: String): String {
-        val string = periodDatabaseHelper.getStringSettingByKey(settingKey)
-        return string
+        return periodDatabaseHelper.getStringSettingByKey(settingKey)
     }
 
     private fun getAppVersion(context: Context): String {
