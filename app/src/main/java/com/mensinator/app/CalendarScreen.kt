@@ -92,8 +92,8 @@ fun CalendarScreen() {
     val colorMap = ColorSource.getColorMap(isDarkMode())
 
     // Trigger notification with custom message
-    val initPeriodMessage = dbHelper.getStringSettingByKey("period_notification_message")
-    val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodMessage)
+    val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey("period_notification_message")
+    val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
 
     val circleSize = 30.dp
 
