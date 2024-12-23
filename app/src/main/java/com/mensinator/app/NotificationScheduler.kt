@@ -14,18 +14,15 @@ class NotificationScheduler(
     private val context: Context
 ) : INotificationScheduler {
 
-    companion object {
-        private const val ACTION_NOTIFICATION = "com.mensinator.app.SEND_NOTIFICATION"
-    }
-
-    override fun scheduleNotification(notificationDate: LocalDate) {
+    override fun scheduleNotification(notificationDate: LocalDate, messageText: String) {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancelAll()
         Log.d("NotificationScheduler", "Notification canceled")
         val notificationTimeInMillis = notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
         val intent = Intent(context, NotificationReceiver::class.java).apply {
-            action = ACTION_NOTIFICATION
+            action = NotificationReceiver.ACTION_NOTIFICATION
+            putExtra(NotificationReceiver.MESSAGE_TEXT_KEY, messageText)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             context,

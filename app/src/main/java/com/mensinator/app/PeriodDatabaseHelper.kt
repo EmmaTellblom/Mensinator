@@ -17,7 +17,7 @@ class PeriodDatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 8
+        private const val DATABASE_VERSION = 9
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -81,6 +81,9 @@ class PeriodDatabaseHelper(context: Context) :
         }
         if (oldVersion < 8) {
             DatabaseUtils.databaseVersion8(db)
+        }
+        if (oldVersion < 9) {
+            DatabaseUtils.databaseVersion9(db)
         }
     }
 
@@ -399,6 +402,15 @@ class PeriodDatabaseHelper(context: Context) :
         cursor.close()
         db.close()
         return setting
+    }
+
+    override fun getStringSettingByKey(key: String): String {
+        val string = getSettingByKey(key)?.value
+        if (string == null) {
+            Log.e("getStringSettingByKey", "key '$key' is null")
+            return "Unknown"
+        }
+        return string
     }
 
     override fun updateOvulationDate(date: LocalDate) {

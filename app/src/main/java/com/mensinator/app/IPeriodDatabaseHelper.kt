@@ -53,6 +53,9 @@ interface IPeriodDatabaseHelper {
     @WorkerThread
     fun getSettingByKey(key: String): Setting?
 
+    // This function wraps getSettingByKey to return a valid string
+    fun getStringSettingByKey(key: String): String
+
     // This function is used for adding/removing ovulation dates from the database
     fun updateOvulationDate(date: LocalDate)
 

@@ -36,6 +36,8 @@ class SettingsViewModel(
             openColorPickerForSetting = null,
 
             daysBeforeReminder = -1,
+            periodNotificationMessage = "",
+            showPeriodNotificationDialog = false,
             daysForPeriodHistory = -1,
             daysForOvulationHistory = -1,
             openIntPickerForSetting = null,
@@ -68,6 +70,8 @@ class SettingsViewModel(
         val openColorPickerForSetting: ColorSetting? = null,
 
         val daysBeforeReminder: Int,
+        val periodNotificationMessage: String,
+        val showPeriodNotificationDialog: Boolean,
         val daysForPeriodHistory: Int,
         val daysForOvulationHistory: Int,
         val openIntPickerForSetting: IntSetting? = null,
@@ -107,6 +111,7 @@ class SettingsViewModel(
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
                 daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
+                periodNotificationMessage = getString(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey),
                 daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
                 daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
 
@@ -135,14 +140,21 @@ class SettingsViewModel(
         refreshData()
     }
 
+    fun updateStringSetting(stringSetting: StringSetting, newString: String) {
+        periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
+        refreshData()
+    }
+
     fun showColorPicker(colorSetting: ColorSetting?) {
-        _viewState.update {
-            it.copy(openColorPickerForSetting = colorSetting)
-        }
+        _viewState.update { it.copy(openColorPickerForSetting = colorSetting) }
     }
 
     fun showIntPicker(intSetting: IntSetting?) {
         _viewState.update { it.copy(openIntPickerForSetting = intSetting) }
+    }
+
+    fun showPeriodNotificationDialog(show: Boolean) {
+        _viewState.update { it.copy(showPeriodNotificationDialog = show) }
     }
 
     fun showFaqDialog(show: Boolean) {
@@ -210,6 +222,10 @@ class SettingsViewModel(
         return value
     }
 
+    private fun getString(settingKey: String): String {
+        return periodDatabaseHelper.getStringSettingByKey(settingKey)
+    }
+
     private fun getAppVersion(context: Context): String {
         return try {
             val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
@@ -240,4 +256,8 @@ enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
     LUTEAL_PHASE_CALCULATION(R.string.luteal_phase_calculation, "luteal_period_calculation"),
     SHOW_CYCLE_NUMBERS(R.string.cycle_numbers_show, "cycle_numbers_show"),
     PREVENT_SCREENSHOTS(R.string.screen_protection, "screen_protection"),
+}
+
+enum class StringSetting(val stringResId: Int, val settingDbKey: String) {
+    PERIOD_NOTIFICATION_MESSAGE(R.string.period_notification_title, "period_notification_message"),
 }
