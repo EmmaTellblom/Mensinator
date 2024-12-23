@@ -158,13 +158,13 @@
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
     <string name="data_settings">Backup</string>
-    <string name="data">Saved Data</string> //translate this
-    <string name="Import">Import</string> //it doesn't accept import so i named it with I //translate this
-    <string name="data_export">Export</string> //translate this
-    <string name="select_file">Select file for import</string>//translate this
-    <string name="select_file_button">Select</string>//translate this
+    <string name="data">Saved Data</string>
+    <string name="Import">Import</string>
+    <string name="data_export">Export</string>
+    <string name="select_file">Select file for import</string>
+    <string name="select_file_button">Select</string>
     <string name="import_export_data">Import Export Data</string>
-    <string name="import_data">Import Data</string>//translate this
+    <string name="import_data">Import Data</string>
     <string name="export_data">Export Data</string>
     <string name="about_app">About App</string>
     <string name="rename_symptom" >Rename symptom</string>
