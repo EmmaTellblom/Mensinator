@@ -14,8 +14,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -238,6 +240,15 @@ fun CalendarScreen(modifier: Modifier) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null
+                )
+            }
+            IconButton(onClick = {
+                currentMonth.value = LocalDate.now().withDayOfMonth(1)
+                selectedDates.value = setOf()
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_today_24),
+                    contentDescription = "Today"
                 )
             }
         }
