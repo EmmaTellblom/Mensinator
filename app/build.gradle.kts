@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.common.ktx)
 
+    implementation("com.kizitonwose.calendar:compose:2.6.1")
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin)
     implementation(libs.koin.compose)

@@ -296,16 +296,16 @@ private fun ColorSection(
         },
         onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
-    SettingColorSelection(
-        colorSetting = ColorSetting.PERIOD_SELECTION,
-        currentColor = viewState.periodSelectionColor,
-        openColorPickerForSetting = viewState.openColorPickerForSetting,
-        onClosePicker = { viewModel.showColorPicker(null) },
-        onColorChange = { colorSetting, newColor ->
-            viewModel.updateColorSetting(colorSetting, newColor)
-        },
-        onOpenColorPicker = { viewModel.showColorPicker(it) },
-    )
+//    SettingColorSelection(
+//        colorSetting = ColorSetting.PERIOD_SELECTION,
+//        currentColor = viewState.periodSelectionColor,
+//        openColorPickerForSetting = viewState.openColorPickerForSetting,
+//        onClosePicker = { viewModel.showColorPicker(null) },
+//        onColorChange = { colorSetting, newColor ->
+//            viewModel.updateColorSetting(colorSetting, newColor)
+//        },
+//        onOpenColorPicker = { viewModel.showColorPicker(it) },
+//    )
     SettingColorSelection(
         colorSetting = ColorSetting.EXPECTED_PERIOD,
         currentColor = viewState.expectedPeriodColor,
@@ -517,7 +517,9 @@ private fun SettingNumberSelection(
             onClick = { onOpenIntPicker(intSetting) },
             colors = ButtonDefaults.filledTonalButtonColors()
         ) {
-            Text("$currentNumber ${stringResource(R.string.days)}")
+            //Cannot have days since this function is also used for period/ovulation history
+            //Text("$currentNumber ${stringResource(R.string.days)}")
+            Text("$currentNumber")
         }
 
         if (openIntPickerForSetting != intSetting) return
