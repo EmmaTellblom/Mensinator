@@ -4,34 +4,24 @@ package com.mensinator.app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+//import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kizitonwose.calendar.compose.VerticalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
@@ -40,9 +30,11 @@ import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.ChronoUnit
-import kotlin.math.abs
-
+import java.time.YearMonth
+import com.kizitonwose.calendar.compose.*
+import com.kizitonwose.calendar.core.*
+import java.util.*
+import java.time.format.TextStyle
 /*
 This file creates the calendar. A sort of "main screen".
  */
@@ -179,31 +171,6 @@ fun CalendarScreen(modifier: Modifier) {
         updateCalculations()
     }
 
-    val monthName = mapOf(
-        1 to R.string.january,
-        2 to R.string.february,
-        3 to R.string.march,
-        4 to R.string.april,
-        5 to R.string.may,
-        6 to R.string.june,
-        7 to R.string.july,
-        8 to R.string.august,
-        9 to R.string.september,
-        10 to R.string.october,
-        11 to R.string.november,
-        12 to R.string.december
-    )
-
-    //List of Days of Week
-    val daysOfWeek = listOf(
-        stringResource(id = R.string.mon),
-        stringResource(id = R.string.tue),
-        stringResource(id = R.string.wed),
-        stringResource(id = R.string.thu),
-        stringResource(id = R.string.fri),
-        stringResource(id = R.string.sat),
-        stringResource(id = R.string.sun)
-    )
 
     //UI Implementation
     Column(
@@ -216,264 +183,76 @@ fun CalendarScreen(modifier: Modifier) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .weight(1f, fill = true) // Make this row occupy the maximum remaining height
                 .padding(top = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Button(onClick = {
-                currentMonth.value = currentMonth.value.minusMonths(1)
-                selectedDates.value = setOf()
-            }) {
-                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-            }
 
-            Text(
-                text = "${monthName[currentMonth.value.month.value]?.let { stringResource(id = it) }} ${currentMonth.value.year}",
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f)
+            var currentMonth by remember { mutableStateOf(YearMonth.now()) }
+            val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
+            val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
+
+            val state = rememberCalendarState(
+                startMonth = startMonth,
+                endMonth = endMonth,
+                firstVisibleMonth = currentMonth,
+                firstDayOfWeek = DayOfWeek.MONDAY
             )
 
-            Button(onClick = {
-                currentMonth.value = currentMonth.value.plusMonths(1)
-                selectedDates.value = setOf()
-            }) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null
-                )
-            }
-            IconButton(onClick = {
-                currentMonth.value = LocalDate.now().withDayOfMonth(1)
-                selectedDates.value = setOf()
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_today_24),
-                    contentDescription = "Today"
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Row {
-            daysOfWeek.forEach { day ->
-                Text(
-                    text = day,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-        val firstDayOfMonth = currentMonth.value.withDayOfMonth(1).dayOfWeek
-        val daysInMonth = currentMonth.value.lengthOfMonth()
-        val dayOffset = (firstDayOfMonth.value - DayOfWeek.MONDAY.value + 7) % 7
-
-        Spacer(modifier = Modifier.padding(5.dp))
-
-        Column(modifier = Modifier.pointerInput(Unit) {
-            var initial: Offset? = null
-            var current: Offset? = null
-            val minimumDragDistance = 50f
-            detectHorizontalDragGestures(
-                onDragStart = { initialOffset ->
-                    initial = initialOffset
+            VerticalCalendar(
+                state = state,
+                dayContent = { day ->
+                    // Customize the day view here
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            //.background(
+                                //if (day.date in selectedDates.value) selectedColor else Color.Transparent,
+                                //CircleShape
+                            //)
+                            .clickable {
+                                selectedDates.value = if (day.date in selectedDates.value) {
+                                    selectedDates.value - day.date
+                                } else {
+                                    selectedDates.value + day.date
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = day.date.dayOfMonth.toString(),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                //color = if (day.date.month == calendarState.firstVisibleMonth.month) Color.Black else Color.Gray
+                            )
+                        )
+                    }
                 },
-                onDragEnd = {
-                    val deltaX = (current?.x ?: 0f) - (initial?.x ?: 0f)
-                    if (abs(deltaX) <= minimumDragDistance) return@detectHorizontalDragGestures
-                    if (deltaX > 0) {
-                        currentMonth.value = currentMonth.value.minusMonths(1)
-                    } else {
-                        currentMonth.value = currentMonth.value.plusMonths(1)
-                    }
-                }
-            ) { change, _ ->
-                change.consume()
-                current = change.position
-            }
-        }) {
-            for (week in 0..5) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    for (day in 0..6) {
-                        val dayOfMonth = week * 7 + day - dayOffset + 1
-                        if (dayOfMonth in 1..daysInMonth) {
-                            val dayDate = currentMonth.value.withDayOfMonth(dayOfMonth)
-                            val isSelected = dayDate in selectedDates.value
-                            val hasPeriodDate = dayDate in periodDates.value
-                            val hasSymptomDate = dayDate in symptomDates.value
-                            val hasOvulationDate = dayDate in ovulationDates.value
-                            val hasOvulationDateCalculated =
-                                dayDate == if (ovulationPredictionDate != LocalDate.parse("1900-01-01")) ovulationPredictionDate else false
-                            val hasPeriodDateCalculated =
-                                dayDate == if (nextPeriodDate != LocalDate.parse("1900-01-01")) nextPeriodDate else false
 
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clickable {
-                                        if (isSelected) {
-                                            selectedDates.value -= dayDate
-                                        } else {
-                                            selectedDates.value += dayDate
-                                        }
-                                    }
-                                    .drawWithContent {
-                                        drawContent() // Draw the content first
-                                        val strokeWidth = 1.dp.toPx()
-                                        val y = strokeWidth / 2 // Adjust y to start from the top
-                                        drawLine(
-                                            color = Color.LightGray, // Replace with your desired color
-                                            strokeWidth = strokeWidth,
-                                            start = Offset(0f, y),
-                                            end = Offset(size.width, y)
-                                        )
-                                    }
-                                    .padding(bottom = 15.dp, top = 4.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
+                monthHeader = {
+                    MonthTitle(month = currentMonth)
+                    DaysOfWeekTitle(daysOfWeek = daysOfWeek()) // Use the title as month header
+                },
+                //monthHeader = { month ->
+                    // Customize the month header
+                    //val currentMonth = remember { mutableStateOf(LocalDate.now().withDayOfMonth(1)) }
 
-                                // If date is a calculated period date
-                                if (dayDate == nextPeriodDate && !hasPeriodDate) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(circleSize)
-                                            .background(nextPeriodColor, CircleShape),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = dayOfMonth.toString(),
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                }
-                                // If date is a calculated ovulation date (and not an ovulation by user)
-                                if (dayDate.toString() == ovulationPredictionDate.toString() && !hasOvulationDate) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(circleSize)
-                                            .background(nextOvulationColor, CircleShape),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = dayOfMonth.toString(),
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                }
-
-                                val backgroundColor = when {
-                                    hasPeriodDateCalculated && isSelected -> selectedPeriodColor
-                                    hasOvulationDateCalculated && isSelected -> selectedPeriodColor
-                                    hasPeriodDate && isSelected -> selectedPeriodColor
-                                    hasOvulationDate && isSelected -> selectedPeriodColor
-                                    hasPeriodDate -> periodColor
-                                    hasOvulationDate -> ovulationColor
-                                    isSelected -> selectedColor
-                                    else -> Color.Transparent
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(circleSize)
-                                        .background(backgroundColor, CircleShape)
-                                )
-
-                                // Symptom indicator in the top right corner
-                                if (hasSymptomDate) {
-                                    val noSymptomsForDay = dbHelper.getSymptomColorForDate(dayDate)
-
-                                    Row(
-                                        modifier = Modifier
-                                            .offset(y = 12.dp)
-                                            .align(Alignment.BottomCenter),
-                                        horizontalArrangement = Arrangement.spacedBy((-5).dp)  // Negative spacing for overlap
-                                    ) {
-                                        noSymptomsForDay.forEach { symp ->
-                                            symptomColor = colorMap[symp] ?: Color.Black
-
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(11.dp)  // Size of the small bubble
-                                                    .background(symptomColor, CircleShape)
-                                            )
-                                        }
-                                    }
-
-                                }
-
-                                // Mark today's date with a black border and bold font
-                                if (dayDate == LocalDate.now()) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(circleSize)
-                                            .border(1.dp, Color.LightGray, CircleShape)
-                                            .background(Color.Transparent, CircleShape),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = dayOfMonth.toString(),
-                                            fontWeight = FontWeight.Bold,
-                                            textAlign = TextAlign.Center
-                                        )
-                                    }
-                                } else { // Regular dates
-                                    Text(
-                                        text = dayOfMonth.toString(),
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier
-                                            .background(Color.Transparent)
-                                    )
-                                }
-
-                                // Here is cycle numbers
-                                if (oldestPeriodDate != null && showCycleNumbersSetting == 1) {
-                                    if (dayDate >= oldestPeriodDate && dayDate <= LocalDate.now()) {
-                                        previousFirstPeriodDate =
-                                            dbHelper.getFirstPreviousPeriodDate(dayDate)
-                                        if (previousFirstPeriodDate != null) {
-                                            // Calculate the number of days between the firstLastPeriodDate and dayDate
-                                            cycleNumber = ChronoUnit.DAYS.between(
-                                                previousFirstPeriodDate,
-                                                dayDate
-                                            )
-                                                .toInt() + 1
-
-                                            // Render UI elements based on cycleNumber or other logic
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(18.dp)
-                                                    .background(
-                                                        Color.Transparent,
-                                                    )
-                                                    .align(Alignment.TopStart)
-                                            ) {
-                                                Text(
-                                                    text = cycleNumber.toString(),
-                                                    style = androidx.compose.ui.text.TextStyle(
-                                                        fontSize = 8.sp,
-                                                        textAlign = TextAlign.Left
-                                                    ),
-                                                    modifier = Modifier.padding(2.dp)
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.weight(0.2f))
-            }
-
+                    //Text(
+                        //text = "${month.year}-${month.month}",
+                   //     text = "hej",
+                   //     style = MaterialTheme.typography.bodyMedium.copy(
+                   //         fontWeight = FontWeight.Bold,
+                   //         textAlign = TextAlign.Center
+                   //     ),
+                   //     modifier = Modifier.fillMaxWidth()
+                   // )
+                //},
+                modifier = Modifier.fillMaxSize()
+            )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
 
         val emptyClick = stringResource(id = R.string.statistics_title)
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
@@ -650,9 +429,47 @@ fun CalendarScreen(modifier: Modifier) {
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        //Spacer(modifier = Modifier.weight(1f))
     }
 }
+
+@Composable
+fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        for (dayOfWeek in daysOfWeek) {
+            Text(
+                modifier = Modifier.weight(1f),
+                textAlign = TextAlign.Center,
+                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+            )
+        }
+    }
+}
+
+/*
+@Composable
+fun MonthTitle(month: YearMonth) {
+    Text(
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center,
+        text = month.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
+                + " " + month.year,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+    )
+}*/
+
+@Composable
+fun MonthTitle(month: YearMonth) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            modifier = Modifier.weight(1f),
+            textAlign = TextAlign.Center,
+            text = month.month.name + " " + month.year.toString(),
+        )
+    }
+}
+
 
 //Return true if selected dates
 fun containsPeriodDate(selectedDates: Set<LocalDate>, periodDates: Map<LocalDate, Int>): Boolean {
@@ -685,3 +502,5 @@ fun newSendNotification(context: Context, scheduler: INotificationScheduler, day
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
     }
 }
+
+
