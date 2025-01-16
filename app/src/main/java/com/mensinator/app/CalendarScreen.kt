@@ -1,5 +1,6 @@
 package com.mensinator.app
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -24,6 +25,8 @@ import org.koin.compose.koinInject
 import java.util.*
 import java.time.format.TextStyle
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 
 /*
@@ -32,9 +35,13 @@ This file creates the calendar. A sort of "main screen".
 @Composable
 fun CalendarScreen(modifier: Modifier) {
 
+    val context = LocalContext.current
+
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    //val refreshOvulationDates: () -> Unit = koinInject()
+
     // Days selected in the calendar
     val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
-
 
     //UI Implementation
     Column(
@@ -80,7 +87,7 @@ fun CalendarScreen(modifier: Modifier) {
 
         Button(
             onClick = {
-
+                //TODO!
             },
             enabled = true,  // Set the state of the Periods button
             modifier = Modifier
@@ -93,6 +100,7 @@ fun CalendarScreen(modifier: Modifier) {
 
         Button(
             onClick = {
+                //TODO!
             },
             enabled = true,  // Set the state of the Symptoms button
             modifier = Modifier
@@ -102,10 +110,25 @@ fun CalendarScreen(modifier: Modifier) {
             Text(text = "Symptoms")
         }
 
+        //ovulation starts here
+        val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
+        val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
+        val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
 
         Button(
             onClick = {
+                if (selectedDates.value.size > 1) {
+                    Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
+                } else if (selectedDates.value.size == 1) {
+                    val date = selectedDates.value.first()
+                    dbHelper.updateOvulationDate(date)
+                    selectedDates.value = setOf()
+                    //refreshOvulationDates() TODO: Does this need to be done?
 
+                    Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
+                }
             },
             enabled = true,  // Set the state of the Ovulation button
             modifier = Modifier
