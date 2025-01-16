@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
@@ -66,7 +67,8 @@ fun CalendarScreen(modifier: Modifier) {
                 state = state,
                 dayContent = { Day(it) },
                 monthHeader = {
-                    DaysOfWeekTitle(daysOfWeek = daysOfWeek) // Use the title as month header
+                    MonthTitle(month = it.yearMonth)
+                    DaysOfWeekTitle(daysOfWeek = daysOfWeek)
                 }
 
             )
@@ -121,6 +123,8 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
         for (dayOfWeek in daysOfWeek) {
             Text(
                 modifier = Modifier.weight(1f),
+                fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                //fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
             )
