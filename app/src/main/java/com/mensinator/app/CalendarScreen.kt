@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
@@ -19,16 +18,18 @@ import java.time.LocalDate
 import java.time.YearMonth
 //import com.kizitonwose.calendar.compose.*
 import com.kizitonwose.calendar.core.*
+import com.mensinator.app.data.ColorSource
+import com.mensinator.app.ui.theme.isDarkMode
+import org.koin.compose.koinInject
 import java.util.*
 import java.time.format.TextStyle
+
 
 /*
 This file creates the calendar. A sort of "main screen".
  */
 @Composable
 fun CalendarScreen(modifier: Modifier) {
-    //val context = LocalContext.current
-
 
     // Days selected in the calendar
     val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
@@ -65,7 +66,7 @@ fun CalendarScreen(modifier: Modifier) {
 
             VerticalCalendar(
                 state = state,
-                dayContent = { Day(it) },
+                dayContent = { day -> Day(day, selectedDates) },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek)
@@ -144,12 +145,35 @@ fun MonthTitle(month: YearMonth) {
 }
 
 @Composable
-fun Day(day: CalendarDay) {
+fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
+    val colorMap = ColorSource.getColorMap(isDarkMode())
+    val dbHelper: IPeriodDatabaseHelper = koinInject()
+
+    val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
+        ?: colorMap["LightGray"]!!
+
+    val isSelected = day.date in selectedDates.value
+
     Box(
         modifier = Modifier
-            .aspectRatio(1f), // This is important for square sizing!
+            .aspectRatio(1f) // This ensures the cells remain square.
+            .background(
+                if (isSelected) selectedColor else MaterialTheme.colorScheme.surface,
+                shape = MaterialTheme.shapes.small
+            )
+            .clickable {
+                selectedDates.value = if (isSelected) {
+                    selectedDates.value - day.date
+                } else {
+                    selectedDates.value + day.date
+                }
+            }
+            .padding(4.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = day.date.dayOfMonth.toString())
+        Text(
+            text = day.date.dayOfMonth.toString(),
+            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        )
     }
 }
