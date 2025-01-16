@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kizitonwose.calendar.compose.VerticalCalendar
@@ -16,14 +17,14 @@ import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-//import com.kizitonwose.calendar.compose.*
 import com.kizitonwose.calendar.core.*
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
 import java.util.*
 import java.time.format.TextStyle
-
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.text.font.FontWeight
 
 /*
 This file creates the calendar. A sort of "main screen".
@@ -54,7 +55,7 @@ fun CalendarScreen(modifier: Modifier) {
             val currentMonth = remember { YearMonth.now() }
             val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
             val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
-            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY)
+            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: Store and fetch from database
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
@@ -149,31 +150,67 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
+    val circleSize = 30.dp
+
+    //Colors
     val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
         ?: colorMap["LightGray"]!!
 
     val isSelected = day.date in selectedDates.value
 
-    Box(
-        modifier = Modifier
-            .aspectRatio(1f) // This ensures the cells remain square.
-            .background(
-                if (isSelected) selectedColor else MaterialTheme.colorScheme.surface,
-                shape = MaterialTheme.shapes.small
-            )
-            .clickable {
-                selectedDates.value = if (isSelected) {
-                    selectedDates.value - day.date
-                } else {
-                    selectedDates.value + day.date
+    if (day.date.isEqual(LocalDate.now())) {
+        val isSelected = day.date in selectedDates.value
+        val selectedColor = MaterialTheme.colorScheme.primary
+
+        Box(
+            modifier = Modifier
+                .aspectRatio(1f)
+                .size(circleSize)
+                .border(1.dp, color = Color.LightGray, CircleShape)
+                .background(
+                    if (isSelected) selectedColor else Color.Transparent,
+                    shape = CircleShape
+                )
+                .clickable {
+                    selectedDates.value = if (isSelected) {
+                        selectedDates.value - day.date
+                    } else {
+                        selectedDates.value + day.date
+                    }
                 }
-            }
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = day.date.dayOfMonth.toString(),
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-        )
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = day.date.dayOfMonth.toString(),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+
+    else {
+        Box(
+            modifier = Modifier
+                .aspectRatio(1f) // This ensures the cells remain square.
+                .background(
+                    if (isSelected) selectedColor else Color.Transparent,
+                    shape = MaterialTheme.shapes.small
+                )
+                .clickable {
+                    selectedDates.value = if (isSelected) {
+                        selectedDates.value - day.date
+                    } else {
+                        selectedDates.value + day.date
+                    }
+                }
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = day.date.dayOfMonth.toString(),
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+            )
+        }
     }
 }
