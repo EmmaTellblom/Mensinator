@@ -149,14 +149,25 @@ fun MonthTitle(month: YearMonth) {
 fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val periodPrediction: IPeriodPrediction = koinInject()
+    val ovulationPrediction: IOvulationPrediction = koinInject()
 
     val circleSize = 30.dp
 
     //Colors
     val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
         ?: colorMap["LightGray"]!!
+    val nextPeriodColor =
+        dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
+            ?: colorMap["Yellow"]!!
+    val nextOvulationColor =
+        dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
+            ?: colorMap["Magenta"]!!
 
+    //Dates to track
     val isSelected = day.date in selectedDates.value
+    var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
+    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
 
     if (day.date.isEqual(LocalDate.now())) {
         val isSelected = day.date in selectedDates.value
@@ -168,7 +179,11 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
                 .size(circleSize)
                 .border(1.dp, color = Color.LightGray, CircleShape)
                 .background(
-                    if (isSelected) selectedColor else Color.Transparent,
+                    //if (isSelected) selectedColor else Color.Transparent,
+                    if(day.date.isEqual(nextPeriodDate)) nextPeriodColor
+                        else if(day.date.isEqual(ovulationPredictionDate)) nextOvulationColor
+                        else if (isSelected) selectedColor
+                        else Color.Transparent,
                     shape = CircleShape
                 )
                 .clickable {
@@ -194,7 +209,11 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
             modifier = Modifier
                 .aspectRatio(1f) // This ensures the cells remain square.
                 .background(
-                    if (isSelected) selectedColor else Color.Transparent,
+                    //if (isSelected) selectedColor else Color.Transparent,
+                    if(day.date.isEqual(nextPeriodDate)) nextPeriodColor
+                    else if(day.date.isEqual(ovulationPredictionDate)) nextOvulationColor
+                    else if (isSelected) selectedColor
+                    else Color.Transparent,
                     shape = MaterialTheme.shapes.small
                 )
                 .clickable {
