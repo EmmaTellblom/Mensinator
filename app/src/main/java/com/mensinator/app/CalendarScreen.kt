@@ -31,7 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 
 /*
-This file creates the calendar. A sort of "main screen".
+This function is the initiator of the vertical calendar.
  */
 @Composable
 fun CalendarScreen(modifier: Modifier) {
@@ -39,19 +39,21 @@ fun CalendarScreen(modifier: Modifier) {
     val context = LocalContext.current
 
     val dbHelper: IPeriodDatabaseHelper = koinInject()
-    //val refreshOvulationDates: () -> Unit = koinInject()
 
     // Days selected in the calendar
     val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
 
     val actualPeriodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
-    //val actualOvulationDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
+    val actualOvulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
 
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
 
-
-    //actualOvulationDates.value = dbHelper.getOvulationDatesForMonthNew(year, month)
+    fun refreshOvulationDates() {
+        val year = focusedYearMonth.value.year
+        val month = focusedYearMonth.value.monthValue
+        actualOvulationDates.value = dbHelper.getOvulationDatesForMonth(year, month).toSet()
+    }
 
     //UI Implementation
     Column(
@@ -86,12 +88,16 @@ fun CalendarScreen(modifier: Modifier) {
                 // Load data for the new month
                 actualPeriodDates.value =
                     dbHelper.getPeriodDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
+                actualOvulationDates.value =
+                    dbHelper.getOvulationDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
             }
+
+
 
             VerticalCalendar(
                 state = state,
                 dayContent = { day -> Day(day, selectedDates,
-                    actualPeriodDates.value
+                    actualPeriodDates.value, actualOvulationDates.value
                 ) },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
@@ -141,7 +147,8 @@ fun CalendarScreen(modifier: Modifier) {
                     val date = selectedDates.value.first()
                     dbHelper.updateOvulationDate(date)
                     selectedDates.value = setOf()
-                    //refreshOvulationDates() TODO: Does this need to be done?
+
+                    refreshOvulationDates()
 
                     Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
                 } else {
@@ -160,6 +167,7 @@ fun CalendarScreen(modifier: Modifier) {
     }
 }
 
+// Helper function to display the days of the week
 @Composable
 fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     Spacer(modifier = Modifier.height(4.dp))
@@ -176,6 +184,7 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     }
 }
 
+// Helper function to display the month title
 @Composable
 fun MonthTitle(month: YearMonth) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -196,9 +205,9 @@ fun MonthTitle(month: YearMonth) {
     }
 }
 
-
+// Helper function to display a day
 @Composable
-fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>) {
+fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>, actualOvulationDates: Set<LocalDate>) {
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     val periodPrediction: IPeriodPrediction = koinInject()
@@ -221,8 +230,8 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
     val nextPeriodColor =
         dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
             ?: colorMap["Yellow"]!!
-//    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] }
-//        ?: colorMap["Blue"]!!
+    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] }
+        ?: colorMap["Blue"]!!
     val nextOvulationColor =
         dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
             ?: colorMap["Magenta"]!!
@@ -231,7 +240,7 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
         day.date in actualPeriodDates.keys -> periodColor
         day.date in selectedDates.value -> selectedColor
         day.date.isEqual(periodPrediction.getPredictedPeriodDate()) -> nextPeriodColor
-        //day.date in actualOvulationDates.keys -> ovulationColor
+        day.date in actualOvulationDates -> ovulationColor
         day.date.isEqual(ovulationPrediction.getPredictedOvulationDate()) -> nextOvulationColor
         else -> Color.Transparent
     }
