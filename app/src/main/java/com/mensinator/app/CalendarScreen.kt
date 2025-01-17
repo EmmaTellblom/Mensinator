@@ -25,7 +25,6 @@ import org.koin.compose.koinInject
 import java.util.*
 import java.time.format.TextStyle
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -187,71 +186,66 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     val periodPrediction: IPeriodPrediction = koinInject()
     val ovulationPrediction: IOvulationPrediction = koinInject()
+    //val actualPeriodDates: Map<LocalDate, Int> = koinInject()
+    //val actualOvulationDates: Map<LocalDate, Int> = koinInject()
 
-    val circleSize = 30.dp
 
     //Colors
+    val periodColor =
+        dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
     val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
         ?: colorMap["LightGray"]!!
     val nextPeriodColor =
         dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
             ?: colorMap["Yellow"]!!
+    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] }
+        ?: colorMap["Blue"]!!
     val nextOvulationColor =
         dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
             ?: colorMap["Magenta"]!!
 
-    //Dates to track
-    val isSelected = day.date in selectedDates.value
-    var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
-    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
-
-    if (day.date.isEqual(LocalDate.now())) {
-        val isSelected = day.date in selectedDates.value
-        val selectedColor = MaterialTheme.colorScheme.primary
-
-        Box(
-            modifier = Modifier
-                .aspectRatio(1f)
-                .size(circleSize)
-                .border(1.dp, color = Color.LightGray, CircleShape)
-                .background(
-                    //if (isSelected) selectedColor else Color.Transparent,
-                    if(day.date.isEqual(nextPeriodDate)) nextPeriodColor
-                        else if(day.date.isEqual(ovulationPredictionDate)) nextOvulationColor
-                        else if (isSelected) selectedColor
-                        else Color.Transparent,
-                    shape = CircleShape
-                )
-                .clickable {
-                    selectedDates.value = if (isSelected) {
-                        selectedDates.value - day.date
-                    } else {
-                        selectedDates.value + day.date
-                    }
-                }
-                .padding(4.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = day.date.dayOfMonth.toString(),
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        }
+    val backgroundColor = when {
+        //day.date in actualPeriodDates.keys -> periodColor
+        day.date in selectedDates.value -> selectedColor
+        day.date.isEqual(periodPrediction.getPredictedPeriodDate()) -> nextPeriodColor
+        //day.date in actualOvulationDates.keys -> ovulationColor
+        day.date.isEqual(ovulationPrediction.getPredictedOvulationDate()) -> nextOvulationColor
+        else -> Color.Transparent
     }
 
-    else {
-        Box(
+    val circleSize = when {
+        day.date.isEqual(LocalDate.now()) -> 30.dp
+        else -> 0.dp
+    }
+
+    val borderSize = when {
+        day.date.isEqual(LocalDate.now()) -> 1.dp
+        else -> 0.dp
+    }
+
+    val borderColor = when {
+        day.date.isEqual(LocalDate.now()) -> Color.LightGray
+        else -> Color.Transparent
+    }
+
+    val fontStyleType = when {
+        day.date.isEqual(LocalDate.now()) -> FontWeight.Bold
+        else -> FontWeight.Normal
+
+    }
+
+    //Dates to track
+    val isSelected = day.date in selectedDates.value
+
+    Box(
             modifier = Modifier
                 .aspectRatio(1f) // This ensures the cells remain square.
+                .size(circleSize)
                 .background(
-                    //if (isSelected) selectedColor else Color.Transparent,
-                    if(day.date.isEqual(nextPeriodDate)) nextPeriodColor
-                    else if(day.date.isEqual(ovulationPredictionDate)) nextOvulationColor
-                    else if (isSelected) selectedColor
-                    else Color.Transparent,
+                    backgroundColor,
                     shape = MaterialTheme.shapes.small
                 )
+                .border(borderSize, color = borderColor, shape = CircleShape)
                 .clickable {
                     selectedDates.value = if (isSelected) {
                         selectedDates.value - day.date
@@ -262,10 +256,10 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
                 .padding(4.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = day.date.dayOfMonth.toString(),
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-            )
-        }
+        Text(
+            text = day.date.dayOfMonth.toString(),
+            fontWeight = fontStyleType,
+            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+        )
     }
 }
