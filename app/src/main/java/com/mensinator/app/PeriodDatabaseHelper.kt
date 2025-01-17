@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import java.time.LocalDate
+import java.time.YearMonth
 
 /*
 This file contains functions to get/set data into the database
@@ -144,6 +145,63 @@ class PeriodDatabaseHelper(context: Context) :
         db.close()
         return dates
     }
+
+    override fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, Int> {
+        val dates = mutableMapOf<LocalDate, Int>()
+        val db = readableDatabase
+
+        // Calculate previous, current, and next months
+        val currentMonth = YearMonth.of(year, month)
+        val previousMonth = currentMonth.minusMonths(1)
+        val nextMonth = currentMonth.plusMonths(1)
+
+        // Build query parameters
+        val monthConditions = listOf(
+            Pair(previousMonth.year, previousMonth.monthValue),
+            Pair(currentMonth.year, currentMonth.monthValue),
+            Pair(nextMonth.year, nextMonth.monthValue)
+        )
+
+        // SQL query to match year and month
+        val queryCondition = monthConditions.joinToString(" OR ") { "(strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?)" }
+        val queryArgs = monthConditions.flatMap { listOf(it.first.toString(), it.second.toString().padStart(2, '0')) }.toTypedArray()
+
+        // Execute query
+        val cursor = db.query(
+            TABLE_PERIODS,
+            arrayOf(COLUMN_DATE, COLUMN_PERIOD_ID),
+            queryCondition,
+            queryArgs,
+            null, null, null
+        )
+
+        if (cursor != null) {
+            try {
+                // Get column indices
+                val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
+                val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
+
+                if (dateIndex != -1 && periodIdIndex != -1) {
+                    while (cursor.moveToNext()) {
+                        val dateStr = cursor.getString(dateIndex)
+                        val periodId = cursor.getInt(periodIdIndex)
+                        val date = LocalDate.parse(dateStr)
+                        dates[date] = periodId
+                    }
+                } else {
+                    Log.e(TAG, "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex")
+                }
+            } finally {
+                cursor.close()
+            }
+        } else {
+            Log.e(TAG, "Cursor is null while querying for dates")
+        }
+
+        db.close()
+        return dates
+    }
+
 
     override fun getPeriodCount(): Int {
         val db = readableDatabase
@@ -472,6 +530,57 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e("TAG", "Error querying for ovulation dates", e)
         } finally {
             cursor.close()
+            db.close()
+        }
+
+        return dates
+    }
+
+    override fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate> {
+        val dates = mutableSetOf<LocalDate>()
+        val db = readableDatabase
+
+        try {
+            // Calculate the date range
+            val currentMonthStart = LocalDate.of(year, month, 1)
+            val previousMonthStart = currentMonthStart.minusMonths(1)
+            val nextMonthStart = currentMonthStart.plusMonths(1)
+            val rangeStart = previousMonthStart
+            val rangeEnd = nextMonthStart.plusMonths(1).minusDays(1)
+
+            // Query the database for dates within the calculated range
+            val cursor = db.query(
+                "ovulations", // Table name
+                arrayOf("date"), // Column name
+                "date BETWEEN ? AND ?", // Date range condition
+                arrayOf(rangeStart.toString(), rangeEnd.toString()),
+                null, null, null
+            )
+
+            try {
+                // Get the column index for the date
+                val dateIndex = cursor.getColumnIndex("date")
+
+                if (dateIndex != -1) {
+                    while (cursor.moveToNext()) {
+                        val dateStr = cursor.getString(dateIndex)
+                        try {
+                            val date = LocalDate.parse(dateStr)
+                            // Add the date to the set of dates
+                            dates.add(date)
+                        } catch (e: Exception) {
+                            Log.e("TAG", "Failed to parse date string: $dateStr", e)
+                        }
+                    }
+                } else {
+                    Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
+                }
+            } finally {
+                cursor.close()
+            }
+        } catch (e: Exception) {
+            Log.e("TAG", "Error querying for ovulation dates", e)
+        } finally {
             db.close()
         }
 

@@ -20,6 +20,9 @@ interface IPeriodDatabaseHelper {
     // Get all period dates for a given month
     fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int>
 
+    // NEW! Testing new function for getting all period dates month-1, month, month+1
+    fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, Int>
+
     // Returns how many periods that are in the database
     fun getPeriodCount(): Int
 
@@ -61,6 +64,7 @@ interface IPeriodDatabaseHelper {
 
     // This function is used to get ovulation date for a given month
     fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate>
+    fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate>
 
     // This function is used to get the number of ovulations in the database
     fun getOvulationCount(): Int
