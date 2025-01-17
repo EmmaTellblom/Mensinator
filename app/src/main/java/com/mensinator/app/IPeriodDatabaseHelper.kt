@@ -37,6 +37,8 @@ interface IPeriodDatabaseHelper {
 
     // This function returns all Symptom dates for given month
     fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate>
+    // NEW! Testing new function for getting all symptom dates month-1, month, month+1
+    fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate>
 
     // This function is used to update symptom dates in the database
     fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>)
@@ -64,6 +66,8 @@ interface IPeriodDatabaseHelper {
 
     // This function is used to get ovulation date for a given month
     fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate>
+
+    //NEW! Testing new function for getting all ovulation dates month-1, month, month+1
     fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate>
 
     // This function is used to get the number of ovulations in the database

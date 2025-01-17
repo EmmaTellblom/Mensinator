@@ -312,6 +312,70 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
+    override fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate> {
+        val dates = mutableSetOf<LocalDate>()
+        val db = readableDatabase
+
+        // Calculate previous month and next month
+        val currentYearMonth = YearMonth.of(year, month)
+        val prevMonth = currentYearMonth.minusMonths(1)
+        val nextMonth = currentYearMonth.plusMonths(1)
+
+        val prevYear = prevMonth.year
+        val prevMonthValue = prevMonth.monthValue
+
+        val nextYear = nextMonth.year
+        val nextMonthValue = nextMonth.monthValue
+
+        // Define the raw SQL query to get symptom dates for previous, current, and next months
+        val query = """
+        SELECT sd.symptom_date
+        FROM $TABLE_SYMPTOM_DATE AS sd
+        INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID
+        WHERE (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           OR (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           OR (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           AND s.$COLUMN_SYMPTOM_ACTIVE = 1
+    """
+
+        // Execute the query with the calculated previous, current, and next months
+        val cursor = db.rawQuery(
+            query,
+            arrayOf(
+                year.toString(), month.toString().padStart(2, '0'),
+                prevYear.toString(), prevMonthValue.toString().padStart(2, '0'),
+                nextYear.toString(), nextMonthValue.toString().padStart(2, '0')
+            )
+        )
+
+        try {
+            // Get the column index for the date
+            val dateIndex = cursor.getColumnIndex("symptom_date")
+
+            if (dateIndex != -1) {
+                while (cursor.moveToNext()) {
+                    val dateStr = cursor.getString(dateIndex)
+                    try {
+                        val date = LocalDate.parse(dateStr)
+                        // Add the date to the set of dates with active symptoms
+                        dates.add(date)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to parse date string: $dateStr", e)
+                    }
+                }
+            } else {
+                Log.e(TAG, "Column index is invalid: dateIndex=$dateIndex")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error querying for symptom dates", e)
+        } finally {
+            cursor.close()
+            db.close()
+        }
+
+        return dates
+    }
+
     override fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
         val db = writableDatabase
 

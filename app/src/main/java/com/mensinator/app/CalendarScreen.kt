@@ -45,6 +45,7 @@ fun CalendarScreen(modifier: Modifier) {
 
     val actualPeriodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
     val actualOvulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
+    val symptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
 
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
@@ -53,6 +54,13 @@ fun CalendarScreen(modifier: Modifier) {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
         actualOvulationDates.value = dbHelper.getOvulationDatesForMonth(year, month).toSet()
+    }
+
+    // Function to refresh symptom dates
+    fun refreshSymptomDates() {
+        val year = focusedYearMonth.value.year
+        val month = focusedYearMonth.value.monthValue
+        symptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
     }
 
     //UI Implementation
@@ -90,6 +98,8 @@ fun CalendarScreen(modifier: Modifier) {
                     dbHelper.getPeriodDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
                 actualOvulationDates.value =
                     dbHelper.getOvulationDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
+                symptomDates.value =
+                    dbHelper.getSymptomDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
             }
 
 
@@ -125,6 +135,8 @@ fun CalendarScreen(modifier: Modifier) {
         Button(
             onClick = {
                 //TODO!
+                selectedDates.value = setOf()
+                refreshSymptomDates()
             },
             enabled = true,  // Set the state of the Symptoms button
             modifier = Modifier
