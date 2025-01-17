@@ -25,6 +25,8 @@ import org.koin.compose.koinInject
 import java.util.*
 import java.time.format.TextStyle
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -144,6 +146,7 @@ fun CalendarScreen(modifier: Modifier) {
 
 @Composable
 fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
+    Spacer(modifier = Modifier.height(4.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
             Text(
@@ -159,14 +162,24 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
 
 @Composable
 fun MonthTitle(month: YearMonth) {
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp),
             textAlign = TextAlign.Center,
-            text = month.month.name + " " + month.year.toString(),
+            text = "${month.month.name} ${month.year}",
+            style = MaterialTheme.typography.titleLarge, // Adjust text style as needed
+        )
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.primary,
+            thickness = 2.dp,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 }
+
 
 @Composable
 fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>) {
