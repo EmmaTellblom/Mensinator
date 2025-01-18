@@ -1,7 +1,7 @@
 package com.mensinator.app
 
-//import android.content.Context
-//import android.util.Log
+import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -31,6 +31,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import com.mensinator.app.settings.ResourceMapper
+import com.mensinator.app.settings.StringSetting
 
 /*
 This function is the initiator of the vertical calendar.
@@ -43,6 +45,7 @@ fun CalendarScreen(modifier: Modifier) {
     val periodPrediction: IPeriodPrediction = koinInject()
     val ovulationPrediction: IOvulationPrediction = koinInject()
     val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val notificationScheduler: INotificationScheduler = koinInject()
 
     // Days selected in the calendar
     val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
@@ -53,6 +56,16 @@ fun CalendarScreen(modifier: Modifier) {
 
     var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
     var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
+    var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
+    val periodReminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
+    var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
+
+    // Trigger notification with custom message
+    val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
+    val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
+
+    //var selectedIsOvulation = false
+    var selectedIsPeriod = false
 
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
@@ -135,22 +148,91 @@ fun CalendarScreen(modifier: Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        val periodButtonEnabled by remember {
+        val isPeriodButtonEnabled by remember {
             derivedStateOf { selectedDates.value.isNotEmpty() }
         }
+        val successSaved = stringResource(id = R.string.successfully_saved_alert)
         Button(
             onClick = {
                 //TODO!
+                /**
+                 * Make sure that if two or more days are selected (and at least one is already marked as period),
+                 * we should make sure that all days are removed.
+                 */
+                val datesAlreadyMarkedAsPeriod =
+                    selectedDates.value.intersect(actualPeriodDates.value.keys)
+                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                    selectedDates.value.forEach {
+                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                        dbHelper.addDateToPeriod(it, periodId)
+                    }
+                } else {
+                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                }
+
+                selectedDates.value = setOf()
+
+                val year = focusedYearMonth.value.year
+                val month = focusedYearMonth.value.monthValue
+                actualPeriodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
+
+                // Calculate the first day of the next month
+                val firstDayOfNextMonth = if (month == 12) {
+                    LocalDate.of(year + 1, 1, 1) // January 1st of next year
+                } else {
+                    LocalDate.of(year, month + 1, 1) // First of the next month in the same year
+                }
+                // Recalculate the previous periods first day the first day of the next month
+                previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
+
                 updateCalculations()
+
+                // Schedule notification for reminder
+                // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
+                // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
+                if (periodReminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
+                    newSendNotification(
+                        context,
+                        notificationScheduler,
+                        periodReminderDays,
+                        nextPeriodDate,
+                        periodMessageText
+                    )
+                }
+                Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
             },
-            enabled = periodButtonEnabled,  // Set the state of the Periods button
+            enabled = isPeriodButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
 
-            Text(text = "Period")
-        }
+            for (selectedDate in selectedDates.value) {
+                if (selectedDate in actualPeriodDates.value) {
+                    selectedIsPeriod = true
+                    break
+                }
+            }
+
+            val text = when {
+                selectedIsPeriod && isPeriodButtonEnabled -> {
+                    stringResource(id = R.string.period_button_selected)
+                }
+                !selectedIsPeriod && isPeriodButtonEnabled -> {
+                    stringResource(id = R.string.period_button_not_selected)
+                }
+                else -> stringResource(id = R.string.period_button)
+            }
+            Text(text = text)
+            }//,
+//            enabled = periodButtonEnabled,  // Set the state of the Periods button
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(top = 8.dp)
+//        ) {
+//
+//            Text(text = "Period")
+//        }
         var showSymptomsDialog by remember { mutableStateOf(false) }
         val symptomButtonEnabled by remember {
             derivedStateOf { selectedDates.value.isNotEmpty() }
@@ -299,8 +381,8 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
             ?: colorMap["Magenta"]!!
 
     val backgroundColor = when {
-        day.date in actualPeriodDates.keys -> periodColor
         day.date in selectedDates.value -> selectedColor
+        day.date in actualPeriodDates.keys -> periodColor
         day.date.isEqual(periodPredictionDate) -> nextPeriodColor
         day.date in actualOvulationDates -> ovulationColor
         day.date.isEqual(ovulationPredictionDate) -> nextOvulationColor
@@ -377,7 +459,7 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
     }
 }
 
-////Return true if selected dates
+//Return true if selected dates
 //fun containsPeriodDate(selectedDates: Set<LocalDate>, periodDates: Map<LocalDate, Int>): Boolean {
 //    return selectedDates.any { selectedDate ->
 //        periodDates.containsKey(selectedDate)
@@ -390,21 +472,21 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
 //    }
 //}
 
-//fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
-//    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
-//    if (notificationDate.isBefore(LocalDate.now())) {
-//        Log.d(
-//            "CalendarScreen",
-//            "Notification not scheduled because the reminder date is in the past"
-//        )
-//        Toast.makeText(
-//            context,
-//            "Notification not scheduled because the date to remind you will be in the past",
-//            Toast.LENGTH_SHORT
-//        ).show()
-//    } else {
-//        //Schedule notification
-//        scheduler.scheduleNotification(notificationDate, messageText)
-//        Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
-//    }
-//}
+fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
+    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
+    if (notificationDate.isBefore(LocalDate.now())) {
+        Log.d(
+            "CalendarScreen",
+            "Notification not scheduled because the reminder date is in the past"
+        )
+        Toast.makeText(
+            context,
+            "Notification not scheduled because the date to remind you will be in the past",
+            Toast.LENGTH_SHORT
+        ).show()
+    } else {
+        //Schedule notification
+        scheduler.scheduleNotification(notificationDate, messageText)
+        Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
+    }
+}
