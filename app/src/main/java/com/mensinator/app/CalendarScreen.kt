@@ -82,7 +82,7 @@ fun CalendarScreen(modifier: Modifier) {
             val currentMonth = remember { YearMonth.now() }
             val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
             val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
-            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: Store and fetch from database
+            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: New setting for the database!
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
@@ -141,7 +141,6 @@ fun CalendarScreen(modifier: Modifier) {
 
         Button(
             onClick = {
-                //TODO!
                 showSymptomsDialog = true
             },
             enabled = symptomButtonEnabled,  // Set the state of the Symptoms button
@@ -289,10 +288,7 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
         else -> Color.Transparent
     }
 
-    val circleSize = when {
-        day.date.isEqual(LocalDate.now()) -> 30.dp
-        else -> 0.dp
-    }
+
 
     val borderSize = when {
         day.date.isEqual(LocalDate.now()) -> 1.dp
@@ -338,5 +334,26 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
             fontWeight = fontStyleType,
             color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
         )
+
+        // Add symptom circles
+        if (hasSymptomDate) {
+            val symptomsForDay = dbHelper.getSymptomColorForDate(day.date)
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter),
+                horizontalArrangement = Arrangement.spacedBy((-5).dp) // Overlapping circles
+            ) {
+                symptomsForDay.forEach { symptom ->
+                    val symptomColor = colorMap[symptom] ?: Color.Black
+
+                    Box(
+                        modifier = Modifier
+                            .size(11.dp)
+                            .background(symptomColor, CircleShape)
+                    )
+                }
+            }
+        }
     }
 }
