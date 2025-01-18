@@ -45,7 +45,7 @@ fun CalendarScreen(modifier: Modifier) {
 
     val actualPeriodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
     val actualOvulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
-    val symptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
+    val actualSymptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
 
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
@@ -60,7 +60,7 @@ fun CalendarScreen(modifier: Modifier) {
     fun refreshSymptomDates() {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
-        symptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
+        actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
     }
 
     //UI Implementation
@@ -98,7 +98,7 @@ fun CalendarScreen(modifier: Modifier) {
                     dbHelper.getPeriodDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
                 actualOvulationDates.value =
                     dbHelper.getOvulationDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
-                symptomDates.value =
+                actualSymptomDates.value =
                     dbHelper.getSymptomDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
             }
 
@@ -107,7 +107,7 @@ fun CalendarScreen(modifier: Modifier) {
             VerticalCalendar(
                 state = state,
                 dayContent = { day -> Day(day, selectedDates,
-                    actualPeriodDates.value, actualOvulationDates.value
+                    actualPeriodDates.value, actualOvulationDates.value, actualSymptomDates.value
                 ) },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
@@ -119,11 +119,14 @@ fun CalendarScreen(modifier: Modifier) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        val periodButtonEnabled by remember {
+            derivedStateOf { selectedDates.value.isNotEmpty() }
+        }
         Button(
             onClick = {
                 //TODO!
             },
-            enabled = true,  // Set the state of the Periods button
+            enabled = periodButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
@@ -131,14 +134,17 @@ fun CalendarScreen(modifier: Modifier) {
 
             Text(text = "Period")
         }
+        var showSymptomsDialog by remember { mutableStateOf(false) }
+        val symptomButtonEnabled by remember {
+            derivedStateOf { selectedDates.value.isNotEmpty() }
+        }
 
         Button(
             onClick = {
                 //TODO!
-                selectedDates.value = setOf()
-                refreshSymptomDates()
+                showSymptomsDialog = true
             },
-            enabled = true,  // Set the state of the Symptoms button
+            enabled = symptomButtonEnabled,  // Set the state of the Symptoms button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
@@ -146,11 +152,36 @@ fun CalendarScreen(modifier: Modifier) {
             Text(text = "Symptoms")
         }
 
+        // Show the SymptomsDialog
+        if (showSymptomsDialog && selectedDates.value.isNotEmpty()) {
+            val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+
+            SymptomsDialog(
+                date = selectedDates.value.last(),  // Pass the last selected date
+                symptoms = activeSymptoms,
+                dbHelper = dbHelper,
+                onSave = { selectedSymptoms ->
+                    val selectedSymptomIds = selectedSymptoms.map { it.id }
+                    val datesToUpdate = selectedDates.value.toList()
+                    dbHelper.updateSymptomDate(datesToUpdate, selectedSymptomIds)
+                    showSymptomsDialog = false
+                    refreshSymptomDates()
+                    selectedDates.value = emptySet()
+                },
+                onCancel = {
+                    showSymptomsDialog = false
+                    selectedDates.value = emptySet()
+                }
+            )
+        }
+
         //ovulation starts here
         val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
         val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
         val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
-
+        val ovulationButtonEnabled by remember {
+            derivedStateOf { selectedDates.value.size == 1 }
+        }
         Button(
             onClick = {
                 if (selectedDates.value.size > 1) {
@@ -167,7 +198,7 @@ fun CalendarScreen(modifier: Modifier) {
                     Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
                 }
             },
-            enabled = true,  // Set the state of the Ovulation button
+            enabled = ovulationButtonEnabled,  // Set the state of the Ovulation button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
@@ -219,7 +250,8 @@ fun MonthTitle(month: YearMonth) {
 
 // Helper function to display a day
 @Composable
-fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>, actualOvulationDates: Set<LocalDate>) {
+fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>,
+        actualOvulationDates: Set<LocalDate>, actualSymptomDates: Set<LocalDate>) {
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     val periodPrediction: IPeriodPrediction = koinInject()
@@ -280,11 +312,12 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
 
     //Dates to track
     val isSelected = day.date in selectedDates.value
+    val hasSymptomDate = day.date in actualSymptomDates
 
     Box(
             modifier = Modifier
                 .aspectRatio(1f) // This ensures the cells remain square.
-                .size(circleSize)
+                //.size(circleSize)
                 .background(
                     backgroundColor,
                     shape = MaterialTheme.shapes.small
