@@ -1,5 +1,7 @@
 package com.mensinator.app
 
+//import android.content.Context
+//import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -38,6 +40,8 @@ fun CalendarScreen(modifier: Modifier) {
 
     val context = LocalContext.current
 
+    val periodPrediction: IPeriodPrediction = koinInject()
+    val ovulationPrediction: IOvulationPrediction = koinInject()
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
     // Days selected in the calendar
@@ -46,6 +50,9 @@ fun CalendarScreen(modifier: Modifier) {
     val actualPeriodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
     val actualOvulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
     val actualSymptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
+
+    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+    var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
 
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
@@ -62,6 +69,13 @@ fun CalendarScreen(modifier: Modifier) {
         val month = focusedYearMonth.value.monthValue
         actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
     }
+
+    // Function to recalculate calculations
+    fun updateCalculations() {
+        ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+        periodPredictionDate = periodPrediction.getPredictedPeriodDate()
+    }
+
 
     //UI Implementation
     Column(
@@ -100,6 +114,7 @@ fun CalendarScreen(modifier: Modifier) {
                     dbHelper.getOvulationDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
                 actualSymptomDates.value =
                     dbHelper.getSymptomDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
+                updateCalculations()
             }
 
 
@@ -107,7 +122,8 @@ fun CalendarScreen(modifier: Modifier) {
             VerticalCalendar(
                 state = state,
                 dayContent = { day -> Day(day, selectedDates,
-                    actualPeriodDates.value, actualOvulationDates.value, actualSymptomDates.value
+                    actualPeriodDates.value, actualOvulationDates.value, actualSymptomDates.value, ovulationPredictionDate,
+                    periodPredictionDate
                 ) },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
@@ -125,6 +141,7 @@ fun CalendarScreen(modifier: Modifier) {
         Button(
             onClick = {
                 //TODO!
+                updateCalculations()
             },
             enabled = periodButtonEnabled,  // Set the state of the Periods button
             modifier = Modifier
@@ -191,6 +208,7 @@ fun CalendarScreen(modifier: Modifier) {
                     selectedDates.value = setOf()
 
                     refreshOvulationDates()
+                    updateCalculations()
 
                     Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
                 } else {
@@ -250,11 +268,12 @@ fun MonthTitle(month: YearMonth) {
 // Helper function to display a day
 @Composable
 fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>,
-        actualOvulationDates: Set<LocalDate>, actualSymptomDates: Set<LocalDate>) {
+        actualOvulationDates: Set<LocalDate>, actualSymptomDates: Set<LocalDate>, ovulationPredictionDate: LocalDate,
+        periodPredictionDate: LocalDate) {
+
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
-    val periodPrediction: IPeriodPrediction = koinInject()
-    val ovulationPrediction: IOvulationPrediction = koinInject()
+
 
     if (day.position != DayPosition.MonthDate) {
         // Exclude dates that are not part of the current month
@@ -282,9 +301,9 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
     val backgroundColor = when {
         day.date in actualPeriodDates.keys -> periodColor
         day.date in selectedDates.value -> selectedColor
-        day.date.isEqual(periodPrediction.getPredictedPeriodDate()) -> nextPeriodColor
+        day.date.isEqual(periodPredictionDate) -> nextPeriodColor
         day.date in actualOvulationDates -> ovulationColor
-        day.date.isEqual(ovulationPrediction.getPredictedOvulationDate()) -> nextOvulationColor
+        day.date.isEqual(ovulationPredictionDate) -> nextOvulationColor
         else -> Color.Transparent
     }
 
@@ -357,3 +376,35 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
         }
     }
 }
+
+////Return true if selected dates
+//fun containsPeriodDate(selectedDates: Set<LocalDate>, periodDates: Map<LocalDate, Int>): Boolean {
+//    return selectedDates.any { selectedDate ->
+//        periodDates.containsKey(selectedDate)
+//    }
+//}
+//
+//fun containsOvulationDate(selectedDates: Set<LocalDate>, ovulationDates: Set<LocalDate>): Boolean {
+//    return selectedDates.any { selectedDate ->
+//        ovulationDates.contains(selectedDate)
+//    }
+//}
+
+//fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
+//    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
+//    if (notificationDate.isBefore(LocalDate.now())) {
+//        Log.d(
+//            "CalendarScreen",
+//            "Notification not scheduled because the reminder date is in the past"
+//        )
+//        Toast.makeText(
+//            context,
+//            "Notification not scheduled because the date to remind you will be in the past",
+//            Toast.LENGTH_SHORT
+//        ).show()
+//    } else {
+//        //Schedule notification
+//        scheduler.scheduleNotification(notificationDate, messageText)
+//        Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
+//    }
+//}
