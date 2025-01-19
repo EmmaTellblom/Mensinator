@@ -31,8 +31,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.settings.StringSetting
+import java.time.temporal.ChronoUnit
 
 /*
 This function is the initiator of the vertical calendar.
@@ -356,6 +358,8 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
+    val showCycleNumbersSetting =
+        dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1
 
     if (day.position != DayPosition.MonthDate) {
         // Exclude dates that are not part of the current month
@@ -456,6 +460,49 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
                 }
             }
         }
+
+        if(showCycleNumbersSetting == 1){
+            val cycleNumber = calculateCycleNumber(day.date, dbHelper)
+            if(cycleNumber > 0){
+                Box(
+                    modifier = Modifier
+                        .size(18.dp)
+                        .background(
+                            Color.Transparent,
+                        )
+                        .align(Alignment.TopStart)
+                ) {
+                    Text(
+                        text = cycleNumber.toString(),
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 8.sp,
+                            textAlign = TextAlign.Left
+                        ),
+                        modifier = Modifier.padding(2.dp)
+                    )
+                }
+            }
+        }
+
+
+    }
+}
+
+fun calculateCycleNumber(day: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
+    var cycleNumber = 0
+    var previousFirstPeriodDate =
+        dbHelper.getFirstPreviousPeriodDate(day)
+
+    if (previousFirstPeriodDate != null && day <= LocalDate.now()) {
+        // Calculate the number of days between the firstLastPeriodDate and dayDate
+        cycleNumber = ChronoUnit.DAYS.between(
+            previousFirstPeriodDate,
+            day
+        ).toInt() + 1
+        return cycleNumber
+    }
+    else{
+        return 0
     }
 }
 
