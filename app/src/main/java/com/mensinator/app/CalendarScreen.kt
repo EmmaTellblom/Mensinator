@@ -72,27 +72,34 @@ fun CalendarScreen(modifier: Modifier) {
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
 
+    /**
+     * Refresh the dates for the current month.
+     */
     fun refreshOvulationDates() {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
         actualOvulationDates.value = dbHelper.getOvulationDatesForMonth(year, month).toSet()
     }
 
-    // Function to refresh symptom dates
+    /**
+     * Refresh the dates for the current month.
+     */
     fun refreshSymptomDates() {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
         actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
     }
 
-    // Function to recalculate calculations
+    /**
+     * Recalculate the calculations for the current month.
+     */
     fun updateCalculations() {
         ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
         periodPredictionDate = periodPrediction.getPredictedPeriodDate()
     }
 
 
-    //UI Implementation
+// Generate placement for calendar and buttons
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -109,8 +116,8 @@ fun CalendarScreen(modifier: Modifier) {
         ) {
 
             val currentMonth = remember { YearMonth.now() }
-            val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
-            val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
+            val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed
+            val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed
             val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: New setting for the database!
 
             val state = rememberCalendarState(
@@ -131,8 +138,6 @@ fun CalendarScreen(modifier: Modifier) {
                     dbHelper.getSymptomDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
                 updateCalculations()
             }
-
-
 
             VerticalCalendar(
                 state = state,
@@ -311,7 +316,9 @@ fun CalendarScreen(modifier: Modifier) {
     }
 }
 
-// Helper function to display the days of the week
+/**
+ * Display the days of the week.
+ */
 @Composable
 fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     Spacer(modifier = Modifier.height(4.dp))
@@ -328,7 +335,9 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     }
 }
 
-// Helper function to display the month title
+/**
+ * Display the month title.
+ */
 @Composable
 fun MonthTitle(month: YearMonth) {
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -349,7 +358,9 @@ fun MonthTitle(month: YearMonth) {
     }
 }
 
-// Helper function to display a day
+/**
+ * Display a day in the calendar.
+ */
 @Composable
 fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>,
         actualOvulationDates: Set<LocalDate>, actualSymptomDates: Set<LocalDate>, ovulationPredictionDate: LocalDate,
@@ -483,27 +494,23 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
                 }
             }
         }
-
-
     }
 }
 
+/**
+ * Calculate the cycle number for a given date.
+ */
 fun calculateCycleNumber(day: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
-    var cycleNumber = 0
-    var previousFirstPeriodDate =
-        dbHelper.getFirstPreviousPeriodDate(day)
-
-    if (previousFirstPeriodDate != null && day <= LocalDate.now()) {
-        // Calculate the number of days between the firstLastPeriodDate and dayDate
-        cycleNumber = ChronoUnit.DAYS.between(
-            previousFirstPeriodDate,
-            day
-        ).toInt() + 1
-        return cycleNumber
-    }
-    else{
+    val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day)
+    if (lastPeriodStartDate == null) {
+        // There are now passed periods from days date
         return 0
     }
+    if (day > LocalDate.now()) {
+        // Don't generate cycle numbers for future dates
+        return 0
+    }
+    return ChronoUnit.DAYS.between(lastPeriodStartDate, day).toInt() + 1
 }
 
 //Return true if selected dates
@@ -519,6 +526,9 @@ fun calculateCycleNumber(day: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
 //    }
 //}
 
+/**
+ * Schedule a notification for a given date.
+ */
 fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
     if (notificationDate.isBefore(LocalDate.now())) {
