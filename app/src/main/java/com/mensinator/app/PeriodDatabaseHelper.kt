@@ -86,6 +86,9 @@ class PeriodDatabaseHelper(context: Context) :
         if (oldVersion < 9) {
             DatabaseUtils.databaseVersion9(db)
         }
+        if (oldVersion < 10) {
+            DatabaseUtils.databaseVersion10(db)
+        }
     }
 
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
