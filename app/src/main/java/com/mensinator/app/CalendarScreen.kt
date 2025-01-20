@@ -58,7 +58,6 @@ fun CalendarScreen(modifier: Modifier) {
 
     var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
     var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
-    var previousFirstPeriodDate by remember { mutableStateOf<LocalDate?>(null) }
     val periodReminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
     var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
 
@@ -97,7 +96,6 @@ fun CalendarScreen(modifier: Modifier) {
         ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
         periodPredictionDate = periodPrediction.getPredictedPeriodDate()
     }
-
 
 // Generate placement for calendar and buttons
     Column(
@@ -182,15 +180,6 @@ fun CalendarScreen(modifier: Modifier) {
                 val year = focusedYearMonth.value.year
                 val month = focusedYearMonth.value.monthValue
                 actualPeriodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
-
-                // Calculate the first day of the next month
-                val firstDayOfNextMonth = if (month == 12) {
-                    LocalDate.of(year + 1, 1, 1) // January 1st of next year
-                } else {
-                    LocalDate.of(year, month + 1, 1) // First of the next month in the same year
-                }
-                // Recalculate the previous periods first day the first day of the next month
-                previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
                 updateCalculations()
 
@@ -403,7 +392,6 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
         day.date.isEqual(ovulationPredictionDate) -> nextOvulationColor
         else -> Color.Transparent
     }
-
 
 
     val borderSize = when {
