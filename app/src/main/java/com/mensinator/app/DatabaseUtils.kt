@@ -50,6 +50,7 @@ object DatabaseUtils {
         databaseVersion7(db)
         databaseVersion8(db)
         databaseVersion9(db)
+        databaseVersion10(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {

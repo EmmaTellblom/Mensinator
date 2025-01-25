@@ -71,6 +71,19 @@ fun CalendarScreen(modifier: Modifier) {
     val currentMonth = remember { YearMonth.now() }
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
 
+    val daysOfWeek = daysOfWeek()
+
+    val startDayDB = dbHelper.getSettingByKey("calendar_start_day")?.value?.toIntOrNull() ?: 2
+    val calendarStartWeekDay = when (startDayDB) {
+        1 -> DayOfWeek.MONDAY
+        2 -> DayOfWeek.TUESDAY
+        3 -> DayOfWeek.WEDNESDAY
+        4 -> DayOfWeek.THURSDAY
+        5 -> DayOfWeek.FRIDAY
+        6 -> DayOfWeek.SATURDAY
+        else -> DayOfWeek.SUNDAY
+    }
+
     /**
      * Refresh the dates for the current month.
      */
@@ -116,13 +129,13 @@ fun CalendarScreen(modifier: Modifier) {
             val currentMonth = remember { YearMonth.now() }
             val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed
             val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed
-            val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: New setting for the database!
+            //val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: New setting for the database!
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
                 endMonth = endMonth,
                 firstVisibleMonth = currentMonth,
-                firstDayOfWeek = daysOfWeek.first()
+                firstDayOfWeek = calendarStartWeekDay
             )
 
             LaunchedEffect(state.firstVisibleMonth) {
