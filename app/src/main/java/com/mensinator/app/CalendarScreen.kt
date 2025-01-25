@@ -63,7 +63,7 @@ fun CalendarScreen(modifier: Modifier) {
     val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
     val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
 
-    //var selectedIsOvulation = false
+    var selectedIsOvulation = false
     var selectedIsPeriod = false
 
     val currentMonth = remember { YearMonth.now() }
@@ -166,6 +166,7 @@ fun CalendarScreen(modifier: Modifier) {
         val isPeriodButtonEnabled by remember {
             derivedStateOf { selectedDates.value.isNotEmpty() }
         }
+
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
         Button(
             onClick = {
@@ -230,15 +231,8 @@ fun CalendarScreen(modifier: Modifier) {
                 else -> stringResource(id = R.string.period_button)
             }
             Text(text = text)
-            }//,
-//            enabled = periodButtonEnabled,  // Set the state of the Periods button
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(top = 8.dp)
-//        ) {
-//
-//            Text(text = "Period")
-//        }
+            }
+
         var showSymptomsDialog by remember { mutableStateOf(false) }
         val symptomButtonEnabled by remember {
             derivedStateOf { selectedDates.value.isNotEmpty() }
@@ -253,7 +247,8 @@ fun CalendarScreen(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-            Text(text = "Symptoms")
+            Text(text = stringResource(id = R.string.symptoms_button))
+            //Text(text = "Symptoms")
         }
 
         // Show the SymptomsDialog
@@ -308,8 +303,22 @@ fun CalendarScreen(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-
-            Text(text = "Ovulation")
+            for (selectedDate in selectedDates.value) {
+                if (selectedDate in actualOvulationDates.value) {
+                    selectedIsOvulation = true
+                    break
+                }
+            }
+            val text = when {
+                selectedIsOvulation && ovulationButtonEnabled -> {
+                    stringResource(id = R.string.ovulation_button_selected)
+                }
+                !selectedIsOvulation && ovulationButtonEnabled -> {
+                    stringResource(id = R.string.ovulation_button_not_selected)
+                }
+                else -> stringResource(id = R.string.ovulation_button)
+            }
+            Text(text = text)
         }
 
     }
