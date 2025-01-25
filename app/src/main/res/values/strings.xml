@@ -58,6 +58,7 @@
     <string name="screen_protection">Prevent Screenshots</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
+    <string name="calendar_start_day">Start of week</string>
     
     <!-- Color values -->
     <string name="color_red">Red</string>

@@ -53,6 +53,7 @@
     <string name="close">Zapri</string>
     <string name="save">Shrani</string>
     <!-- Color values -->
+    <string name="calendar_start_day">Začetek tedna</string>
     <string name="color_red">Rdeča</string>
     <string name="color_green">Zelena</string>
     <string name="color_blue">Modra</string>

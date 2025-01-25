@@ -45,6 +45,7 @@
     <string name="close">மூடு</string>
     <string name="save">சேமிக்கவும்</string>
     <!-- Color values -->
+    <string name="calendar_start_day">வாரத்தின் தொடக்கம்</string>
     <string name="color_red">சிவப்பு</string>
     <string name="color_green">பச்சை</string>
     <string name="color_blue">நீலம்</string>

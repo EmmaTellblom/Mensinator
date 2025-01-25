@@ -50,6 +50,7 @@
     <string name="save">Enregistrer</string>
 
     <!-- Color values -->
+    <string name="calendar_start_day">Début de la semaine</string>
     <string name="color_red">Rouge</string>
     <string name="color_green">Vert</string>
     <string name="color_blue">Bleu</string>

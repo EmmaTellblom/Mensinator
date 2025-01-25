@@ -42,6 +42,7 @@
     <string name="close">বন্ধ করুন</string>
     <string name="save">সংরক্ষণ করুন</string>
     <!-- Color values -->
+    <string name="calendar_start_day">সপ্তাহের শুরু</string>
     <string name="color_red">লাল</string>
     <string name="color_green">সবুজ</string>
     <string name="color_blue">নীল</string>

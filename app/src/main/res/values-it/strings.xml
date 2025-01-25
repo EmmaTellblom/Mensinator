@@ -57,6 +57,7 @@
     <string name="save">Salva</string>
 
     <!-- Color values -->
+    <string name="calendar_start_day">Inizio della settimana</string>
     <string name="color_red">Rosso</string>
     <string name="color_green">Verde</string>
     <string name="color_blue">Blu</string>
