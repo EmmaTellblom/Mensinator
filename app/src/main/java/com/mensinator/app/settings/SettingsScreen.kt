@@ -519,7 +519,9 @@ private fun SettingNumberSelection(
             onClick = { onOpenIntPicker(intSetting) },
             colors = ButtonDefaults.filledTonalButtonColors()
         ) {
-            Text("$currentNumber ${stringResource(R.string.days)}")
+            //Cannot have days since this function is also used for period/ovulation history
+            //Text("$currentNumber ${stringResource(R.string.days)}")
+            Text("$currentNumber")
         }
 
         if (openIntPickerForSetting != intSetting) return
