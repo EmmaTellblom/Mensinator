@@ -24,8 +24,6 @@ import com.kizitonwose.calendar.core.*
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.compose.koinInject
-import java.util.*
-import java.time.format.TextStyle
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
@@ -129,7 +127,6 @@ fun CalendarScreen(modifier: Modifier) {
             val currentMonth = remember { YearMonth.now() }
             val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed
             val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed
-            //val daysOfWeek = daysOfWeek(firstDayOfWeek = DayOfWeek.MONDAY) // TODO: New setting for the database!
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
@@ -326,12 +323,20 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     Spacer(modifier = Modifier.height(4.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
+            val dayStringRes = when (dayOfWeek) {
+                DayOfWeek.MONDAY -> R.string.mon
+                DayOfWeek.TUESDAY -> R.string.tue
+                DayOfWeek.WEDNESDAY -> R.string.wed
+                DayOfWeek.THURSDAY -> R.string.thu
+                DayOfWeek.FRIDAY -> R.string.fri
+                DayOfWeek.SATURDAY -> R.string.sat
+                DayOfWeek.SUNDAY -> R.string.sun
+            }
             Text(
                 modifier = Modifier.weight(1f),
                 fontSize = MaterialTheme.typography.titleSmall.fontSize,
-                //fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                text = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = stringResource(id = dayStringRes),
             )
         }
     }
@@ -342,6 +347,21 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
  */
 @Composable
 fun MonthTitle(month: YearMonth) {
+    val monthStringRes = when (month.month.value) {
+        1 -> R.string.january
+        2 -> R.string.february
+        3 -> R.string.march
+        4 -> R.string.april
+        5 -> R.string.may
+        6 -> R.string.june
+        7 -> R.string.july
+        8 -> R.string.august
+        9 -> R.string.september
+        10 -> R.string.october
+        11 -> R.string.november
+        12 -> R.string.december
+        else -> throw IllegalArgumentException("Invalid month value")
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
@@ -349,7 +369,8 @@ fun MonthTitle(month: YearMonth) {
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Center,
-            text = "${month.month.name} ${month.year}",
+            //text = "${month.month.name} ${month.year}",
+            text = "${stringResource(id = monthStringRes)} ${month.year}",
             style = MaterialTheme.typography.titleLarge, // Adjust text style as needed
         )
         HorizontalDivider(
