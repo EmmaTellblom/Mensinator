@@ -13,7 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -66,30 +66,12 @@ fun MensinatorApp(
 //    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
 //    var follicleGrowthDays by remember { mutableStateOf("0") }
 
-    val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
-
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screen.valueOf(
         backStackEntry?.destination?.route ?: Screen.Calendar.name
     )
 
     Scaffold(
-        floatingActionButton = {
-            if (currentScreen == Screen.Symptoms) {
-                FloatingActionButton(
-                    onClick = { showCreateSymptom.value = true },
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .displayCutoutPadding()
-                        .padding(5.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.delete_button)
-                    )
-                }
-            }
-        },
         bottomBar = {
             val barItems = listOf(
                 BarItem(
@@ -164,12 +146,31 @@ fun MensinatorApp(
                 }
             }
             composable(route = Screen.Symptoms.name) {
+                // Adapted from https://stackoverflow.com/a/71191082/3991578
+                // Needed so that the action button can cause the dialog to be shown
+                val (fabOnClick, setFabOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
                 Scaffold(
+                    floatingActionButton = {
+                        if (currentScreen == Screen.Symptoms) {
+                            FloatingActionButton(
+                                onClick = { fabOnClick?.invoke() },
+                                shape = CircleShape,
+                                modifier = Modifier
+                                    .displayCutoutPadding()
+                                    .padding(5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = stringResource(R.string.delete_button)
+                                )
+                            }
+                        }
+                    },
                     topBar = { MensinatorTopBar(currentScreen) }
                 ) { topBarPadding ->
                     ManageSymptomScreen(
-                        showCreateSymptom,
-                        modifier = Modifier.padding(topBarPadding)
+                        modifier = Modifier.padding(topBarPadding),
+                        setFabOnClick = setFabOnClick
                     )
                 }
             }

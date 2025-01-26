@@ -19,46 +19,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.mensinator.app.*
 import com.mensinator.app.R
-import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.data.ColorSource
-import com.mensinator.app.data.Symptom
-import com.mensinator.app.data.isActive
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
-import com.mensinator.app.settings.SettingsViewModel
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
 fun ManageSymptomScreen(
-    showCreateSymptom: MutableState<Boolean>,
     modifier: Modifier = Modifier,
-    //viewModel: SettingsViewModel = koinViewModel(),
+    viewModel: ManageSymptomsViewModel = koinViewModel(),
+    setFabOnClick: (() -> Unit) -> Unit,
 ) {
-    val dbHelper: IPeriodDatabaseHelper = koinInject()
-    var initialSymptoms = remember { dbHelper.getAllSymptoms() }
-    var savedSymptoms by remember { mutableStateOf(initialSymptoms) }
+    val state = viewModel.viewState.collectAsState()
+    var initialSymptoms = state.value.allSymptoms
+    var savedSymptoms = initialSymptoms
 
-    // State to manage the rename dialog visibility
-    var showRenameDialog by remember { mutableStateOf(false) }
-    var symptomToRename by remember { mutableStateOf<Symptom?>(null) }
-
-    // State to manage the dialog visibility
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var symptomToDelete by remember { mutableStateOf<Symptom?>(null) }
-
+    LaunchedEffect(Unit) {
+        setFabOnClick { viewModel.showCreateSymptomDialog(true) }
+        viewModel.refreshData()
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())  // Make the column scrollable
             .displayCutoutExcludingStatusBarsPadding()
-            .padding (16.dp)
+            .padding(16.dp)
             .padding(bottom = 50.dp), // To be able to overscroll the list, to not have the FloatingActionButton overlapping
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -67,13 +57,13 @@ fun ManageSymptomScreen(
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
             //val resKey = ResourceMapper.getStringResourceId(symptom.name)
-            val selectedColor = ColorSource.getColorMap(isDarkMode())[selectedColorName] ?: Color.Gray
+            val selectedColor =
+                ColorSource.getColorMap(isDarkMode())[selectedColorName] ?: Color.Gray
 
             val symptomDisplayName = ResourceMapper.getStringResourceOrCustom(symptom.name)
             Card(
                 onClick = {
-                    symptomToRename = symptom
-                    showRenameDialog = true
+                    viewModel.setSymptomToRename(symptom)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(25.dp),
@@ -88,14 +78,13 @@ fun ManageSymptomScreen(
                     if (savedSymptoms.size > 1) {
                         IconButton(
                             onClick = {
-                                val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+                                val activeSymptoms = state.value.activeSymptoms
                                 if (activeSymptoms.contains(symptom)) {
-                                    showDeleteDialog = true
-                                    symptomToDelete = symptom
+                                    viewModel.setSymptomToDelete(symptom)
                                 } else {
                                     symptom.let { symptom ->
                                         savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
-                                        dbHelper.deleteSymptom(symptom.id)
+                                        viewModel.deleteSymptom(symptom.id)
                                     }
                                 }
                             },
@@ -184,7 +173,7 @@ fun ManageSymptomScreen(
                                                         }
                                                         // Save settings to the database
                                                         savedSymptoms.forEach { symptom ->
-                                                            dbHelper.updateSymptom(
+                                                            viewModel.updateSymptom(
                                                                 symptom.id,
                                                                 symptom.active,
                                                                 symptom.color
@@ -220,7 +209,7 @@ fun ManageSymptomScreen(
                             }
                             // Save settings to the database
                             savedSymptoms.forEach { symptom ->
-                                dbHelper.updateSymptom(
+                                viewModel.updateSymptom(
                                     symptom.id,
                                     symptom.active,
                                     symptom.color
@@ -233,51 +222,60 @@ fun ManageSymptomScreen(
             }
         }
     }
-    if (showCreateSymptom.value) {
+    if (state.value.showCreateSymptomDialog) {
         CreateNewSymptomDialog(
             newSymptom = "",  // Pass an empty string for new symptoms
             onSave = { newSymptomName ->
-                dbHelper.createNewSymptom(newSymptomName)
-                initialSymptoms = dbHelper.getAllSymptoms() //reset the data to make the new symptom appear
-                savedSymptoms = initialSymptoms
-                showCreateSymptom.value = false  // Close the new symptom dialog
+                viewModel.createNewSymptom(newSymptomName)
+                // todo check whether this is needed
+                //initialSymptoms = state.value.allSymptoms // reset the data to make the new symptom appear
+                //savedSymptoms = initialSymptoms
+                viewModel.showCreateSymptomDialog(false)
             },
             onCancel = {
-                showCreateSymptom.value = false  // Close the new symptom dialog
+                viewModel.showCreateSymptomDialog(false)
             },
         )
     }
 
-    if (showRenameDialog && symptomToRename != null) {
-        val symptomKey = ResourceMapper.getStringResourceId(symptomToRename!!.name)
+    val symptomToRename = state.value.symptomToRename
+    if (symptomToRename != null) {
+        val symptomKey = ResourceMapper.getStringResourceId(symptomToRename.name)
         val symptomDisplayName =
-            symptomKey?.let { stringResource(id = it) } ?: symptomToRename!!.name
+            symptomKey?.let { stringResource(id = it) } ?: symptomToRename.name
 
         RenameSymptomDialog(
             symptomDisplayName = symptomDisplayName,
             onRename = { newName ->
-                dbHelper.renameSymptom(symptomToRename!!.id, newName)
-                initialSymptoms = dbHelper.getAllSymptoms()
-                savedSymptoms = initialSymptoms
-                showRenameDialog = false
+                viewModel.renameSymptom(symptomToRename.id, newName)
+
+                // todo check whether this is needed
+                //initialSymptoms = state.value.allSymptoms
+                //savedSymptoms = initialSymptoms
+
+                viewModel.setSymptomToRename(null)
             },
             onCancel = {
-                showRenameDialog = false
+                viewModel.setSymptomToRename(null)
             }
         )
     }
 
-    // Show the delete confirmation dialog
-    if (showDeleteDialog) {
+    val symptomToDelete = state.value.symptomToDelete
+    if (symptomToDelete != null) {
         DeleteSymptomDialog(
             onSave = {
-                symptomToDelete?.let { symptom ->
-                    savedSymptoms = savedSymptoms.filter { it.id != symptom.id }
-                    dbHelper.deleteSymptom(symptom.id)
-                }
-                showDeleteDialog = false
+                viewModel.deleteSymptom(symptomToDelete.id)
+
+
+                // todo check whether this is needed
+                //savedSymptoms = savedSymptoms.filter { it.id != symptomToDelete.id }
+
+                viewModel.setSymptomToDelete(null)
             },
-            onCancel = { showDeleteDialog = false },
+            onCancel = {
+                viewModel.setSymptomToDelete(null)
+            },
         )
     }
 }
