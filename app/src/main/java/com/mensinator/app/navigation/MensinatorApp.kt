@@ -134,14 +134,16 @@ fun MensinatorApp(
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screen.Calendar.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     CalendarScreen(modifier = Modifier.padding(topBarPadding))
                 }
             }
             composable(route = Screen.Statistic.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     StatisticsScreen(modifier = Modifier.padding(topBarPadding))
                 }
@@ -167,7 +169,8 @@ fun MensinatorApp(
                             }
                         }
                     },
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     ManageSymptomScreen(
                         modifier = Modifier.padding(topBarPadding),
@@ -177,7 +180,8 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     Column {
                         SettingsScreen(

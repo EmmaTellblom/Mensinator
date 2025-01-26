@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.NotificationDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
@@ -112,6 +113,7 @@ fun SettingsScreen(
         modifier = modifier
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState())
+            .displayCutoutExcludingStatusBarsPadding()
     ) {
         Spacer(Modifier.height(16.dp))
         SettingSectionHeader(text = stringResource(R.string.colors))
