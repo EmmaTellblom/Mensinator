@@ -50,7 +50,6 @@
     <string name="close">Закрыть</string>
     <string name="save">Сохранить</string>
     <!-- Color values -->
-    <string name="calendar_start_day">Начало недели</string>
     <string name="color_red">Красный</string>
     <string name="color_green">Зеленый</string>
     <string name="color_blue">Синий</string>

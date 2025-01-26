@@ -52,7 +52,6 @@
     <string name="close">Cerrar</string>
     <string name="save">Guardar</string>
     <!-- Color values -->
-    <string name="calendar_start_day">Inicio de la semana</string>
     <string name="color_red">Rojo</string>
     <string name="color_green">Verde</string>
     <string name="color_blue">Azul</string>

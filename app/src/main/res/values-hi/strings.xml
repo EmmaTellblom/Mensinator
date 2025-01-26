@@ -43,7 +43,6 @@
     <string name="close">बंद करना</string>
     <string name="save">लक्षण सेव करें</string>
     <!-- Color values -->
-    <string name="calendar_start_day">सप्ताह की शुरुआत</string>
     <string name="color_red">लाल</string>
     <string name="color_green">हरा</string>
     <string name="color_blue">नीला</string>

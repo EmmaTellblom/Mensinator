@@ -44,7 +44,6 @@
     <string name="close">Stäng</string>
     <string name="save">Spara</string>
     <!-- Color values -->
-    <string name="calendar_start_day">Veckans startdag</string>
     <string name="color_red">Röd</string>
     <string name="color_green">Grön</string>
     <string name="color_blue">Blå</string>

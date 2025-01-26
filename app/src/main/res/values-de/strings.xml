@@ -57,7 +57,6 @@
     <string name="save">Speichern</string>
     
     <!-- Color values -->
-    <string name="calendar_start_day">Wochenbeginn</string>
     <string name="color_red">Rot</string>
     <string name="color_green">Grün</string>
     <string name="color_blue">Blau</string>
