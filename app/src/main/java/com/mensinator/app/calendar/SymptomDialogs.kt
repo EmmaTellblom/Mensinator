@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.mensinator.app.settings.ResourceMapper
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mensinator.app.R
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -85,15 +84,6 @@ fun EditSymptomsForDaysDialog(
                         Text(text = symptomDisplayName)
                     }
                 }
-//                Spacer(modifier = Modifier.height(16.dp))
-//                Button(
-//                    onClick = {
-//                        onCreateNewSymptom()
-//                    },
-//                    modifier = Modifier.fillMaxWidth()
-//                ) {
-//                    Text(text = stringResource(id = R.string.create_new_symptom_button))
-//                }
             }
         },
     )
