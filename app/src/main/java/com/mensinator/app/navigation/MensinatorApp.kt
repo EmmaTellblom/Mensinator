@@ -31,6 +31,7 @@ import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
+import com.mensinator.app.ui.theme.UiConstants
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -157,7 +158,7 @@ fun MensinatorApp(
                                 shape = CircleShape,
                                 modifier = Modifier
                                     .displayCutoutPadding()
-                                    .padding(5.dp)
+                                    .size(UiConstants.floatingActionButtonSize)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,

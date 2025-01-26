@@ -22,19 +22,16 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
-import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.settings.ResourceMapper
+import com.mensinator.app.ui.theme.UiConstants
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 
 // TODO: Improve Composable structure
 // TODO: Use tokens for shapes
+
 // TODO: Maybe delete savedSymptoms
-// TODO: Define/use constant for 50.dp FAB size
-// TODO:
-// TODO:
-// TODO:
-// TODO:
 
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
@@ -57,7 +54,7 @@ fun ManageSymptomScreen(
             .verticalScroll(rememberScrollState())  // Make the column scrollable
             .displayCutoutExcludingStatusBarsPadding()
             .padding(16.dp)
-            .padding(bottom = 50.dp), // To be able to overscroll the list, to not have the FloatingActionButton overlapping
+            .padding(bottom = UiConstants.floatingActionButtonSize * 1.25f), // To be able to overscroll the list, to not have the FloatingActionButton overlapping
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -231,9 +228,7 @@ fun ManageSymptomScreen(
     }
 
     if (state.value.showCreateSymptomDialog) {
-        // TODO: remove newSymptom parameter?
         CreateNewSymptomDialog(
-            newSymptom = "",  // Pass an empty string for new symptoms
             onSave = { newSymptomName ->
                 viewModel.createNewSymptom(newSymptomName)
                 viewModel.showCreateSymptomDialog(false)

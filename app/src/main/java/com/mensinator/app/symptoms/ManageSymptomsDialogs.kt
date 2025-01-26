@@ -14,12 +14,11 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 
 @Composable
 fun CreateNewSymptomDialog(
-    newSymptom: String,
     onSave: (String) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var symptomName by remember { mutableStateOf(newSymptom) }
+    var symptomName by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onCancel,
@@ -136,7 +135,6 @@ fun DeleteSymptomDialog(
 private fun CreateNewSymptomDialogPreview() {
     MensinatorTheme {
         CreateNewSymptomDialog(
-            newSymptom = "preview",
             onSave = {},
             onCancel = {}
         )
