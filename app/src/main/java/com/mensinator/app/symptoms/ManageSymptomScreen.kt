@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -26,6 +27,14 @@ import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 
+// TODO: Improve Composable structure
+// TODO: Use tokens for shapes
+// TODO: Maybe delete savedSymptoms
+// TODO: Define/use constant for 50.dp FAB size
+// TODO:
+// TODO:
+// TODO:
+// TODO:
 
 //Maps Database keys to res/strings.xml for multilanguage support
 @Composable
@@ -35,8 +44,7 @@ fun ManageSymptomScreen(
     setFabOnClick: (() -> Unit) -> Unit,
 ) {
     val state = viewModel.viewState.collectAsState()
-    var initialSymptoms = state.value.allSymptoms
-    var savedSymptoms = initialSymptoms
+    var savedSymptoms = state.value.allSymptoms
 
     LaunchedEffect(Unit) {
         setFabOnClick { viewModel.showCreateSymptomDialog(true) }
@@ -151,8 +159,7 @@ fun ManageSymptomScreen(
                             ) {
                                 ColorSource.colorsGroupedByHue.forEach { colorGroup ->
                                     Row(
-                                        modifier = Modifier
-                                            .wrapContentSize(),
+                                        modifier = Modifier.wrapContentSize(),
                                         horizontalArrangement = Arrangement.Center,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -162,7 +169,7 @@ fun ManageSymptomScreen(
                                                 DropdownMenuItem(
                                                     modifier = Modifier
                                                         .size(50.dp)
-                                                        .clip(RoundedCornerShape(100.dp)),
+                                                        .clip(CircleShape),
                                                     onClick = {
                                                         selectedColorName = colorName
                                                         expanded = false
@@ -222,14 +229,13 @@ fun ManageSymptomScreen(
             }
         }
     }
+
     if (state.value.showCreateSymptomDialog) {
+        // TODO: remove newSymptom parameter?
         CreateNewSymptomDialog(
             newSymptom = "",  // Pass an empty string for new symptoms
             onSave = { newSymptomName ->
                 viewModel.createNewSymptom(newSymptomName)
-                // todo check whether this is needed
-                //initialSymptoms = state.value.allSymptoms // reset the data to make the new symptom appear
-                //savedSymptoms = initialSymptoms
                 viewModel.showCreateSymptomDialog(false)
             },
             onCancel = {
@@ -248,11 +254,6 @@ fun ManageSymptomScreen(
             symptomDisplayName = symptomDisplayName,
             onRename = { newName ->
                 viewModel.renameSymptom(symptomToRename.id, newName)
-
-                // todo check whether this is needed
-                //initialSymptoms = state.value.allSymptoms
-                //savedSymptoms = initialSymptoms
-
                 viewModel.setSymptomToRename(null)
             },
             onCancel = {
@@ -266,11 +267,6 @@ fun ManageSymptomScreen(
         DeleteSymptomDialog(
             onSave = {
                 viewModel.deleteSymptom(symptomToDelete.id)
-
-
-                // todo check whether this is needed
-                //savedSymptoms = savedSymptoms.filter { it.id != symptomToDelete.id }
-
                 viewModel.setSymptomToDelete(null)
             },
             onCancel = {
