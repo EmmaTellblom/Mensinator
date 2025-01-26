@@ -201,14 +201,6 @@ object DatabaseUtils {
         DELETE FROM app_settings WHERE setting_key = 'period_selection_color';
         """
         )
-
-        // Insert a new setting for calendar start day
-        db.execSQL(
-            """
-        INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type)
-        VALUES ('calendar_start_day', 'Week Start Day', '1', '2', 'LI');
-        """
-        )
     }
 
 

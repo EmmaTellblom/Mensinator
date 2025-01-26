@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.settings.StringSetting
 import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import java.util.Locale
 
 /*
 This function is the initiator of the vertical calendar.
@@ -70,17 +72,6 @@ fun CalendarScreen(modifier: Modifier) {
     val focusedYearMonth = remember { mutableStateOf(currentMonth) }
 
     val daysOfWeek = daysOfWeek()
-
-    val startDayDB = dbHelper.getSettingByKey("calendar_start_day")?.value?.toIntOrNull() ?: 2
-    val calendarStartWeekDay = when (startDayDB) {
-        1 -> DayOfWeek.MONDAY
-        2 -> DayOfWeek.TUESDAY
-        3 -> DayOfWeek.WEDNESDAY
-        4 -> DayOfWeek.THURSDAY
-        5 -> DayOfWeek.FRIDAY
-        6 -> DayOfWeek.SATURDAY
-        else -> DayOfWeek.SUNDAY
-    }
 
     /**
      * Refresh the dates for the current month.
@@ -132,7 +123,7 @@ fun CalendarScreen(modifier: Modifier) {
                 startMonth = startMonth,
                 endMonth = endMonth,
                 firstVisibleMonth = currentMonth,
-                firstDayOfWeek = calendarStartWeekDay
+                firstDayOfWeek = getCalendarStartWeekDay()
             )
 
             LaunchedEffect(state.firstVisibleMonth) {
@@ -576,5 +567,20 @@ fun newSendNotification(context: Context, scheduler: INotificationScheduler, day
         //Schedule notification
         scheduler.scheduleNotification(notificationDate, messageText)
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
+    }
+}
+
+fun getCalendarStartWeekDay(): DayOfWeek {
+    val calendar = Calendar.getInstance(Locale.getDefault()) // Get the user's locale
+    val firstDay = calendar.firstDayOfWeek // Returns an int representing the first day
+    return when (firstDay) {
+        Calendar.SUNDAY -> DayOfWeek.SUNDAY
+        Calendar.MONDAY -> DayOfWeek.MONDAY
+        Calendar.TUESDAY -> DayOfWeek.TUESDAY
+        Calendar.WEDNESDAY -> DayOfWeek.WEDNESDAY
+        Calendar.THURSDAY -> DayOfWeek.THURSDAY
+        Calendar.FRIDAY -> DayOfWeek.FRIDAY
+        Calendar.SATURDAY -> DayOfWeek.SATURDAY
+        else -> throw IllegalStateException("Invalid day of the week: $firstDay")
     }
 }
