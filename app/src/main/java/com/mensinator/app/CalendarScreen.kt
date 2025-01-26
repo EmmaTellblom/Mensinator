@@ -116,8 +116,8 @@ fun CalendarScreen(modifier: Modifier) {
         ) {
 
             val currentMonth = remember { YearMonth.now() }
-            val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed
-            val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed
+            val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
+            val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
@@ -161,7 +161,6 @@ fun CalendarScreen(modifier: Modifier) {
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
         Button(
             onClick = {
-                //TODO!
                 /**
                  * Make sure that if two or more days are selected (and at least one is already marked as period),
                  * we should make sure that all days are removed.
