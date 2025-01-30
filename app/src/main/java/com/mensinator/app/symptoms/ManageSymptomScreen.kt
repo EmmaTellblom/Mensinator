@@ -1,11 +1,9 @@
 package com.mensinator.app.symptoms
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -22,18 +20,22 @@ import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.data.isActive
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
+import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.UiConstants
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
 
 // TODO: Improve Composable structure
-// TODO: Use tokens for shapes
 
 // TODO: Maybe delete savedSymptoms
 
-//Maps Database keys to res/strings.xml for multilanguage support
+private object SymptomScreenConstants {
+    val colorCircleSize = 24.dp
+}
+
 @Composable
 fun ManageSymptomScreen(
     modifier: Modifier = Modifier,
@@ -61,7 +63,6 @@ fun ManageSymptomScreen(
         savedSymptoms.forEach { symptom ->
             var expanded by remember { mutableStateOf(false) }
             var selectedColorName by remember { mutableStateOf(symptom.color) }
-            //val resKey = ResourceMapper.getStringResourceId(symptom.name)
             val selectedColor =
                 ColorSource.getColorMap(isDarkMode())[selectedColorName] ?: Color.Gray
 
@@ -71,7 +72,7 @@ fun ManageSymptomScreen(
                     viewModel.setSymptomToRename(symptom)
                 },
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(25.dp),
+                shape = MaterialTheme.shapes.extraLarge,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -112,13 +113,6 @@ fun ManageSymptomScreen(
                     Box {
                         // Color Dropdown wrapped in a Box for alignment
                         Card(
-                            modifier = Modifier
-                                .padding(start = 10.dp)
-                                .clickable { }
-                                .clip(RoundedCornerShape(26.dp)),  // Make the entire row round
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.Transparent,
-                            ),
                             onClick = { expanded = true }
                         ) {
                             Row(
@@ -127,8 +121,8 @@ fun ManageSymptomScreen(
                             ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(25.dp)
-                                        .clip(RoundedCornerShape(26.dp))
+                                        .size(SymptomScreenConstants.colorCircleSize)
+                                        .clip(CircleShape)
                                         .background(selectedColor),
                                 )
                                 Icon(
@@ -165,7 +159,7 @@ fun ManageSymptomScreen(
                                             if (colorValue != null) {
                                                 DropdownMenuItem(
                                                     modifier = Modifier
-                                                        .size(50.dp)
+                                                        .size(SymptomScreenConstants.colorCircleSize * 2)
                                                         .clip(CircleShape),
                                                     onClick = {
                                                         selectedColorName = colorName
@@ -187,8 +181,8 @@ fun ManageSymptomScreen(
                                                     text = {
                                                         Box(
                                                             modifier = Modifier
-                                                                .size(25.dp)
-                                                                .clip(RoundedCornerShape(26.dp))
+                                                                .size(SymptomScreenConstants.colorCircleSize)
+                                                                .clip(CircleShape)
                                                                 .background(colorValue)  // Use the color from the map
                                                         )
                                                     }
@@ -204,10 +198,9 @@ fun ManageSymptomScreen(
                     Spacer(modifier = Modifier.weight(0.05f))
 
                     Switch(
-                        checked = symptom.active == 1,
+                        checked = symptom.isActive,
                         onCheckedChange = { checked ->
-                            val updatedSymptom =
-                                symptom.copy(active = if (checked) 1 else 0)
+                            val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
                             savedSymptoms = savedSymptoms.map {
                                 if (it.id == symptom.id) updatedSymptom else it
                             }
