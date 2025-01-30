@@ -20,7 +20,6 @@ class ManageSymptomsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
 ) : ViewModel() {
 
-
     private val _viewState = MutableStateFlow(
         ViewState()
     )
@@ -34,6 +33,22 @@ class ManageSymptomsViewModel(
         val symptomToDelete: Symptom? = null,
     )
 
+    fun onAction(uiAction: UiAction) = when (uiAction) {
+        UiAction.HideCreationDialog -> _viewState.update { it.copy(showCreateSymptomDialog = false) }
+        UiAction.ShowCreationDialog -> _viewState.update { it.copy(showCreateSymptomDialog = true) }
+
+        UiAction.HideDeletionDialog -> _viewState.update { it.copy(symptomToDelete = null) }
+        is UiAction.ShowDeletionDialog -> _viewState.update { it.copy(symptomToDelete = uiAction.symptom ) }
+
+        UiAction.HideRenamingDialog -> _viewState.update { it.copy(symptomToRename = null) }
+        is UiAction.ShowRenamingDialog -> _viewState.update { it.copy( symptomToRename = uiAction.symptom ) }
+
+        is UiAction.CreateSymptom -> createNewSymptom(uiAction.name)
+        is UiAction.UpdateSymptom -> updateSymptom(uiAction.symptom)
+        is UiAction.DeleteSymptom -> deleteSymptom(uiAction.symptom)
+        is UiAction.RenameSymptom -> renameSymptom(uiAction.symptom)
+    }
+
     suspend fun refreshData() {
         withContext(Dispatchers.IO) {
             val allSymptoms = periodDatabaseHelper.getAllSymptoms()
@@ -46,35 +61,39 @@ class ManageSymptomsViewModel(
         }
     }
 
-    fun createNewSymptom(name: String) {
+    private fun createNewSymptom(name: String) {
         periodDatabaseHelper.createNewSymptom(name)
         viewModelScope.launch { refreshData() }
     }
 
-    fun updateSymptom(id: Int, active: Int, color: String) {
-        periodDatabaseHelper.updateSymptom(id, active, color)
+    private fun updateSymptom(symptom: Symptom) {
+        periodDatabaseHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
         viewModelScope.launch { refreshData() }
     }
 
-    fun renameSymptom(id: Int, name: String) {
-        periodDatabaseHelper.renameSymptom(id, name)
+    private fun renameSymptom(symptom: Symptom) {
+        periodDatabaseHelper.renameSymptom(symptom.id, symptom.name)
         viewModelScope.launch { refreshData() }
     }
 
-    fun deleteSymptom(id: Int) {
-        periodDatabaseHelper.deleteSymptom(id)
+    private fun deleteSymptom(symptom: Symptom) {
+        periodDatabaseHelper.deleteSymptom(symptom.id)
         viewModelScope.launch { refreshData() }
     }
 
-    fun showCreateSymptomDialog(show: Boolean) {
-        _viewState.update { it.copy(showCreateSymptomDialog = show) }
-    }
+    sealed class UiAction {
+        data object HideRenamingDialog : UiAction()
+        data class ShowRenamingDialog(val symptom: Symptom): UiAction()
 
-    fun setSymptomToRename(symptom: Symptom?) {
-        _viewState.update { it.copy(symptomToRename = symptom) }
-    }
+        data object HideDeletionDialog : UiAction()
+        data class ShowDeletionDialog(val symptom: Symptom): UiAction()
 
-    fun setSymptomToDelete(symptom: Symptom?) {
-        _viewState.update { it.copy(symptomToDelete = symptom) }
+        data object HideCreationDialog : UiAction()
+        data object ShowCreationDialog: UiAction()
+
+        data class CreateSymptom(val name: String): UiAction()
+        data class UpdateSymptom(val symptom: Symptom): UiAction()
+        data class DeleteSymptom(val symptom: Symptom): UiAction()
+        data class RenameSymptom(val symptom: Symptom): UiAction()
     }
 }

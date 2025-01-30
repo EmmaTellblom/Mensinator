@@ -25,12 +25,11 @@ import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
 import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
+import com.mensinator.app.symptoms.ManageSymptomsViewModel.UiAction
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.UiConstants
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel
-
-// TODO: Maybe delete savedSymptoms
 
 private object SymptomScreenConstants {
     val colorCircleSize = 24.dp
@@ -46,7 +45,7 @@ fun ManageSymptomScreen(
     val symptoms = state.value.allSymptoms
 
     LaunchedEffect(Unit) {
-        setFabOnClick { viewModel.showCreateSymptomDialog(true) }
+        setFabOnClick { viewModel.onAction(UiAction.ShowCreationDialog) }
         viewModel.refreshData()
     }
 
@@ -62,7 +61,7 @@ fun ManageSymptomScreen(
     ) {
         symptoms.forEach { symptom ->
             SymptomItem(
-                viewModel = viewModel,
+                onAction = { viewModel.onAction(it) },
                 symptom = symptom,
                 showDeletionIcon = symptoms.size > 1
             )
@@ -72,11 +71,11 @@ fun ManageSymptomScreen(
     if (state.value.showCreateSymptomDialog) {
         CreateNewSymptomDialog(
             onSave = { newSymptomName ->
-                viewModel.createNewSymptom(newSymptomName)
-                viewModel.showCreateSymptomDialog(false)
+                viewModel.onAction(UiAction.CreateSymptom(newSymptomName))
+                viewModel.onAction(UiAction.HideCreationDialog)
             },
             onCancel = {
-                viewModel.showCreateSymptomDialog(false)
+                viewModel.onAction(UiAction.HideCreationDialog)
             },
         )
     }
@@ -89,11 +88,13 @@ fun ManageSymptomScreen(
         RenameSymptomDialog(
             symptomDisplayName = symptomDisplayName,
             onRename = { newName ->
-                viewModel.renameSymptom(symptomToRename.id, newName)
-                viewModel.setSymptomToRename(null)
+                val updatedSymptom = symptomToRename.copy(name = newName)
+                viewModel.onAction(UiAction.RenameSymptom(updatedSymptom))
+                viewModel.onAction(UiAction.HideRenamingDialog)
             },
             onCancel = {
-                viewModel.setSymptomToRename(null)
+                viewModel.onAction(UiAction.HideRenamingDialog)
+
             }
         )
     }
@@ -102,11 +103,11 @@ fun ManageSymptomScreen(
     if (symptomToDelete != null) {
         DeleteSymptomDialog(
             onSave = {
-                viewModel.deleteSymptom(symptomToDelete.id)
-                viewModel.setSymptomToDelete(null)
+                viewModel.onAction(UiAction.DeleteSymptom(symptomToDelete))
+                viewModel.onAction(UiAction.HideDeletionDialog)
             },
             onCancel = {
-                viewModel.setSymptomToDelete(null)
+                viewModel.onAction(UiAction.HideDeletionDialog)
             },
         )
     }
@@ -114,18 +115,19 @@ fun ManageSymptomScreen(
 
 @Composable
 private fun SymptomItem(
-    viewModel: ManageSymptomsViewModel,
+    onAction: (uiAction: UiAction) -> Unit,
     symptom: Symptom,
-    showDeletionIcon: Boolean
+    showDeletionIcon: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     val selectedColor = ColorSource.getColorMap(isDarkMode())[symptom.color] ?: Color.Gray
     val symptomDisplayName = ResourceMapper.getStringResourceOrCustom(symptom.name)
 
     Card(
         onClick = {
-            viewModel.setSymptomToRename(symptom)
+            onAction(UiAction.ShowRenamingDialog(symptom))
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.extraLarge,
     ) {
         Row(
@@ -136,7 +138,7 @@ private fun SymptomItem(
         ) {
             if (showDeletionIcon) {
                 IconButton(
-                    onClick = { viewModel.setSymptomToDelete(symptom) },
+                    onClick = { onAction(UiAction.ShowDeletionDialog(symptom)) },
                     modifier = Modifier.size(20.dp)
                 ) {
                     Icon(
@@ -145,15 +147,15 @@ private fun SymptomItem(
                     )
                 }
             }
-            Spacer(modifier = Modifier.padding(start = 5.dp))
             Text(
                 text = symptomDisplayName,
                 textAlign = TextAlign.Left,
-                modifier = Modifier.weight(1f) // Let the text expand to fill available space
+                modifier = Modifier
+                    .weight(1f) // Let the text expand to fill available space
+                    .padding(4.dp)
             )
 
-            //Color Picker Dropdown Menu
-            ColorPicker(selectedColor, symptom, viewModel)
+            ColorPicker(selectedColor, symptom, onAction)
 
             Spacer(modifier = Modifier.weight(0.05f))
 
@@ -161,11 +163,7 @@ private fun SymptomItem(
                 checked = symptom.isActive,
                 onCheckedChange = { checked ->
                     val updatedSymptom = symptom.copy(active = if (checked) 1 else 0)
-                    viewModel.updateSymptom(
-                        updatedSymptom.id,
-                        updatedSymptom.active,
-                        updatedSymptom.color
-                    )
+                    onAction(UiAction.UpdateSymptom(updatedSymptom))
                 },
             )
             Spacer(modifier = Modifier.weight(0.05f))
@@ -173,11 +171,12 @@ private fun SymptomItem(
     }
 }
 
+// Color Picker Dropdown Menu
 @Composable
 private fun ColorPicker(
     selectedColor: Color,
     symptom: Symptom,
-    viewModel: ManageSymptomsViewModel
+    onAction: (uiAction: UiAction) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -233,11 +232,7 @@ private fun ColorPicker(
                                 onClick = {
                                     expanded = false
                                     val updatedSymptom = symptom.copy(color = colorName)
-                                    viewModel.updateSymptom(
-                                        updatedSymptom.id,
-                                        updatedSymptom.active,
-                                        updatedSymptom.color
-                                    )
+                                    onAction(UiAction.UpdateSymptom(updatedSymptom))
                                 },
                                 text = {
                                     Box(
@@ -256,16 +251,29 @@ private fun ColorPicker(
     }
 }
 
-
-// TODO: Broken
 @Preview(showBackground = true)
 @Composable
 private fun SymptomItemPreview() {
     MensinatorTheme {
         SymptomItem(
-            viewModel = koinViewModel(),
-            symptom = Symptom(1, "Medium flow", 1, "red"),
-            showDeletionIcon = true
+            onAction = {},
+            symptom = Symptom(1, "Medium flow", 1, "Red"),
+            showDeletionIcon = true,
+            modifier = Modifier.padding(8.dp)
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun SymptomItemLongTextPreview() {
+    MensinatorTheme {
+        SymptomItem(
+            onAction = {},
+            symptom = Symptom(2, "Very long text that could span multiple lines ".repeat(2), 0, "DarkBlue"),
+            showDeletionIcon = false,
+            modifier = Modifier.padding(8.dp)
         )
     }
 }
