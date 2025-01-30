@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.data.Symptom
-import com.mensinator.app.data.isActive
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +26,6 @@ class ManageSymptomsViewModel(
 
     data class ViewState(
         val allSymptoms: List<Symptom> = listOf(),
-        val activeSymptoms: List<Symptom> = listOf(),
         val showCreateSymptomDialog: Boolean = false,
         val symptomToRename: Symptom? = null,
         val symptomToDelete: Symptom? = null,
@@ -51,11 +49,9 @@ class ManageSymptomsViewModel(
 
     suspend fun refreshData() {
         withContext(Dispatchers.IO) {
-            val allSymptoms = periodDatabaseHelper.getAllSymptoms()
             _viewState.update {
                 it.copy(
                     allSymptoms = periodDatabaseHelper.getAllSymptoms(),
-                    activeSymptoms = allSymptoms.filter { it.isActive },
                 )
             }
         }
