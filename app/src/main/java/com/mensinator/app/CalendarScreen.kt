@@ -5,36 +5,37 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import com.kizitonwose.calendar.compose.VerticalCalendar
-import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.YearMonth
-import com.kizitonwose.calendar.core.*
-import com.mensinator.app.data.ColorSource
-import com.mensinator.app.ui.theme.isDarkMode
-import org.koin.compose.koinInject
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kizitonwose.calendar.compose.VerticalCalendar
+import com.kizitonwose.calendar.compose.rememberCalendarState
+import com.kizitonwose.calendar.core.CalendarDay
+import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.core.daysOfWeek
+import com.mensinator.app.data.ColorSource
+import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.settings.StringSetting
+import com.mensinator.app.ui.theme.isDarkMode
+import kotlinx.collections.immutable.*
+import org.koin.compose.koinInject
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.YearMonth
 import java.time.temporal.ChronoUnit
-import java.util.Calendar
-import java.util.Locale
 
 /*
 This function is the initiator of the vertical calendar.
@@ -50,11 +51,11 @@ fun CalendarScreen(modifier: Modifier) {
     val notificationScheduler: INotificationScheduler = koinInject()
 
     // Days selected in the calendar
-    val selectedDates = remember { mutableStateOf(setOf<LocalDate>()) }
+    val selectedDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
 
-    val actualPeriodDates = remember { mutableStateOf(emptyMap<LocalDate, Int>()) }
-    val actualOvulationDates = remember { mutableStateOf(emptySet<LocalDate>()) }
-    val actualSymptomDates = remember { mutableStateOf(emptySet<LocalDate>()) }
+    val actualPeriodDates = remember { mutableStateOf(persistentMapOf<LocalDate, Int>()) }
+    val actualOvulationDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
+    val actualSymptomDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
 
     var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
     var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
@@ -62,7 +63,8 @@ fun CalendarScreen(modifier: Modifier) {
     var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
 
     // Trigger notification with custom message
-    val initPeriodKeyOrCustomMessage = dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
+    val initPeriodKeyOrCustomMessage =
+        dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
     val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
 
     var selectedIsOvulation = false
@@ -79,7 +81,8 @@ fun CalendarScreen(modifier: Modifier) {
     fun refreshOvulationDates() {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
-        actualOvulationDates.value = dbHelper.getOvulationDatesForMonth(year, month).toSet()
+        actualOvulationDates.value =
+            dbHelper.getOvulationDatesForMonth(year, month).toPersistentSet()
     }
 
     /**
@@ -88,7 +91,7 @@ fun CalendarScreen(modifier: Modifier) {
     fun refreshSymptomDates() {
         val year = focusedYearMonth.value.year
         val month = focusedYearMonth.value.monthValue
-        actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month)
+        actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month).toPersistentSet()
     }
 
     /**
@@ -116,37 +119,51 @@ fun CalendarScreen(modifier: Modifier) {
         ) {
 
             val currentMonth = remember { YearMonth.now() }
-            val startMonth = remember { currentMonth.minusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
-            val endMonth = remember { currentMonth.plusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
+            val startMonth =
+                remember { currentMonth.minusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
+            val endMonth =
+                remember { currentMonth.plusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
 
             val state = rememberCalendarState(
                 startMonth = startMonth,
                 endMonth = endMonth,
                 firstVisibleMonth = currentMonth,
-                firstDayOfWeek = getCalendarStartWeekDay()
             )
 
             LaunchedEffect(state.firstVisibleMonth) {
                 focusedYearMonth.value = state.firstVisibleMonth.yearMonth
                 // Load data for the new month
-                actualPeriodDates.value =
-                    dbHelper.getPeriodDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
-                actualOvulationDates.value =
-                    dbHelper.getOvulationDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
-                actualSymptomDates.value =
-                    dbHelper.getSymptomDatesForMonthNew(focusedYearMonth.value.year, focusedYearMonth.value.monthValue)
+                actualPeriodDates.value = dbHelper.getPeriodDatesForMonthNew(
+                    focusedYearMonth.value.year,
+                    focusedYearMonth.value.monthValue
+                ).toPersistentMap()
+                actualOvulationDates.value = dbHelper.getOvulationDatesForMonthNew(
+                    focusedYearMonth.value.year,
+                    focusedYearMonth.value.monthValue
+                ).toPersistentSet()
+                actualSymptomDates.value = dbHelper.getSymptomDatesForMonthNew(
+                    focusedYearMonth.value.year,
+                    focusedYearMonth.value.monthValue
+                ).toPersistentSet()
                 updateCalculations()
             }
 
             VerticalCalendar(
                 state = state,
-                dayContent = { day -> Day(day, selectedDates,
-                    actualPeriodDates.value, actualOvulationDates.value, actualSymptomDates.value, ovulationPredictionDate,
-                    periodPredictionDate
-                ) },
+                dayContent = { day ->
+                    Day(
+                        day = day,
+                        selectedDates = selectedDates,
+                        actualPeriodDates = actualPeriodDates.value,
+                        actualOvulationDates = actualOvulationDates.value,
+                        actualSymptomDates = actualSymptomDates.value,
+                        ovulationPredictionDate = ovulationPredictionDate,
+                        periodPredictionDate = periodPredictionDate
+                    )
+                },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
-                    DaysOfWeekTitle(daysOfWeek = daysOfWeek)
+                    DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
                 }
 
             )
@@ -176,11 +193,11 @@ fun CalendarScreen(modifier: Modifier) {
                     datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
                 }
 
-                selectedDates.value = setOf()
+                selectedDates.value = persistentSetOf()
 
                 val year = focusedYearMonth.value.year
                 val month = focusedYearMonth.value.monthValue
-                actualPeriodDates.value = dbHelper.getPeriodDatesForMonth(year, month)
+                actualPeriodDates.value = dbHelper.getPeriodDatesForMonth(year, month).toPersistentMap()
 
                 updateCalculations()
 
@@ -221,7 +238,7 @@ fun CalendarScreen(modifier: Modifier) {
                 else -> stringResource(id = R.string.period_button)
             }
             Text(text = text)
-            }
+        }
 
         var showSymptomsDialog by remember { mutableStateOf(false) }
         val symptomButtonEnabled by remember {
@@ -255,11 +272,11 @@ fun CalendarScreen(modifier: Modifier) {
                     dbHelper.updateSymptomDate(datesToUpdate, selectedSymptomIds)
                     showSymptomsDialog = false
                     refreshSymptomDates()
-                    selectedDates.value = emptySet()
+                    selectedDates.value = persistentSetOf()
                 },
                 onCancel = {
                     showSymptomsDialog = false
-                    selectedDates.value = emptySet()
+                    selectedDates.value = persistentSetOf()
                 }
             )
         }
@@ -278,7 +295,7 @@ fun CalendarScreen(modifier: Modifier) {
                 } else if (selectedDates.value.size == 1) {
                     val date = selectedDates.value.first()
                     dbHelper.updateOvulationDate(date)
-                    selectedDates.value = setOf()
+                    selectedDates.value = persistentSetOf()
 
                     refreshOvulationDates()
                     updateCalculations()
@@ -318,7 +335,7 @@ fun CalendarScreen(modifier: Modifier) {
  * Display the days of the week.
  */
 @Composable
-fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
+fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
     Spacer(modifier = Modifier.height(4.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
@@ -384,9 +401,15 @@ fun MonthTitle(month: YearMonth) {
  * Display a day in the calendar.
  */
 @Composable
-fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPeriodDates: Map<LocalDate, Int>,
-        actualOvulationDates: Set<LocalDate>, actualSymptomDates: Set<LocalDate>, ovulationPredictionDate: LocalDate,
-        periodPredictionDate: LocalDate) {
+fun Day(
+    day: CalendarDay,
+    selectedDates: MutableState<PersistentSet<LocalDate>>,
+    actualPeriodDates: PersistentMap<LocalDate, Int>,
+    actualOvulationDates: PersistentSet<LocalDate>,
+    actualSymptomDates: PersistentSet<LocalDate>,
+    ovulationPredictionDate: LocalDate,
+    periodPredictionDate: LocalDate
+) {
 
     val colorMap = ColorSource.getColorMap(isDarkMode())
     val dbHelper: IPeriodDatabaseHelper = koinInject()
@@ -448,24 +471,25 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
     val hasSymptomDate = day.date in actualSymptomDates
 
     Box(
-            modifier = Modifier
-                .aspectRatio(1f) // This ensures the cells remain square.
-                //.size(circleSize)
-                .background(
-                    backgroundColor,
-                    shape = MaterialTheme.shapes.small
-                )
-                .border(borderSize, color = borderColor, shape = CircleShape)
-                .clickable {
-                    selectedDates.value = if (isSelected) {
-                        selectedDates.value - day.date
-                    } else {
-                        selectedDates.value + day.date
-                    }
-                }
-                .padding(4.dp),
-            contentAlignment = Alignment.Center
-        ) {
+        modifier = Modifier
+            .aspectRatio(1f) // This ensures the cells remain square.
+            //.size(circleSize)
+            .background(
+                backgroundColor,
+                shape = MaterialTheme.shapes.small
+            )
+            .border(borderSize, color = borderColor, shape = CircleShape)
+            .clickable {
+                val newSelectedDates = if (isSelected) {
+                    selectedDates.value - day.date
+                } else {
+                    selectedDates.value + day.date
+                }.toPersistentSet()
+                selectedDates.value = newSelectedDates
+            }
+            .padding(4.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
             text = day.date.dayOfMonth.toString(),
             fontWeight = fontStyleType,
@@ -493,9 +517,9 @@ fun Day(day: CalendarDay, selectedDates: MutableState<Set<LocalDate>>, actualPer
             }
         }
 
-        if(showCycleNumbersSetting == 1){
+        if (showCycleNumbersSetting == 1) {
             val cycleNumber = calculateCycleNumber(day.date, dbHelper)
-            if(cycleNumber > 0){
+            if (cycleNumber > 0) {
                 Box(
                     modifier = Modifier
                         .size(18.dp)
@@ -550,7 +574,13 @@ fun calculateCycleNumber(day: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
 /**
  * Schedule a notification for a given date.
  */
-fun newSendNotification(context: Context, scheduler: INotificationScheduler, daysForReminding: Int, periodDate: LocalDate, messageText: String) {
+fun newSendNotification(
+    context: Context,
+    scheduler: INotificationScheduler,
+    daysForReminding: Int,
+    periodDate: LocalDate,
+    messageText: String
+) {
     val notificationDate = periodDate.minusDays(daysForReminding.toLong())
     if (notificationDate.isBefore(LocalDate.now())) {
         Log.d(
@@ -566,20 +596,5 @@ fun newSendNotification(context: Context, scheduler: INotificationScheduler, day
         //Schedule notification
         scheduler.scheduleNotification(notificationDate, messageText)
         Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
-    }
-}
-
-fun getCalendarStartWeekDay(): DayOfWeek {
-    val calendar = Calendar.getInstance(Locale.getDefault()) // Get the user's locale
-    val firstDay = calendar.firstDayOfWeek // Returns an int representing the first day
-    return when (firstDay) {
-        Calendar.SUNDAY -> DayOfWeek.SUNDAY
-        Calendar.MONDAY -> DayOfWeek.MONDAY
-        Calendar.TUESDAY -> DayOfWeek.TUESDAY
-        Calendar.WEDNESDAY -> DayOfWeek.WEDNESDAY
-        Calendar.THURSDAY -> DayOfWeek.THURSDAY
-        Calendar.FRIDAY -> DayOfWeek.FRIDAY
-        Calendar.SATURDAY -> DayOfWeek.SATURDAY
-        else -> throw IllegalStateException("Invalid day of the week: $firstDay")
     }
 }
