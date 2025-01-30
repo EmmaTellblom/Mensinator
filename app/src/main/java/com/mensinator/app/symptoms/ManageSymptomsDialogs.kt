@@ -27,6 +27,7 @@ fun CreateNewSymptomDialog(
                 onClick = {
                     onSave(symptomName)
                 },
+                enabled = symptomName.isNotBlank()
             ) {
                 Text(stringResource(id = R.string.save_button))
             }
