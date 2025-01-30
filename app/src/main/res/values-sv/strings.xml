@@ -32,7 +32,8 @@
     <string name="expected_ovulation_color">Förväntad ägglossning</string>
     <string name="reminders">Påminnelser</string>
     <string name="days_before_reminder">Dagar före påminnelse</string>
-    <string name="period_notification_title">Notifieringstext för mens</string>
+    <string name="period_notification_title">Påminnelsetext för mens</string>
+    <string name="change_text">Ändra text</string>
     <string name="other_settings">Andra inställningar</string>
     <string name="luteal_phase_calculation">Lutealberäkning</string>
     <string name="period_history">Menshistorik</string>
@@ -161,4 +162,5 @@
     <string name="period_button_selected">Ta bort mens</string>
     <string name="period_button_not_selected">Lägg till mens</string>
     <string name="ovulation_button_selected">Ta bort ägglossning</string>
+    <string name="period_notification_message">Din mens börjar snart</string>
 </resources>

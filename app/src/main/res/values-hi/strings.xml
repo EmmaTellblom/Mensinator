@@ -33,6 +33,7 @@
     <string name="expected_ovulation_color">अपेक्षित ओवुलेशन</string>
     <string name="reminders">अनुस्मारक</string>
     <string name="days_before_reminder">अनुस्मारक से पहले के दिन</string>
+    <string name="change_text">टेक्स्ट बदलें।</string>
     <string name="other_settings">अन्य सेटिंग</string>
     <string name="luteal_phase_calculation">यूटियल चरण की गणना</string>
     <string name="period_history">पिरियड् इतिहास</string>
@@ -160,4 +161,6 @@
     <string name="Import">आयात</string>
     <string name="data_export">डेटा निर्यात</string>
     <string name="select_file">फ़ाइल चुनें</string>
+    <string name="period_notification_title">पीरियड सूचना संदेश।</string>
+    <string name="period_notification_message">आपका पीरियड शुरू होने वाला है।</string>
 </resources>
