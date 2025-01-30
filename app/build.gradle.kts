@@ -41,6 +41,7 @@ android {
         compose = true
     }
     androidResources {
+        @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
     }
     packaging {
