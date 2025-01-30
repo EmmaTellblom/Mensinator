@@ -28,10 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mensinator.app.NotificationDialog
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
-import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
 import org.koin.androidx.compose.koinViewModel

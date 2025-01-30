@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mensinator.app.R
-import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
 import org.koin.androidx.compose.koinViewModel
 

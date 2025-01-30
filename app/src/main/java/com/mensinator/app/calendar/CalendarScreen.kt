@@ -40,7 +40,7 @@ import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.isActive
-import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.theme.isDarkMode

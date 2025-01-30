@@ -1,4 +1,4 @@
-package com.mensinator.app.navigation
+package com.mensinator.app.ui.navigation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme

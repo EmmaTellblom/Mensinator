@@ -23,7 +23,7 @@ import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
-import com.mensinator.app.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.settings.ResourceMapper
 import com.mensinator.app.symptoms.ManageSymptomsViewModel.UiAction
 import com.mensinator.app.ui.theme.MensinatorTheme
