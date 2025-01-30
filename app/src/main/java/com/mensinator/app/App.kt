@@ -24,7 +24,7 @@ class App : Application() {
         singleOf(::ExportImport) { bind<IExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
 
-        viewModel { ManageSymptomsViewModel(get(), get()) }
+        viewModel { ManageSymptomsViewModel(get()) }
         viewModel { SettingsViewModel(get(), get(), get()) }
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }

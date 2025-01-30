@@ -1,7 +1,5 @@
 package com.mensinator.app.symptoms
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.business.IPeriodDatabaseHelper
@@ -15,7 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ManageSymptomsViewModel(
-    @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
 ) : ViewModel() {
 
