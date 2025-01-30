@@ -32,6 +32,7 @@
     <string name="expected_ovulation_color">অপেক্ষিত ওভুলেশনের</string>
     <string name="reminders">স্মরণকারী</string>
     <string name="days_before_reminder">স্মরণকারীর আগে দিন</string>
+    <string name="change_text">টেক্সট পরিবর্তন করুন।</string>
     <string name="other_settings">অন্যান্য সেটিংস</string>
     <string name="luteal_phase_calculation">লুটিয়াল পর্যায় গণনা</string>
     <string name="period_history">মাসিক ইতিহাস</string>
@@ -160,4 +161,6 @@
     <string name="Import">আমদানি</string>
     <string name="data_export">তথ্য রপ্তানি</string>
     <string name="select_file">ফাইল নির্বাচন করুন</string>
+    <string name="period_notification_title">পিরিয়ড নোটিফিকেশন বার্তা।</string>
+    <string name="period_notification_message">আপনার পিরিয়ড শুরু হতে চলেছে।</string>
 </resources>
