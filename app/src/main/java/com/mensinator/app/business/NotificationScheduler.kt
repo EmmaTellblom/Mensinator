@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.business
 
 
 import android.app.AlarmManager
@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.mensinator.app.NotificationReceiver
 import java.time.LocalDate
 import java.time.ZoneId
 

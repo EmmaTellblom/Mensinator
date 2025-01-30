@@ -1,4 +1,4 @@
-package com.mensinator.app.navigation
+package com.mensinator.app.ui.navigation
 
 import android.util.Log
 import androidx.annotation.StringRes
@@ -13,7 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -25,10 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.mensinator.app.*
 import com.mensinator.app.R
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
+import com.mensinator.app.symptoms.ManageSymptomScreen
+import com.mensinator.app.ui.theme.UiConstants
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -64,30 +67,12 @@ fun MensinatorApp(
 //    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
 //    var follicleGrowthDays by remember { mutableStateOf("0") }
 
-    val showCreateSymptom = rememberSaveable { mutableStateOf(false) }
-
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screen.valueOf(
         backStackEntry?.destination?.route ?: Screen.Calendar.name
     )
 
     Scaffold(
-        floatingActionButton = {
-            if (currentScreen == Screen.Symptoms) {
-                FloatingActionButton(
-                    onClick = { showCreateSymptom.value = true },
-                    shape = CircleShape,
-                    modifier = Modifier
-                        .displayCutoutPadding()
-                        .padding(5.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(R.string.delete_button)
-                    )
-                }
-            }
-        },
         bottomBar = {
             val barItems = listOf(
                 BarItem(
@@ -149,31 +134,54 @@ fun MensinatorApp(
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screen.Calendar.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     CalendarScreen(modifier = Modifier.padding(topBarPadding))
                 }
             }
             composable(route = Screen.Statistic.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     StatisticsScreen(modifier = Modifier.padding(topBarPadding))
                 }
             }
             composable(route = Screen.Symptoms.name) {
+                // Adapted from https://stackoverflow.com/a/71191082/3991578
+                // Needed so that the action button can cause the dialog to be shown
+                val (fabOnClick, setFabOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    floatingActionButton = {
+                        if (currentScreen == Screen.Symptoms) {
+                            FloatingActionButton(
+                                onClick = { fabOnClick?.invoke() },
+                                shape = CircleShape,
+                                modifier = Modifier
+                                    .displayCutoutPadding()
+                                    .size(UiConstants.floatingActionButtonSize)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Add,
+                                    contentDescription = stringResource(R.string.delete_button)
+                                )
+                            }
+                        }
+                    },
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     ManageSymptomScreen(
-                        showCreateSymptom,
-                        modifier = Modifier.padding(topBarPadding)
+                        modifier = Modifier.padding(topBarPadding),
+                        setFabOnClick = setFabOnClick
                     )
                 }
             }
             composable(route = Screen.Settings.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) }
+                    topBar = { MensinatorTopBar(currentScreen) },
+                    contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     Column {
                         SettingsScreen(
@@ -187,6 +195,5 @@ fun MensinatorApp(
             }
         }
     }
-
 }
 

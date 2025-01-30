@@ -1,8 +1,10 @@
 package com.mensinator.app
 
 import android.app.Application
+import com.mensinator.app.business.*
 import com.mensinator.app.settings.SettingsViewModel
 import com.mensinator.app.statistics.StatisticsViewModel
+import com.mensinator.app.symptoms.ManageSymptomsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -22,6 +24,7 @@ class App : Application() {
         singleOf(::ExportImport) { bind<IExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
 
+        viewModel { ManageSymptomsViewModel(get()) }
         viewModel { SettingsViewModel(get(), get(), get()) }
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }

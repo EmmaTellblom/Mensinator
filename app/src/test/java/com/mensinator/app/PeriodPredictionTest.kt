@@ -1,5 +1,9 @@
 package com.mensinator.app
 
+import com.mensinator.app.business.ICalculationsHelper
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
+import com.mensinator.app.business.PeriodPrediction
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.settings
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 
 @Composable

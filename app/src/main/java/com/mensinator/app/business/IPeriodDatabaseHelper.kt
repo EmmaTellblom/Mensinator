@@ -1,7 +1,9 @@
-package com.mensinator.app
+package com.mensinator.app.business
 
 import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.WorkerThread
+import com.mensinator.app.data.Symptom
+import com.mensinator.app.data.Setting
 import java.time.LocalDate
 
 interface IPeriodDatabaseHelper {
@@ -39,7 +41,7 @@ interface IPeriodDatabaseHelper {
     fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>)
 
     // This function is used to get symptoms for a given date
-    fun getSymptomsFromDate(date: LocalDate): List<Int>
+    fun getActiveSymptomIdsForDate(date: LocalDate): List<Int>
 
     fun getSymptomColorForDate(date: LocalDate): List<String>
 
