@@ -101,7 +101,6 @@ class PeriodDatabaseHelper(context: Context) :
         if (rowsUpdated == 0) {
             db.insert(TABLE_PERIODS, null, values)
         }
-        //db.close()
     }
 
     override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
@@ -143,7 +142,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e(TAG, "Cursor is null while querying for dates")
         }
 
-        //db.close()
         return dates
     }
 
@@ -156,7 +154,6 @@ class PeriodDatabaseHelper(context: Context) :
             count = cursor.getInt(0)
         }
         cursor.close()
-        //db.close()
         return count
     }
 
@@ -170,7 +167,6 @@ class PeriodDatabaseHelper(context: Context) :
         } else {
             Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
         }
-        //db.close()
     }
 
     override fun getAllSymptoms(): List<Symptom> {
@@ -194,8 +190,6 @@ class PeriodDatabaseHelper(context: Context) :
 
         }
         cursor.close()
-        //db.close()
-
         return symptoms
     }
 
@@ -208,7 +202,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
         // Insert the new symptom into the symptoms table
         db.insert(TABLE_SYMPTOMS, null, values)
-        //db.close()  // Close the database connection to free up resources
     }
 
     override fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
@@ -250,7 +243,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e(TAG, "Error querying for symptom dates", e)
         } finally {
             cursor.close()
-            //db.close()
         }
 
         return dates
@@ -297,7 +289,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         // Close the database connection
-        //db.close()
     }
 
     override fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> {
@@ -321,7 +312,6 @@ class PeriodDatabaseHelper(context: Context) :
             }
         }
 
-        //db.close()
         return symptoms
     }
 
@@ -346,8 +336,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
-
         return symptomColors
     }
 
@@ -375,7 +363,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
         val rowsUpdated =
             db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
-        //db.close()
         return rowsUpdated > 0
     }
 
@@ -402,7 +389,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return setting
     }
 
@@ -436,7 +422,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
     }
 
     override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
@@ -474,7 +459,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e("TAG", "Error querying for ovulation dates", e)
         } finally {
             cursor.close()
-            //db.close()
         }
 
         return dates
@@ -489,7 +473,6 @@ class PeriodDatabaseHelper(context: Context) :
             count = cursor.getInt(0)
         }
         cursor.close()
-        //db.close()
         return count
     }
 
@@ -545,7 +528,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e(TAG, "Cursor is null while querying for periodId")
         }
 
-        //db.close()
         return periodId
     }
 
@@ -576,8 +558,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
-
         return firstLatestDate
     }
 
@@ -596,7 +576,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return oldestPeriodDate
     }
 
@@ -615,7 +594,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return newestOvulationDate
     }
 
@@ -644,8 +622,6 @@ class PeriodDatabaseHelper(context: Context) :
         if (rowsAffected == 0) {
             throw IllegalStateException("No symptom found with ID: $id")
         }
-
-        //db.close()
     }
 
     // This function is used to get the latest X ovulation dates where they are followed by a period
@@ -674,7 +650,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return ovulationDates
     }
 
@@ -693,7 +668,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return ovulationDate
     }
 
@@ -726,8 +700,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
-
         return dateList
     }
 
@@ -751,8 +723,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
-
         return firstNextDate
     }
 
@@ -768,7 +738,6 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        //db.close()
         return count
     }
 
@@ -787,7 +756,6 @@ class PeriodDatabaseHelper(context: Context) :
             } while (cursor.moveToNext())
         }
         cursor.close()
-        //db.close()
         return ovulationDates
     }
 
@@ -802,7 +770,6 @@ class PeriodDatabaseHelper(context: Context) :
         } else {
             Log.d(TAG, "No symptoms to delete")
         }
-        //db.close()
     }
 
     override fun getDBVersion(): String {
@@ -830,7 +797,6 @@ class PeriodDatabaseHelper(context: Context) :
             return LocalDate.parse(dateString)
         }
         cursor.close()
-        //db.close()
         return latestPeriodStart
     }
 }
