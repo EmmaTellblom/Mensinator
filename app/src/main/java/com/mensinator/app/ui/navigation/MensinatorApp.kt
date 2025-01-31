@@ -129,7 +129,7 @@ fun MensinatorApp(
             navController = navController,
             startDestination = Screen.Calendar.name,
             modifier = Modifier.padding(paddingValues),
-            enterTransition = { fadeIn(animationSpec = tween(5000)) },
+            enterTransition = { fadeIn(animationSpec = tween(50)) },
             exitTransition = { fadeOut(animationSpec = tween(50)) },
         ) {//create a new file for every page and pass it inside the composable
             composable(route = Screen.Calendar.name) {
