@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
+import org.koin.androidx.compose.KoinAndroidContext
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,17 +19,19 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             MensinatorTheme {
-                MensinatorApp { isScreenProtectionEnabled ->
-                    // Sets the flags for screen protection if
-                    // isScreenProtectionEnabled == true
-                    // If isScreenProtectionEnabled == false it removes the flags
-                    if (isScreenProtectionEnabled) {
-                        window?.setFlags(
-                            WindowManager.LayoutParams.FLAG_SECURE,
-                            WindowManager.LayoutParams.FLAG_SECURE
-                        )
-                    } else {
-                        window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                KoinAndroidContext {
+                    MensinatorApp { isScreenProtectionEnabled ->
+                        // Sets the flags for screen protection if
+                        // isScreenProtectionEnabled == true
+                        // If isScreenProtectionEnabled == false it removes the flags
+                        if (isScreenProtectionEnabled) {
+                            window?.setFlags(
+                                WindowManager.LayoutParams.FLAG_SECURE,
+                                WindowManager.LayoutParams.FLAG_SECURE
+                            )
+                        } else {
+                            window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
+                        }
                     }
                 }
             }
@@ -45,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             description = channelDescription
         }
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 }
