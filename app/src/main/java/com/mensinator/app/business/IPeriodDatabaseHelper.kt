@@ -2,8 +2,8 @@ package com.mensinator.app.business
 
 import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.WorkerThread
-import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.Setting
+import com.mensinator.app.data.Symptom
 import java.time.LocalDate
 
 interface IPeriodDatabaseHelper {
@@ -17,13 +17,13 @@ interface IPeriodDatabaseHelper {
     val writableDb: SQLiteDatabase
 
     // This function is used to add a date together with a period id to the periods table
-    fun addDateToPeriod(date: LocalDate, periodId: Int)
+    fun addDateToPeriod(date: LocalDate, periodId: PeriodId)
 
     // Get all period dates for a given month
-    fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int>
+    fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, PeriodId>
 
     // NEW! Testing new function for getting all period dates month-1, month, month+1
-    fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, Int>
+    fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, PeriodId>
 
     // Returns how many periods that are in the database
     fun getPeriodCount(): Int
@@ -77,7 +77,7 @@ interface IPeriodDatabaseHelper {
 
     // This function checks if date input should be included in existing period
     // or if a new periodId should be created
-    fun newFindOrCreatePeriodID(date: LocalDate): Int
+    fun newFindOrCreatePeriodID(date: LocalDate): PeriodId
 
     // Retrieve the previous period's start date from a given date
     fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate?

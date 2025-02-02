@@ -5,10 +5,13 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.Setting
+import com.mensinator.app.data.Symptom
 import java.time.LocalDate
 import java.time.YearMonth
+
+
+typealias PeriodId = Int
 
 /*
 This file contains functions to get/set data into the database
@@ -107,8 +110,8 @@ class PeriodDatabaseHelper(context: Context) :
         }
     }
 
-    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
-        val dates = mutableMapOf<LocalDate, Int>()
+    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, PeriodId> {
+        val dates = mutableMapOf<LocalDate, PeriodId>()
         val db = readableDatabase
 
         // Query the database for dates in the specified month and year
@@ -149,8 +152,8 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
-    override fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, Int> {
-        val dates = mutableMapOf<LocalDate, Int>()
+    override fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, PeriodId> {
+        val dates = mutableMapOf<LocalDate, PeriodId>()
         val db = readableDatabase
 
         // Calculate previous, current, and next months
@@ -201,7 +204,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e(TAG, "Cursor is null while querying for dates")
         }
 
-        db.close()
         return dates
     }
 
@@ -367,7 +369,6 @@ class PeriodDatabaseHelper(context: Context) :
             Log.e(TAG, "Error querying for symptom dates", e)
         } finally {
             cursor.close()
-            db.close()
         }
 
         return dates
@@ -634,7 +635,6 @@ class PeriodDatabaseHelper(context: Context) :
         } catch (e: Exception) {
             Log.e("TAG", "Error querying for ovulation dates", e)
         } finally {
-            db.close()
         }
 
         return dates

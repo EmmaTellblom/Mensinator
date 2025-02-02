@@ -27,16 +27,13 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.mensinator.app.R
 import com.mensinator.app.business.INotificationScheduler
-import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
-import com.mensinator.app.business.IPeriodPrediction
+import com.mensinator.app.calendar.CalendarViewModel.UiAction
 import com.mensinator.app.data.ColorSource
-import com.mensinator.app.data.isActive
-import com.mensinator.app.settings.ResourceMapper
-import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.*
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -47,68 +44,21 @@ import java.time.temporal.ChronoUnit
 This function is the initiator of the vertical calendar.
  */
 @Composable
-fun CalendarScreen(modifier: Modifier) {
+fun CalendarScreen(
+    modifier: Modifier,
+    viewModel: CalendarViewModel = koinViewModel()
+) {
+    val state = viewModel.viewState.collectAsState()
 
     val context = LocalContext.current
-
-    val periodPrediction: IPeriodPrediction = koinInject()
-    val ovulationPrediction: IOvulationPrediction = koinInject()
-    val dbHelper: IPeriodDatabaseHelper = koinInject()
     val notificationScheduler: INotificationScheduler = koinInject()
-
-    // Days selected in the calendar
-    val selectedDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
-
-    val actualPeriodDates = remember { mutableStateOf(persistentMapOf<LocalDate, Int>()) }
-    val actualOvulationDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
-    val actualSymptomDates = remember { mutableStateOf(persistentSetOf<LocalDate>()) }
-
-    var ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
-    var periodPredictionDate = periodPrediction.getPredictedPeriodDate()
-    val periodReminderDays = dbHelper.getSettingByKey("reminder_days")?.value?.toIntOrNull() ?: 2
-    var nextPeriodDate = periodPrediction.getPredictedPeriodDate()
-
-    // Trigger notification with custom message
-    val initPeriodKeyOrCustomMessage =
-        dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
-    val periodMessageText = ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage)
 
     var selectedIsOvulation = false
     var selectedIsPeriod = false
 
-    val currentMonth = remember { YearMonth.now() }
-    val focusedYearMonth = remember { mutableStateOf(currentMonth) }
-
     val daysOfWeek = daysOfWeek()
 
-    /**
-     * Refresh the dates for the current month.
-     */
-    fun refreshOvulationDates() {
-        val year = focusedYearMonth.value.year
-        val month = focusedYearMonth.value.monthValue
-        actualOvulationDates.value =
-            dbHelper.getOvulationDatesForMonth(year, month).toPersistentSet()
-    }
-
-    /**
-     * Refresh the dates for the current month.
-     */
-    fun refreshSymptomDates() {
-        val year = focusedYearMonth.value.year
-        val month = focusedYearMonth.value.monthValue
-        actualSymptomDates.value = dbHelper.getSymptomDatesForMonth(year, month).toPersistentSet()
-    }
-
-    /**
-     * Recalculate the calculations for the current month.
-     */
-    fun updateCalculations() {
-        ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
-        periodPredictionDate = periodPrediction.getPredictedPeriodDate()
-    }
-
-// Generate placement for calendar and buttons
+    // Generate placement for calendar and buttons
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -124,93 +74,60 @@ fun CalendarScreen(modifier: Modifier) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
-            val currentMonth = remember { YearMonth.now() }
-            val startMonth =
-                remember { currentMonth.minusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
-            val endMonth =
-                remember { currentMonth.plusMonths(50) } // Adjust as needed TODO: Fix this  to be dynamic!
-
-            val state = rememberCalendarState(
-                startMonth = startMonth,
-                endMonth = endMonth,
-                firstVisibleMonth = currentMonth,
+            val current = YearMonth.now()
+            val calendarState = rememberCalendarState(
+                startMonth = current.minusMonths(30),
+                endMonth = current.plusMonths(30),
+                firstVisibleMonth = current,
             )
 
-            LaunchedEffect(state.firstVisibleMonth) {
-                focusedYearMonth.value = state.firstVisibleMonth.yearMonth
-                // Load data for the new month
-                actualPeriodDates.value = dbHelper.getPeriodDatesForMonthNew(
-                    focusedYearMonth.value.year,
-                    focusedYearMonth.value.monthValue
-                ).toPersistentMap()
-                actualOvulationDates.value = dbHelper.getOvulationDatesForMonthNew(
-                    focusedYearMonth.value.year,
-                    focusedYearMonth.value.monthValue
-                ).toPersistentSet()
-                actualSymptomDates.value = dbHelper.getSymptomDatesForMonthNew(
-                    focusedYearMonth.value.year,
-                    focusedYearMonth.value.monthValue
-                ).toPersistentSet()
-                updateCalculations()
+            LaunchedEffect(calendarState.firstVisibleMonth) {
+                viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
             }
 
             VerticalCalendar(
-                state = state,
+                state = calendarState,
                 dayContent = { day ->
                     Day(
+                        onAction = { uiAction -> viewModel.onAction(uiAction) },
                         day = day,
-                        selectedDates = selectedDates,
-                        actualPeriodDates = actualPeriodDates.value,
-                        actualOvulationDates = actualOvulationDates.value,
-                        actualSymptomDates = actualSymptomDates.value,
-                        ovulationPredictionDate = ovulationPredictionDate,
-                        periodPredictionDate = periodPredictionDate
+                        selectedDates = state.value.selectedDays,
+                        actualPeriodDates = state.value.periodDates,
+                        actualOvulationDates = state.value.ovulationDates,
+                        actualSymptomDates = state.value.symptomDates,
+                        ovulationPredictionDate = state.value.ovulationPredictionDate,
+                        periodPredictionDate = state.value.periodPredictionDate
                     )
                 },
                 monthHeader = {
                     MonthTitle(month = it.yearMonth)
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
                 }
-
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         val isPeriodButtonEnabled by remember {
-            derivedStateOf { selectedDates.value.isNotEmpty() }
+            derivedStateOf { state.value.selectedDays.isNotEmpty() }
         }
-
         val successSaved = stringResource(id = R.string.successfully_saved_alert)
         Button(
             onClick = {
-                /**
-                 * Make sure that if two or more days are selected (and at least one is already marked as period),
-                 * we should make sure that all days are removed.
-                 */
-                val datesAlreadyMarkedAsPeriod =
-                    selectedDates.value.intersect(actualPeriodDates.value.keys)
-                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                    selectedDates.value.forEach {
-                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                        dbHelper.addDateToPeriod(it, periodId)
-                    }
-                } else {
-                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
-                }
-
-                selectedDates.value = persistentSetOf()
-
-                val year = focusedYearMonth.value.year
-                val month = focusedYearMonth.value.monthValue
-                actualPeriodDates.value = dbHelper.getPeriodDatesForMonth(year, month).toPersistentMap()
-
-                updateCalculations()
+                viewModel.onAction(
+                    UiAction.UpdatePeriodDates(
+                        currentPeriodDays = state.value.periodDates,
+                        selectedDays = state.value.selectedDays
+                    )
+                )
 
                 // Schedule notification for reminder
                 // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
                 // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
-                if (periodReminderDays > 0 && nextPeriodDate != LocalDate.parse("1900-01-01") && nextPeriodDate >= LocalDate.now()) {
+                val periodReminderDays = state.value.periodReminderDays ?: 2
+                val nextPeriodDate = state.value.periodPredictionDate
+                val periodMessageText = state.value.periodMessageText
+                if (periodReminderDays > 0 && nextPeriodDate != null && nextPeriodDate >= LocalDate.now() && periodMessageText != null) {
                     newSendNotification(
                         context,
                         notificationScheduler,
@@ -218,6 +135,8 @@ fun CalendarScreen(modifier: Modifier) {
                         nextPeriodDate,
                         periodMessageText
                     )
+                } else {
+                    // TODO: Handle this
                 }
                 Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
             },
@@ -227,8 +146,8 @@ fun CalendarScreen(modifier: Modifier) {
                 .padding(top = 8.dp)
         ) {
 
-            for (selectedDate in selectedDates.value) {
-                if (selectedDate in actualPeriodDates.value) {
+            for (selectedDate in state.value.selectedDays) {
+                if (selectedDate in state.value.periodDates) {
                     selectedIsPeriod = true
                     break
                 }
@@ -247,66 +166,58 @@ fun CalendarScreen(modifier: Modifier) {
         }
 
         var showSymptomsDialog by remember { mutableStateOf(false) }
-        val symptomButtonEnabled by remember {
-            derivedStateOf { selectedDates.value.isNotEmpty() }
-        }
 
         Button(
             onClick = {
                 showSymptomsDialog = true
             },
-            enabled = symptomButtonEnabled,  // Set the state of the Symptoms button
+            enabled = state.value.selectedDays.isNotEmpty(),  // Set the state of the Symptoms button
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
             Text(text = stringResource(id = R.string.symptoms_button))
-            //Text(text = "Symptoms")
         }
 
         // Show the SymptomsDialog
-        if (showSymptomsDialog && selectedDates.value.isNotEmpty()) {
-            val activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+        if (showSymptomsDialog && state.value.selectedDays.isNotEmpty()) {
+            val activeSymptoms = state.value.activeSymptoms
+            val date = state.value.selectedDays.last()
 
-            val date = selectedDates.value.last()
             EditSymptomsForDaysDialog(
                 date = date,  // Pass the last selected date
                 symptoms = activeSymptoms,
-                currentlyActiveSymptomIds = dbHelper.getActiveSymptomIdsForDate(date).toSet(),
+                currentlyActiveSymptomIds = state.value.activeSymptomIdsForLatestSelectedDay,
                 onSave = { selectedSymptoms ->
                     val selectedSymptomIds = selectedSymptoms.map { it.id }
-                    val datesToUpdate = selectedDates.value.toList()
-                    dbHelper.updateSymptomDate(datesToUpdate, selectedSymptomIds)
                     showSymptomsDialog = false
-                    refreshSymptomDates()
-                    selectedDates.value = persistentSetOf()
+                    viewModel.onAction(
+                        UiAction.UpdateSymptomDates(
+                            days = state.value.selectedDays,
+                            selectedSymptomIds = selectedSymptomIds.toPersistentList()
+                        )
+                    )
                 },
                 onCancel = {
                     showSymptomsDialog = false
-                    selectedDates.value = persistentSetOf()
+                    viewModel.onAction(UiAction.SelectDays(persistentSetOf()))
                 }
             )
         }
 
-        //ovulation starts here
+        // ovulation starts here
         val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
         val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
         val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
         val ovulationButtonEnabled by remember {
-            derivedStateOf { selectedDates.value.size == 1 }
+            derivedStateOf { state.value.selectedDays.size == 1 }
         }
         Button(
             onClick = {
-                if (selectedDates.value.size > 1) {
+                if (state.value.selectedDays.size > 1) {
                     Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
-                } else if (selectedDates.value.size == 1) {
-                    val date = selectedDates.value.first()
-                    dbHelper.updateOvulationDate(date)
-                    selectedDates.value = persistentSetOf()
-
-                    refreshOvulationDates()
-                    updateCalculations()
-
+                } else if (ovulationButtonEnabled) {
+                    viewModel.onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
                     Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
@@ -317,8 +228,8 @@ fun CalendarScreen(modifier: Modifier) {
                 .fillMaxWidth()
                 .padding(top = 8.dp)
         ) {
-            for (selectedDate in selectedDates.value) {
-                if (selectedDate in actualOvulationDates.value) {
+            for (selectedDate in state.value.selectedDays) {
+                if (selectedDate in state.value.ovulationDates) {
                     selectedIsOvulation = true
                     break
                 }
@@ -334,7 +245,6 @@ fun CalendarScreen(modifier: Modifier) {
             }
             Text(text = text)
         }
-
     }
 }
 
@@ -410,13 +320,14 @@ fun MonthTitle(month: YearMonth) {
  */
 @Composable
 fun Day(
+    onAction: (uiAction: UiAction) -> Unit,
     day: CalendarDay,
-    selectedDates: MutableState<PersistentSet<LocalDate>>,
+    selectedDates: PersistentSet<LocalDate>,
     actualPeriodDates: PersistentMap<LocalDate, Int>,
     actualOvulationDates: PersistentSet<LocalDate>,
     actualSymptomDates: PersistentSet<LocalDate>,
-    ovulationPredictionDate: LocalDate,
-    periodPredictionDate: LocalDate
+    ovulationPredictionDate: LocalDate?,
+    periodPredictionDate: LocalDate?
 ) {
 
     val colorMap = ColorSource.getColorMap(isDarkMode())
@@ -428,13 +339,12 @@ fun Day(
     if (day.position != DayPosition.MonthDate) {
         // Exclude dates that are not part of the current month
         Box(
-            modifier = Modifier
-                .aspectRatio(1f) // Maintain grid structure with empty space
+            modifier = Modifier.aspectRatio(1f) // Maintain grid structure with empty space
         )
         return
     }
 
-    //Colors
+    // TODO: Provide colors via the VM
     val periodColor =
         dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
     val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
@@ -449,14 +359,13 @@ fun Day(
             ?: colorMap["Magenta"]!!
 
     val backgroundColor = when {
-        day.date in selectedDates.value -> selectedColor
+        day.date in selectedDates -> selectedColor
         day.date in actualPeriodDates.keys -> periodColor
-        day.date.isEqual(periodPredictionDate) -> nextPeriodColor
+        periodPredictionDate?.isEqual(day.date) == true -> nextPeriodColor
         day.date in actualOvulationDates -> ovulationColor
-        day.date.isEqual(ovulationPredictionDate) -> nextOvulationColor
+        ovulationPredictionDate?.isEqual(day.date) == true-> nextOvulationColor
         else -> Color.Transparent
     }
-
 
     val borderSize = when {
         day.date.isEqual(LocalDate.now()) -> 1.dp
@@ -471,11 +380,10 @@ fun Day(
     val fontStyleType = when {
         day.date.isEqual(LocalDate.now()) -> FontWeight.Bold
         else -> FontWeight.Normal
-
     }
 
-    //Dates to track
-    val isSelected = day.date in selectedDates.value
+    // Dates to track
+    val isSelected = day.date in selectedDates
     val hasSymptomDate = day.date in actualSymptomDates
 
     Box(
@@ -489,11 +397,11 @@ fun Day(
             .border(borderSize, color = borderColor, shape = CircleShape)
             .clickable {
                 val newSelectedDates = if (isSelected) {
-                    selectedDates.value - day.date
+                    selectedDates - day.date
                 } else {
-                    selectedDates.value + day.date
+                    selectedDates + day.date
                 }.toPersistentSet()
-                selectedDates.value = newSelectedDates
+                onAction(UiAction.SelectDays(newSelectedDates))
             }
             .padding(4.dp),
         contentAlignment = Alignment.Center
@@ -506,6 +414,7 @@ fun Day(
 
         // Add symptom circles
         if (hasSymptomDate) {
+            // TODO: The VM should provide a Map<Symptom, Color>, so that this can be removed
             val symptomsForDay = dbHelper.getSymptomColorForDate(day.date)
 
             Row(
