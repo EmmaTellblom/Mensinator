@@ -43,6 +43,9 @@
     <string name="expected_ovulation_color">Spodziewana Owulacja</string>
     <string name="reminders">Przypomnienia</string>
     <string name="days_before_reminder">Dni Przed Przypomnieniem</string>
+    <string name="period_notification_title">Powiadomienie o okresie</string>
+    <string name="period_notification_message">Niedługo dostaniesz okres</string>
+    <string name="change_text">Zmień tekst</string>
     <string name="other_settings">Inne Ustawienia</string>
     <string name="luteal_phase_calculation">Kalkulacja Fazy Lutealnej</string>
     <string name="period_history">Historia Okresów</string>
