@@ -39,6 +39,9 @@
     <string name="expected_ovulation_color">L\'ovulation attendue</string>
     <string name="reminders">Rappels</string>
     <string name="days_before_reminder">Jours avant le rappel</string>
+    <string name="period_notification_title">Notification de règles</string>
+    <string name="period_notification_message">Vos règles arrivez bientôt</string>
+    <string name="change_text">Modifier le texte</string>
     <string name="other_settings">Autres paramètres</string>
     <string name="luteal_phase_calculation">Calcul de la phase lutéale</string>
     <string name="period_history">Historique des règles</string>
