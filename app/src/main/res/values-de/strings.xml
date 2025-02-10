@@ -19,9 +19,9 @@
     <string name="empty_click_alert">Keine Daten ausgewählt zum Speichern oder Löschen</string>
     <string name="successfully_saved_alert">Änderungen wurden gespeichert</string>
     <string name="no_data_selected">Keine Daten ausgewählt</string>
-    <string name="only_day_alert">Die Ovulation kann nur ein Tag betreffen!</string>
+    <string name="only_day_alert">Die Ovulation kann nur einen Tag betreffen!</string>
     <string name="success_saved_ovulation">Ovulation wurde gespeichert</string>
-    <string name="no_date_selected_ovulation">Kein Tag für Ovulation ausgewählt</string>
+    <string name="no_date_selected_ovulation">Keinen Tag für Ovulation ausgewählt</string>
 
     <!-- navigation -->
     <string name="home_page">Start</string>
@@ -141,16 +141,16 @@
     <string name="select_dates">• Auswahl der Tage: Tippe auf Tage um diese auszuwählen.</string>
     <string name="add_or_remove_dates">• Periodentage hinzufügen oder entfernen: Tippe auf den \'Tage hinzufügen oder entfernen\'-Button nach Auswahl der Tage.</string>
     <string name="symptoms">• Symptome: Tippe auf den \'Symptome\'-Button um Symptome für diesen Tag zu sehen oder hinzuzufügen.</string>
-    <string name="ovulation">• Ovulation: Wähle einen Tag aus um die Ovulation zu markieren. Erneutes tippen auf Ovulation entfernt die Markierung.</string>
+    <string name="ovulation">• Ovulation: Wähle einen Tag aus, um die Ovulation zu markieren. Erneutes tippen auf Ovulation entfernt die Markierung.</string>
     <string name="statistics">• Statistiken: Tippe auf das Diagramm-Icon im unteren Menü um die Statistiken zu sehen.</string>
-    <string name="import_export">• Import/Export: Tippe auf das Einstellungs-Icon, im unteren Bereich der Liste befinden sich die Daten-Einstellungen. Tippe auf Import/Export um die Daten zu importieren bzw. zu exportieren. Dies ist ZWINGEND ERFORDERLICH wenn du ein neues Gerät benutzen möchtest!</string>
-    <string name="calculations">• Berechnungen:\nPerioden werden mit der durchschnittlichen Zyklus- und Perioden-Länge berechnet.\nPerioden können anhand der durchschnittlichen Lutealphase berechnet werden. Anhand der letzten 5 Zyklen wird die Lutealphase, und dadurch wiederrum die Periode errechnet. Dies kann in den Einstellungen aktiviert werden.\nDie Ovulation wird anhand des durchschnittlichen Ovulationszyklus berechnet.</string>
+    <string name="import_export">• Import/Export: Tippe auf das Einstellungs-Icon, im unteren Bereich der Liste befinden sich die Daten-Einstellungen. Tippe auf Import/Export, um die Daten zu importieren bzw. zu exportieren. Dies ist ZWINGEND ERFORDERLICH wenn du ein neues Gerät benutzen möchtest!</string>
+    <string name="calculations">• Berechnungen:\nPerioden werden mit der durchschnittlichen Zyklus- und Perioden-Länge berechnet.\nPerioden können anhand der durchschnittlichen Lutealphase berechnet werden. Anhand der letzten 5 Zyklen wird die Lutealphase, und dadurch wiederum die Periode errechnet. Dies kann in den Einstellungen aktiviert werden.\nDie Ovulation wird anhand des durchschnittlichen Ovulationszyklus berechnet.</string>
     <string name="features_coming_soon">Demnächst verfügbare Features:</string>
     <string name="upcoming_features">• Schau dir unsere Github-Seite an um die neusten Infos zu sehen!</string>
     <string name="our_story_header">Unsere Story</string>
-    <string name="our_story">Wir sind zwei Frauen die kein Bock mehr darauf hatten, dass unsere Daten an große Firmen geteilt bzw. durch diese verkauft werden. Alle Daten der App werden nur lokal gespeichert und wir haben keinen Zugriff darauf.\nWir schätzen deine Privatsphäre und speichern oder teilen keine persönlichen Informationen. Seit der Veröffentlichung der App sind wir gewachsen und haben unseren eigenen Discord-Server, bei dem sich begeisterte Leute wie du uns helfen, die App zu verbessern!\n\nMach bei unserem Discord mit: https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">Wir sind zwei Frauen, die keinen Bock mehr darauf hatten, dass unsere Daten an große Firmen geteilt bzw. durch diese verkauft werden. Alle Daten der App werden nur lokal gespeichert und wir haben keinen Zugriff darauf.\nWir schätzen deine Privatsphäre und speichern oder teilen keine persönlichen Informationen. Seit der Veröffentlichung der App sind wir gewachsen und haben unseren eigenen Discord-Server, bei dem sich begeisterte Leute wie du uns helfen, die App zu verbessern!\n\nMach bei unserem Discord mit: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>
-    <string name="disclaimer">• Dies ist ein Hobby-Projekt und ist nicht für medizinische Zwecke geeignet. Wir haben diese App für unsere eigene entwickelt, weil wir selbst eine brauchten. Aber wir freuen uns auf eure Ideen und euer Feedback. Besuch unser Discord oder send uns eine E-Mail:\nmensinator.app@gmail.com</string>
+    <string name="disclaimer">• Dies ist ein Hobby-Projekt und ist nicht für medizinische Zwecke geeignet. Wir haben diese App für unsere eigene Benutzung entwickelt, weil wir selbst eine solche App brauchten. Aber wir freuen uns auf eure Ideen und euer Feedback. Besuch unser Discord oder send uns eine E-Mail:\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Schließen</string>
