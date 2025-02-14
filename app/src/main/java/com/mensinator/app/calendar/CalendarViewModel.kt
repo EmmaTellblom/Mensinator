@@ -30,28 +30,14 @@ class CalendarViewModel(
     private val ovulationPrediction: IOvulationPrediction,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
-        ViewState(
-
-        )
+        ViewState()
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
-    data class ViewState(
-        val focusedYearMonth: YearMonth = YearMonth.now(),
-        val periodPredictionDate: LocalDate? = null,
-        val ovulationPredictionDate: LocalDate? = null,
-        val symptomDates: PersistentSet<LocalDate> = persistentSetOf(),
-        val periodDates: PersistentMap<LocalDate, Int> = persistentMapOf(),
-        val ovulationDates: PersistentSet<LocalDate> = persistentSetOf(),
-        val periodReminderDays: Int? = null,
-        val activeSymptoms: PersistentSet<Symptom> = persistentSetOf(),
-        val periodMessageText: String? = null,
-        val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
-        val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
-    )
-
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
+            val showCycleNumbersSetting =
+                (dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1) == 1
             val initPeriodKeyOrCustomMessage =
                 dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
             val periodMessageText =
@@ -59,6 +45,7 @@ class CalendarViewModel(
 
             _viewState.update {
                 it.copy(
+                    showCycleNumbers = showCycleNumbersSetting,
                     periodPredictionDate = periodPrediction.getPredictedPeriodDate(),
                     ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate(),
                     symptomDates = dbHelper.getSymptomDatesForMonthNew(
@@ -73,9 +60,12 @@ class CalendarViewModel(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
                     ).toPersistentSet(),
-                    periodReminderDays = dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull() ?: 2,
-                    activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }.toPersistentSet(),
+                    periodReminderDays = dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull()
+                        ?: 2,
+                    activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+                        .toPersistentSet(),
                     periodMessageText = periodMessageText,
+                    calendarColors = getCalendarColors()
                 )
             }
         }
@@ -130,6 +120,32 @@ class CalendarViewModel(
             refreshData()
         }
     }
+
+    private fun getCalendarColors(): CalendarColors {
+        return CalendarColors(
+            periodColorName = dbHelper.getSettingByKey("period_color")?.value,
+            selectedColorName = dbHelper.getSettingByKey("selection_color")?.value,
+            nextPeriodColorName = dbHelper.getSettingByKey("expected_period_color")?.value,
+            ovulationColorName = dbHelper.getSettingByKey("ovulation_color")?.value,
+            nextOvulationColorName = dbHelper.getSettingByKey("expected_ovulation_color")?.value,
+        )
+    }
+
+    data class ViewState(
+        val showCycleNumbers: Boolean = false,
+        val focusedYearMonth: YearMonth = YearMonth.now(),
+        val periodPredictionDate: LocalDate? = null,
+        val ovulationPredictionDate: LocalDate? = null,
+        val symptomDates: PersistentSet<LocalDate> = persistentSetOf(),
+        val periodDates: PersistentMap<LocalDate, Int> = persistentMapOf(),
+        val ovulationDates: PersistentSet<LocalDate> = persistentSetOf(),
+        val periodReminderDays: Int? = null,
+        val activeSymptoms: PersistentSet<Symptom> = persistentSetOf(),
+        val periodMessageText: String? = null,
+        val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
+        val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
+        val calendarColors: CalendarColors? = null
+    )
 
     sealed class UiAction {
         data class UpdateFocusedYearMonth(val focusedYearMonth: YearMonth) : UiAction()

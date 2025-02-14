@@ -30,6 +30,7 @@ import com.mensinator.app.business.INotificationScheduler
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.extensions.stringRes
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.*
@@ -89,18 +90,13 @@ fun CalendarScreen(
                 state = calendarState,
                 dayContent = { day ->
                     Day(
+                        viewState = state,
                         onAction = { uiAction -> viewModel.onAction(uiAction) },
                         day = day,
-                        selectedDates = state.value.selectedDays,
-                        actualPeriodDates = state.value.periodDates,
-                        actualOvulationDates = state.value.ovulationDates,
-                        actualSymptomDates = state.value.symptomDates,
-                        ovulationPredictionDate = state.value.ovulationPredictionDate,
-                        periodPredictionDate = state.value.periodPredictionDate
                     )
                 },
                 monthHeader = {
-                    MonthTitle(month = it.yearMonth)
+                    MonthTitle(yearMonth = it.yearMonth)
                     DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
                 }
             )
@@ -253,24 +249,15 @@ fun CalendarScreen(
  * Display the days of the week.
  */
 @Composable
-fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
+private fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
     Spacer(modifier = Modifier.height(4.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
-            val dayStringRes = when (dayOfWeek) {
-                DayOfWeek.MONDAY -> R.string.mon
-                DayOfWeek.TUESDAY -> R.string.tue
-                DayOfWeek.WEDNESDAY -> R.string.wed
-                DayOfWeek.THURSDAY -> R.string.thu
-                DayOfWeek.FRIDAY -> R.string.fri
-                DayOfWeek.SATURDAY -> R.string.sat
-                DayOfWeek.SUNDAY -> R.string.sun
-            }
             Text(
                 modifier = Modifier.weight(1f),
                 fontSize = MaterialTheme.typography.titleSmall.fontSize,
                 textAlign = TextAlign.Center,
-                text = stringResource(id = dayStringRes),
+                text = stringResource(id = dayOfWeek.stringRes),
             )
         }
     }
@@ -280,22 +267,7 @@ fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
  * Display the month title.
  */
 @Composable
-fun MonthTitle(month: YearMonth) {
-    val monthStringRes = when (month.month.value) {
-        1 -> R.string.january
-        2 -> R.string.february
-        3 -> R.string.march
-        4 -> R.string.april
-        5 -> R.string.may
-        6 -> R.string.june
-        7 -> R.string.july
-        8 -> R.string.august
-        9 -> R.string.september
-        10 -> R.string.october
-        11 -> R.string.november
-        12 -> R.string.december
-        else -> throw IllegalArgumentException("Invalid month value")
-    }
+private fun MonthTitle(yearMonth: YearMonth) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.height(10.dp))
         Text(
@@ -303,8 +275,7 @@ fun MonthTitle(month: YearMonth) {
                 .fillMaxWidth()
                 .padding(bottom = 4.dp),
             textAlign = TextAlign.Center,
-            //text = "${month.month.name} ${month.year}",
-            text = "${stringResource(id = monthStringRes)} ${month.year}",
+            text = "${stringResource(id = yearMonth.month.stringRes)} ${yearMonth.year}",
             style = MaterialTheme.typography.titleLarge, // Adjust text style as needed
         )
         HorizontalDivider(
@@ -320,21 +291,15 @@ fun MonthTitle(month: YearMonth) {
  */
 @Composable
 fun Day(
+    viewState: State<CalendarViewModel.ViewState>,
     onAction: (uiAction: UiAction) -> Unit,
     day: CalendarDay,
-    selectedDates: PersistentSet<LocalDate>,
-    actualPeriodDates: PersistentMap<LocalDate, Int>,
-    actualOvulationDates: PersistentSet<LocalDate>,
-    actualSymptomDates: PersistentSet<LocalDate>,
-    ovulationPredictionDate: LocalDate?,
-    periodPredictionDate: LocalDate?
 ) {
+    val state = viewState.value
 
     val colorMap = ColorSource.getColorMap(isDarkMode())
+    val calendarColors = state.calendarColors
     val dbHelper: IPeriodDatabaseHelper = koinInject()
-
-    val showCycleNumbersSetting =
-        dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1
 
     if (day.position != DayPosition.MonthDate) {
         // Exclude dates that are not part of the current month
@@ -344,28 +309,14 @@ fun Day(
         return
     }
 
-    // TODO: Provide colors via the VM
-    val periodColor =
-        dbHelper.getSettingByKey("period_color")?.value?.let { colorMap[it] } ?: colorMap["Red"]!!
-    val selectedColor = dbHelper.getSettingByKey("selection_color")?.value?.let { colorMap[it] }
-        ?: colorMap["LightGray"]!!
-    val nextPeriodColor =
-        dbHelper.getSettingByKey("expected_period_color")?.value?.let { colorMap[it] }
-            ?: colorMap["Yellow"]!!
-    val ovulationColor = dbHelper.getSettingByKey("ovulation_color")?.value?.let { colorMap[it] }
-        ?: colorMap["Blue"]!!
-    val nextOvulationColor =
-        dbHelper.getSettingByKey("expected_ovulation_color")?.value?.let { colorMap[it] }
-            ?: colorMap["Magenta"]!!
-
     val backgroundColor = when {
-        day.date in selectedDates -> selectedColor
-        day.date in actualPeriodDates.keys -> periodColor
-        periodPredictionDate?.isEqual(day.date) == true -> nextPeriodColor
-        day.date in actualOvulationDates -> ovulationColor
-        ovulationPredictionDate?.isEqual(day.date) == true-> nextOvulationColor
-        else -> Color.Transparent
-    }
+        day.date in state.selectedDays -> colorMap[calendarColors?.selectedColorName] ?: colorMap["LightGray"]
+        day.date in state.periodDates.keys -> colorMap[calendarColors?.periodColorName] ?: colorMap["Red"]
+        state.periodPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextPeriodColorName] ?: colorMap["Yellow"]
+        day.date in state.ovulationDates -> colorMap[calendarColors?.ovulationColorName] ?: colorMap["Blue"]
+        state.ovulationPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextOvulationColorName] ?: colorMap["Magenta"]
+        else -> null
+    } ?: Color.Transparent
 
     val borderSize = when {
         day.date.isEqual(LocalDate.now()) -> 1.dp
@@ -383,8 +334,8 @@ fun Day(
     }
 
     // Dates to track
-    val isSelected = day.date in selectedDates
-    val hasSymptomDate = day.date in actualSymptomDates
+    val isSelected = day.date in state.selectedDays
+    val hasSymptomDate = day.date in state.symptomDates
 
     Box(
         modifier = Modifier
@@ -397,9 +348,9 @@ fun Day(
             .border(borderSize, color = borderColor, shape = CircleShape)
             .clickable {
                 val newSelectedDates = if (isSelected) {
-                    selectedDates - day.date
+                    state.selectedDays - day.date
                 } else {
-                    selectedDates + day.date
+                    state.selectedDays + day.date
                 }.toPersistentSet()
                 onAction(UiAction.SelectDays(newSelectedDates))
             }
@@ -434,7 +385,7 @@ fun Day(
             }
         }
 
-        if (showCycleNumbersSetting == 1) {
+        if (state.showCycleNumbers) {
             val cycleNumber = calculateCycleNumber(day.date, dbHelper)
             if (cycleNumber > 0) {
                 Box(
