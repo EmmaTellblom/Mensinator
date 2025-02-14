@@ -229,6 +229,7 @@ class SettingsViewModel(
             // Returns the version name, e.g., "1.8.4"
             packageInfo.versionName ?: throw PackageManager.NameNotFoundException()
         } catch (e: PackageManager.NameNotFoundException) {
+            Log.e("SettingsViewModel", "Error getting app version", e)
             "Unknown" // Fallback if the version name is not found
         }
     }
