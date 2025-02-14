@@ -6,16 +6,15 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -310,23 +309,22 @@ fun Day(
     }
 
     val backgroundColor = when {
-        day.date in state.selectedDays -> colorMap[calendarColors?.selectedColorName] ?: colorMap["LightGray"]
-        day.date in state.periodDates.keys -> colorMap[calendarColors?.periodColorName] ?: colorMap["Red"]
-        state.periodPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextPeriodColorName] ?: colorMap["Yellow"]
-        day.date in state.ovulationDates -> colorMap[calendarColors?.ovulationColorName] ?: colorMap["Blue"]
-        state.ovulationPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextOvulationColorName] ?: colorMap["Magenta"]
+        day.date in state.selectedDays -> colorMap[calendarColors?.selectedColorName]
+            ?: colorMap["LightGray"]
+        day.date in state.periodDates.keys -> colorMap[calendarColors?.periodColorName]
+            ?: colorMap["Red"]
+        state.periodPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextPeriodColorName]
+            ?: colorMap["Yellow"]
+        day.date in state.ovulationDates -> colorMap[calendarColors?.ovulationColorName]
+            ?: colorMap["Blue"]
+        state.ovulationPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextOvulationColorName]
+            ?: colorMap["Magenta"]
         else -> null
     } ?: Color.Transparent
 
-    val borderSize = when {
-        day.date.isEqual(LocalDate.now()) -> 1.dp
-        else -> 0.dp
-    }
-
-    val borderColor = when {
-        day.date.isEqual(LocalDate.now()) -> Color.LightGray
-        else -> Color.Transparent
-    }
+    val border = if (day.date.isEqual(LocalDate.now())) {
+        BorderStroke(1.dp, Color.DarkGray)
+    } else null
 
     val fontStyleType = when {
         day.date.isEqual(LocalDate.now()) -> FontWeight.Bold
@@ -337,15 +335,11 @@ fun Day(
     val isSelected = day.date in state.selectedDays
     val hasSymptomDate = day.date in state.symptomDates
 
-    Box(
+    Surface(
         modifier = Modifier
             .aspectRatio(1f) // This ensures the cells remain square.
-            //.size(circleSize)
-            .background(
-                backgroundColor,
-                shape = MaterialTheme.shapes.small
-            )
-            .border(borderSize, color = borderColor, shape = CircleShape)
+            .padding(2.dp)
+            .clip(MaterialTheme.shapes.small)
             .clickable {
                 val newSelectedDates = if (isSelected) {
                     state.selectedDays - day.date
@@ -353,57 +347,57 @@ fun Day(
                     state.selectedDays + day.date
                 }.toPersistentSet()
                 onAction(UiAction.SelectDays(newSelectedDates))
-            }
-            .padding(4.dp),
-        contentAlignment = Alignment.Center
+            },
+        shape = MaterialTheme.shapes.small,
+        color = backgroundColor,
+        border = border
     ) {
-        Text(
-            text = day.date.dayOfMonth.toString(),
-            fontWeight = fontStyleType,
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-        )
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = day.date.dayOfMonth.toString(),
+                fontWeight = fontStyleType,
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+            )
 
-        // Add symptom circles
-        if (hasSymptomDate) {
-            // TODO: The VM should provide a Map<Symptom, Color>, so that this can be removed
-            val symptomsForDay = dbHelper.getSymptomColorForDate(day.date)
+            // Add symptom circles
+            if (hasSymptomDate) {
+                // TODO: The VM should provide a Map<Symptom, Color>, so that this can be removed
+                val symptomsForDay = dbHelper.getSymptomColorForDate(day.date)
 
-            Row(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter),
-                horizontalArrangement = Arrangement.spacedBy((-5).dp) // Overlapping circles
-            ) {
-                symptomsForDay.forEach { symptom ->
-                    val symptomColor = colorMap[symptom] ?: Color.Black
+                Row(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    horizontalArrangement = Arrangement.spacedBy((-5).dp) // Overlap circles
+                ) {
+                    symptomsForDay.forEach { symptom ->
+                        val symptomColor = colorMap[symptom] ?: Color.Black
 
-                    Box(
-                        modifier = Modifier
-                            .size(11.dp)
-                            .background(symptomColor, CircleShape)
-                    )
+                        Box(
+                            modifier = Modifier
+                                .size(11.dp)
+                                .background(symptomColor, CircleShape)
+                        )
+                    }
                 }
             }
-        }
 
-        if (state.showCycleNumbers) {
-            val cycleNumber = calculateCycleNumber(day.date, dbHelper)
-            if (cycleNumber > 0) {
-                Box(
-                    modifier = Modifier
-                        .size(18.dp)
-                        .background(
-                            Color.Transparent,
+            if (state.showCycleNumbers) {
+                val cycleNumber = calculateCycleNumber(day.date, dbHelper)
+                if (cycleNumber > 0) {
+                    Box(
+                        modifier = Modifier
+                            .size(18.dp)
+                            .background(Color.Transparent)
+                            .align(Alignment.TopStart)
+                    ) {
+                        Text(
+                            text = cycleNumber.toString(),
+                            style = TextStyle(
+                                fontSize = 8.sp,
+                                textAlign = TextAlign.Left
+                            ),
+                            modifier = Modifier.padding(4.dp)
                         )
-                        .align(Alignment.TopStart)
-                ) {
-                    Text(
-                        text = cycleNumber.toString(),
-                        style = androidx.compose.ui.text.TextStyle(
-                            fontSize = 8.sp,
-                            textAlign = TextAlign.Left
-                        ),
-                        modifier = Modifier.padding(2.dp)
-                    )
+                    }
                 }
             }
         }

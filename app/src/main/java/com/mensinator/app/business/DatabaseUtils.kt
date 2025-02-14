@@ -89,7 +89,7 @@ object DatabaseUtils {
                 ('reminder_days', 'Days Before Reminder', '0', 2),
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
-        // ('period_selection_color', 'Period Selection Color', 'DarkGray', 1), - depreciated
+        // ('period_selection_color', 'Period Selection Color', 'DarkGray', 1), - deprecated
     }
 
     fun createOvulationStructure(db: SQLiteDatabase){
