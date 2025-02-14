@@ -8,11 +8,16 @@ import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.business.PeriodId
+import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
+import com.mensinator.app.extensions.pickBestContrastTextColorForThisBackground
+import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.ResourceMapper
+import com.mensinator.app.ui.theme.Black
+import com.mensinator.app.ui.theme.DarkGrey
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,6 +34,7 @@ class CalendarViewModel(
     private val periodPrediction: IPeriodPrediction,
     private val ovulationPrediction: IOvulationPrediction,
 ) : ViewModel() {
+
     private val _viewState = MutableStateFlow(
         ViewState()
     )
@@ -65,9 +71,17 @@ class CalendarViewModel(
                     activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
                         .toPersistentSet(),
                     periodMessageText = periodMessageText,
-                    calendarColors = getCalendarColors()
                 )
             }
+        }
+    }
+
+    fun updateDarkModeStatus(isDarkMode: Boolean) {
+        _viewState.update {
+            it.copy(
+                isDarkMode = isDarkMode,
+                calendarColorMap = getCalendarColorMap(isDarkMode)
+            )
         }
     }
 
@@ -121,17 +135,25 @@ class CalendarViewModel(
         }
     }
 
-    private fun getCalendarColors(): CalendarColors {
-        return CalendarColors(
-            periodColorName = dbHelper.getSettingByKey("period_color")?.value,
-            selectedColorName = dbHelper.getSettingByKey("selection_color")?.value,
-            nextPeriodColorName = dbHelper.getSettingByKey("expected_period_color")?.value,
-            ovulationColorName = dbHelper.getSettingByKey("ovulation_color")?.value,
-            nextOvulationColorName = dbHelper.getSettingByKey("expected_ovulation_color")?.value,
-        )
+    private fun getCalendarColorMap(isDarkMode: Boolean): Map<ColorSetting, ColorCombination> {
+        return ColorSetting.entries.associate {
+            val backgroundColor = ColorSource.getColor(
+                isDarkMode,
+                dbHelper.getSettingByKey(it.settingDbKey)?.value ?: "LightGray"
+            )
+            val textColor = backgroundColor.pickBestContrastTextColorForThisBackground(
+                isDarkMode,
+                DarkGrey,
+                Black
+            )
+
+            it to ColorCombination(backgroundColor, textColor)
+        }
     }
 
     data class ViewState(
+        val isDarkMode: Boolean = false,
+
         val showCycleNumbers: Boolean = false,
         val focusedYearMonth: YearMonth = YearMonth.now(),
         val periodPredictionDate: LocalDate? = null,
@@ -144,7 +166,7 @@ class CalendarViewModel(
         val periodMessageText: String? = null,
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
-        val calendarColors: CalendarColors? = null
+        val calendarColorMap: Map<ColorSetting, ColorCombination> = mapOf()
     )
 
     sealed class UiAction {

@@ -7,9 +7,9 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import com.mensinator.app.R
 import com.mensinator.app.business.IExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
-import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +30,6 @@ class SettingsViewModel(
             periodColor = Color.Yellow,
             selectionColor = Color.Yellow,
             expectedPeriodColor = Color.Yellow,
-            periodSelectionColor = Color.Yellow,
             ovulationColor = Color.Yellow,
             expectedOvulationColor = Color.Yellow,
             openColorPickerForSetting = null,
@@ -64,7 +63,6 @@ class SettingsViewModel(
         val periodColor: Color,
         val selectionColor: Color,
         val expectedPeriodColor: Color,
-        val periodSelectionColor: Color,
         val ovulationColor: Color,
         val expectedOvulationColor: Color,
         val openColorPickerForSetting: ColorSetting? = null,
@@ -106,7 +104,6 @@ class SettingsViewModel(
                 periodColor = getColor(isDarkMode, PERIOD.settingDbKey),
                 selectionColor = getColor(isDarkMode, SELECTION.settingDbKey),
                 expectedPeriodColor = getColor(isDarkMode, EXPECTED_PERIOD.settingDbKey),
-                periodSelectionColor = getColor(isDarkMode, PERIOD_SELECTION.settingDbKey),
                 ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
                 expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
@@ -238,10 +235,9 @@ class SettingsViewModel(
 }
 
 enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
-    PERIOD(R.string.period_color, "period_color"),
     SELECTION(R.string.selection_color, "selection_color"),
+    PERIOD(R.string.period_color, "period_color"),
     EXPECTED_PERIOD(R.string.expected_period_color, "expected_period_color"),
-    PERIOD_SELECTION(R.string.period_selection_color, "period_selection_color"),
     OVULATION(R.string.ovulation_color, "ovulation_color"),
     EXPECTED_OVULATION(R.string.expected_ovulation_color, "expected_ovulation_color"),
 }

@@ -14,11 +14,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -30,7 +30,10 @@ import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.extensions.stringRes
+import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
+import com.mensinator.app.ui.theme.Black
+import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.*
 import org.koin.androidx.compose.koinViewModel
@@ -48,7 +51,12 @@ fun CalendarScreen(
     modifier: Modifier,
     viewModel: CalendarViewModel = koinViewModel()
 ) {
-    val state = viewModel.viewState.collectAsState()
+    val state = viewModel.viewState.collectAsStateWithLifecycle()
+
+    val isDarkMode = isDarkMode()
+    LaunchedEffect(isDarkMode) {
+        viewModel.updateDarkModeStatus(isDarkMode)
+    }
 
     val context = LocalContext.current
     val notificationScheduler: INotificationScheduler = koinInject()
@@ -297,7 +305,7 @@ fun Day(
     val state = viewState.value
 
     val colorMap = ColorSource.getColorMap(isDarkMode())
-    val calendarColors = state.calendarColors
+    val calendarColorMap = state.calendarColorMap
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
     if (day.position != DayPosition.MonthDate) {
@@ -308,22 +316,22 @@ fun Day(
         return
     }
 
-    val backgroundColor = when {
-        day.date in state.selectedDays -> colorMap[calendarColors?.selectedColorName]
-            ?: colorMap["LightGray"]
-        day.date in state.periodDates.keys -> colorMap[calendarColors?.periodColorName]
-            ?: colorMap["Red"]
-        state.periodPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextPeriodColorName]
-            ?: colorMap["Yellow"]
-        day.date in state.ovulationDates -> colorMap[calendarColors?.ovulationColorName]
-            ?: colorMap["Blue"]
-        state.ovulationPredictionDate?.isEqual(day.date) == true -> colorMap[calendarColors?.nextOvulationColorName]
-            ?: colorMap["Magenta"]
+    val fallbackColors = if (isDarkMode()) {
+        ColorCombination(DarkGrey, Color.White)
+    } else {
+        ColorCombination(Color.Transparent, Black)
+    }
+    val dayColors = when {
+        day.date in state.selectedDays -> calendarColorMap[ColorSetting.SELECTION]
+        day.date in state.periodDates.keys -> calendarColorMap[ColorSetting.PERIOD]
+        state.periodPredictionDate?.isEqual(day.date) == true -> calendarColorMap[ColorSetting.EXPECTED_PERIOD]
+        day.date in state.ovulationDates -> calendarColorMap[ColorSetting.OVULATION]
+        state.ovulationPredictionDate?.isEqual(day.date) == true -> calendarColorMap[ColorSetting.EXPECTED_OVULATION]
         else -> null
-    } ?: Color.Transparent
+    } ?: fallbackColors
 
     val border = if (day.date.isEqual(LocalDate.now())) {
-        BorderStroke(1.dp, Color.DarkGray)
+        BorderStroke(1.5.dp, Color.DarkGray)
     } else null
 
     val fontStyleType = when {
@@ -335,11 +343,12 @@ fun Day(
     val isSelected = day.date in state.selectedDays
     val hasSymptomDate = day.date in state.symptomDates
 
+    val shape = MaterialTheme.shapes.small
     Surface(
         modifier = Modifier
             .aspectRatio(1f) // This ensures the cells remain square.
             .padding(2.dp)
-            .clip(MaterialTheme.shapes.small)
+            .clip(shape)
             .clickable {
                 val newSelectedDates = if (isSelected) {
                     state.selectedDays - day.date
@@ -348,15 +357,15 @@ fun Day(
                 }.toPersistentSet()
                 onAction(UiAction.SelectDays(newSelectedDates))
             },
-        shape = MaterialTheme.shapes.small,
-        color = backgroundColor,
+        shape = shape,
+        color = dayColors.backgroundColor,
         border = border
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = day.date.dayOfMonth.toString(),
                 fontWeight = fontStyleType,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+                color = dayColors.textColor
             )
 
             // Add symptom circles
@@ -383,19 +392,15 @@ fun Day(
             if (state.showCycleNumbers) {
                 val cycleNumber = calculateCycleNumber(day.date, dbHelper)
                 if (cycleNumber > 0) {
-                    Box(
-                        modifier = Modifier
-                            .size(18.dp)
-                            .background(Color.Transparent)
-                            .align(Alignment.TopStart)
+                    Surface(
+                        shape = shape,
+                        color = Color.Transparent,
+                        modifier = Modifier.align(Alignment.TopStart)
                     ) {
                         Text(
                             text = cycleNumber.toString(),
-                            style = TextStyle(
-                                fontSize = 8.sp,
-                                textAlign = TextAlign.Left
-                            ),
-                            modifier = Modifier.padding(4.dp)
+                            fontSize = 8.sp,
+                            modifier = Modifier.padding(horizontal = 4.dp)
                         )
                     }
                 }
