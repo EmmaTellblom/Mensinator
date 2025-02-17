@@ -12,7 +12,7 @@ interface ICalculationsHelper {
      *
      * @return The next expected period date.
      */
-    fun calculateNextPeriod(): LocalDate
+    fun calculateNextPeriod(): LocalDate?
 
     /**
      * Calculates the average number of days from the first day of the last period to ovulation.

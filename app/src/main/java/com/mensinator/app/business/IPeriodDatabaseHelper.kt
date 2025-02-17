@@ -119,5 +119,5 @@ interface IPeriodDatabaseHelper {
     fun renameSymptom(symptomId: Int, newName: String)
 
     // Retrieve the latest period start date
-    fun getLatestPeriodStart(): LocalDate
+    fun getLatestPeriodStart(): LocalDate?
 }

@@ -9,7 +9,7 @@ class OvulationPrediction(
     private val periodPrediction: IPeriodPrediction,
 ) : IOvulationPrediction {
 
-    override fun getPredictedOvulationDate(): LocalDate {
+    override fun getPredictedOvulationDate(): LocalDate? {
         val periodCount = dbHelper.getPeriodCount()
         val ovulationCount = dbHelper.getOvulationCount()
         val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
@@ -17,26 +17,24 @@ class OvulationPrediction(
         val firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1)
         val previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
-        val ovulationDatePrediction: LocalDate
-
         // No data at all in database
         if (lastOvulationDate == null || previousFirstPeriodDate == null) {
             Log.e("TAG", "Null values found: lastOvulationDate=$lastOvulationDate, previousFirstPeriodDate=$previousFirstPeriodDate")
-            return LocalDate.parse("1900-01-01")
+            return null
         }
 
-        if (ovulationCount >=2 && periodCount >= 2 && lastOvulationDate < previousFirstPeriodDate) {
+        return if (ovulationCount >=2 && periodCount >= 2 && lastOvulationDate < previousFirstPeriodDate) {
             Log.d("TAG", "Inside if statement")
             // Get average follicleGrowth based on ovulationHistory
             // Get latest start of period, add days to that date
             val averageOvulationDay = calcHelper.averageFollicalGrowthInDays().toInt()
             if (averageOvulationDay > 0) {
                 val latestPeriodStart = dbHelper.getLatestPeriodStart()
-                ovulationDatePrediction = latestPeriodStart.plusDays(averageOvulationDay.toLong())
+                latestPeriodStart?.plusDays(averageOvulationDay.toLong())
             }
-            else{
+            else {
                 // Return a default value, not enough data to predict ovulation, averageFollicalGrowthInDays() returns 0
-                ovulationDatePrediction = LocalDate.parse("1900-01-01")
+                null
             }
         }   // If Ovulation is after previous first period date and prediction exists for Period, calculate next ovulation based on calculated start of period
         else if (lastOvulationDate > previousFirstPeriodDate && (periodPredictionDate != LocalDate.parse("1900-01-01"))) {
@@ -45,18 +43,16 @@ class OvulationPrediction(
             val follicleGrowthDaysLong = follicleGrowthDays.toLong()
 
             if (follicleGrowthDaysLong > 0) {
-                ovulationDatePrediction = periodPredictionDate.plusDays(follicleGrowthDaysLong)
+                periodPredictionDate?.plusDays(follicleGrowthDaysLong)
             } else {
                 // Return a default value, not enough data to predict ovulation, averageFollicalGrowthInDays() returns 0
-                ovulationDatePrediction = LocalDate.parse("1900-01-01")
+               null
             }
         }
         else {
             Log.d("TAG", "THERE ARE NOW OVULATIONS")
             // Return a default value, not enough data to predict ovulation, ovulationCount < 2
-            ovulationDatePrediction = LocalDate.parse("1900-01-01")
+            null
         }
-        // Valid prediction
-        return ovulationDatePrediction
     }
 }

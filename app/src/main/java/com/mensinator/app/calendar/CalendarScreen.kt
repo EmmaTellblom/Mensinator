@@ -45,9 +45,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
-/*
-This function is the initiator of the vertical calendar.
- */
 @Composable
 fun CalendarScreen(
     modifier: Modifier,
@@ -122,12 +119,12 @@ fun CalendarScreen(
                 )
 
                 // Schedule notification for reminder
-                // Check that reminders should be scheduled (reminder>0) and that the next period is in the future
+                // Check that reminders should be scheduled (reminder>0)
                 // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
                 val periodReminderDays = state.value.periodReminderDays ?: 2
                 val nextPeriodDate = state.value.periodPredictionDate
                 val periodMessageText = state.value.periodMessageText
-                if (periodReminderDays > 0 && nextPeriodDate != null && nextPeriodDate >= LocalDate.now() && periodMessageText != null) {
+                if (periodReminderDays > 0 && nextPeriodDate != null && periodMessageText != null) {
                     newSendNotification(
                         context,
                         notificationScheduler,
@@ -135,8 +132,6 @@ fun CalendarScreen(
                         nextPeriodDate,
                         periodMessageText
                     )
-                } else {
-                    // TODO: Handle this
                 }
                 Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
             },

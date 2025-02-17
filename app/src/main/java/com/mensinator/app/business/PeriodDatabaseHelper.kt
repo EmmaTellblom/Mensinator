@@ -993,8 +993,7 @@ class PeriodDatabaseHelper(context: Context) :
 
     }
 
-    override fun getLatestPeriodStart(): LocalDate {
-        val latestPeriodStart = LocalDate.parse("1900-01-01")
+    override fun getLatestPeriodStart(): LocalDate? {
         val db = readableDatabase
         val query =
             "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
@@ -1004,6 +1003,6 @@ class PeriodDatabaseHelper(context: Context) :
             return LocalDate.parse(dateString)
         }
         cursor.close()
-        return latestPeriodStart
+        return null
     }
 }

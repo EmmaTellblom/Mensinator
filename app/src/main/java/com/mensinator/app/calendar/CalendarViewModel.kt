@@ -69,7 +69,8 @@ class CalendarViewModel(
                     ).toPersistentSet(),
                     periodReminderDays = dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull()
                         ?: 2,
-                    activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
+                    activeSymptoms = dbHelper.getAllSymptoms()
+                        .filter { it.isActive }
                         .toPersistentSet(),
                     periodMessageText = periodMessageText,
                     symptomsForDates = dbHelper.getSymptomsForDates(),
