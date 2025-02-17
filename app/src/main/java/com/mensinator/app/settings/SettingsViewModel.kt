@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// TODO: Currently, all database calls block the UI. The impact is negligible as we are only
-//       retrieving a few values, but this should be refactored.
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
@@ -217,8 +215,7 @@ class SettingsViewModel(
     }
 
     private suspend fun getBoolean(booleanSetting: BooleanSetting): Boolean {
-        val dbValue =
-            periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
+        val dbValue = periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
         val value = dbValue == "1" //
         return value
     }
