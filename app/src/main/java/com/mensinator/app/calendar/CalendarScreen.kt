@@ -3,7 +3,9 @@ package com.mensinator.app.calendar
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
@@ -70,44 +72,39 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
-        Row(
+
+        val current = YearMonth.now()
+        val calendarState = rememberCalendarState(
+            startMonth = current.minusMonths(30),
+            endMonth = current.plusMonths(30),
+            firstVisibleMonth = current,
+        )
+
+        LaunchedEffect(calendarState.firstVisibleMonth) {
+            viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
+        }
+
+        VerticalCalendar(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f, fill = true) // Make this row occupy the maximum remaining height
                 .padding(top = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-
-            val current = YearMonth.now()
-            val calendarState = rememberCalendarState(
-                startMonth = current.minusMonths(30),
-                endMonth = current.plusMonths(30),
-                firstVisibleMonth = current,
-            )
-
-            LaunchedEffect(calendarState.firstVisibleMonth) {
-                viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
+            state = calendarState,
+            dayContent = { day ->
+                Day(
+                    viewState = state,
+                    onAction = { uiAction -> viewModel.onAction(uiAction) },
+                    day = day,
+                )
+            },
+            monthHeader = {
+                MonthTitle(yearMonth = it.yearMonth)
+                DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
             }
-
-            VerticalCalendar(
-                state = calendarState,
-                dayContent = { day ->
-                    Day(
-                        viewState = state,
-                        onAction = { uiAction -> viewModel.onAction(uiAction) },
-                        day = day,
-                    )
-                },
-                monthHeader = {
-                    MonthTitle(yearMonth = it.yearMonth)
-                    DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
-                }
-            )
-        }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
