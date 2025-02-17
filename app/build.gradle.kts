@@ -102,4 +102,7 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // To be used to profile performance. Don't include in release builds
+    // implementation("androidx.compose.runtime:runtime-tracing")
 }
