@@ -3,6 +3,7 @@ package com.mensinator.app.extensions
 import androidx.annotation.StringRes
 import com.mensinator.app.R
 import java.time.Month
+import java.time.YearMonth
 
 @get:StringRes
 val Month.stringRes: Int
@@ -20,3 +21,6 @@ val Month.stringRes: Int
         Month.NOVEMBER -> R.string.november
         Month.DECEMBER -> R.string.december
     }
+
+infix fun YearMonth.until(other: YearMonth): Sequence<YearMonth> =
+    generateSequence(this) { if (it < other) it.plusMonths(1) else null }

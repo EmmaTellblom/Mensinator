@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import androidx.core.database.sqlite.transaction
+import com.kizitonwose.calendar.core.atStartOfMonth
 import com.mensinator.app.data.Setting
 import com.mensinator.app.data.Symptom
+import com.mensinator.app.extensions.until
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -58,6 +60,8 @@ class PeriodDatabaseHelper(context: Context) :
 
     override val writableDb: SQLiteDatabase
         get() = writableDatabase
+
+    private val surroundingMonthsToConsider = 2L
 
     //See DatabaseUtils
     override fun onCreate(db: SQLiteDatabase) {
@@ -160,25 +164,19 @@ class PeriodDatabaseHelper(context: Context) :
 
         // Calculate previous, current, and next months
         val currentMonth = YearMonth.of(year, month)
-        val previousMonth = currentMonth.minusMonths(1)
-        val nextMonth = currentMonth.plusMonths(1)
-
-        // Build query parameters
-        val monthConditions = listOf(
-            Pair(previousMonth.year, previousMonth.monthValue),
-            Pair(currentMonth.year, currentMonth.monthValue),
-            Pair(nextMonth.year, nextMonth.monthValue)
-        )
+        val startMonth = currentMonth.minusMonths(surroundingMonthsToConsider)
+        val endMonth = currentMonth.plusMonths(surroundingMonthsToConsider)
+        val months = startMonth until endMonth
 
         // SQL query to match year and month
         val queryCondition =
-            monthConditions.joinToString(" OR ") { "(strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?)" }
-        val queryArgs = monthConditions.flatMap {
+            months.joinToString(" OR ") { "(strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?)" }
+        val queryArgs = months.flatMap {
             listOf(
-                it.first.toString(),
-                it.second.toString().padStart(2, '0')
+                it.year.toString(),
+                it.monthValue.toString().padStart(2, '0')
             )
-        }.toTypedArray()
+        }.toList().toTypedArray()
 
         // Execute query
         val cursor = db.query(
@@ -323,8 +321,8 @@ class PeriodDatabaseHelper(context: Context) :
 
             // Calculate previous month and next month
             val currentYearMonth = YearMonth.of(year, month)
-            val prevMonth = currentYearMonth.minusMonths(1)
-            val nextMonth = currentYearMonth.plusMonths(1)
+            val prevMonth = currentYearMonth.minusMonths(surroundingMonthsToConsider)
+            val nextMonth = currentYearMonth.plusMonths(surroundingMonthsToConsider)
 
             val prevYear = prevMonth.year
             val prevMonthValue = prevMonth.monthValue
@@ -634,11 +632,10 @@ class PeriodDatabaseHelper(context: Context) :
 
             try {
                 // Calculate the date range
-                val currentMonthStart = LocalDate.of(year, month, 1)
-                val previousMonthStart = currentMonthStart.minusMonths(1)
-                val nextMonthStart = currentMonthStart.plusMonths(1)
-                val rangeStart = previousMonthStart
-                val rangeEnd = nextMonthStart.plusMonths(1).minusDays(1)
+                val currentMonth = YearMonth.of(year, month)
+
+                val rangeStart = currentMonth.minusMonths(surroundingMonthsToConsider).atStartOfMonth()
+                val rangeEnd = currentMonth.plusMonths(surroundingMonthsToConsider).atEndOfMonth()
 
                 // Query the database for dates within the calculated range
                 val cursor = db.query(
