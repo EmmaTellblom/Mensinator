@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.core.database.sqlite.transaction
 import com.mensinator.app.data.Setting
 import com.mensinator.app.data.Symptom
 import kotlinx.coroutines.Dispatchers
@@ -255,8 +256,6 @@ class PeriodDatabaseHelper(context: Context) :
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
                 } while (it.moveToNext())
             }
-
-
         }
         cursor.close()
         symptoms
@@ -425,41 +424,32 @@ class PeriodDatabaseHelper(context: Context) :
         // Convert dates to strings for database operations
         val dateStrings = dates.map { it.toString() }
 
-        db.beginTransaction()
-        try {
-            // Delete existing symptoms for the specified dates
-            db.execSQL(
-                """
-                DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${
-                    dateStrings.joinToString(
-                        ","
-                    ) { "?" }
-                })
-            """,
-                dateStrings.toTypedArray()
-            )
+        db.transaction {
+            try {
+                // Delete existing symptoms for the specified dates
+                execSQL(
+                    """
+              DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${
+                        dateStrings.joinToString(",") { "?" }
+                    })
+           """,
+                    dateStrings.toTypedArray()
+                )
 
-            // Insert new symptoms for the specified dates
-            val insertSQL = """
+                // Insert new symptoms for the specified dates
+                val insertSQL = """
             INSERT INTO $TABLE_SYMPTOM_DATE ($COLUMN_SYMPTOM_DATE, $COLUMN_SYMPTOM_ID) VALUES (?, ?)
         """
-            for (date in dates) {
-                for (id in symptomId) {
-                    db.execSQL(insertSQL, arrayOf(date.toString(), id))
+                for (date in dates) {
+                    for (id in symptomId) {
+                        execSQL(insertSQL, arrayOf<Any>(date.toString(), id))
+                    }
                 }
+            } catch (e: Exception) {
+                // Handle exceptions
+                e.printStackTrace()
             }
-
-            // Mark the transaction as successful
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            // Handle exceptions
-            e.printStackTrace()
-        } finally {
-            // End the transaction
-            db.endTransaction()
         }
-
-        // Close the database connection
     }
 
     override suspend fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> =
