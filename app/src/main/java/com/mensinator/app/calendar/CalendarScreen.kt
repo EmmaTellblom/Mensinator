@@ -301,8 +301,7 @@ fun Day(
 ) {
     val state = viewState.value
 
-    val colorMap = ColorSource.getColorMap(isDarkMode())
-    val calendarColorMap = state.calendarColorMap
+    val settingColors = state.calendarColors.settingColors
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
     if (day.position != DayPosition.MonthDate) {
@@ -319,11 +318,11 @@ fun Day(
         ColorCombination(Color.Transparent, Black)
     }
     val dayColors = when {
-        day.date in state.selectedDays -> calendarColorMap[ColorSetting.SELECTION]
-        day.date in state.periodDates.keys -> calendarColorMap[ColorSetting.PERIOD]
-        state.periodPredictionDate?.isEqual(day.date) == true -> calendarColorMap[ColorSetting.EXPECTED_PERIOD]
-        day.date in state.ovulationDates -> calendarColorMap[ColorSetting.OVULATION]
-        state.ovulationPredictionDate?.isEqual(day.date) == true -> calendarColorMap[ColorSetting.EXPECTED_OVULATION]
+        day.date in state.selectedDays -> settingColors[ColorSetting.SELECTION]
+        day.date in state.periodDates.keys -> settingColors[ColorSetting.PERIOD]
+        state.periodPredictionDate?.isEqual(day.date) == true -> settingColors[ColorSetting.EXPECTED_PERIOD]
+        day.date in state.ovulationDates -> settingColors[ColorSetting.OVULATION]
+        state.ovulationPredictionDate?.isEqual(day.date) == true -> settingColors[ColorSetting.EXPECTED_OVULATION]
         else -> null
     } ?: fallbackColors
 
@@ -367,15 +366,16 @@ fun Day(
 
             // Add symptom circles
             if (hasSymptomDate) {
-                // TODO: The VM should provide a Map<Symptom, Color>, so that this can be removed
-                val symptomsForDay = dbHelper.getSymptomColorForDate(day.date)
+                val symptomsForDay = state.symptomsForDates.getOrDefault(day.date, setOf())
 
                 Row(
-                    modifier = Modifier.align(Alignment.BottomCenter),
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 1.dp),
                     horizontalArrangement = Arrangement.spacedBy((-5).dp) // Overlap circles
                 ) {
                     symptomsForDay.forEach { symptom ->
-                        val symptomColor = colorMap[symptom] ?: Color.Black
+                        val symptomColor = state.calendarColors.symptomColors[symptom] ?: Color.Red
 
                         Box(
                             modifier = Modifier

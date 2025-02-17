@@ -2,6 +2,7 @@ package com.mensinator.app.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.business.IOvulationPrediction
@@ -71,16 +72,17 @@ class CalendarViewModel(
                     activeSymptoms = dbHelper.getAllSymptoms().filter { it.isActive }
                         .toPersistentSet(),
                     periodMessageText = periodMessageText,
+                    symptomsForDates = dbHelper.getSymptomsForDates(),
                 )
             }
         }
     }
 
-    fun updateDarkModeStatus(isDarkMode: Boolean) {
+    fun updateDarkModeStatus(isDarkMode: Boolean) = viewModelScope.launch {
         _viewState.update {
             it.copy(
                 isDarkMode = isDarkMode,
-                calendarColorMap = getCalendarColorMap(isDarkMode)
+                calendarColors = getCalendarColorMap(isDarkMode)
             )
         }
     }
@@ -88,22 +90,25 @@ class CalendarViewModel(
     fun onAction(uiAction: UiAction): Unit = when (uiAction) {
         is UiAction.UpdateFocusedYearMonth -> {
             _viewState.update {
-                it.copy(
-                    focusedYearMonth = uiAction.focusedYearMonth
-                )
+                it.copy(focusedYearMonth = uiAction.focusedYearMonth)
             }
             refreshData()
         }
-        is UiAction.SelectDays -> _viewState.update {
-            val activeSymptoms = if (uiAction.days.isEmpty()) {
-                persistentSetOf()
-            } else {
-                dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+        is UiAction.SelectDays -> {
+            viewModelScope.launch {
+                _viewState.update {
+                    val activeSymptoms = if (uiAction.days.isEmpty()) {
+                        persistentSetOf()
+                    } else {
+                        dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+                    }
+                    it.copy(
+                        selectedDays = uiAction.days,
+                        activeSymptomIdsForLatestSelectedDay = activeSymptoms
+                    )
+                }
             }
-            it.copy(
-                selectedDays = uiAction.days,
-                activeSymptomIdsForLatestSelectedDay = activeSymptoms
-            )
+            Unit
         }
         is UiAction.UpdateSymptomDates -> {
             dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
@@ -135,8 +140,8 @@ class CalendarViewModel(
         }
     }
 
-    private fun getCalendarColorMap(isDarkMode: Boolean): Map<ColorSetting, ColorCombination> {
-        return ColorSetting.entries.associate {
+    private suspend fun getCalendarColorMap(isDarkMode: Boolean): CalendarColors {
+        val settingColors = ColorSetting.entries.associateWith {
             val backgroundColor = ColorSource.getColor(
                 isDarkMode,
                 dbHelper.getSettingByKey(it.settingDbKey)?.value ?: "LightGray"
@@ -147,8 +152,17 @@ class CalendarViewModel(
                 Black
             )
 
-            it to ColorCombination(backgroundColor, textColor)
+            ColorCombination(backgroundColor, textColor)
         }
+
+        val symptomColors = dbHelper.getAllSymptoms().associateWith {
+            ColorSource.getColor(
+                isDarkMode,
+                it.color
+            )
+        }
+
+        return CalendarColors(settingColors, symptomColors)
     }
 
     data class ViewState(
@@ -166,7 +180,13 @@ class CalendarViewModel(
         val periodMessageText: String? = null,
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
-        val calendarColorMap: Map<ColorSetting, ColorCombination> = mapOf()
+        val symptomsForDates: Map<LocalDate, Set<Symptom>> = mapOf(),
+        val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf())
+    )
+
+    data class CalendarColors(
+        val settingColors: Map<ColorSetting, ColorCombination>,
+        val symptomColors: Map<Symptom, Color>,
     )
 
     sealed class UiAction {

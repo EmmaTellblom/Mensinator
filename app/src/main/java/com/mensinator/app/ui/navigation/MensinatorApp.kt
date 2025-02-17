@@ -32,6 +32,7 @@ import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
+import kotlinx.coroutines.runBlocking
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -59,7 +60,9 @@ fun MensinatorApp(
     val dbHelper: IPeriodDatabaseHelper = koinInject()
     // If protectScreen is 1, it should protect the screen
     // If protectScreen is 0, should not protect screen(allows prints and screen visibility in recent apps)
-    val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1
+    val protectScreen = runBlocking {// TODO: FIX
+        dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1
+    }
     Log.d("screenProtectionUI", "protect screen value $protectScreen")
     onScreenProtectionChanged(protectScreen != 0)
 

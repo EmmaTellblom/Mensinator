@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mensinator.app.R
 import com.mensinator.app.business.IExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 // TODO: Currently, all database calls block the UI. The impact is negligible as we are only
 //       retrieving a few values, but this should be refactored.
@@ -99,23 +101,25 @@ class SettingsViewModel(
 
     private fun refreshData() {
         val isDarkMode = viewState.value.isDarkMode
-        _viewState.update {
-            it.copy(
-                periodColor = getColor(isDarkMode, PERIOD.settingDbKey),
-                selectionColor = getColor(isDarkMode, SELECTION.settingDbKey),
-                expectedPeriodColor = getColor(isDarkMode, EXPECTED_PERIOD.settingDbKey),
-                ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
-                expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
+        viewModelScope.launch {
+            _viewState.update {
+                it.copy(
+                    periodColor = getColor(isDarkMode, PERIOD.settingDbKey),
+                    selectionColor = getColor(isDarkMode, SELECTION.settingDbKey),
+                    expectedPeriodColor = getColor(isDarkMode, EXPECTED_PERIOD.settingDbKey),
+                    ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
+                    expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
-                daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
-                periodNotificationMessage = getString(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey),
-                daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
-                daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
+                    daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
+                    periodNotificationMessage = getString(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey),
+                    daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
+                    daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
 
-                lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
-                showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
-                preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
-            )
+                    lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
+                    showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
+                    preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
+                )
+            }
         }
     }
 
@@ -202,24 +206,24 @@ class SettingsViewModel(
         }
     }
 
-    private fun getColor(isDarkMode: Boolean, settingKey: String): Color {
+    private suspend fun getColor(isDarkMode: Boolean, settingKey: String): Color {
         val colorName = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "Red"
         return ColorSource.getColor(isDarkMode, colorName)
     }
 
-    private fun getInt(settingKey: String): Int {
+    private suspend fun getInt(settingKey: String): Int {
         val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
         return int.toIntOrNull() ?: 0
     }
 
-    private fun getBoolean(booleanSetting: BooleanSetting): Boolean {
+    private suspend fun getBoolean(booleanSetting: BooleanSetting): Boolean {
         val dbValue =
             periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
         val value = dbValue == "1" //
         return value
     }
 
-    private fun getString(settingKey: String): String {
+    private suspend fun getString(settingKey: String): String {
         return periodDatabaseHelper.getStringSettingByKey(settingKey)
     }
 
