@@ -30,7 +30,6 @@ import com.mensinator.app.R
 import com.mensinator.app.business.INotificationScheduler
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
-import com.mensinator.app.data.ColorSource
 import com.mensinator.app.extensions.stringRes
 import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
@@ -106,7 +105,7 @@ fun CalendarScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         val isPeriodButtonEnabled by remember {
             derivedStateOf { state.value.selectedDays.isNotEmpty() }
@@ -141,9 +140,7 @@ fun CalendarScreen(
                 Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
             },
             enabled = isPeriodButtonEnabled,  // Set the state of the Periods button
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
 
             for (selectedDate in state.value.selectedDays) {
