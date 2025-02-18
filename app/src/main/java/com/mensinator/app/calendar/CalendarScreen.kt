@@ -359,7 +359,7 @@ fun Day(
 
             // Add symptom circles
             if (hasSymptomDate) {
-                val symptomsForDay = state.symptomsForDates.getOrDefault(day.date, setOf())
+                val symptomsForDay = state.symptomDates.getOrDefault(day.date, setOf())
 
                 Row(
                     modifier = Modifier

@@ -56,14 +56,11 @@ class CalendarViewModel(
                     showCycleNumbers = showCycleNumbersSetting,
                     periodPredictionDate = periodPrediction.getPredictedPeriodDate(),
                     ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate(),
-                    symptomDates = dbHelper.getSymptomDatesForMonthNew(
-                        it.focusedYearMonth.year,
-                        it.focusedYearMonth.monthValue
-                    ).toPersistentSet(),
                     periodDates = dbHelper.getPeriodDatesForMonthNew(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
                     ).toPersistentMap(),
+                    symptomDates = dbHelper.getSymptomsForDates().toPersistentMap(),
                     ovulationDates = dbHelper.getOvulationDatesForMonthNew(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
@@ -74,7 +71,6 @@ class CalendarViewModel(
                         .filter { it.isActive }
                         .toPersistentSet(),
                     periodMessageText = periodMessageText,
-                    symptomsForDates = dbHelper.getSymptomsForDates(),
                 )
             }
         }
@@ -199,15 +195,14 @@ class CalendarViewModel(
         val focusedYearMonth: YearMonth = YearMonth.now(),
         val periodPredictionDate: LocalDate? = null,
         val ovulationPredictionDate: LocalDate? = null,
-        val symptomDates: PersistentSet<LocalDate> = persistentSetOf(),
         val periodDates: PersistentMap<LocalDate, Int> = persistentMapOf(),
+        val symptomDates: PersistentMap<LocalDate, Set<Symptom>> = persistentMapOf(),
         val ovulationDates: PersistentSet<LocalDate> = persistentSetOf(),
         val periodReminderDays: Int? = null,
         val activeSymptoms: PersistentSet<Symptom> = persistentSetOf(),
         val periodMessageText: String? = null,
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
-        val symptomsForDates: Map<LocalDate, Set<Symptom>> = mapOf(),
         val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf())
     )
 
