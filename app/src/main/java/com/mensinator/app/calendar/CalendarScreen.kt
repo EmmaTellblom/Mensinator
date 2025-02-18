@@ -320,7 +320,7 @@ fun Day(
     } ?: fallbackColors
 
     val border = if (day.date.isEqual(LocalDate.now())) {
-        BorderStroke(1.5.dp, Color.DarkGray)
+        BorderStroke(1.5.dp, fallbackColors.textColor.copy(alpha = 0.5f))
     } else null
 
     val fontStyleType = when {
