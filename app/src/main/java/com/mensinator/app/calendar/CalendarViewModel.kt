@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kizitonwose.calendar.core.yearMonth
 import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
@@ -93,6 +94,7 @@ class CalendarViewModel(
             _viewState.update {
                 it.copy(focusedYearMonth = uiAction.focusedYearMonth)
             }
+            deselectDatesIfFocusChangedTooMuch(uiAction.focusedYearMonth)
             refreshData()
         }
         is UiAction.SelectDays -> {
@@ -138,6 +140,30 @@ class CalendarViewModel(
             }
             onAction(UiAction.SelectDays(persistentSetOf()))
             refreshData()
+        }
+    }
+
+    /**
+     * To avoid the user not seeing what they are editing, we deselect the data when the calendar
+     * focus was changed too much. Possibly annoying as data could get discarded.
+     */
+    private fun deselectDatesIfFocusChangedTooMuch(newFocus: YearMonth) {
+        val selectedDateYearMonths = viewState.value.selectedDays.map { it.yearMonth }
+        if (selectedDateYearMonths.isEmpty()) return
+
+        val minSelectedMonth = selectedDateYearMonths.min()
+        val maxSelectedMonth = selectedDateYearMonths.max()
+
+        val minAllowedMonth = minSelectedMonth.minusMonths(2)
+        val maxAllowedMonth = maxSelectedMonth.plusMonths(1)
+
+        if (newFocus >= minAllowedMonth && newFocus <= maxAllowedMonth) return
+
+        _viewState.update {
+            it.copy(
+                selectedDays = persistentSetOf(),
+                activeSymptomIdsForLatestSelectedDay = persistentSetOf()
+            )
         }
     }
 
