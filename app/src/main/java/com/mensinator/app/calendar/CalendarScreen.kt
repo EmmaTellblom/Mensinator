@@ -391,7 +391,8 @@ fun Day(
                         Text(
                             text = cycleNumber.toString(),
                             fontSize = 8.sp,
-                            modifier = Modifier.padding(horizontal = 4.dp)
+                            modifier = Modifier.padding(horizontal = 4.dp),
+                            color = dayColors.textColor,
                         )
                     }
                 }
