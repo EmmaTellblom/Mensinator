@@ -128,18 +128,28 @@ fun MensinatorApp(
             modifier = Modifier.padding(paddingValues),
             enterTransition = { fadeIn(animationSpec = tween(50)) },
             exitTransition = { fadeOut(animationSpec = tween(50)) },
-        ) {//create a new file for every page and pass it inside the composable
+        ) {
             composable(route = Screen.Calendar.name) {
+                // Adapted from https://stackoverflow.com/a/71191082/3991578
+                val (toolbarOnClick, setToolbarOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = {
+                        MensinatorTopBar(
+                            titleStringId = currentScreen.titleRes,
+                            onTitleClick = toolbarOnClick
+                        )
+                    },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
-                    CalendarScreen(modifier = Modifier.padding(topBarPadding))
+                    CalendarScreen(
+                        modifier = Modifier.padding(topBarPadding),
+                        setToolbarOnClick = setToolbarOnClick
+                    )
                 }
             }
             composable(route = Screen.Statistic.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     StatisticsScreen(modifier = Modifier.padding(topBarPadding))
@@ -166,7 +176,7 @@ fun MensinatorApp(
                             }
                         }
                     },
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     ManageSymptomScreen(
@@ -177,7 +187,7 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     Column {

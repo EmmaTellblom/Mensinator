@@ -38,6 +38,7 @@ import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
@@ -48,17 +49,32 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CalendarScreen(
     modifier: Modifier,
-    viewModel: CalendarViewModel = koinViewModel()
+    viewModel: CalendarViewModel = koinViewModel(),
+    setToolbarOnClick: (() -> Unit) -> Unit,
 ) {
-    val state = viewModel.viewState.collectAsStateWithLifecycle()
-
-    val isDarkMode = isDarkMode()
-    LaunchedEffect(isDarkMode) {
-        viewModel.updateDarkModeStatus(isDarkMode)
-    }
-
     val context = LocalContext.current
     val notificationScheduler: INotificationScheduler = koinInject()
+
+    val state = viewModel.viewState.collectAsStateWithLifecycle()
+    val isDarkMode = isDarkMode()
+
+    val currentYearMonth = YearMonth.now()
+    val calendarState = rememberCalendarState(
+        startMonth = currentYearMonth.minusMonths(30),
+        endMonth = currentYearMonth.plusMonths(30),
+        firstVisibleMonth = currentYearMonth,
+    )
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
+
+    LaunchedEffect(Unit) {
+        setToolbarOnClick {
+            coroutineScope.launch {
+                calendarState.animateScrollToMonth(YearMonth.now())
+            }
+        }
+    }
 
     var selectedIsOvulation = false
     var selectedIsPeriod = false
@@ -72,14 +88,6 @@ fun CalendarScreen(
             .displayCutoutExcludingStatusBarsPadding()
             .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
-
-        val current = YearMonth.now()
-        val calendarState = rememberCalendarState(
-            startMonth = current.minusMonths(30),
-            endMonth = current.plusMonths(30),
-            firstVisibleMonth = current,
-        )
-
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
         }
