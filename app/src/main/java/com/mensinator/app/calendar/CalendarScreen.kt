@@ -10,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowHeightSizeClass
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -46,6 +49,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.ChronoUnit
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CalendarScreen(
     modifier: Modifier,
@@ -65,6 +69,7 @@ fun CalendarScreen(
         firstVisibleMonth = currentYearMonth,
     )
     val coroutineScope = rememberCoroutineScope()
+    val showSymptomsDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
 
@@ -75,11 +80,6 @@ fun CalendarScreen(
             }
         }
     }
-
-    var selectedIsOvulation = false
-    var selectedIsPeriod = false
-
-    val daysOfWeek = daysOfWeek()
 
     // Generate placement for calendar and buttons
     Column(
@@ -107,81 +107,30 @@ fun CalendarScreen(
             },
             monthHeader = {
                 MonthTitle(yearMonth = it.yearMonth)
-                DaysOfWeekTitle(daysOfWeek = daysOfWeek.toPersistentList())
+                DaysOfWeekTitle(daysOfWeek = daysOfWeek().toPersistentList())
             }
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(2.dp))
 
-        val isPeriodButtonEnabled by remember {
-            derivedStateOf { state.value.selectedDays.isNotEmpty() }
-        }
-        val successSaved = stringResource(id = R.string.successfully_saved_alert)
-        Button(
-            onClick = {
-                viewModel.onAction(
-                    UiAction.UpdatePeriodDates(
-                        currentPeriodDays = state.value.periodDates,
-                        selectedDays = state.value.selectedDays
-                    )
-                )
-
-                // Schedule notification for reminder
-                // Check that reminders should be scheduled (reminder>0)
-                // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
-                val periodReminderDays = state.value.periodReminderDays ?: 2
-                val nextPeriodDate = state.value.periodPredictionDate
-                val periodMessageText = state.value.periodMessageText
-                if (periodReminderDays > 0 && nextPeriodDate != null && periodMessageText != null) {
-                    newSendNotification(
-                        context,
-                        notificationScheduler,
-                        periodReminderDays,
-                        nextPeriodDate,
-                        periodMessageText
-                    )
-                }
-                Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
-            },
-            enabled = isPeriodButtonEnabled,  // Set the state of the Periods button
-            modifier = Modifier.fillMaxWidth()
-        ) {
-
-            for (selectedDate in state.value.selectedDays) {
-                if (selectedDate in state.value.periodDates) {
-                    selectedIsPeriod = true
-                    break
-                }
-            }
-
-            val text = when {
-                selectedIsPeriod && isPeriodButtonEnabled -> {
-                    stringResource(id = R.string.period_button_selected)
-                }
-                !selectedIsPeriod && isPeriodButtonEnabled -> {
-                    stringResource(id = R.string.period_button_not_selected)
-                }
-                else -> stringResource(id = R.string.period_button)
-            }
-            Text(text = text)
-        }
-
-        var showSymptomsDialog by remember { mutableStateOf(false) }
-
-        Button(
-            onClick = {
-                showSymptomsDialog = true
-            },
-            enabled = state.value.selectedDays.isNotEmpty(),  // Set the state of the Symptoms button
+        FlowRow(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
+                .widthIn(max = 600.dp)
+                .align(Alignment.CenterHorizontally),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = stringResource(id = R.string.symptoms_button))
+            val buttonModifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+            PeriodButton(state, viewModel, context, notificationScheduler, buttonModifier)
+            SymptomButton(showSymptomsDialog, state, buttonModifier)
+            OvulationButton(state, context, viewModel, buttonModifier)
         }
+
 
         // Show the SymptomsDialog
-        if (showSymptomsDialog && state.value.selectedDays.isNotEmpty()) {
+        if (showSymptomsDialog.value && state.value.selectedDays.isNotEmpty()) {
             val activeSymptoms = state.value.activeSymptoms
             val date = state.value.selectedDays.last()
 
@@ -191,7 +140,7 @@ fun CalendarScreen(
                 currentlyActiveSymptomIds = state.value.activeSymptomIdsForLatestSelectedDay,
                 onSave = { selectedSymptoms ->
                     val selectedSymptomIds = selectedSymptoms.map { it.id }
-                    showSymptomsDialog = false
+                    showSymptomsDialog.value = false
                     viewModel.onAction(
                         UiAction.UpdateSymptomDates(
                             days = state.value.selectedDays,
@@ -200,52 +149,145 @@ fun CalendarScreen(
                     )
                 },
                 onCancel = {
-                    showSymptomsDialog = false
+                    showSymptomsDialog.value = false
                     viewModel.onAction(UiAction.SelectDays(persistentSetOf()))
                 }
             )
         }
+    }
+}
 
-        // ovulation starts here
-        val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
-        val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
-        val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
-        val ovulationButtonEnabled by remember {
-            derivedStateOf { state.value.selectedDays.size == 1 }
-        }
-        Button(
-            onClick = {
-                if (state.value.selectedDays.size > 1) {
-                    Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
-                } else if (ovulationButtonEnabled) {
-                    viewModel.onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
-                    Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
-                }
-            },
-            enabled = ovulationButtonEnabled,  // Set the state of the Ovulation button
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)
-        ) {
-            for (selectedDate in state.value.selectedDays) {
-                if (selectedDate in state.value.ovulationDates) {
-                    selectedIsOvulation = true
-                    break
-                }
+@Composable
+private fun PeriodButton(
+    state: State<CalendarViewModel.ViewState>,
+    viewModel: CalendarViewModel,
+    context: Context,
+    notificationScheduler: INotificationScheduler,
+    modifier: Modifier = Modifier
+) {
+    var selectedIsPeriod = false
+    val isPeriodButtonEnabled by remember {
+        derivedStateOf { state.value.selectedDays.isNotEmpty() }
+    }
+    val successSaved = stringResource(id = R.string.successfully_saved_alert)
+    Button(
+        onClick = {
+            viewModel.onAction(
+                UiAction.UpdatePeriodDates(
+                    currentPeriodDays = state.value.periodDates,
+                    selectedDays = state.value.selectedDays
+                )
+            )
+
+            // Schedule notification for reminder
+            // Check that reminders should be scheduled (reminder>0)
+            // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
+            val periodReminderDays = state.value.periodReminderDays ?: 2
+            val nextPeriodDate = state.value.periodPredictionDate
+            val periodMessageText = state.value.periodMessageText
+            if (periodReminderDays > 0 && nextPeriodDate != null && periodMessageText != null) {
+                newSendNotification(
+                    context,
+                    notificationScheduler,
+                    periodReminderDays,
+                    nextPeriodDate,
+                    periodMessageText
+                )
             }
-            val text = when {
-                selectedIsOvulation && ovulationButtonEnabled -> {
-                    stringResource(id = R.string.ovulation_button_selected)
-                }
-                !selectedIsOvulation && ovulationButtonEnabled -> {
-                    stringResource(id = R.string.ovulation_button_not_selected)
-                }
-                else -> stringResource(id = R.string.ovulation_button)
+            Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
+        },
+        enabled = isPeriodButtonEnabled,  // Set the state of the Periods button
+        modifier = modifier//.fillMaxWidth()
+    ) {
+        for (selectedDate in state.value.selectedDays) {
+            if (selectedDate in state.value.periodDates) {
+                selectedIsPeriod = true
+                break
             }
-            Text(text = text)
         }
+
+        val text = when {
+            selectedIsPeriod && isPeriodButtonEnabled -> {
+                stringResource(id = R.string.period_button_selected)
+            }
+            !selectedIsPeriod && isPeriodButtonEnabled -> {
+                stringResource(id = R.string.period_button_not_selected)
+            }
+            else -> stringResource(id = R.string.period_button)
+        }
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun SymptomButton(
+    showSymptomsDialog: MutableState<Boolean>,
+    state: State<CalendarViewModel.ViewState>,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = { showSymptomsDialog.value = true },
+        enabled = state.value.selectedDays.isNotEmpty(),  // Set the state of the Symptoms button
+        modifier = modifier//.fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(id = R.string.symptoms_button),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun OvulationButton(
+    state: State<CalendarViewModel.ViewState>,
+    context: Context,
+    viewModel: CalendarViewModel,
+    modifier: Modifier = Modifier
+) {
+    // ovulation starts here
+    var selectedIsOvulation = false
+    val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
+    val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
+    val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
+    val ovulationButtonEnabled by remember {
+        derivedStateOf { state.value.selectedDays.size == 1 }
+    }
+    Button(
+        onClick = {
+            if (state.value.selectedDays.size > 1) {
+                Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
+            } else if (ovulationButtonEnabled) {
+                viewModel.onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
+                Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
+            }
+        },
+        enabled = ovulationButtonEnabled,  // Set the state of the Ovulation button
+        modifier = modifier
+    ) {
+        for (selectedDate in state.value.selectedDays) {
+            if (selectedDate in state.value.ovulationDates) {
+                selectedIsOvulation = true
+                break
+            }
+        }
+        val text = when {
+            selectedIsOvulation && ovulationButtonEnabled -> {
+                stringResource(id = R.string.ovulation_button_selected)
+            }
+            !selectedIsOvulation && ovulationButtonEnabled -> {
+                stringResource(id = R.string.ovulation_button_not_selected)
+            }
+            else -> stringResource(id = R.string.ovulation_button)
+        }
+        Text(
+            text = text,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -305,10 +347,25 @@ fun Day(
     val settingColors = state.calendarColors.settingColors
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
+    /**
+     * Make sure the cells don't occupy so much space in landscape or on relatively big screens.
+     */
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val heightClass = windowSizeClass.windowHeightSizeClass
+    val widthClass = windowSizeClass.windowWidthSizeClass
+    val aspectRatioModifier = when {
+        heightClass == WindowHeightSizeClass.EXPANDED && widthClass == WindowWidthSizeClass.COMPACT -> {
+            Modifier.aspectRatio(1f) // Ensure cells remain square
+        }
+        else -> {
+            Modifier.aspectRatio(2f) // Make cells less tall
+        }
+    }
+
     if (day.position != DayPosition.MonthDate) {
         // Exclude dates that are not part of the current month
         Box(
-            modifier = Modifier.aspectRatio(1f) // Maintain grid structure with empty space
+            modifier = aspectRatioModifier // Maintain grid structure with empty space
         )
         return
     }
@@ -342,8 +399,7 @@ fun Day(
 
     val shape = MaterialTheme.shapes.small
     Surface(
-        modifier = Modifier
-            .aspectRatio(1f) // This ensures the cells remain square.
+        modifier = aspectRatioModifier
             .padding(2.dp)
             .clip(shape)
             .clickable {
