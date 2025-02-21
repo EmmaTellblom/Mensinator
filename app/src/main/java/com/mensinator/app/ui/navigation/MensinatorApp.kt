@@ -1,6 +1,5 @@
 package com.mensinator.app.ui.navigation
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -10,10 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -32,6 +28,7 @@ import com.mensinator.app.settings.SettingsScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
+import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 enum class Screen(@StringRes val titleRes: Int) {
@@ -57,15 +54,15 @@ fun MensinatorApp(
     onScreenProtectionChanged: (Boolean) -> Unit?,
 ) {
     val dbHelper: IPeriodDatabaseHelper = koinInject()
-    // If protectScreen is 1, it should protect the screen
-    // If protectScreen is 0, should not protect screen(allows prints and screen visibility in recent apps)
-    val protectScreen = dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1
-    Log.d("screenProtectionUI", "protect screen value $protectScreen")
-    onScreenProtectionChanged(protectScreen != 0)
 
-//    var nextPeriodStartCalculated by remember { mutableStateOf("Not enough data") }
-//    var nextOvulationCalculated by remember { mutableStateOf("Not enough data") }
-//    var follicleGrowthDays by remember { mutableStateOf("0") }
+    LaunchedEffect(Unit) {
+        launch {
+            // If protectScreen is 1, it should protect the screen
+            // If protectScreen is 0, should not protect screen (allows screenshots and screen visibility in recent apps)
+            val protectScreen = (dbHelper.getSettingByKey("screen_protection")?.value?.toIntOrNull() ?: 1) == 1
+            onScreenProtectionChanged(protectScreen)
+        }
+    }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = Screen.valueOf(
@@ -131,18 +128,28 @@ fun MensinatorApp(
             modifier = Modifier.padding(paddingValues),
             enterTransition = { fadeIn(animationSpec = tween(50)) },
             exitTransition = { fadeOut(animationSpec = tween(50)) },
-        ) {//create a new file for every page and pass it inside the composable
+        ) {
             composable(route = Screen.Calendar.name) {
+                // Adapted from https://stackoverflow.com/a/71191082/3991578
+                val (toolbarOnClick, setToolbarOnClick) = remember { mutableStateOf<(() -> Unit)?>(null) }
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = {
+                        MensinatorTopBar(
+                            titleStringId = currentScreen.titleRes,
+                            onTitleClick = toolbarOnClick
+                        )
+                    },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
-                    CalendarScreen(modifier = Modifier.padding(topBarPadding))
+                    CalendarScreen(
+                        modifier = Modifier.padding(topBarPadding),
+                        setToolbarOnClick = setToolbarOnClick
+                    )
                 }
             }
             composable(route = Screen.Statistic.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     StatisticsScreen(modifier = Modifier.padding(topBarPadding))
@@ -169,7 +176,7 @@ fun MensinatorApp(
                             }
                         }
                     },
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     ManageSymptomScreen(
@@ -180,7 +187,7 @@ fun MensinatorApp(
             }
             composable(route = Screen.Settings.name) {
                 Scaffold(
-                    topBar = { MensinatorTopBar(currentScreen) },
+                    topBar = { MensinatorTopBar(currentScreen.titleRes) },
                     contentWindowInsets = WindowInsets(0.dp),
                 ) { topBarPadding ->
                     Column {

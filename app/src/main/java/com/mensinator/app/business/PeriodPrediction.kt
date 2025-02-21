@@ -7,12 +7,12 @@ class PeriodPrediction(
     private val calcHelper: ICalculationsHelper,
 ) : IPeriodPrediction {
 
-    override fun getPredictedPeriodDate(): LocalDate {
+    override fun getPredictedPeriodDate(): LocalDate? {
         val periodCount = dbHelper.getPeriodCount()
-        return if (periodCount >= 2) {
-            calcHelper.calculateNextPeriod()
-        } else {
-            LocalDate.parse("1900-01-01")
+        if (periodCount < 2) {
+            return null
         }
+
+        return calcHelper.calculateNextPeriod()
     }
 }
