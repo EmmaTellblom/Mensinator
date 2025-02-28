@@ -133,7 +133,7 @@
     <string name="import_success_toast">文件导入成功</string>
     <string name="import_failure_toast">文件导入失败</string>
     <string name="export_path_label">导出文件到：%1$s</string>
-    <string name="import_path_label">导入路径：</string>
+    <string name="import_path_label">导入路径：%1$s</string>
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">常见问题</string>
@@ -151,7 +151,7 @@
     <string name="features_coming_soon">即将推出的功能：</string>
     <string name="upcoming_features">• 查看我们的GitHub 主页获得应用程序开发的最新消息！</string>
     <string name="our_story_header">我们的故事</string>
-    <string name="our_story">我们是两位厌倦了将自己的数据出卖给大公司的女性。我们的应用程序将所有数据本地保存在您的设备上，我们对您的数据没有任何访问权限。\n我们重视您的隐私，不会保存或共享任何个人信息。自从推出这个应用程序以来，我们不断发展，现在拥有了自己的 Discord 服务器，那里有许多对这个应用程序充满热情并愿意帮助我们的用户！ \n\n加入我们的 Discord： https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">我们是两位厌倦了将自己的数据出卖给大型企业的女性。我们的应用程序将所有数据本地保存在您的设备上，我们对您的数据没有任何访问权限。\n我们重视您的隐私，不会保存或共享任何个人信息。自从推出这个应用程序以来，我们不断发展，现在已拥有了自己的Discord服务器，那里有许多对这个应用程序充满热情并愿意帮助我们的用户！\n\n加入我们的Discord：https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">免责声明：</string>
     <string name="disclaimer">• 这是一个业余爱好项目，不用于医疗用途。我们制作这个应用程序仅为了我们自己的需要，但我们非常欢迎您提出想法和需求。加入我们的 Discord 或发送电子邮件到：\nmensinator.app@gmail.com</string>
 
@@ -167,5 +167,5 @@
     <string name="import_data">导入数据</string>
     <string name="export_data">导出数据</string>
     <string name="about_app">关于本应用程序</string>
-    <string name="rename_symptom" >重命名症状</string>
+    <string name="rename_symptom">重命名症状</string>
 </resources>
