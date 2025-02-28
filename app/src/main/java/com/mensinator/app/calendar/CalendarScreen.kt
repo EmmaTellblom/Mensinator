@@ -85,8 +85,10 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .displayCutoutExcludingStatusBarsPadding()
-            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            //.background(Color.Cyan.copy(alpha = 0.5f))
+        //.windowInsetsPadding(WindowInsets.displayCutout.exclude(WindowInsets.statusBars))
+        .displayCutoutExcludingStatusBarsPadding()
+        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
@@ -127,6 +129,15 @@ fun CalendarScreen(
             SymptomButton(showSymptomsDialog, state, buttonModifier)
             OvulationButton(state, context, viewModel, buttonModifier)
         }
+
+        // Bottom insets when in landscape
+        /*
+        Box(
+            modifier = Modifier
+                .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Vertical))
+                .background(Color.Red)
+        )
+         */
 
 
         // Show the SymptomsDialog

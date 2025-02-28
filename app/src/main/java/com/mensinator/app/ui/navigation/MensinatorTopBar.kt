@@ -25,6 +25,7 @@ fun MensinatorTopBar(
 ) {
     Column(
         modifier = Modifier
+            //.windowInsetsPadding(WindowInsets.navigationBars)
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
