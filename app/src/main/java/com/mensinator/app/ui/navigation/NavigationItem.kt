@@ -1,6 +1,6 @@
 package com.mensinator.app.ui.navigation
 
-data class BarItem(
+data class NavigationItem(
     val screen: Screen,
     val imageSelected: Int,
     val imageUnSelected: Int

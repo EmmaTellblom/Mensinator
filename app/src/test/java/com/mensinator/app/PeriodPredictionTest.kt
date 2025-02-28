@@ -10,7 +10,6 @@ import io.mockk.impl.annotations.MockK
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.time.LocalDate
 
 
 class PeriodPredictionTest {
@@ -29,11 +28,11 @@ class PeriodPredictionTest {
     }
 
     @Test
-    fun getPredictedPeriodDate_onlyOnePeriodEntered_fallbackDate() {
+    fun getPredictedPeriodDate_onlyOnePeriodEntered_null() {
         every { dbHelper.getPeriodCount() } returns 1
 
         periodPrediction = PeriodPrediction(dbHelper, calcHelper)
 
-        assertEquals(LocalDate.parse("1900-01-01"), periodPrediction.getPredictedPeriodDate())
+        assertEquals(null, periodPrediction.getPredictedPeriodDate())
     }
 }

@@ -4,31 +4,37 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.mensinator.app.settings.ResourceMapper
 import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
 import com.mensinator.app.data.Symptom
+import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.theme.MensinatorTheme
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.toPersistentSet
 import java.time.LocalDate
 
 @Composable
 fun EditSymptomsForDaysDialog(
     date: LocalDate,
-    symptoms: List<Symptom>,
-    currentlyActiveSymptomIds: Set<Int>,
-    onSave: (List<Symptom>) -> Unit,
+    symptoms: PersistentSet<Symptom>,
+    currentlyActiveSymptomIds: PersistentSet<Int>,
+    onSave: (PersistentSet<Symptom>) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var selectedSymptoms by remember {
         mutableStateOf(
-            symptoms.filter { it.id in currentlyActiveSymptomIds }.toSet()
+            symptoms.filter { it.id in currentlyActiveSymptomIds }.toPersistentSet()
         )
     }
 
@@ -37,7 +43,7 @@ fun EditSymptomsForDaysDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onSave(selectedSymptoms.toList())
+                    onSave(selectedSymptoms)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -68,11 +74,12 @@ fun EditSymptomsForDaysDialog(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .clickable {
-                                selectedSymptoms = if (selectedSymptoms.contains(symptom)) {
+                                val newSet = if (selectedSymptoms.contains(symptom)) {
                                     selectedSymptoms - symptom
                                 } else {
                                     selectedSymptoms + symptom
                                 }
+                                selectedSymptoms = newSet.toPersistentSet()
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -92,7 +99,7 @@ fun EditSymptomsForDaysDialog(
 @Preview
 @Composable
 private fun EditSymptomsForDaysDialog_OneDayPreview() {
-    val symptoms = listOf(
+    val symptoms = persistentSetOf(
         Symptom(1, "Light", 0, ""),
         Symptom(2, "Medium", 1, ""),
     )
@@ -100,7 +107,7 @@ private fun EditSymptomsForDaysDialog_OneDayPreview() {
         EditSymptomsForDaysDialog(
             date = LocalDate.now(),
             symptoms = symptoms,
-            currentlyActiveSymptomIds = setOf(2),
+            currentlyActiveSymptomIds = persistentSetOf(2),
             onSave = {},
             onCancel = { },
         )
@@ -111,7 +118,7 @@ private fun EditSymptomsForDaysDialog_OneDayPreview() {
 @Preview
 @Composable
 private fun EditSymptomsForDaysDialog_MultipleDaysPreview() {
-    val symptoms = listOf(
+    val symptoms = persistentSetOf(
         Symptom(1, "Light", 0, ""),
         Symptom(2, "Medium", 1, ""),
     )
@@ -119,7 +126,7 @@ private fun EditSymptomsForDaysDialog_MultipleDaysPreview() {
         EditSymptomsForDaysDialog(
             date = LocalDate.now(),
             symptoms = symptoms,
-            currentlyActiveSymptomIds = setOf(2),
+            currentlyActiveSymptomIds = persistentSetOf(2),
             onSave = {},
             onCancel = { },
         )
