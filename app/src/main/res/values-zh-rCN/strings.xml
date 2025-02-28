@@ -90,9 +90,9 @@
     <string name="create_new_symptom_button">创建新症状</string>
     <string name="save_symptoms_button">保存症状</string>
     <string name="cancel_button">取消</string>
-    <string name="heavy">流量大</string>
-    <string name="medium">流量中等</string>
-    <string name="light">流量少</string>
+    <string name="heavy">经血量大</string>
+    <string name="medium">经血量中等</string>
+    <string name="light">经血量少</string>
 
     <!-- CreateNewSymptomDialog -->
     <string name="create_new_symptom_dialog_title">创建新症状</string>
