@@ -144,16 +144,16 @@
     <string name="select_dates">• 选择日期：点击某个日期以选中或取消选中。</string>
     <string name="add_or_remove_dates">• 添加或移除经期日期：在选中日期后点击\'添加或移除日期\' 按钮。</string>
     <string name="symptoms">• 症状：点击\'症状\' 按钮以查看或添加某个选中的日期的症状。</string>
-    <string name="ovulation">• 排卵日：选择单个日期并点击排卵日按钮。若要移除排卵日，选中该日期并再次点击排卵日按钮。Select a single date and click the ovulation button. To remove, select the date and press the button again.</string>
+    <string name="ovulation">• 排卵日：选择单个日期并点击排卵日按钮。若要移除排卵日，选中该日期并再次点击排卵日按钮。</string>
     <string name="statistics">• 统计：点击底部菜单中的统计按钮以查看统计资料。</string>
     <string name="import_export">• 导入/导出：点击底部菜单中的设置按钮，然后在设置中向下滚动到底部。点击导入/导出以导入或导出您的数据。这是将数据迁移到新设备时的必需步骤！</string>
     <string name="calculations">• 计算：\n经期是根据平均周期长度和经期长度计算的。\n经期也可通过平均黄体期来计算。即使用最近的五个周期得出一个平均黄体期，并以此来计算经期。此功能可以在设置中启用。\n排卵日是根据平均排卵周期长度计算的。</string>
     <string name="features_coming_soon">即将推出的功能：</string>
     <string name="upcoming_features">• 查看我们的GitHub 主页获得应用程序开发的最新消息！</string>
     <string name="our_story_header">我们的故事</string>
-    <string name="our_story">我们是两位厌倦了将自己的数据出卖给大公司的女性。我们的应用程序将所有数据本地保存在您的设备上，我们对您的数据没有任何访问权限。\n我们重视您的隐私，不会保存或共享任何个人信息。自从推出这个应用程序以来，我们不断发展，现在拥有了自己的 Discord 服务器，那里有许多对这个应用程序充满热情并愿意帮助我们的用户！ \n\n加入我们的 Discord： https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">我们是两位厌倦了将自己的数据出卖给大公司的女性。我们的应用程序将所有数据本地保存在您的设备上，我们对您的数据没有任何访问权限。\n我们重视您的隐私，不会保存或共享任何个人信息。自从推出这个应用程序以来，我们不断发展，现在拥有了自己的Discord服务器，那里有许多对这个应用程序充满热情并愿意帮助我们的用户！ \n\n加入我们的Discord：https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">免责声明：</string>
-    <string name="disclaimer">• 这是一个业余爱好项目，不用于医疗用途。我们制作这个应用程序仅为了我们自己的需要，但我们非常欢迎您提出想法和需求。加入我们的 Discord 或发送电子邮件到：\nmensinator.app@gmail.com</string>
+    <string name="disclaimer">• 这是一个业余爱好项目，不用于医疗用途。我们制作这个应用程序仅为了我们自己的需要，但我们非常欢迎您提出想法和需求。加入我们的Discord或发送电子邮件到：\nmensinator.app@gmail.com</string>
 
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">关闭</string>
