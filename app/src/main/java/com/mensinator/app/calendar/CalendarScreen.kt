@@ -443,8 +443,7 @@ fun Day(
             }
 
             if (state.showCycleNumbers) {
-                val cycleNumber = calculateCycleNumber(day.date, localDateNow, dbHelper)
-                if (cycleNumber > 0) {
+                calculateCycleNumber(day.date, localDateNow, dbHelper)?.let { cycleNumber ->
                     Surface(
                         shape = shape,
                         color = Color.Transparent,
@@ -466,31 +465,14 @@ fun Day(
 /**
  * Calculate the cycle number for a given date.
  */
-fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
-    val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day)
-    if (lastPeriodStartDate == null) {
-        // There are now passed periods from days date
-        return 0
-    }
-    if (day > now) {
-        // Don't generate cycle numbers for future dates
-        return 0
-    }
+fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDatabaseHelper): Int? {
+    // Don't generate cycle numbers for future dates
+    if (day > now) return null
+
+    val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day) ?: return null
+
     return ChronoUnit.DAYS.between(lastPeriodStartDate, day).toInt() + 1
 }
-
-//Return true if selected dates
-//fun containsPeriodDate(selectedDates: Set<LocalDate>, periodDates: Map<LocalDate, Int>): Boolean {
-//    return selectedDates.any { selectedDate ->
-//        periodDates.containsKey(selectedDate)
-//    }
-//}
-//
-//fun containsOvulationDate(selectedDates: Set<LocalDate>, ovulationDates: Set<LocalDate>): Boolean {
-//    return selectedDates.any { selectedDate ->
-//        ovulationDates.contains(selectedDate)
-//    }
-//}
 
 /**
  * Schedule a notification for a given date.
