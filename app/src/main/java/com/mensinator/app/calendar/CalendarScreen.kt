@@ -55,8 +55,8 @@ fun CalendarScreen(
     viewModel: CalendarViewModel = koinViewModel(),
     setToolbarOnClick: (() -> Unit) -> Unit,
 ) {
-    val context = LocalContext.current
     val notificationScheduler: INotificationScheduler = koinInject()
+    val onAction = { uiAction: UiAction -> viewModel.onAction(uiAction) }
 
     val state = viewModel.viewState.collectAsStateWithLifecycle()
     val isDarkMode = isDarkMode()
@@ -84,10 +84,8 @@ fun CalendarScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            //.background(Color.Cyan.copy(alpha = 0.5f))
-        //.windowInsetsPadding(WindowInsets.displayCutout.exclude(WindowInsets.statusBars))
-        .displayCutoutExcludingStatusBarsPadding()
-        .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            .displayCutoutExcludingStatusBarsPadding()
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
     ) {
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))
@@ -102,7 +100,7 @@ fun CalendarScreen(
             dayContent = { day ->
                 Day(
                     viewState = state,
-                    onAction = { uiAction -> viewModel.onAction(uiAction) },
+                    onAction = onAction,
                     day = day,
                 )
             },
@@ -124,9 +122,9 @@ fun CalendarScreen(
             val buttonModifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
-            PeriodButton(state, viewModel, context, notificationScheduler, buttonModifier)
+            PeriodButton(state, onAction, notificationScheduler, buttonModifier)
             SymptomButton(showSymptomsDialog, state, buttonModifier)
-            OvulationButton(state, context, viewModel, buttonModifier)
+            OvulationButton(state, onAction, buttonModifier)
         }
 
         // Bottom insets when in landscape
@@ -170,11 +168,11 @@ fun CalendarScreen(
 @Composable
 private fun PeriodButton(
     state: State<CalendarViewModel.ViewState>,
-    viewModel: CalendarViewModel,
-    context: Context,
+    onAction: (uiAction: UiAction) -> Unit,
     notificationScheduler: INotificationScheduler,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     var selectedIsPeriod = false
     val isPeriodButtonEnabled by remember {
         derivedStateOf { state.value.selectedDays.isNotEmpty() }
@@ -182,7 +180,7 @@ private fun PeriodButton(
     val successSaved = stringResource(id = R.string.successfully_saved_alert)
     Button(
         onClick = {
-            viewModel.onAction(
+            onAction(
                 UiAction.UpdatePeriodDates(
                     currentPeriodDays = state.value.periodDates,
                     selectedDays = state.value.selectedDays
@@ -253,11 +251,11 @@ private fun SymptomButton(
 @Composable
 private fun OvulationButton(
     state: State<CalendarViewModel.ViewState>,
-    context: Context,
-    viewModel: CalendarViewModel,
+    onAction: (uiAction: UiAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // ovulation starts here
+    val context = LocalContext.current
+
     var selectedIsOvulation = false
     val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
     val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
@@ -270,7 +268,7 @@ private fun OvulationButton(
             if (state.value.selectedDays.size > 1) {
                 Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
             } else if (ovulationButtonEnabled) {
-                viewModel.onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
+                onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
                 Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
@@ -353,15 +351,15 @@ fun Day(
     day: CalendarDay,
 ) {
     val state = viewState.value
+    val localDateNow = remember { LocalDate.now() }
 
     val settingColors = state.calendarColors.settingColors
     val dbHelper: IPeriodDatabaseHelper = koinInject()
 
     /**
-     * Make sure the cells don't occupy so much space in landscape or on relatively big screens.
+     * Make sure the cells don't occupy so much space in landscape or on big (wide) screens.
      */
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-
     val wideWindow = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
     val aspectRatioModifier = when {
         wideWindow -> {
@@ -394,12 +392,12 @@ fun Day(
         else -> null
     } ?: fallbackColors
 
-    val border = if (day.date.isEqual(LocalDate.now())) {
+    val border = if (day.date.isEqual(localDateNow)) {
         BorderStroke(1.5.dp, fallbackColors.textColor.copy(alpha = 0.5f))
     } else null
 
     val fontStyleType = when {
-        day.date.isEqual(LocalDate.now()) -> FontWeight.Bold
+        day.date.isEqual(localDateNow) -> FontWeight.Bold
         else -> FontWeight.Normal
     }
 
@@ -455,7 +453,7 @@ fun Day(
             }
 
             if (state.showCycleNumbers) {
-                val cycleNumber = calculateCycleNumber(day.date, dbHelper)
+                val cycleNumber = calculateCycleNumber(day.date, localDateNow, dbHelper)
                 if (cycleNumber > 0) {
                     Surface(
                         shape = shape,
@@ -478,13 +476,13 @@ fun Day(
 /**
  * Calculate the cycle number for a given date.
  */
-fun calculateCycleNumber(day: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
+fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDatabaseHelper): Int {
     val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day)
     if (lastPeriodStartDate == null) {
         // There are now passed periods from days date
         return 0
     }
-    if (day > LocalDate.now()) {
+    if (day > now) {
         // Don't generate cycle numbers for future dates
         return 0
     }
