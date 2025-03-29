@@ -110,7 +110,7 @@ private fun MainScaffold(
     Row {
         if (isMediumExpandedWWSC) {
             NavigationRail(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
             ) {
                 Column(
                     modifier = Modifier.fillMaxHeight()
@@ -144,12 +144,11 @@ private fun MainScaffold(
                     }
                 }
             },
-            //contentWindowInsets = WindowInsets(0.dp)
-        ) { paddingValues ->
+        ) { rootPaddingValues ->
             NavHost(
                 navController = navController,
                 startDestination = Screen.Calendar.name,
-                modifier = Modifier.padding(paddingValues),
+                modifier = Modifier.padding(rootPaddingValues),
                 enterTransition = { fadeIn(animationSpec = tween(50)) },
                 exitTransition = { fadeOut(animationSpec = tween(50)) },
             ) {
