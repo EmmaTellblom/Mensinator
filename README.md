@@ -3,9 +3,11 @@ Private period tracking with custom symptoms. We don't track your data - you do.
 
 ## 💡 Features
 - Period and ovulation tracking and statistics.
-- ***Customizable, colour-coded symptoms***.
+- Customizable, colour-coded symptoms.
 - Cycle prediction with average period calculation.
-- Cycle prediction with average ***luteal phase calculation for irregular cycles***.
+- Cycle prediction with average luteal phase calculation for irregular cycles.
+- Customisable period reminder text.
+- App is available in 14 languages (with Community contributions).
 - Data export and import for backups or moving to another device.
 - No tracking. No sign-up. Your data is yours. No data is sent anywhere.
 - No bloat. No useless or complex features. No emails.
@@ -13,7 +15,7 @@ Private period tracking with custom symptoms. We don't track your data - you do.
 ## 🫂 Made for friends by friends
 Originally, Emma made Mensinator for a friend who was looking for an app that would track unique period symptoms and respect her privacy.
 Soon, more like-minded individuals joined the project. 
-We all wanted a user-friendly, straigtforward app made for us, not an app that uses our data for profit. We are now actively building Mensinator together. 
+We all wanted a user-friendly, straightforward app made for us, not an app that uses our data for profit. We are now actively building Mensinator together. 
 
 ## 🔮 Future plans
 - Whatever you suggest! Discuss ideas with users and developers on **[our Discord](https://discord.gg/tHA2k3bFRN)**. Let us know what features you'd like to see.

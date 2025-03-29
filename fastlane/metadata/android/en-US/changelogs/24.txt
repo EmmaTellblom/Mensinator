@@ -1,0 +1,11 @@
+Version 2.0 of Mensinator is here, we have reworked the ENTIRE calendar for better UI!
+
+Features:
+* New vertical calendar!
+* Text for period reminder is now customizable!
+* Start day of week is now based on phone locale
+
+New languages:
+* Russian
+* Italian
+* Simplified Chinese
