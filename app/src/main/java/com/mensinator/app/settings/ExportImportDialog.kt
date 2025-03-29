@@ -1,6 +1,7 @@
 package com.mensinator.app.settings
 
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +19,7 @@ import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
 import java.io.FileOutputStream
+
 
 @Composable
 fun ExportDialog(
@@ -75,11 +77,17 @@ fun ImportDialog(
     val impFailure = stringResource(id = R.string.import_failure_toast)
 
     val importLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri == null) return@rememberLauncherForActivityResult
 
-            val inputStream = context.contentResolver.openInputStream(uri)
-            val file = File(defaultImportFilePath)
+            val contentResolver = context.contentResolver
+            val mimeTypes = MimeTypeMap.getSingleton()
+            val type = mimeTypes.getExtensionFromMimeType(contentResolver.getType(uri)) ?: throw Exception("Cannot infer import file type")
+            Log.d("Import", "Inferred URI extension = $type")
+
+            val inputStream = contentResolver.openInputStream(uri)
+            val importFilePath = "$defaultImportFilePath.$type"
+            val file = File(importFilePath)
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
@@ -109,7 +117,7 @@ fun ImportDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    importLauncher.launch("application/json")
+                    importLauncher.launch(arrayOf("application/json", "text/plain"))
                 },
             ) {
                 Text(stringResource(id = R.string.select_file_button))
