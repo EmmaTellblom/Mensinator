@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,6 +107,7 @@ fun CalendarScreen(
             },
             monthHeader = {
                 MonthTitle(yearMonth = it.yearMonth)
+                Spacer(modifier = Modifier.height(4.dp))
                 DaysOfWeekTitle(daysOfWeek = daysOfWeek().toPersistentList())
             }
         )
@@ -223,10 +225,7 @@ private fun PeriodButton(
             }
             else -> stringResource(id = R.string.period_button)
         }
-        Text(
-            text = text,
-            textAlign = TextAlign.Center,
-        )
+        ButtonText(text)
     }
 }
 
@@ -238,13 +237,10 @@ private fun SymptomButton(
 ) {
     Button(
         onClick = { showSymptomsDialog.value = true },
-        enabled = state.value.selectedDays.isNotEmpty(),  // Set the state of the Symptoms button
-        modifier = modifier//.fillMaxWidth()
+        enabled = state.value.selectedDays.isNotEmpty(),
+        modifier = modifier
     ) {
-        Text(
-            text = stringResource(id = R.string.symptoms_button),
-            textAlign = TextAlign.Center,
-        )
+        ButtonText(stringResource(id = R.string.symptoms_button))
     }
 }
 
@@ -292,11 +288,23 @@ private fun OvulationButton(
             }
             else -> stringResource(id = R.string.ovulation_button)
         }
-        Text(
-            text = text,
-            textAlign = TextAlign.Center,
-        )
+        ButtonText(text)
     }
+}
+
+@Composable
+private fun ButtonText(
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        style = MaterialTheme.typography.labelMedium,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2
+    )
 }
 
 
@@ -305,7 +313,6 @@ private fun OvulationButton(
  */
 @Composable
 private fun DaysOfWeekTitle(daysOfWeek: PersistentList<DayOfWeek>) {
-    Spacer(modifier = Modifier.height(4.dp))
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
             Text(
@@ -360,7 +367,8 @@ fun Day(
      * Make sure the cells don't occupy so much space in landscape or on big (wide) screens.
      */
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val wideWindow = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
+    val wideWindow =
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
     val aspectRatioModifier = when {
         wideWindow -> {
             Modifier.aspectRatio(2f) // Make cells less tall
