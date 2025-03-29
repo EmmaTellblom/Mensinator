@@ -1,24 +1,16 @@
 package com.mensinator.app.calendar
 
-import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kizitonwose.calendar.core.yearMonth
-import com.mensinator.app.business.IOvulationPrediction
-import com.mensinator.app.business.IPeriodDatabaseHelper
-import com.mensinator.app.business.IPeriodPrediction
-import com.mensinator.app.business.PeriodId
+import com.mensinator.app.business.*
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
 import com.mensinator.app.extensions.pickBestContrastTextColorForThisBackground
 import com.mensinator.app.settings.BooleanSetting
 import com.mensinator.app.settings.ColorSetting
-import com.mensinator.app.settings.IntSetting
-import com.mensinator.app.settings.StringSetting
-import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import kotlinx.collections.immutable.*
@@ -33,9 +25,9 @@ import java.time.YearMonth
 
 class CalendarViewModel(
     private val dbHelper: IPeriodDatabaseHelper,
-    @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val periodPrediction: IPeriodPrediction,
     private val ovulationPrediction: IOvulationPrediction,
+    private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(
@@ -47,10 +39,6 @@ class CalendarViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val showCycleNumbersSetting =
                 (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull() ?: 1) == 1
-            val initPeriodKeyOrCustomMessage =
-                dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
-            val periodMessageText =
-                ResourceMapper.getStringResourceOrCustom(initPeriodKeyOrCustomMessage, appContext)
 
             _viewState.update {
                 it.copy(
@@ -66,12 +54,9 @@ class CalendarViewModel(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
                     ).toPersistentSet(),
-                    periodReminderDays = dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull()
-                        ?: 2,
                     activeSymptoms = dbHelper.getAllSymptoms()
                         .filter { symptom->  symptom.isActive }
                         .toPersistentSet(),
-                    periodMessageText = periodMessageText,
                 )
             }
         }
@@ -135,6 +120,7 @@ class CalendarViewModel(
             } else {
                 datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
             }
+            viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
             onAction(UiAction.SelectDays(persistentSetOf()))
             refreshData()
         }
@@ -196,9 +182,7 @@ class CalendarViewModel(
         val periodDates: PersistentMap<LocalDate, Int> = persistentMapOf(),
         val symptomDates: PersistentMap<LocalDate, Set<Symptom>> = persistentMapOf(),
         val ovulationDates: PersistentSet<LocalDate> = persistentSetOf(),
-        val periodReminderDays: Int? = null,
         val activeSymptoms: PersistentSet<Symptom> = persistentSetOf(),
-        val periodMessageText: String? = null,
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
         val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf()),

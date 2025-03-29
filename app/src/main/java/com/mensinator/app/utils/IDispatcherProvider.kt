@@ -1,5 +1,17 @@
 package com.mensinator.app.utils
 
-interface DispatcherProvider {
-    
+import kotlinx.coroutines.Dispatchers
+
+@Suppress("unused", "PropertyName")
+interface IDispatcherProvider {
+    val Main
+        get() = Dispatchers.Main
+    val Default
+        get() = Dispatchers.Default
+    val IO
+        get() = Dispatchers.IO
+    val Unconfined
+        get() = Dispatchers.Unconfined
 }
+
+class DefaultDispatcherProvider : IDispatcherProvider

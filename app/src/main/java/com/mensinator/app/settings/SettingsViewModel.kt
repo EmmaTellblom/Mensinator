@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.R
 import com.mensinator.app.business.IExportImport
+import com.mensinator.app.business.INotificationScheduler
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*
@@ -23,6 +24,7 @@ class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IExportImport,
+    private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
         ViewState(
@@ -121,25 +123,29 @@ class SettingsViewModel(
         }
     }
 
-    fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) {
-        periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
-        showColorPicker(null)
-        refreshData()
+    fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) = viewModelScope.launch {
+            periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
+            showColorPicker(null)
+            refreshData()
     }
 
-    fun updateIntSetting(intSetting: IntSetting, newNumber: Int) {
+    fun updateIntSetting(intSetting: IntSetting, newNumber: Int) = viewModelScope.launch {
         periodDatabaseHelper.updateSetting(intSetting.settingDbKey, newNumber.toString())
         showIntPicker(null)
         refreshData()
+
+        if (intSetting == IntSetting.REMINDER_DAYS) {
+            notificationScheduler.schedulePeriodNotification()
+        }
     }
 
-    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) {
+    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean)= viewModelScope.launch {
         val dbValue = if (newValue) "1" else "0"
         periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
         refreshData()
     }
 
-    fun updateStringSetting(stringSetting: StringSetting, newString: String) {
+    fun updateStringSetting(stringSetting: StringSetting, newString: String) = viewModelScope.launch {
         periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
         refreshData()
     }

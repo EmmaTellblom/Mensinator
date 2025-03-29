@@ -1,8 +1,8 @@
 package com.mensinator.app.business
 
-import java.time.LocalDate
-
 interface INotificationScheduler {
-    fun scheduleNotification(notificationDate: LocalDate, messageText: String)
-    fun cancelNotification(notificationId: Int)
+    /**
+     * Checks if there is enough data to schedule a period reminder notification, then schedules it.
+     */
+    suspend fun schedulePeriodNotification()
 }
