@@ -129,16 +129,6 @@ fun CalendarScreen(
             OvulationButton(state, onAction, buttonModifier)
         }
 
-        // Bottom insets when in landscape
-        /*
-        Box(
-            modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Vertical))
-                .background(Color.Red)
-        )
-         */
-
-
         // Show the SymptomsDialog
         if (showSymptomsDialog.value && state.value.selectedDays.isNotEmpty()) {
             val activeSymptoms = state.value.activeSymptoms
@@ -253,24 +243,16 @@ private fun OvulationButton(
     val context = LocalContext.current
 
     var selectedIsOvulation = false
-    val onlyOneOvulationAllowed = stringResource(id = R.string.only_day_alert)
     val successSavedOvulation = stringResource(id = R.string.success_saved_ovulation)
-    val noDateSelectedOvulation = stringResource(id = R.string.no_date_selected_ovulation)
     val ovulationButtonEnabled by remember {
         derivedStateOf { state.value.selectedDays.size == 1 }
     }
     Button(
         onClick = {
-            if (state.value.selectedDays.size > 1) {
-                Toast.makeText(context, onlyOneOvulationAllowed, Toast.LENGTH_SHORT).show()
-            } else if (ovulationButtonEnabled) {
-                onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
-                Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, noDateSelectedOvulation, Toast.LENGTH_SHORT).show()
-            }
+            onAction(UiAction.UpdateOvulationDay(state.value.selectedDays.first()))
+            Toast.makeText(context, successSavedOvulation, Toast.LENGTH_SHORT).show()
         },
-        enabled = ovulationButtonEnabled,  // Set the state of the Ovulation button
+        enabled = ovulationButtonEnabled,
         modifier = modifier
     ) {
         for (selectedDate in state.value.selectedDays) {

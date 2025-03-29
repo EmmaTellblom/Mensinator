@@ -14,6 +14,7 @@ import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
 import com.mensinator.app.extensions.pickBestContrastTextColorForThisBackground
+import com.mensinator.app.settings.BooleanSetting
 import com.mensinator.app.settings.ColorSetting
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
@@ -45,7 +46,7 @@ class CalendarViewModel(
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             val showCycleNumbersSetting =
-                (dbHelper.getSettingByKey("cycle_numbers_show")?.value?.toIntOrNull() ?: 1) == 1
+                (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull() ?: 1) == 1
             val initPeriodKeyOrCustomMessage =
                 dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
             val periodMessageText =
@@ -68,7 +69,7 @@ class CalendarViewModel(
                     periodReminderDays = dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull()
                         ?: 2,
                     activeSymptoms = dbHelper.getAllSymptoms()
-                        .filter { it.isActive }
+                        .filter { symptom->  symptom.isActive }
                         .toPersistentSet(),
                     periodMessageText = periodMessageText,
                 )
@@ -179,10 +180,7 @@ class CalendarViewModel(
         }
 
         val symptomColors = dbHelper.getAllSymptoms().associateWith {
-            ColorSource.getColor(
-                isDarkMode,
-                it.color
-            )
+            ColorSource.getColor(isDarkMode, it.color)
         }
 
         return CalendarColors(settingColors, symptomColors)
@@ -203,7 +201,7 @@ class CalendarViewModel(
         val periodMessageText: String? = null,
         val selectedDays: PersistentSet<LocalDate> = persistentSetOf(),
         val activeSymptomIdsForLatestSelectedDay: PersistentSet<Int> = persistentSetOf(),
-        val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf())
+        val calendarColors: CalendarColors = CalendarColors(mapOf(), mapOf()),
     )
 
     data class CalendarColors(
