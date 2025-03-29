@@ -23,8 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.window.core.layout.WindowHeightSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass
+import androidx.window.core.layout.WindowSizeClass
 import com.kizitonwose.calendar.compose.VerticalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
@@ -362,14 +361,14 @@ fun Day(
      * Make sure the cells don't occupy so much space in landscape or on relatively big screens.
      */
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val heightClass = windowSizeClass.windowHeightSizeClass
-    val widthClass = windowSizeClass.windowWidthSizeClass
+
+    val wideWindow = windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
     val aspectRatioModifier = when {
-        heightClass == WindowHeightSizeClass.EXPANDED && widthClass == WindowWidthSizeClass.COMPACT -> {
-            Modifier.aspectRatio(1f) // Ensure cells remain square
+        wideWindow -> {
+            Modifier.aspectRatio(2f) // Make cells less tall
         }
         else -> {
-            Modifier.aspectRatio(2f) // Make cells less tall
+            Modifier.aspectRatio(1f) // Ensure cells remain square
         }
     }
 
