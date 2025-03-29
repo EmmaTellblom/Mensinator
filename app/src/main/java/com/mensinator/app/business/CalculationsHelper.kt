@@ -2,25 +2,30 @@ package com.mensinator.app.business
 
 import android.util.Log
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
+import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : ICalculationsHelper {
     private val periodHistory
-        get() = dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
+        get() = runBlocking {
+            dbHelper.getSettingByKey("period_history")?.value?.toIntOrNull() ?: 5
+        }
     private val ovulationHistory
-        get() = dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
+        get() = runBlocking {
+            dbHelper.getSettingByKey("ovulation_history")?.value?.toIntOrNull() ?: 5
+        }
     private val lutealCalculation
-        get() = dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
+        get() = runBlocking {
+            dbHelper.getSettingByKey("luteal_period_calculation")?.value?.toIntOrNull() ?: 0
+        }
 
-    override fun calculateNextPeriod(): LocalDate {
-        val expectedPeriodDate: LocalDate
-
-        if (lutealCalculation == 1) {
+    override fun calculateNextPeriod(): LocalDate? {
+        return if (lutealCalculation == 1) {
             //go to advanced calculation using X latest ovulations (set by user in settings)
             Log.d("TAG", "Advanced calculation")
-            expectedPeriodDate = advancedNextPeriod()
+            advancedNextPeriod()
         } else {
             // Basic calculation using latest period start dates
             Log.d("TAG", "Basic calculation")
@@ -29,7 +34,7 @@ class CalculationsHelper(
             val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
             if (listPeriodDates.isEmpty()) {
-                expectedPeriodDate = LocalDate.parse("1900-01-01")
+                null
             } else {
                 // Calculate the cycle lengths between consecutive periods
                 val cycleLengths = mutableListOf<Long>()
@@ -42,11 +47,12 @@ class CalculationsHelper(
                 }
                 // Calculate the average cycle length
                 val averageLength = cycleLengths.average()
-                expectedPeriodDate = listPeriodDates.last().plusDays(averageLength.toLong())
+
+                listPeriodDates.last().plusDays(averageLength.toLong())
+            }.also {
+                Log.d("TAG", "Expected period date Basic: $it")
             }
         }
-        Log.d("TAG", "Expected period date Basic: $expectedPeriodDate")
-        return expectedPeriodDate
     }
 
     /**
@@ -54,14 +60,14 @@ class CalculationsHelper(
      *
      * @return The next expected period date.
      */
-    private fun advancedNextPeriod(): LocalDate {
+    private fun advancedNextPeriod(): LocalDate? {
         // Get the list of the latest ovulation dates
         val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(ovulationHistory)
         //Log.d("TAG", "Ovulation dates: $ovulationDates")
         if (ovulationDates.isEmpty()) {
             // Return null or handle the case where no ovulations are available
             Log.d("TAG", "Ovulationdates are empty")
-            return LocalDate.parse("1900-01-01")
+            return null
         }
 
         var lutealLength = 0
@@ -83,7 +89,7 @@ class CalculationsHelper(
         if (lastOvulation == null) {
             // Return null or handle the case where no last ovulation date is available
             Log.d("TAG", "Ovulation is null")
-            return LocalDate.parse("1900-01-01")
+            return null
         }
         val periodDates =
             dbHelper.getLatestXPeriodStart(ovulationHistory) //This always returns no+1 period dates

@@ -50,6 +50,7 @@ object DatabaseUtils {
         databaseVersion7(db)
         databaseVersion8(db)
         databaseVersion9(db)
+        databaseVersion10(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -84,11 +85,11 @@ object DatabaseUtils {
             INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id) VALUES
                 ('period_color', 'Period Color', 'Red', 1),
                 ('selection_color', 'Selection Color', 'LightGray', 1),
-                ('period_selection_color', 'Period Selection Color', 'DarkGray', 1),
                 ('expected_period_color', 'Expected Period Color', 'Yellow', 1),
                 ('reminder_days', 'Days Before Reminder', '0', 2),
                 ('luteal_period_calculation', 'Luteal Phase Calculation', '0', 3)
         """)
+        // ('period_selection_color', 'Period Selection Color', 'DarkGray', 1), - deprecated
     }
 
     fun createOvulationStructure(db: SQLiteDatabase){
@@ -192,4 +193,15 @@ object DatabaseUtils {
         """
         )
     }
+
+    fun databaseVersion10(db: SQLiteDatabase) {
+        // Remove old setting for period_selection_color
+        db.execSQL(
+            """
+        DELETE FROM app_settings WHERE setting_key = 'period_selection_color';
+        """
+        )
+    }
+
+
 }

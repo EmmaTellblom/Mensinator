@@ -61,6 +61,10 @@ android {
     lint {
         sarifReport = true
     }
+    composeCompiler {
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+        metricsDestination = layout.buildDirectory.dir("compose_compiler")
+    }
 }
 
 dependencies {
@@ -74,15 +78,22 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.adaptive)
+    implementation(libs.androidx.material3.adaptive.layout)
+    implementation(libs.androidx.material3.window.size.classes)
     implementation(libs.androidx.window)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.common.ktx)
 
+    implementation(libs.kizitonwose.calendar.compose)
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin)
     implementation(libs.koin.compose)
+
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -94,4 +105,7 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // To be used to profile performance. Don't include in release builds
+    // implementation("androidx.compose.runtime:runtime-tracing")
 }

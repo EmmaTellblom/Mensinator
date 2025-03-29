@@ -3,7 +3,7 @@ package com.mensinator.app.statistics
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.mensinator.app.*
+import com.mensinator.app.R
 import com.mensinator.app.business.ICalculationsHelper
 import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
@@ -24,6 +24,7 @@ class StatisticsViewModel(
     private val periodPrediction: IPeriodPrediction,
 ) : ViewModel() {
 
+    private val dash = "-"
     private val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
 
     private val _viewState = MutableStateFlow(
@@ -50,8 +51,8 @@ class StatisticsViewModel(
                 averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
                 averageLutealLength =formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
                 follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
-                ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate().format(dateFormatter),
-                periodPredictionDate = periodPrediction.getPredictedPeriodDate().format(dateFormatter),
+                ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
+                periodPredictionDate = periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash,
                 ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
             )
         }

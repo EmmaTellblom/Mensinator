@@ -5,9 +5,18 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.mensinator.app.data.Symptom
+import androidx.core.database.sqlite.transaction
+import com.kizitonwose.calendar.core.atStartOfMonth
 import com.mensinator.app.data.Setting
+import com.mensinator.app.data.Symptom
+import com.mensinator.app.extensions.until
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.YearMonth
+
+
+typealias PeriodId = Int
 
 /*
 This file contains functions to get/set data into the database
@@ -19,7 +28,7 @@ class PeriodDatabaseHelper(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 9
+        private const val DATABASE_VERSION = 10
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -51,6 +60,8 @@ class PeriodDatabaseHelper(context: Context) :
 
     override val writableDb: SQLiteDatabase
         get() = writableDatabase
+
+    private val surroundingMonthsToConsider = 2L
 
     //See DatabaseUtils
     override fun onCreate(db: SQLiteDatabase) {
@@ -87,6 +98,9 @@ class PeriodDatabaseHelper(context: Context) :
         if (oldVersion < 9) {
             DatabaseUtils.databaseVersion9(db)
         }
+        if (oldVersion < 10) {
+            DatabaseUtils.databaseVersion10(db)
+        }
     }
 
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
@@ -103,8 +117,8 @@ class PeriodDatabaseHelper(context: Context) :
         }
     }
 
-    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int> {
-        val dates = mutableMapOf<LocalDate, Int>()
+    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, PeriodId> {
+        val dates = mutableMapOf<LocalDate, PeriodId>()
         val db = readableDatabase
 
         // Query the database for dates in the specified month and year
@@ -116,34 +130,88 @@ class PeriodDatabaseHelper(context: Context) :
             null, null, null
         )
 
-        if (cursor != null) {
-            try {
-                // Get column indices
-                val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
-                val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
+        try {
+            // Get column indices
+            val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
+            val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
 
-                if (dateIndex != -1 && periodIdIndex != -1) {
-                    while (cursor.moveToNext()) {
-                        val dateStr = cursor.getString(dateIndex)
-                        val periodId = cursor.getInt(periodIdIndex)
-                        val date = LocalDate.parse(dateStr)
-                        dates[date] = periodId
-                    }
-                } else {
-                    Log.e(
-                        TAG,
-                        "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
-                    )
+            if (dateIndex != -1 && periodIdIndex != -1) {
+                while (cursor.moveToNext()) {
+                    val dateStr = cursor.getString(dateIndex)
+                    val periodId = cursor.getInt(periodIdIndex)
+                    val date = LocalDate.parse(dateStr)
+                    dates[date] = periodId
                 }
-            } finally {
-                cursor.close()
+            } else {
+                Log.e(
+                    TAG,
+                    "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
+                )
             }
-        } else {
-            Log.e(TAG, "Cursor is null while querying for dates")
+        } finally {
+            cursor.close()
         }
 
         return dates
     }
+
+    override suspend fun getPeriodDatesForMonthNew(
+        year: Int,
+        month: Int
+    ): Map<LocalDate, PeriodId> = withContext(Dispatchers.IO) {
+        val dates = mutableMapOf<LocalDate, PeriodId>()
+        val db = readableDatabase
+
+        // Calculate previous, current, and next months
+        val currentMonth = YearMonth.of(year, month)
+        val startMonth = currentMonth.minusMonths(surroundingMonthsToConsider)
+        val endMonth = currentMonth.plusMonths(surroundingMonthsToConsider)
+        val months = startMonth until endMonth
+
+        // SQL query to match year and month
+        val queryCondition =
+            months.joinToString(" OR ") { "(strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?)" }
+        val queryArgs = months.flatMap {
+            listOf(
+                it.year.toString(),
+                it.monthValue.toString().padStart(2, '0')
+            )
+        }.toList().toTypedArray()
+
+        // Execute query
+        val cursor = db.query(
+            TABLE_PERIODS,
+            arrayOf(COLUMN_DATE, COLUMN_PERIOD_ID),
+            queryCondition,
+            queryArgs,
+            null, null, null
+        )
+
+        try {
+            // Get column indices
+            val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
+            val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
+
+            if (dateIndex != -1 && periodIdIndex != -1) {
+                while (cursor.moveToNext()) {
+                    val dateStr = cursor.getString(dateIndex)
+                    val periodId = cursor.getInt(periodIdIndex)
+                    val date = LocalDate.parse(dateStr)
+                    dates[date] = periodId
+                }
+            } else {
+                Log.e(
+                    TAG,
+                    "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
+                )
+            }
+        } finally {
+            cursor.close()
+        }
+
+        dates
+    }
+
 
     override fun getPeriodCount(): Int {
         val db = readableDatabase
@@ -169,7 +237,7 @@ class PeriodDatabaseHelper(context: Context) :
         }
     }
 
-    override fun getAllSymptoms(): List<Symptom> {
+    override suspend fun getAllSymptoms(): List<Symptom> = withContext(Dispatchers.IO) {
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
@@ -186,11 +254,9 @@ class PeriodDatabaseHelper(context: Context) :
                     symptoms.add(Symptom(symptomId, symptomName, symptomActive, color))
                 } while (it.moveToNext())
             }
-
-
         }
         cursor.close()
-        return symptoms
+        symptoms
     }
 
     override fun createNewSymptom(symptomName: String) {
@@ -248,72 +314,167 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
+    override suspend fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
+        withContext(Dispatchers.IO) {
+            val dates = mutableSetOf<LocalDate>()
+            val db = readableDatabase
+
+            // Calculate previous month and next month
+            val currentYearMonth = YearMonth.of(year, month)
+            val prevMonth = currentYearMonth.minusMonths(surroundingMonthsToConsider)
+            val nextMonth = currentYearMonth.plusMonths(surroundingMonthsToConsider)
+
+            val prevYear = prevMonth.year
+            val prevMonthValue = prevMonth.monthValue
+
+            val nextYear = nextMonth.year
+            val nextMonthValue = nextMonth.monthValue
+
+            // Define the raw SQL query to get symptom dates for previous, current, and next months
+            val query = """
+        SELECT sd.symptom_date
+        FROM $TABLE_SYMPTOM_DATE AS sd
+        INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID
+        WHERE (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           OR (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           OR (strftime('%Y', sd.symptom_date) = ? AND strftime('%m', sd.symptom_date) = ?)
+           AND s.$COLUMN_SYMPTOM_ACTIVE = 1
+    """
+
+            // Execute the query with the calculated previous, current, and next months
+            val cursor = db.rawQuery(
+                query,
+                arrayOf(
+                    year.toString(), month.toString().padStart(2, '0'),
+                    prevYear.toString(), prevMonthValue.toString().padStart(2, '0'),
+                    nextYear.toString(), nextMonthValue.toString().padStart(2, '0')
+                )
+            )
+
+            try {
+                // Get the column index for the date
+                val dateIndex = cursor.getColumnIndex("symptom_date")
+
+                if (dateIndex != -1) {
+                    while (cursor.moveToNext()) {
+                        val dateStr = cursor.getString(dateIndex)
+                        try {
+                            val date = LocalDate.parse(dateStr)
+                            // Add the date to the set of dates with active symptoms
+                            dates.add(date)
+                        } catch (e: Exception) {
+                            Log.e(TAG, "Failed to parse date string: $dateStr", e)
+                        }
+                    }
+                } else {
+                    Log.e(TAG, "Column index is invalid: dateIndex=$dateIndex")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error querying for symptom dates", e)
+            } finally {
+                cursor.close()
+            }
+
+            dates
+        }
+
+    override suspend fun getSymptomsForDates(): Map<LocalDate, Set<Symptom>> =
+        withContext(Dispatchers.IO) {
+            val dates = mutableMapOf<LocalDate, MutableSet<Symptom>>()
+            val db = readableDatabase
+
+            val query = """
+        SELECT sd.$COLUMN_SYMPTOM_DATE, 
+               s.$COLUMN_ID, 
+               s.$COLUMN_SYMPTOM_NAME, 
+               s.$COLUMN_SYMPTOM_ACTIVE, 
+               s.color
+        FROM $TABLE_SYMPTOM_DATE AS sd
+        INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID
+        WHERE s.$COLUMN_SYMPTOM_ACTIVE = 1
+    """
+
+            val cursor = db.rawQuery(query, null)
+
+            cursor.use {  // Ensures cursor is closed automatically
+                while (it.moveToNext()) {
+                    val dateString = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_DATE))
+                    val date =
+                        LocalDate.parse(dateString)  // Assuming it's stored in "YYYY-MM-DD" format
+
+                    val symptomId = it.getInt(it.getColumnIndexOrThrow(COLUMN_ID))
+                    val symptomName = it.getString(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_NAME))
+                    val symptomActive = it.getInt(it.getColumnIndexOrThrow(COLUMN_SYMPTOM_ACTIVE))
+                    val color = it.getString(it.getColumnIndexOrThrow("color"))
+
+                    val symptom = Symptom(symptomId, symptomName, symptomActive, color)
+
+                    dates.computeIfAbsent(date) { mutableSetOf() }.add(symptom)
+                }
+            }
+
+            dates
+        }
+
     override fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
         val db = writableDatabase
 
         // Convert dates to strings for database operations
         val dateStrings = dates.map { it.toString() }
 
-        db.beginTransaction()
-        try {
-            // Delete existing symptoms for the specified dates
-            db.execSQL(
-                """
-                DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${
-                    dateStrings.joinToString(
-                        ","
-                    ) { "?" }
-                })
-            """,
-                dateStrings.toTypedArray()
-            )
+        db.transaction {
+            try {
+                // Delete existing symptoms for the specified dates
+                execSQL(
+                    """
+              DELETE FROM $TABLE_SYMPTOM_DATE WHERE $COLUMN_SYMPTOM_DATE IN (${
+                        dateStrings.joinToString(",") { "?" }
+                    })
+           """,
+                    dateStrings.toTypedArray()
+                )
 
-            // Insert new symptoms for the specified dates
-            val insertSQL = """
+                // Insert new symptoms for the specified dates
+                val insertSQL = """
             INSERT INTO $TABLE_SYMPTOM_DATE ($COLUMN_SYMPTOM_DATE, $COLUMN_SYMPTOM_ID) VALUES (?, ?)
         """
-            for (date in dates) {
-                for (id in symptomId) {
-                    db.execSQL(insertSQL, arrayOf(date.toString(), id))
+                for (date in dates) {
+                    for (id in symptomId) {
+                        execSQL(insertSQL, arrayOf<Any>(date.toString(), id))
+                    }
+                }
+            } catch (e: Exception) {
+                // Handle exceptions
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override suspend fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> =
+        withContext(Dispatchers.IO) {
+            val db = readableDatabase
+            val symptoms = mutableListOf<Int>()
+
+            val cursor = db.query(
+                TABLE_SYMPTOM_DATE,
+                arrayOf(COLUMN_SYMPTOM_ID),
+                "$COLUMN_SYMPTOM_DATE = ?",
+                arrayOf(date.toString()),
+                null, null, null
+            )
+
+            cursor.use {
+                if (cursor.moveToFirst()) {
+                    do {
+                        val symptomId =
+                            cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SYMPTOM_ID))
+                        symptoms.add(symptomId)
+                    } while (cursor.moveToNext())
                 }
             }
 
-            // Mark the transaction as successful
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            // Handle exceptions
-            e.printStackTrace()
-        } finally {
-            // End the transaction
-            db.endTransaction()
+            symptoms
         }
-
-        // Close the database connection
-    }
-
-    override fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> {
-        val db = readableDatabase
-        val symptoms = mutableListOf<Int>()
-
-        val cursor = db.query(
-            TABLE_SYMPTOM_DATE,
-            arrayOf(COLUMN_SYMPTOM_ID),
-            "$COLUMN_SYMPTOM_DATE = ?",
-            arrayOf(date.toString()),
-            null, null, null
-        )
-
-        cursor.use {
-            if (cursor.moveToFirst()) {
-                do {
-                    val symptomId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SYMPTOM_ID))
-                    symptoms.add(symptomId)
-                } while (cursor.moveToNext())
-            }
-        }
-
-        return symptoms
-    }
 
     override fun getSymptomColorForDate(date: LocalDate): List<String> {
         val db = readableDatabase
@@ -366,7 +527,7 @@ class PeriodDatabaseHelper(context: Context) :
         return rowsUpdated > 0
     }
 
-    override fun getSettingByKey(key: String): Setting? {
+    override suspend fun getSettingByKey(key: String): Setting? = withContext(Dispatchers.IO) {
         val db = readableDatabase
         val cursor = db.query(
             TABLE_APP_SETTINGS,
@@ -389,16 +550,16 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
         cursor.close()
-        return setting
+        setting
     }
 
-    override fun getStringSettingByKey(key: String): String {
+    override suspend fun getStringSettingByKey(key: String): String = withContext(Dispatchers.IO) {
         val string = getSettingByKey(key)?.value
         if (string == null) {
             Log.e("getStringSettingByKey", "key '$key' is null")
-            return "Unknown"
+            return@withContext "Unknown"
         }
-        return string
+        string
     }
 
     override fun updateOvulationDate(date: LocalDate) {
@@ -464,6 +625,56 @@ class PeriodDatabaseHelper(context: Context) :
         return dates
     }
 
+    override suspend fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
+        withContext(Dispatchers.IO) {
+            val dates = mutableSetOf<LocalDate>()
+            val db = readableDatabase
+
+            try {
+                // Calculate the date range
+                val currentMonth = YearMonth.of(year, month)
+
+                val rangeStart = currentMonth.minusMonths(surroundingMonthsToConsider).atStartOfMonth()
+                val rangeEnd = currentMonth.plusMonths(surroundingMonthsToConsider).atEndOfMonth()
+
+                // Query the database for dates within the calculated range
+                val cursor = db.query(
+                    "ovulations", // Table name
+                    arrayOf("date"), // Column name
+                    "date BETWEEN ? AND ?", // Date range condition
+                    arrayOf(rangeStart.toString(), rangeEnd.toString()),
+                    null, null, null
+                )
+
+                try {
+                    // Get the column index for the date
+                    val dateIndex = cursor.getColumnIndex("date")
+
+                    if (dateIndex != -1) {
+                        while (cursor.moveToNext()) {
+                            val dateStr = cursor.getString(dateIndex)
+                            try {
+                                val date = LocalDate.parse(dateStr)
+                                // Add the date to the set of dates
+                                dates.add(date)
+                            } catch (e: Exception) {
+                                Log.e("TAG", "Failed to parse date string: $dateStr", e)
+                            }
+                        }
+                    } else {
+                        Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
+                    }
+                } finally {
+                    cursor.close()
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "Error querying for ovulation dates", e)
+            } finally {
+            }
+
+            dates
+        }
+
     override fun getOvulationCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT DATE) FROM OVULATIONS"
@@ -489,43 +700,39 @@ class PeriodDatabaseHelper(context: Context) :
         val args = arrayOf(dateStr, date.minusDays(1).toString(), date.plusDays(1).toString())
         val cursor = db.rawQuery(query, args)
 
-        if (cursor != null) {
-            try {
-                if (cursor.count > 1) {
-                    cursor.moveToFirst()
-                    val primaryPeriodID = cursor.getInt(0)
-                    cursor.moveToNext()
-                    val secondaryPeriodID = cursor.getInt(0)
+        try {
+            if (cursor.count > 1) {
+                cursor.moveToFirst()
+                val primaryPeriodID = cursor.getInt(0)
+                cursor.moveToNext()
+                val secondaryPeriodID = cursor.getInt(0)
 
-                    // Merge periods
-                    val updateQuery = "UPDATE PERIODS SET PERIOD_ID = ? WHERE PERIOD_ID = ?"
-                    val updateArgs =
-                        arrayOf(primaryPeriodID.toString(), secondaryPeriodID.toString())
-                    db.execSQL(updateQuery, updateArgs)
+                // Merge periods
+                val updateQuery = "UPDATE PERIODS SET PERIOD_ID = ? WHERE PERIOD_ID = ?"
+                val updateArgs =
+                    arrayOf(primaryPeriodID.toString(), secondaryPeriodID.toString())
+                db.execSQL(updateQuery, updateArgs)
 
-                    periodId = primaryPeriodID
-                    //Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
-                } else if (cursor.count == 1) {
-                    cursor.moveToFirst()
-                    periodId = cursor.getInt(0)
-                    //Log.d(TAG, "Found existing periodId $periodId for date $date")
-                } else {
-                    // Create a new period ID
-                    val maxPeriodIdCursor =
-                        db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
-                    if (maxPeriodIdCursor.moveToFirst()) {
-                        val maxPeriodId =
-                            if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
-                        periodId = maxPeriodId + 1
-                        //Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
-                    }
-                    maxPeriodIdCursor.close()
+                periodId = primaryPeriodID
+                //Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
+            } else if (cursor.count == 1) {
+                cursor.moveToFirst()
+                periodId = cursor.getInt(0)
+                //Log.d(TAG, "Found existing periodId $periodId for date $date")
+            } else {
+                // Create a new period ID
+                val maxPeriodIdCursor =
+                    db.rawQuery("SELECT MAX($COLUMN_PERIOD_ID) FROM $TABLE_PERIODS", null)
+                if (maxPeriodIdCursor.moveToFirst()) {
+                    val maxPeriodId =
+                        if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
+                    periodId = maxPeriodId + 1
+                    //Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
                 }
-            } finally {
-                cursor.close()
+                maxPeriodIdCursor.close()
             }
-        } else {
-            Log.e(TAG, "Cursor is null while querying for periodId")
+        } finally {
+            cursor.close()
         }
 
         return periodId
@@ -786,8 +993,7 @@ class PeriodDatabaseHelper(context: Context) :
 
     }
 
-    override fun getLatestPeriodStart(): LocalDate {
-        val latestPeriodStart = LocalDate.parse("1900-01-01")
+    override fun getLatestPeriodStart(): LocalDate? {
         val db = readableDatabase
         val query =
             "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
@@ -797,6 +1003,6 @@ class PeriodDatabaseHelper(context: Context) :
             return LocalDate.parse(dateString)
         }
         cursor.close()
-        return latestPeriodStart
+        return null
     }
 }

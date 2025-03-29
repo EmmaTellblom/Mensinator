@@ -1,9 +1,8 @@
 package com.mensinator.app.business
 
 import android.database.sqlite.SQLiteDatabase
-import androidx.annotation.WorkerThread
-import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.Setting
+import com.mensinator.app.data.Symptom
 import java.time.LocalDate
 
 interface IPeriodDatabaseHelper {
@@ -17,10 +16,13 @@ interface IPeriodDatabaseHelper {
     val writableDb: SQLiteDatabase
 
     // This function is used to add a date together with a period id to the periods table
-    fun addDateToPeriod(date: LocalDate, periodId: Int)
+    fun addDateToPeriod(date: LocalDate, periodId: PeriodId)
 
     // Get all period dates for a given month
-    fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, Int>
+    fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, PeriodId>
+
+    // NEW! Testing new function for getting all period dates month-1, month, month+1
+    suspend fun getPeriodDatesForMonthNew(year: Int, month: Int): Map<LocalDate, PeriodId>
 
     // Returns how many periods that are in the database
     fun getPeriodCount(): Int
@@ -29,19 +31,23 @@ interface IPeriodDatabaseHelper {
     fun removeDateFromPeriod(date: LocalDate)
 
     // This function is used to get all symptoms from the database
-    fun getAllSymptoms(): List<Symptom>
+    suspend fun getAllSymptoms(): List<Symptom>
 
     // This function inserts new symptom into the Database
     fun createNewSymptom(symptomName: String)
 
     // This function returns all Symptom dates for given month
     fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate>
+    // NEW! Testing new function for getting all symptom dates month-1, month, month+1
+    suspend fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate>
+
+    suspend fun getSymptomsForDates(): Map<LocalDate, Set<Symptom>>
 
     // This function is used to update symptom dates in the database
     fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>)
 
     // This function is used to get symptoms for a given date
-    fun getActiveSymptomIdsForDate(date: LocalDate): List<Int>
+    suspend fun getActiveSymptomIdsForDate(date: LocalDate): List<Int>
 
     fun getSymptomColorForDate(date: LocalDate): List<String>
 
@@ -52,11 +58,10 @@ interface IPeriodDatabaseHelper {
     fun updateSetting(key: String, value: String): Boolean
 
     // This function is used to get a setting from the database
-    @WorkerThread
-    fun getSettingByKey(key: String): Setting?
+    suspend fun getSettingByKey(key: String): Setting?
 
     // This function wraps getSettingByKey to return a valid string
-    fun getStringSettingByKey(key: String): String
+    suspend fun getStringSettingByKey(key: String): String
 
     // This function is used for adding/removing ovulation dates from the database
     fun updateOvulationDate(date: LocalDate)
@@ -64,12 +69,15 @@ interface IPeriodDatabaseHelper {
     // This function is used to get ovulation date for a given month
     fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate>
 
+    //NEW! Testing new function for getting all ovulation dates month-1, month, month+1
+    suspend fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate>
+
     // This function is used to get the number of ovulations in the database
     fun getOvulationCount(): Int
 
     // This function checks if date input should be included in existing period
     // or if a new periodId should be created
-    fun newFindOrCreatePeriodID(date: LocalDate): Int
+    fun newFindOrCreatePeriodID(date: LocalDate): PeriodId
 
     // Retrieve the previous period's start date from a given date
     fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate?
@@ -111,5 +119,5 @@ interface IPeriodDatabaseHelper {
     fun renameSymptom(symptomId: Int, newName: String)
 
     // Retrieve the latest period start date
-    fun getLatestPeriodStart(): LocalDate
+    fun getLatestPeriodStart(): LocalDate?
 }
