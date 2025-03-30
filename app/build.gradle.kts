@@ -65,6 +65,10 @@ android {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
         metricsDestination = layout.buildDirectory.dir("compose_compiler")
     }
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -93,10 +97,12 @@ dependencies {
     implementation(libs.koin)
     implementation(libs.koin.compose)
 
+    implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

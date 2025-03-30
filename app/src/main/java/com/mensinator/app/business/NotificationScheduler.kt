@@ -20,7 +20,7 @@ class NotificationScheduler(
     private val dbHelper: IPeriodDatabaseHelper,
     private val periodPrediction: IPeriodPrediction,
     private val dispatcherProvider: IDispatcherProvider,
-    private val alarmManager: AlarmManager
+    private val androidNotificationScheduler: IAndroidNotificationScheduler,
 ) : INotificationScheduler {
 
     // Schedule notification for reminder
@@ -37,32 +37,12 @@ class NotificationScheduler(
                 ResourceMapper.getPeriodReminderMessage(initPeriodKeyOrCustomMessage, context)
 
             val notificationDate = getNotificationScheduleDate(periodReminderDays, nextPeriodDate)
-
-
             withContext(dispatcherProvider.Main) {
-                val intent = Intent(context, NotificationReceiver::class.java).apply {
-                    action = NotificationReceiver.ACTION_NOTIFICATION
-                    putExtra(NotificationReceiver.MESSAGE_TEXT_KEY, periodMessageText)
-                }
-                val pendingIntent = PendingIntent.getBroadcast(
-                    context,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                )
-
                 if (notificationDate != null) {
-                    val notificationTimeMillis = notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                    alarmManager.set(
-                        AlarmManager.RTC_WAKEUP,
-                        notificationTimeMillis,
-                        pendingIntent
-                    )
-                    Log.d("NotificationScheduler", "Notification scheduled for $notificationDate")
+                    androidNotificationScheduler.scheduleNotification(periodMessageText, notificationDate)
                 } else {
                     // Make sure the scheduled notification is cancelled, if the user data/conditions become invalid.
-                    alarmManager.cancel(pendingIntent)
-                    Log.d("NotificationScheduler", "Notification cancelled")
+                    androidNotificationScheduler.cancelScheduledNotification()
                 }
             }
         }

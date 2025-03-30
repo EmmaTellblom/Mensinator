@@ -28,6 +28,7 @@ class App : Application() {
         singleOf(::ExportImport) { bind<IExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
         singleOf(::DefaultDispatcherProvider) { bind<IDispatcherProvider>() }
+        singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }
         single { androidContext().getSystemService(ALARM_SERVICE) as AlarmManager }
 
         viewModel { CalendarViewModel(get(), get(), get(), get()) }

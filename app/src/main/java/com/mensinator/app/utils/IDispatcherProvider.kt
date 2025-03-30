@@ -1,10 +1,11 @@
 package com.mensinator.app.utils
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 @Suppress("unused", "PropertyName")
 interface IDispatcherProvider {
-    val Main
+    val Main: CoroutineDispatcher
         get() = Dispatchers.Main
     val Default
         get() = Dispatchers.Default
