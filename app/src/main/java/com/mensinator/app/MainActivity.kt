@@ -9,9 +9,19 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.mensinator.app.NotificationChannelConstants.channelDescription
+import com.mensinator.app.NotificationChannelConstants.channelId
+import com.mensinator.app.NotificationChannelConstants.channelName
 import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
 import org.koin.androidx.compose.KoinAndroidContext
+
+@Suppress("ConstPropertyName")
+object NotificationChannelConstants {
+    const val channelId = "1"
+    const val channelName = "Mensinator"
+    const val channelDescription = "Your Channel Description"
+}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,9 +39,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createNotificationChannel(context: Context) {
-        val channelId = "1"
-        val channelName = "Mensinator"
-        val channelDescription = "Your Channel Description"
         val importance = NotificationManager.IMPORTANCE_HIGH
         val notificationChannel = NotificationChannel(channelId, channelName, importance).apply {
             description = channelDescription
