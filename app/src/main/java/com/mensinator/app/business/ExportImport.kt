@@ -10,6 +10,8 @@ import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -45,7 +47,7 @@ class ExportImport(
     }
 
     override fun getDefaultImportFilePath(): String {
-        return File(context.getExternalFilesDir(null), "import.json").absolutePath
+        return File(context.getExternalFilesDir(null), "import").absolutePath
     }
 
     override fun exportDatabase(filePath: String) {
@@ -106,14 +108,21 @@ class ExportImport(
         val file = File(filePath)
         val fileInputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(fileInputStream))
-        val stringBuilder = StringBuilder()
-        var line: String? = reader.readLine()
-        while (line != null) {
-            stringBuilder.append(line)
-            line = reader.readLine()
+        val importData : JSONObject
+
+        // Check file extension
+        when (file.extension.lowercase()) {
+            "txt" -> importData = transformMyCalendarFormatToMensinatorFormat(reader)
+
+            "json" -> {
+                val stringBuilder = StringBuilder()
+                reader.forEachLine {line -> stringBuilder.append(line) }
+                importData = JSONObject(stringBuilder.toString())
+            }
+
+            else -> throw Exception("Extension file is not supported")
         }
         reader.close()
-        val importData = JSONObject(stringBuilder.toString())
 
         db.beginTransaction()
         try {
@@ -193,5 +202,108 @@ class ExportImport(
                 db.update("app_settings", contentValues, "setting_key = ?", arrayOf(settingKey))
 
         }
+    }
+
+    // This functions transforms an import file that has "My Calendar" period app's txt format into Mensinator's JSON format
+    private fun transformMyCalendarFormatToMensinatorFormat(reader: BufferedReader) : JSONObject {
+        val logMessage: (String) -> Unit = { message -> Log.d("Import", "[TransformMyCalendarFormatToMensinatorFormat] $message") }
+
+        logMessage("Transforming My Calendar's txt format into Mensinator's JSON format")
+
+        // Period data
+        val periodsSection = JSONArray()
+        var periodDateHelper = LocalDate.now()
+        var periodIDHelper = 1
+        var periodDateIDHelper = 1
+
+        // Symptom data
+        val symptomMap : HashMap<String, Int> = HashMap()
+        val symptomSection = JSONArray()
+        val symptomDateSection = JSONArray()
+        var symptomIDHelper = 1
+        var symptomDateIDHelper = 1
+
+        // Regular expressions and formats
+        val dateAndContentRegex = Regex("(.+)\t(.+)") // To get the date and content of each annotation in My Calendar export. Format is '($date)\t($content)'.
+        val symptomsRegex = Regex("Síntomas:(.+)") // To get the symptoms list
+        val myCalendarDateFormatter = DateTimeFormatter.ofPattern("d MMM yyyy") // My Calendar's date format
+
+        // Process file
+        var line: String? = reader.readLine()
+        while (line != null) {
+
+            val lineMatch = dateAndContentRegex.find(line)
+            line = reader.readLine()
+            if (lineMatch == null)  continue
+
+            val date = LocalDate.parse(lineMatch.groupValues[1], myCalendarDateFormatter)
+            val content = lineMatch.groupValues[2]
+
+            when {
+                // Period start
+                content == "Inicio del período" -> periodDateHelper = date
+
+                // Period end
+                content == "Fin del período" -> {
+                    logMessage("Adding period ranged from $periodDateHelper to $date")
+
+                    while (periodDateHelper <= date) {
+                        val periodJSON = JSONObject()
+                        periodJSON.put("id", periodDateIDHelper++)
+                        periodJSON.put("date", periodDateHelper)
+                        periodJSON.put("period_id", periodIDHelper)
+
+                        periodsSection.put(periodJSON)
+                        periodDateHelper = periodDateHelper.plusDays(1)
+                    }
+
+                    periodIDHelper++
+                }
+
+                // Dated symptoms annotated
+                symptomsRegex.containsMatchIn(content) -> {
+                    val symptomList = symptomsRegex.find(content)!!.groupValues[1]
+                    val symptoms = symptomList.split(";").dropLast(1) // My Calendar's symptoms list always ends with a ';'.
+                    // That means that the last symptom will always be an empty string, so we drop it.
+
+                    for (symptom in symptoms) {
+                        var currentSymptomID : Int
+                        if (symptomMap.contains(symptom)) {
+                            currentSymptomID = symptomMap[symptom]!!
+                        }
+                        else {
+                            symptomMap[symptom] = symptomIDHelper++
+                            currentSymptomID = symptomIDHelper
+                        }
+
+                        val symptomDateJSON = JSONObject()
+                        symptomDateJSON.put("id", symptomDateIDHelper++)
+                        symptomDateJSON.put("symptom_date", date)
+                        symptomDateJSON.put("symptom_id", currentSymptomID)
+
+                        symptomDateSection.put(symptomDateJSON)
+                    }
+                }
+            }
+        }
+
+        // Add symptoms
+        for (symptom in symptomMap.keys) {
+            val symptomJSON = JSONObject()
+            symptomJSON.put("id", symptomMap[symptom])
+            symptomJSON.put("symptom_name", symptom)
+            symptomJSON.put("active", 1)
+
+            symptomSection.put(symptomJSON)
+        }
+
+        val mensinatorJSON = JSONObject()
+        mensinatorJSON.put("periods", periodsSection)
+        mensinatorJSON.put("symptoms", symptomSection)
+        mensinatorJSON.put("symptom_date", symptomDateSection)
+
+        logMessage("Transformation ended")
+
+        return mensinatorJSON
     }
 }
