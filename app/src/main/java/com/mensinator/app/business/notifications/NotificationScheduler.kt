@@ -1,8 +1,10 @@
-package com.mensinator.app.business
+package com.mensinator.app.business.notifications
 
 
 import android.content.Context
 import android.util.Log
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.ResourceMapper
@@ -23,13 +25,15 @@ class NotificationScheduler(
     private val androidNotificationScheduler: IAndroidNotificationScheduler,
 ) : INotificationScheduler {
 
+    private val defaultReminderDays = 2
+
     // Schedule notification for reminder
     // Check that reminders should be scheduled (reminder>0)
     // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
     override suspend fun schedulePeriodNotification() {
         withContext(dispatcherProvider.IO) {
             val periodReminderDays =
-                dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull() ?: 2
+                dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull() ?: defaultReminderDays
             val nextPeriodDate = periodPrediction.getPredictedPeriodDate()
             val initPeriodKeyOrCustomMessage =
                 dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)

@@ -1,4 +1,4 @@
-package com.mensinator.app.business
+package com.mensinator.app.business.notifications
 
 import android.app.AlarmManager
 import android.app.PendingIntent

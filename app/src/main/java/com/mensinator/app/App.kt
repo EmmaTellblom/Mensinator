@@ -3,6 +3,10 @@ package com.mensinator.app
 import android.app.AlarmManager
 import android.app.Application
 import com.mensinator.app.business.*
+import com.mensinator.app.business.notifications.AndroidNotificationScheduler
+import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
+import com.mensinator.app.business.notifications.INotificationScheduler
+import com.mensinator.app.business.notifications.NotificationScheduler
 import com.mensinator.app.calendar.CalendarViewModel
 import com.mensinator.app.settings.SettingsViewModel
 import com.mensinator.app.statistics.StatisticsViewModel

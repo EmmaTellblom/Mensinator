@@ -4,7 +4,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kizitonwose.calendar.core.yearMonth
-import com.mensinator.app.business.*
+import com.mensinator.app.business.IOvulationPrediction
+import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.IPeriodPrediction
+import com.mensinator.app.business.PeriodId
+import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.data.isActive
