@@ -20,7 +20,7 @@ import org.koin.androidx.compose.KoinAndroidContext
 object NotificationChannelConstants {
     const val channelId = "1"
     const val channelName = "Mensinator"
-    const val channelDescription = "Your Channel Description"
+    const val channelDescription = "Reminders about upcoming periods"
 }
 
 class MainActivity : AppCompatActivity() {
