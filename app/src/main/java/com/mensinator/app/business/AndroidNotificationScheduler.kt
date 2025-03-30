@@ -9,6 +9,9 @@ import com.mensinator.app.NotificationReceiver
 import java.time.LocalDate
 import java.time.ZoneId
 
+/**
+ * Allows scheduling/cancelling notifications on Android.
+ */
 class AndroidNotificationScheduler(
     private val context: Context,
     private val alarmManager: AlarmManager,

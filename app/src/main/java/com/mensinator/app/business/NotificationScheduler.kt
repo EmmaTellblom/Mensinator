@@ -1,20 +1,20 @@
 package com.mensinator.app.business
 
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.util.Log
-import com.mensinator.app.NotificationReceiver
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.utils.IDispatcherProvider
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
-import java.time.ZoneId
 
+/**
+ * Service that checks whether a notification should be scheduled or cancelled.
+ * Does not perform the actual scheduling itself, instead it delegates this to [IAndroidNotificationScheduler].
+ * This is done to be able to unit test this class without using Robolectric.
+ */
 class NotificationScheduler(
     private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
