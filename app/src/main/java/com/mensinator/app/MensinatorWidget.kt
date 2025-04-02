@@ -31,9 +31,9 @@ class MensinatorWidget : GlanceAppWidget() {
     }
 
     //TODO: Implement sharedPreferences correctly
-    private fun getNextPeriodDate(context: Context): String {
-        return 0.toString()
-    }
+//    private fun getNextPeriodDate(context: Context): String {
+//        return 0.toString()
+//    }
 
     @Composable
     fun WidgetUI(daysUntilNextPeriod: String) {
