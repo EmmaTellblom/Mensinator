@@ -15,6 +15,7 @@ import androidx.glance.text.Text
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.provideContent
+import androidx.glance.background
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 class MensinatorWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+
             WidgetUI()
         }
     }
@@ -29,12 +31,15 @@ class MensinatorWidget : GlanceAppWidget() {
     @Composable
     fun WidgetUI() {
         Column(
-            modifier = GlanceModifier.fillMaxSize().padding(10.dp),
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(GlanceTheme.colors.background)
+                .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Mensinator",
+                text = "X days left",
                 style = androidx.glance.text.TextStyle(
                     color = GlanceTheme.colors.primary,
                     fontSize = 18.sp
