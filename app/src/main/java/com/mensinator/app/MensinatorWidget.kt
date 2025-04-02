@@ -19,17 +19,56 @@ import androidx.glance.background
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.glance.layout.Column
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MensinatorWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            val daysUntilNextPeriod = getNextPeriodDate(context)
+            WidgetUI(daysUntilNextPeriod)
+        }
+    }
 
-            WidgetUI()
+    //TODO: Implement sharedPreferences correctly
+    private fun getNextPeriodDate(context: Context): String {
+        val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val nextPeriodDateString = sharedPreferences.getString("nextPeriodDate", "")
+
+        // If no date is set in SharedPreferences, return a default message
+        if (nextPeriodDateString.isNullOrEmpty()) {
+            return "Next period date not set."
+        }
+
+        // Use SimpleDateFormat to parse the saved string into a Date object
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val nextPeriodDate: Date
+        try {
+            nextPeriodDate = sdf.parse(nextPeriodDateString) ?: throw Exception("Invalid date format")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "Error: Invalid date format"
+        }
+
+        // Get today's date as a Date object
+        val today = Date()
+
+        // Calculate the difference in days between today's date and the next period date
+        val diffInMillis = nextPeriodDate.time - today.time
+        val daysUntilNextPeriod = diffInMillis / (1000 * 60 * 60 * 24) // Convert millis to days
+
+        // Return a message based on the days difference
+        return when {
+            daysUntilNextPeriod > 0 -> "$daysUntilNextPeriod days until next period"
+            daysUntilNextPeriod == 0L -> "Today is the day of your next period"
+            else -> "Your next period was ${-daysUntilNextPeriod} days ago"
         }
     }
 
     @Composable
-    fun WidgetUI() {
+    fun WidgetUI(daysUntilNextPeriod: String) {
         Column(
             modifier = GlanceModifier
                 .fillMaxSize()
@@ -39,7 +78,7 @@ class MensinatorWidget : GlanceAppWidget() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "X days left",
+                text = daysUntilNextPeriod,
                 style = androidx.glance.text.TextStyle(
                     color = GlanceTheme.colors.primary,
                     fontSize = 18.sp
@@ -64,3 +103,4 @@ class MensinatorWidgetReceiver : GlanceAppWidgetReceiver() {
         }
     }
 }
+
