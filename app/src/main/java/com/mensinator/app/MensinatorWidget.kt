@@ -19,6 +19,10 @@ import androidx.glance.background
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.glance.layout.Column
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class MensinatorWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
