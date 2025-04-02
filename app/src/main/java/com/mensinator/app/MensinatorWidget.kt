@@ -19,7 +19,6 @@ import androidx.glance.background
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.glance.layout.Column
 
 class MensinatorWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
