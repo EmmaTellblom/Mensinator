@@ -1,5 +1,6 @@
 [versions]
 agp = "8.8.2"
+glanceAppwidget = "1.1.1"
 kotlin = "2.1.0"
 core = "1.15.0"
 junit = "4.13.2"
@@ -20,6 +21,7 @@ material3-adaptive = "1.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core" }
+androidx-glance-appwidget = { module = "androidx.glance:glance-appwidget", version.ref = "glanceAppwidget" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 kizitonwose-calendar-compose = { module = "com.kizitonwose.calendar:compose", version.ref = "kizitonwoseCalendar" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

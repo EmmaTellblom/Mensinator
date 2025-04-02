@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.koin.compose)
 
     implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.androidx.glance.appwidget)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
