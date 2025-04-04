@@ -1,7 +1,5 @@
 package com.mensinator.app.calendar
 
-import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -31,7 +29,6 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.mensinator.app.R
-import com.mensinator.app.business.INotificationScheduler
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
 import com.mensinator.app.extensions.stringRes
@@ -56,7 +53,6 @@ fun CalendarScreen(
     viewModel: CalendarViewModel = koinViewModel(),
     setToolbarOnClick: (() -> Unit) -> Unit,
 ) {
-    val notificationScheduler: INotificationScheduler = koinInject()
     val onAction = { uiAction: UiAction -> viewModel.onAction(uiAction) }
 
     val state = viewModel.viewState.collectAsStateWithLifecycle()
@@ -124,7 +120,7 @@ fun CalendarScreen(
             val buttonModifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
-            PeriodButton(state, onAction, notificationScheduler, buttonModifier)
+            PeriodButton(state, onAction, buttonModifier)
             SymptomButton(showSymptomsDialog, state, buttonModifier)
             OvulationButton(state, onAction, buttonModifier)
         }
@@ -161,7 +157,6 @@ fun CalendarScreen(
 private fun PeriodButton(
     state: State<CalendarViewModel.ViewState>,
     onAction: (uiAction: UiAction) -> Unit,
-    notificationScheduler: INotificationScheduler,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -178,26 +173,10 @@ private fun PeriodButton(
                     selectedDays = state.value.selectedDays
                 )
             )
-
-            // Schedule notification for reminder
-            // Check that reminders should be scheduled (reminder>0)
-            // and that it's more then reminderDays left (do not schedule notifications where there's too few reminderDays left until period)
-            val periodReminderDays = state.value.periodReminderDays ?: 2
-            val nextPeriodDate = state.value.periodPredictionDate
-            val periodMessageText = state.value.periodMessageText
-            if (periodReminderDays > 0 && nextPeriodDate != null && periodMessageText != null) {
-                newSendNotification(
-                    context,
-                    notificationScheduler,
-                    periodReminderDays,
-                    nextPeriodDate,
-                    periodMessageText
-                )
-            }
             Toast.makeText(context, successSaved, Toast.LENGTH_SHORT).show()
         },
-        enabled = isPeriodButtonEnabled,  // Set the state of the Periods button
-        modifier = modifier//.fillMaxWidth()
+        enabled = isPeriodButtonEnabled,
+        modifier = modifier
     ) {
         for (selectedDate in state.value.selectedDays) {
             if (selectedDate in state.value.periodDates) {
@@ -472,32 +451,4 @@ fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDataba
     val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day) ?: return null
 
     return ChronoUnit.DAYS.between(lastPeriodStartDate, day).toInt() + 1
-}
-
-/**
- * Schedule a notification for a given date.
- */
-fun newSendNotification(
-    context: Context,
-    scheduler: INotificationScheduler,
-    daysForReminding: Int,
-    periodDate: LocalDate,
-    messageText: String
-) {
-    val notificationDate = periodDate.minusDays(daysForReminding.toLong())
-    if (notificationDate.isBefore(LocalDate.now())) {
-        Log.d(
-            "CalendarScreen",
-            "Notification not scheduled because the reminder date is in the past"
-        )
-        Toast.makeText(
-            context,
-            "Notification not scheduled because the date to remind you will be in the past",
-            Toast.LENGTH_SHORT
-        ).show()
-    } else {
-        //Schedule notification
-        scheduler.scheduleNotification(notificationDate, messageText)
-        Log.d("CalendarScreen", "Notification scheduled for $notificationDate")
-    }
 }

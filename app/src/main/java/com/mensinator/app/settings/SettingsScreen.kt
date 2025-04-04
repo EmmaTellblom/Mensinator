@@ -26,8 +26,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.ui.ResourceMapper
@@ -44,6 +46,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = koinViewModel(),
     onSwitchProtectionScreen: (Boolean) -> Unit,
 ) {
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
     val viewState = viewModel.viewState.collectAsStateWithLifecycle().value
     val isDarkMode = isDarkMode()
     LaunchedEffect(isDarkMode) {
@@ -51,6 +54,11 @@ fun SettingsScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.init()
+    }
+    LaunchedEffect("resume") {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.onResume()
+        }
     }
 
     Column(
@@ -69,13 +77,13 @@ fun SettingsScreen(
         val context = LocalContext.current
         SettingNumberSelection(
             intSetting = IntSetting.REMINDER_DAYS,
-            currentNumber = viewState.daysBeforeReminder,
+            text = viewState.daysBeforeReminder,
             openIntPickerForSetting = viewState.openIntPickerForSetting,
             onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
 
-                if (!areNotificationsEnabled(context)) {
+                if (!viewModel.areNotificationsEnabled(context)) {
                     Log.d("SettingsDialog", "Notifications are not enabled")
                     openNotificationSettings(context)
                 }
@@ -114,7 +122,7 @@ fun SettingsScreen(
         )
         SettingNumberSelection(
             intSetting = IntSetting.PERIOD_HISTORY,
-            currentNumber = viewState.daysForPeriodHistory,
+            text = "${viewState.daysForPeriodHistory}",
             openIntPickerForSetting = viewState.openIntPickerForSetting,
             onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
@@ -124,7 +132,7 @@ fun SettingsScreen(
         )
         SettingNumberSelection(
             intSetting = IntSetting.OVULATION_HISTORY,
-            currentNumber = viewState.daysForOvulationHistory,
+            text = "${viewState.daysForOvulationHistory}",
             openIntPickerForSetting = viewState.openIntPickerForSetting,
             onClosePicker = { viewModel.showIntPicker(null) },
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
@@ -443,7 +451,7 @@ private fun SettingText(
 @Composable
 private fun SettingNumberSelection(
     intSetting: IntSetting,
-    currentNumber: Int,
+    text: String,
     openIntPickerForSetting: IntSetting?,
     modifier: Modifier = Modifier,
     onClosePicker: () -> Unit,
@@ -464,7 +472,7 @@ private fun SettingNumberSelection(
         ) {
             //Cannot have days since this function is also used for period/ovulation history
             //Text("$currentNumber ${stringResource(R.string.days)}")
-            Text("$currentNumber")
+            Text(text)
         }
 
         if (openIntPickerForSetting != intSetting) return
@@ -508,7 +516,7 @@ private fun SettingNumberSelectionPreview() {
     MensinatorTheme {
         SettingNumberSelection(
             intSetting = IntSetting.PERIOD_HISTORY,
-            currentNumber = 3,
+            text = "3",
             openIntPickerForSetting = null,
             onClosePicker = { },
             onNumberChange = { _: IntSetting, _: Int -> },
@@ -609,11 +617,6 @@ private fun SettingTextPreview() {
     MensinatorTheme {
         SettingText(text = "Example settings text", onClick = {})
     }
-}
-
-private fun areNotificationsEnabled(context: Context): Boolean {
-    val notificationManager = NotificationManagerCompat.from(context)
-    return notificationManager.areNotificationsEnabled()
 }
 
 private fun openNotificationSettings(context: Context) {

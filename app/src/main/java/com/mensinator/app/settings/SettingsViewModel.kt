@@ -1,16 +1,20 @@
 package com.mensinator.app.settings
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
 import com.mensinator.app.business.IExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.settings.ColorSetting.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +27,7 @@ class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IExportImport,
+    private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
         ViewState(
@@ -34,7 +39,7 @@ class SettingsViewModel(
             expectedOvulationColor = Color.Yellow,
             openColorPickerForSetting = null,
 
-            daysBeforeReminder = -1,
+            daysBeforeReminder = "?",
             periodNotificationMessage = "",
             showPeriodNotificationDialog = false,
             daysForPeriodHistory = -1,
@@ -67,7 +72,7 @@ class SettingsViewModel(
         val expectedOvulationColor: Color,
         val openColorPickerForSetting: ColorSetting? = null,
 
-        val daysBeforeReminder: Int,
+        val daysBeforeReminder: String,
         val periodNotificationMessage: String,
         val showPeriodNotificationDialog: Boolean,
         val daysForPeriodHistory: Int,
@@ -92,6 +97,15 @@ class SettingsViewModel(
         refreshData()
     }
 
+    fun onResume() {
+        viewModelScope.launch {
+            // Make sure to display the correct text once the user came back from updating the settings
+            _viewState.update {
+                it.copy(daysBeforeReminder = getDaysBeforeReminderText())
+            }
+        }
+    }
+
     fun updateDarkModeStatus(isDarkMode: Boolean) {
         _viewState.update { it.copy(isDarkMode = isDarkMode) }
         refreshData()
@@ -108,7 +122,7 @@ class SettingsViewModel(
                     ovulationColor = getColor(isDarkMode, OVULATION.settingDbKey),
                     expectedOvulationColor = getColor(isDarkMode, EXPECTED_OVULATION.settingDbKey),
 
-                    daysBeforeReminder = getInt(IntSetting.REMINDER_DAYS.settingDbKey),
+                    daysBeforeReminder = getDaysBeforeReminderText(),
                     periodNotificationMessage = getString(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey),
                     daysForPeriodHistory = getInt(IntSetting.PERIOD_HISTORY.settingDbKey),
                     daysForOvulationHistory = getInt(IntSetting.OVULATION_HISTORY.settingDbKey),
@@ -121,25 +135,47 @@ class SettingsViewModel(
         }
     }
 
-    fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) {
-        periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
-        showColorPicker(null)
-        refreshData()
+    suspend fun getDaysBeforeReminderText(): String {
+        return if (!areNotificationsEnabled(appContext)) {
+            "?"
+        } else {
+            getInt(IntSetting.REMINDER_DAYS.settingDbKey).toString()
+        }
     }
 
-    fun updateIntSetting(intSetting: IntSetting, newNumber: Int) {
+    /**
+     * Check whether notifications are enabled and whether the notification channel is not deactivated
+     */
+    fun areNotificationsEnabled(context: Context): Boolean {
+        val notificationManager = NotificationManagerCompat.from(context)
+        val channel = notificationManager.getNotificationChannel(NotificationChannelConstants.channelId)
+        return channel?.importance != NotificationManager.IMPORTANCE_NONE && notificationManager.areNotificationsEnabled()
+    }
+
+    fun updateColorSetting(colorSetting: ColorSetting, newColorName: String) =
+        viewModelScope.launch {
+            periodDatabaseHelper.updateSetting(colorSetting.settingDbKey, newColorName)
+            showColorPicker(null)
+            refreshData()
+        }
+
+    fun updateIntSetting(intSetting: IntSetting, newNumber: Int) = viewModelScope.launch {
         periodDatabaseHelper.updateSetting(intSetting.settingDbKey, newNumber.toString())
         showIntPicker(null)
         refreshData()
+
+        if (intSetting == IntSetting.REMINDER_DAYS) {
+            notificationScheduler.schedulePeriodNotification()
+        }
     }
 
-    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) {
+    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) = viewModelScope.launch {
         val dbValue = if (newValue) "1" else "0"
         periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
         refreshData()
     }
 
-    fun updateStringSetting(stringSetting: StringSetting, newString: String) {
+    fun updateStringSetting(stringSetting: StringSetting, newString: String) = viewModelScope.launch {
         periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
         refreshData()
     }
@@ -211,11 +247,12 @@ class SettingsViewModel(
 
     private suspend fun getInt(settingKey: String): Int {
         val int = periodDatabaseHelper.getSettingByKey(settingKey)?.value ?: "0"
-        return int.toIntOrNull() ?: 0
+        return int.toIntOrNull() ?: -1
     }
 
     private suspend fun getBoolean(booleanSetting: BooleanSetting): Boolean {
-        val dbValue = periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
+        val dbValue =
+            periodDatabaseHelper.getSettingByKey(booleanSetting.settingDbKey)?.value ?: "0"
         val value = dbValue == "1" //
         return value
     }
