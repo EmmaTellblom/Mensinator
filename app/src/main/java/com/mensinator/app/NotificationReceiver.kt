@@ -32,8 +32,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.baseline_bloodtype_24)
-            .setContentTitle("Mensinator")
-            .setContentText(messageText)
+            .setContentText(messageText) // See discussion at https://github.com/EmmaTellblom/Mensinator/issues/216
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
 
