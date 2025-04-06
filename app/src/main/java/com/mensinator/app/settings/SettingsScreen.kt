@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -180,11 +181,12 @@ fun SettingsScreen(
         }
 
         if (viewState.showExportDialog) {
+            val fileName = remember { viewModel.getExportFileName() }
             ExportDialog(
-                exportFilePath = viewState.exportFilePath,
+                defaultFileName = fileName,
                 onDismissRequest = { viewModel.showExportDialog(false) },
-                onExportClick = { exportPath ->
-                    viewModel.handleExport(exportPath)
+                onPathSelect = { exportUri ->
+                    viewModel.handleExport(exportUri)
                 }
             )
         }

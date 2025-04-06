@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
@@ -53,7 +54,6 @@ class SettingsViewModel(
             showImportDialog = false,
             showExportDialog = false,
             defaultImportFilePath = exportImport.getDefaultImportFilePath(),
-            exportFilePath = exportImport.getDocumentsExportFilePath(),
 
             showFaqDialog = false,
             appVersion = getAppVersion(appContext),
@@ -86,7 +86,6 @@ class SettingsViewModel(
         val showImportDialog: Boolean,
         val showExportDialog: Boolean,
         val defaultImportFilePath: String,
-        val exportFilePath: String,
 
         val showFaqDialog: Boolean,
         val appVersion: String,
@@ -209,7 +208,7 @@ class SettingsViewModel(
             exportImport.importDatabase(importPath)
             Toast.makeText(
                 appContext,
-                "Data imported successfully from $importPath",
+                "Data imported successfully",
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
@@ -222,21 +221,19 @@ class SettingsViewModel(
         }
     }
 
-    fun handleExport(exportPath: String) {
+    fun getExportFileName(): String = exportImport.generateExportFileName()
+
+    fun handleExport(exportUri: Uri) {
+        fun showToast(errorMessage: String) {
+            Toast.makeText(appContext, errorMessage, Toast.LENGTH_SHORT).show()
+        }
+
         try {
-            exportImport.exportDatabase(exportPath)
-            Toast.makeText(
-                appContext,
-                "Data exported successfully to $exportPath",
-                Toast.LENGTH_SHORT
-            ).show()
+            exportImport.exportDatabase(exportUri)
+            showToast("Data exported successfully")
         } catch (e: Exception) {
-            Toast.makeText(
-                appContext,
-                "Error during export: ${e.message}",
-                Toast.LENGTH_SHORT
-            ).show()
-            Log.e("Export", "Export error: ${e.message}", e)
+            showToast("Error during export: ${e.message}")
+            Log.e("Export", "Error during export", e)
         }
     }
 

@@ -5,11 +5,14 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.icu.text.SimpleDateFormat
-import android.os.Environment
+import android.net.Uri
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.*
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
 import java.util.Date
 import java.util.Locale
 
@@ -19,9 +22,7 @@ class ExportImport(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IExportImport {
 
-    override fun getDocumentsExportFilePath(): String {
-        val documentsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
-
+    override fun generateExportFileName(): String {
         // Create a date formatter to include the current date in the filename
         val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val dateStr = dateFormat.format(Date())
@@ -30,25 +31,14 @@ class ExportImport(
         val randomNumber = (1000..9999).random()
 
         // Construct the filename with date and random number
-        val fileName = "mensinator_${dateStr}_$randomNumber.json"
-
-        // Create the file object for the export file
-        val exportFile = File(documentsDir, fileName)
-
-        // Create the documents directory if it does not exist
-        if (!documentsDir.exists()) {
-            documentsDir.mkdirs()
-        }
-
-        // Return the absolute path of the export file
-        return exportFile.absolutePath
+        return "mensinator_${dateStr}_$randomNumber.json"
     }
 
     override fun getDefaultImportFilePath(): String {
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
     }
 
-    override fun exportDatabase(filePath: String) {
+    override fun exportDatabase(filePath: Uri) {
         val db = dbHelper.readableDb
 
         val exportData = JSONObject()
@@ -79,10 +69,10 @@ class ExportImport(
         settingsCursor.close()
 
         // Write JSON data to file
-        val file = File(filePath)
-        val fileOutputStream = FileOutputStream(file)
-        fileOutputStream.write(exportData.toString().toByteArray())
-        fileOutputStream.close()
+        val contentResolver = context.contentResolver
+        contentResolver.openOutputStream(filePath)?.use { outputStream ->
+            outputStream.write(exportData.toString().toByteArray())
+        }
 
         db.close()
     }
