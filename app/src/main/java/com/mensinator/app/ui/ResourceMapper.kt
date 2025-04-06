@@ -49,14 +49,18 @@ object ResourceMapper {
         return resourceMap[key]
     }
 
-    fun getStringResourceOrCustom(key: String, context: Context): String {
-        /**
-         * - If key is unchanged, return the stringResource value
-         * - If key has changed (null), return user-set value
-         */
-        val id = getStringResourceId(key)
-        val text = id?.let { context.getString(id) } ?: key
-        return text
+    fun getPeriodReminderMessage(key: String, context: Context): String {
+        // If we can't retrieve a resource ID via the key, we know that the user has changed the text.
+        val userHasChangedMessage = getStringResourceId(key) == null
+
+        val appDefaultText = context.getString(R.string.period_notification_message)
+        val userSetValue = key.takeIf { userHasChangedMessage }
+
+        return if (userSetValue.isNullOrBlank()) {
+            appDefaultText
+        } else {
+            userSetValue
+        }
     }
 
     @Composable

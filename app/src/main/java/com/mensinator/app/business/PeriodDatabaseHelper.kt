@@ -10,7 +10,7 @@ import com.kizitonwose.calendar.core.atStartOfMonth
 import com.mensinator.app.data.Setting
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.extensions.until
-import kotlinx.coroutines.Dispatchers
+import com.mensinator.app.utils.IDispatcherProvider
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.YearMonth
@@ -22,8 +22,10 @@ typealias PeriodId = Int
 This file contains functions to get/set data into the database
 For handling database structure, see DatabaseUtils
  */
-class PeriodDatabaseHelper(context: Context) :
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
+class PeriodDatabaseHelper(
+    context: Context,
+    private val dispatcherProvider: IDispatcherProvider,
+) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION),
     IPeriodDatabaseHelper {
 
     companion object {
@@ -158,7 +160,7 @@ class PeriodDatabaseHelper(context: Context) :
     override suspend fun getPeriodDatesForMonthNew(
         year: Int,
         month: Int
-    ): Map<LocalDate, PeriodId> = withContext(Dispatchers.IO) {
+    ): Map<LocalDate, PeriodId> = withContext(dispatcherProvider.IO) {
         val dates = mutableMapOf<LocalDate, PeriodId>()
         val db = readableDatabase
 
@@ -237,7 +239,7 @@ class PeriodDatabaseHelper(context: Context) :
         }
     }
 
-    override suspend fun getAllSymptoms(): List<Symptom> = withContext(Dispatchers.IO) {
+    override suspend fun getAllSymptoms(): List<Symptom> = withContext(dispatcherProvider.IO) {
         val db = readableDatabase
         val symptoms = mutableListOf<Symptom>()
         val query =
@@ -315,7 +317,7 @@ class PeriodDatabaseHelper(context: Context) :
     }
 
     override suspend fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherProvider.IO) {
             val dates = mutableSetOf<LocalDate>()
             val db = readableDatabase
 
@@ -379,7 +381,7 @@ class PeriodDatabaseHelper(context: Context) :
         }
 
     override suspend fun getSymptomsForDates(): Map<LocalDate, Set<Symptom>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherProvider.IO) {
             val dates = mutableMapOf<LocalDate, MutableSet<Symptom>>()
             val db = readableDatabase
 
@@ -451,7 +453,7 @@ class PeriodDatabaseHelper(context: Context) :
     }
 
     override suspend fun getActiveSymptomIdsForDate(date: LocalDate): List<Int> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherProvider.IO) {
             val db = readableDatabase
             val symptoms = mutableListOf<Int>()
 
@@ -517,17 +519,22 @@ class PeriodDatabaseHelper(context: Context) :
         return settings
     }
 
-    override fun updateSetting(key: String, value: String): Boolean {
-        val db = this.writableDatabase
+    override suspend fun updateSetting(key: String, value: String): Boolean = withContext(dispatcherProvider.IO) {
+        val db = writableDatabase
         val contentValues = ContentValues().apply {
             put(COLUMN_SETTING_VALUE, value)
         }
         val rowsUpdated =
-            db.update(TABLE_APP_SETTINGS, contentValues, "$COLUMN_SETTING_KEY = ?", arrayOf(key))
-        return rowsUpdated > 0
+            db.update(
+                TABLE_APP_SETTINGS,
+                contentValues,
+                "$COLUMN_SETTING_KEY = ?",
+                arrayOf(key)
+            )
+        rowsUpdated > 0
     }
 
-    override suspend fun getSettingByKey(key: String): Setting? = withContext(Dispatchers.IO) {
+    override suspend fun getSettingByKey(key: String): Setting? = withContext(dispatcherProvider.IO) {
         val db = readableDatabase
         val cursor = db.query(
             TABLE_APP_SETTINGS,
@@ -553,7 +560,7 @@ class PeriodDatabaseHelper(context: Context) :
         setting
     }
 
-    override suspend fun getStringSettingByKey(key: String): String = withContext(Dispatchers.IO) {
+    override suspend fun getStringSettingByKey(key: String): String = withContext(dispatcherProvider.IO) {
         val string = getSettingByKey(key)?.value
         if (string == null) {
             Log.e("getStringSettingByKey", "key '$key' is null")
@@ -626,7 +633,7 @@ class PeriodDatabaseHelper(context: Context) :
     }
 
     override suspend fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcherProvider.IO) {
             val dates = mutableSetOf<LocalDate>()
             val db = readableDatabase
 

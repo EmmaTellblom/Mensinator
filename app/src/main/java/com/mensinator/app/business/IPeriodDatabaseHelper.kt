@@ -55,7 +55,7 @@ interface IPeriodDatabaseHelper {
     fun getAllSettings(): List<Setting>
 
     // This function is used for updating settings in the database
-    fun updateSetting(key: String, value: String): Boolean
+    suspend fun updateSetting(key: String, value: String): Boolean
 
     // This function is used to get a setting from the database
     suspend fun getSettingByKey(key: String): Setting?
