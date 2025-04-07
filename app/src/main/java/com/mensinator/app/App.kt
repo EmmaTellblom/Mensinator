@@ -34,6 +34,7 @@ class App : Application() {
         singleOf(::DefaultDispatcherProvider) { bind<IDispatcherProvider>() }
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }
         single { androidContext().getSystemService(ALARM_SERVICE) as AlarmManager }
+        singleOf(::MensinatorWidget)
 
         viewModel { CalendarViewModel(get(), get(), get(), get()) }
         viewModel { ManageSymptomsViewModel(get()) }
