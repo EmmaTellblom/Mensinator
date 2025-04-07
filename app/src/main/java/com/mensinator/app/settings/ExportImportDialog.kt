@@ -1,5 +1,6 @@
 package com.mensinator.app.settings
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -8,12 +9,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityOptionsCompat
 import com.mensinator.app.R
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
@@ -21,23 +21,28 @@ import java.io.FileOutputStream
 
 @Composable
 fun ExportDialog(
-    exportFilePath: String,
+    defaultFileName: String,
     onDismissRequest: () -> Unit,
-    onExportClick: (String) -> Unit,
+    onPathSelect: (exportUri: Uri) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
+    val jsonMimeType = "application/json"
+    val filePickerLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(jsonMimeType)) { uri ->
+            if (uri == null) {
+                onDismissRequest()
+                return@rememberLauncherForActivityResult
+            }
 
-    val expSuccess = stringResource(id = R.string.export_success_toast, exportFilePath)
+            onPathSelect(uri)
+            onDismissRequest()
+        }
+
     AlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = {
             Button(
-                onClick = {
-                    onExportClick(exportFilePath) // Calls the exported function
-                    Toast.makeText(context, expSuccess, Toast.LENGTH_SHORT).show()
-                    onDismissRequest()
-                },
+                onClick = { filePickerLauncher.launch(defaultFileName) },
             ) {
                 Text(stringResource(id = R.string.export_button))
             }
@@ -56,7 +61,7 @@ fun ExportDialog(
             Text(stringResource(id = R.string.export_data))
         },
         text = {
-            Text(stringResource(id = R.string.export_path_label, exportFilePath))
+            Text(stringResource(id = R.string.export_dialog_message))
         }
     )
 }
@@ -70,7 +75,6 @@ fun ImportDialog(
 ) {
     val context = LocalContext.current
 
-    val importPath = remember { mutableStateOf("") }
     val impSuccess = stringResource(id = R.string.import_success_toast)
     val impFailure = stringResource(id = R.string.import_failure_toast)
 
@@ -83,9 +87,10 @@ fun ImportDialog(
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
-                importPath.value = file.absolutePath
+
                 // Call the import function
-                onImportClick(importPath.value)
+                onImportClick(file.absolutePath)
+
                 // Show success toast
                 Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
@@ -129,9 +134,7 @@ fun ImportDialog(
             Text(stringResource(id = R.string.import_data))
         },
         text = {
-            Text(
-                stringResource(R.string.select_file)
-            )
+            Text(stringResource(R.string.import_dialog_message))
         }
     )
 }
@@ -141,9 +144,9 @@ fun ImportDialog(
 private fun ExportDialogPreview() {
     MensinatorTheme {
         ExportDialog(
-            exportFilePath = "/preview/path/example",
+            defaultFileName = "mensinator.json",
             onDismissRequest = {},
-            onExportClick = {}
+            onPathSelect = {}
         )
     }
 }
