@@ -29,7 +29,7 @@
     <string name="delete_question">Вы уверены, что хотите удалить этот симптом?</string>
     <string name="delete_button">Удалить</string>
     <!-- Settings -->
-    <string name="app_settings">Настройки</string>
+    <string name="app_settings">Настройки приложения</string>
     <string name="colors">Цвета</string>
     <string name="period_color">Период</string>
     <string name="selection_color">Выделение</string>
@@ -144,5 +144,14 @@
     <string name="data_export">Экспорт</string>
     <string name="select_file">Выберите файл для импорта</string>
     <string name="select_file_button">Выбор</string>
-    <string name="import_export_data">Импорт Экспорт данных</string><string name="import_data">Импорт данных</string>
-    <string name="export_data">Экспорт данных</string><string name="about_app">О приложении</string><string name="rename_symptom">Переименовать симптом</string></resources>
+    <string name="import_export_data">Импорт Экспорт данных</string>
+    <string name="import_data">Импорт данных</string>
+    <string name="export_data">Экспорт данных</string>
+    <string name="about_app">О приложении</string>
+    <string name="rename_symptom">Переименовать симптом</string>
+    <string name="change_text">Изменить текст</string>
+    <string name="import_dialog_message">Выберите файл для импорта данных.</string>
+    <string name="period_notification_title">Текст оповещения про менструацию</string>
+    <string name="period_notification_message">Скоро начнётся ваша менструация</string>
+    <string name="export_dialog_message">Выберите путь куда сохранить экспорт записей календаря, симптомов и других данных.</string>
+</resources>
