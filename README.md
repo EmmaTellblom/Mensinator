@@ -33,7 +33,8 @@ Download the Mensinator app from your preferred source:
 - **[latest release on GitHub](https://github.com/EmmaTellblom/Mensinator/releases/latest)** (NO automatic updates)
 
 ## 🛠️ Contributing for developers
-We welcome contributions to improve Mensinator!  
+We welcome contributions to improve Mensinator!
+Help to translate it on the [Weblate](https://toolate.othing.xyz/projects/mensinator/).  
 If you'd like to contribute, please **[fork the repository](https://github.com/EmmaTellblom/Mensinator/fork)** and submit a pull request.  
 For major changes, please **[open an issue](https://github.com/EmmaTellblom/Mensinator/issues/new/choose)** first to discuss your proposed changes.  
 You are also welcome to **[join our Discord](https://discord.gg/tHA2k3bFRN)** to discuss further or simply to chat with us!
