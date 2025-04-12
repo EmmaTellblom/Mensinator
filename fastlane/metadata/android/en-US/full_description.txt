@@ -16,9 +16,5 @@
 </ul>
 <h4>Who Should Use It?</h4>
 <p>Mensinator is perfect for anyone seeking a straightforward and private period tracking solution. Whether you're tracking for health reasons or simply keeping an eye on your cycle, Mensinator makes it easy and secure.</p>
-<h4>Getting Started</h4>
-<p>To get started with Mensinator, you can either get it from <a href="https://apt.izzysoft.de/packages/com.mensinator.app">IzzyOnDroid</a> or from <a href="https://play.google.com/store/apps/details?id=com.mensinator.app">GooglePlay</a> and start tracking your menstrual cycle with ease and privacy.</p>
-<p></p>
 <h4>Contributing</h4>We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss your proposed changes. You are also welcome to join <a href="https://discord.gg/tHA2k3bFRN">our Discord</a> to discuss further or simply to chat with us!</p>
-<h4>License</h4>
-<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
+
