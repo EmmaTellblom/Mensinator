@@ -1,20 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
     <string name="app_name">Mensinator</string>
-
     <!-- Home -->
     <string name="previous">Zurück</string>
     <string name="next">Weiter</string>
     <string name="period_button">Periode</string>
     <string name="symptoms_button">Symptome</string>
     <string name="ovulation_button">Ovulation</string>
-
     <string name="period_button_selected">Periode entfernen</string>
     <string name="period_button_not_selected">Periode hinzufügen</string>
-
     <string name="ovulation_button_selected">Ovulation entfernen</string>
     <string name="ovulation_button_not_selected">Ovulation hinzufügen</string>
-    
     <!-- Home Alerts -->
     <string name="empty_click_alert">Keine Daten ausgewählt zum Speichern oder Löschen</string>
     <string name="successfully_saved_alert">Änderungen wurden gespeichert</string>
@@ -22,18 +19,15 @@
     <string name="only_day_alert">Die Ovulation kann nur einen Tag betreffen!</string>
     <string name="success_saved_ovulation">Ovulation wurde gespeichert</string>
     <string name="no_date_selected_ovulation">Keinen Tag für Ovulation ausgewählt</string>
-
     <!-- navigation -->
     <string name="home_page">Start</string>
     <string name="statisic_page">Statistiken</string>
     <string name="symptoms_page">Symptome</string>
     <string name="settings_page">Einstellungen</string>
-
     <!-- symptoms page -->
     <string name="delete_symptom">Symptom Entfernen</string>
     <string name="delete_question">Bist du dir sicher, dass du dieses Symptom entfernen möchtest?</string>
     <string name="delete_button">Entfernen</string>
-
     <!-- Settings -->
     <string name="app_settings">App-Einstellungen</string>
     <string name="colors">Farben</string>
@@ -55,7 +49,6 @@
     <string name="screen_protection">Screenshots verhindern</string>
     <string name="close">Schließen</string>
     <string name="save">Speichern</string>
-    
     <!-- Color values -->
     <string name="color_red">Rot</string>
     <string name="color_green">Grün</string>
@@ -67,7 +60,6 @@
     <string name="color_white">Weiß</string>
     <string name="color_darkgray">Dunkelgrau</string>
     <string name="color_gray">Hellgrau</string>
-
     <!-- Statistics -->
     <string name="statistics_title">Statistiken</string>
     <string name="period_count">Getrackte Perioden: </string>
@@ -81,7 +73,6 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Durchschn. Länge Lutealphase: </string>
     <string name="days"> Tage</string>
-
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptome am %1$s</string>
     <string name="create_new_symptom_button">Symptom Erstellen</string>
@@ -90,15 +81,12 @@
     <string name="heavy">Starke Blutung</string>
     <string name="medium">Mittelstarke Blutung</string>
     <string name="light">Leichte Blutung</string>
-
     <!-- CreateNewSymptomDialog -->
     <string name="create_new_symptom_dialog_title">Symptom Erstellen</string>
     <string name="symptom_name_label">Symptom-Name</string>
     <string name="save_button">Speichern</string>
-    
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">Symptome Bearbeiten</string>
-
     <!-- Calender -->
     <string name="calendar_title">Kalender</string>
     <string name="mon">Mo.</string>
@@ -108,7 +96,6 @@
     <string name="fri">Fr.</string>
     <string name="sat">Sa.</string>
     <string name="sun">So.</string>
-
     <string name="january">Januar</string>
     <string name="february">Februar</string>
     <string name="march">März</string>
@@ -121,7 +108,6 @@
     <string name="october">Oktober</string>
     <string name="november">November</string>
     <string name="december">Dezember</string>
-
     <!-- Import Export Dialog -->
     <string name="export_import_title">Daten-Import/Export</string>
     <string name="export_button">Exportieren</string>
@@ -131,10 +117,8 @@
     <string name="import_failure_toast">Datei konnte nicht importiert werden</string>
     <string name="export_path_label">Export-Pfad: %1$s</string>
     <string name="import_path_label">Import-Pfad: %1$s</string>
-
     <!-- Frequently Asked Questions -->
-    <string name="faq_title">Frequently Asked Questions</string>
-
+    <string name="faq_title">Häufig gestellte Fragen</string>
     <!-- User Manual Section -->
     <string name="user_manual_header">Anleitung</string>
     <string name="how_to_use">Benutzung der App:</string>
@@ -151,7 +135,6 @@
     <string name="our_story">Wir sind zwei Frauen, die keinen Bock mehr darauf hatten, dass unsere Daten an große Firmen geteilt bzw. durch diese verkauft werden. Alle Daten der App werden nur lokal gespeichert und wir haben keinen Zugriff darauf.\nWir schätzen deine Privatsphäre und speichern oder teilen keine persönlichen Informationen. Seit der Veröffentlichung der App sind wir gewachsen und haben unseren eigenen Discord-Server, bei dem sich begeisterte Leute wie du uns helfen, die App zu verbessern!\n\nMach bei unserem Discord mit: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Disclaimer:</string>
     <string name="disclaimer">• Dies ist ein Hobby-Projekt und ist nicht für medizinische Zwecke geeignet. Wir haben diese App für unsere eigene Benutzung entwickelt, weil wir selbst eine solche App brauchten. Aber wir freuen uns auf eure Ideen und euer Feedback. Besuch unser Discord oder send uns eine E-Mail:\nmensinator.app@gmail.com</string>
-
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Schließen</string>
     <string name="data_settings">Daten-Einstellungen</string>
@@ -165,4 +148,9 @@
     <string name="export_data">Daten Exportieren</string>
     <string name="about_app">Über die App</string>
     <string name="rename_symptom">Symptom bearbeiten</string>
+    <string name="change_text">Text ändern</string>
+    <string name="period_notification_title">Nachricht der Periodenerinnerung</string>
+    <string name="export_dialog_message">Wähle einen Ordner, um die Kalendereinträge, Symptome und andere Daten zu exportieren.</string>
+    <string name="period_notification_message">Deine Periode fängt bald an</string>
+    <string name="import_dialog_message">Datei für den Import auswählen.</string>
 </resources>
