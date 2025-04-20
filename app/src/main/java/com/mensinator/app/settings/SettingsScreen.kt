@@ -119,6 +119,7 @@ fun SettingsScreen(
             checked = viewState.lutealPhaseCalculationEnabled,
             onCheckedChange = {
                 viewModel.updateBooleanSetting(BooleanSetting.LUTEAL_PHASE_CALCULATION, it)
+                viewModel.showLutealWarningDialog(it)
             }
         )
         SettingNumberSelection(
@@ -178,6 +179,10 @@ fun SettingsScreen(
                     viewModel.handleImport(importPath)
                 }
             )
+        }
+
+        if(viewState.showLutealWarningDialog){
+            LutealWarningDialog(onDismissRequest = { viewModel.showLutealWarningDialog(false) })
         }
 
         if (viewState.showExportDialog) {
@@ -251,16 +256,6 @@ private fun ColorSection(
         },
         onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
-//    SettingColorSelection(
-//        colorSetting = ColorSetting.PERIOD_SELECTION,
-//        currentColor = viewState.periodSelectionColor,
-//        openColorPickerForSetting = viewState.openColorPickerForSetting,
-//        onClosePicker = { viewModel.showColorPicker(null) },
-//        onColorChange = { colorSetting, newColor ->
-//            viewModel.updateColorSetting(colorSetting, newColor)
-//        },
-//        onOpenColorPicker = { viewModel.showColorPicker(it) },
-//    )
     SettingColorSelection(
         colorSetting = ColorSetting.EXPECTED_PERIOD,
         currentColor = viewState.expectedPeriodColor,
@@ -637,4 +632,3 @@ private fun NewScreenPreview() {
         SettingsScreen(onSwitchProtectionScreen = {})
     }
 }
-

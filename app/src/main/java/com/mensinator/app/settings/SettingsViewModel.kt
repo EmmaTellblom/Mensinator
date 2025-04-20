@@ -56,6 +56,7 @@ class SettingsViewModel(
             defaultImportFilePath = exportImport.getDefaultImportFilePath(),
 
             showFaqDialog = false,
+            showLutealWarningDialog = false,
             appVersion = getAppVersion(appContext),
             dbVersion = periodDatabaseHelper.getDBVersion(),
         )
@@ -86,6 +87,8 @@ class SettingsViewModel(
         val showImportDialog: Boolean,
         val showExportDialog: Boolean,
         val defaultImportFilePath: String,
+
+        val showLutealWarningDialog: Boolean,
 
         val showFaqDialog: Boolean,
         val appVersion: String,
@@ -235,6 +238,10 @@ class SettingsViewModel(
             showToast("Error during export: ${e.message}")
             Log.e("Export", "Error during export", e)
         }
+    }
+
+    fun showLutealWarningDialog(show: Boolean) {
+        _viewState.update { it.copy(showLutealWarningDialog = show) }
     }
 
     private suspend fun getColor(isDarkMode: Boolean, settingKey: String): Color {
