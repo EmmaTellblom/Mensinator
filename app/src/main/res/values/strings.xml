@@ -61,7 +61,8 @@
     <string name="warning">Warning</string>
     <string name="luteal_calculation_message">This calculation will use your number of luteal days (days from ovulation to period) to predict your next period.
         In order for this to work you need to track your ovulation in the app and have at least three ovulations in the history.
-        If you are unsure about this setting, turn it off. If the criteria are not meet, the prediction will not work</string>
+        If you are unsure about this setting, turn it off. If the criteria are not meet, the prediction will not work.
+        This calculation is good if you have irregular ovulations but fairly regular number of luteal days.</string>
     
     <!-- Color values -->
     <string name="color_red">Red</string>
