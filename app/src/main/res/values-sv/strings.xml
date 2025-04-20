@@ -1,7 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
     <string name="app_name">Mensinator</string>
-
     <!-- Home -->
     <string name="previous">Föregående</string>
     <string name="next">Nästa</string>
@@ -16,11 +16,9 @@
     <string name="only_day_alert">Bara en dag kan ha ägglossning</string>
     <string name="success_saved_ovulation">Ägglossning sparad</string>
     <string name="no_date_selected_ovulation">Inget datum valt för ägglossning</string>
-
     <!-- navigation -->
     <string name="home_page">Hem</string>
     <string name="statisic_page">Statistik</string>
-
     <!-- Settings -->
     <string name="app_settings">Inställningar</string>
     <string name="colors">Färger</string>
@@ -54,7 +52,6 @@
     <string name="color_white">Vit</string>
     <string name="color_darkgray">Mörkgrå</string>
     <string name="color_gray">Grå</string>
-
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
     <string name="period_count">Antal cykler: </string>
@@ -67,7 +64,6 @@
     <string name="next_predicted_ovulation">"Nästa beräknade ägglossning: "</string>
     <string name="next_predicted_ovulation_default">Inte tillräckligt mycket data för att beräkna ägglossning</string>
     <string name="average_luteal_length">Medellängd lutealfas:  days</string>
-
     <!-- Symptoms -->
     <string name="days">" dagar"</string>
     <string name="symptoms_dialog_title">Symptom for %1$s</string>
@@ -77,15 +73,12 @@
     <string name="heavy">Riklig mens</string>
     <string name="medium">Vanlig mens</string>
     <string name="light">Lätt mens</string>
-
     <!-- CreateNewSymptomDialog -->
     <string name="create_new_symptom_dialog_title">Skapa Nytt Symptom</string>
     <string name="symptom_name_label">Symptom Namn</string>
     <string name="save_button">Spara</string>
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">Hantera Symptom</string>
-
-
     <!-- Calender -->
     <string name="mon">Mån</string>
     <string name="tue">Tis</string>
@@ -94,7 +87,6 @@
     <string name="fri">Fre</string>
     <string name="sat">Lör</string>
     <string name="sun">Sön</string>
-
     <!-- Import Export Dialog -->
     <string name="january">Januari</string>
     <string name="february">Februari</string>
@@ -115,12 +107,8 @@
     <string name="import_failure_toast">Importen misslyckades</string>
     <string name="export_path_label">Exportplats: %1$s</string>
     <string name="import_path_label">Importplats: %1$s</string>
-
-
-
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Vanliga Frågor</string>
-
     <!-- User Manual Section -->
     <string name="user_manual_header">Användarmanual</string>
     <string name="how_to_use">Användning:</string>
@@ -137,7 +125,6 @@
     <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. Vi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. Häng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Viktigt:</string>
     <string name="disclaimer">• Det här är ett hobby-projekt och är inte tänkt för medicinsk användning. Vi är gör helt enkelt detta för vår egna behov. Men vi välkommnar ideer och förfrågningar! Häng med oss på Discord eller skicka ett mail: mensinator.app@gmail.com</string>
-
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Stäng</string>
     <string name="symptoms_page">Symptom</string>
@@ -153,7 +140,7 @@
     <string name="export_data">Exportera data</string>
     <string name="about_app">Om Appen</string>
     <string name="screen_protection">Blockera screenshots</string>
-    <string name="rename_symptom" >Döp om symptom</string>
+    <string name="rename_symptom">Döp om symptom</string>
     <string name="december">December</string>
     <string name="calendar_title">Kalender</string>
     <string name="data">Sparad data</string>
@@ -163,4 +150,6 @@
     <string name="period_button_not_selected">Lägg till mens</string>
     <string name="ovulation_button_selected">Ta bort ägglossning</string>
     <string name="period_notification_message">Din mens börjar snart</string>
+    <string name="export_dialog_message">Välj mapp att exportera data till.</string>
+    <string name="import_dialog_message">Välj fil att importera.</string>
 </resources>
