@@ -167,6 +167,10 @@ fun SettingsScreen(
         AboutSection(viewModel, viewState)
         Spacer(Modifier.height(16.dp))
 
+        if (viewState.showLutealWarningDialog) {
+            LutealWarningDialog(onDismissRequest = { viewModel.showLutealWarningDialog(false) })
+        }
+
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
         }
@@ -179,10 +183,6 @@ fun SettingsScreen(
                     viewModel.handleImport(importPath)
                 }
             )
-        }
-
-        if(viewState.showLutealWarningDialog){
-            LutealWarningDialog(onDismissRequest = { viewModel.showLutealWarningDialog(false) })
         }
 
         if (viewState.showExportDialog) {

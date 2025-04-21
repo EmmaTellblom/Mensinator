@@ -55,8 +55,9 @@ class SettingsViewModel(
             showExportDialog = false,
             defaultImportFilePath = exportImport.getDefaultImportFilePath(),
 
-            showFaqDialog = false,
             showLutealWarningDialog = false,
+            showFaqDialog = false,
+
             appVersion = getAppVersion(appContext),
             dbVersion = periodDatabaseHelper.getDBVersion(),
         )
