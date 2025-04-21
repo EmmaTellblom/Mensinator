@@ -109,17 +109,39 @@ class PeriodDatabaseHelper(
         }
     }
 
+//    override fun addDateToPeriod(date: LocalDate, periodId: Int) {
+//        val db = writableDatabase
+//        val values = ContentValues().apply {
+//            put(COLUMN_DATE, date.toString())
+//            put(COLUMN_PERIOD_ID, periodId)
+//        }
+//        val whereClause = "$COLUMN_DATE = ? AND $COLUMN_PERIOD_ID = ?"
+//        val whereArgs = arrayOf(date.toString(), periodId.toString())
+//        val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
+//        if (rowsUpdated == 0) {
+//            db.insert(TABLE_PERIODS, null, values)
+//        }
+//    }
+
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_DATE, date.toString())
             put(COLUMN_PERIOD_ID, periodId)
         }
-        val whereClause = "$COLUMN_DATE = ? AND $COLUMN_PERIOD_ID = ?"
-        val whereArgs = arrayOf(date.toString(), periodId.toString())
-        val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
-        if (rowsUpdated == 0) {
-            db.insert(TABLE_PERIODS, null, values)
+
+        // Check if date already exists, this is fail-safe for import functionality
+        val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        cursor.use {
+            // If the period already exists (count > 0), do nothing
+            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                return
+            } else {
+                // If date is new, insert
+                db.insert(TABLE_PERIODS, null, values)
+            }
         }
     }
 
