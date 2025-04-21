@@ -30,7 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.mensinator.app.business.ClueImport
+
 
 @Composable
 fun ExportDialog(
@@ -102,17 +102,9 @@ fun ImportDialog(
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
-
-                if (selectedOption == "Clue") {
-                    ClueImport(context).importFileToDatabase(file.absolutePath) // Pass the Uri
-                    //ClueImport(context).importFileToDatabase(file.absolutePath)
-                } else {
-                    onImportClick(file.absolutePath) // Mensinator import
-                    Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
-                }
-
-                //onImportClick(file.absolutePath)
-                //Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
+                // TODO:  Pass file source
+                onImportClick(file.absolutePath)
+                Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
                 Log.d("ExportImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
