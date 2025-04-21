@@ -49,14 +49,11 @@ class ClueImport(
         // Parse JSON array from the file
         val importArray = JSONArray(stringBuilder.toString())
 
-        // Step 1: Validate the data before cleanup
+        // Validate the data before cleanup
         if (!validateImportData(importArray)) {
             Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
             return
         }
-
-        // Step 2: Clean up tables after validating data
-        cleanUpTables(db)
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -112,8 +109,4 @@ class ClueImport(
         return false
     }
 
-    private fun cleanUpTables(db: SQLiteDatabase) {
-        // Clean up the "periods" table before importing new data
-        db.delete("periods", null, null)
-    }
 }
