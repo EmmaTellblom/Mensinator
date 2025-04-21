@@ -5,31 +5,40 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.mensinator.app.R
+import com.mensinator.app.data.ImportSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
 import java.io.FileOutputStream
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 
 
 @Composable
@@ -90,9 +99,10 @@ fun ImportDialog(
     val impSuccess = stringResource(id = R.string.import_success_toast)
     val impFailure = stringResource(id = R.string.import_failure_toast)
 
-    var selectedOption by remember { mutableStateOf("Mensinator") }
-    val options = listOf("Mensinator", "Clue")
+    var selectedOption by remember { mutableStateOf(ImportSource.MENSINATOR) }
+    val options = ImportSource.entries.toTypedArray()
 
+    // File import launcher
     val importLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             if (uri == null) return@rememberLauncherForActivityResult
@@ -102,38 +112,38 @@ fun ImportDialog(
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
-                // TODO:  Pass file source
                 onImportClick(file.absolutePath)
                 Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
-                Log.d("ExportImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
+                Log.d("ImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
             } finally {
                 inputStream?.close()
                 outputStream.close()
             }
-
             onDismissRequest()
         }
 
+    // Dialog content
     AlertDialog(
         text = {
             Column {
                 DropdownMenu(
                     selectedOption = selectedOption,
-                    onOptionSelected = { selectedOption = it },
+                    onOptionSelected = { option ->
+                        selectedOption = option
+                    },
                     options = options,
                     label = stringResource(R.string.select_source),
                     modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = 10.dp)
                 )
                 Text(stringResource(R.string.import_dialog_message))
             }
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            Button(onClick = {
-                importLauncher.launch("application/json")
-            }) {
+            Button(onClick = { importLauncher.launch("application/json") }) {
                 Text(stringResource(id = R.string.select_file_button))
             }
         },
@@ -143,53 +153,77 @@ fun ImportDialog(
                 Text(stringResource(id = R.string.cancel_button))
             }
         },
-        title = {
-            Text(stringResource(id = R.string.import_data))
-        }
+        title = { Text(stringResource(id = R.string.import_data)) }
     )
 }
 
-// The material3 dropdown is marked as experimental
-// So change this when its fully implemented
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropdownMenu(
-    selectedOption: String,
-    onOptionSelected: (String) -> Unit,
-    options: List<String>,
+    selectedOption: ImportSource,
+    onOptionSelected: (ImportSource) -> Unit,
+    options: Array<ImportSource>,
     label: String,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
 
     Column(modifier = modifier) {
-        OutlinedTextField(
-            value = selectedOption,
-            onValueChange = {},
-            label = { Text(label) },
-            readOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { expanded = true }) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowDropDown,
-                        contentDescription = "Dropdown arrow"
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
+        // Add the label above the dropdown
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
         )
 
-        DropdownMenu(
+        ExposedDropdownMenuBox(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onExpandedChange = { expanded = !expanded },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            options.forEach { option ->
-                DropdownMenuItem(
-                    text = { Text(option) },
-                    onClick = {
-                        onOptionSelected(option)
-                        expanded = false
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = MaterialTheme.shapes.medium
+                    )
+                    .clickable {
+                        expanded = true
+                        // Ensuring focus request happens only on user interaction (click)
+                        focusRequester.requestFocus()
                     }
-                )
+                    .focusRequester(focusRequester) // Applying the focusRequester modifier here
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = selectedOption.displayName,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f)
+                    )
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                }
+            }
+
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
+                options.forEach { option ->
+                    DropdownMenuItem(
+                        text = { Text(option.displayName) },
+                        onClick = {
+                            onOptionSelected(option)
+                            expanded = false
+                        }
+                    )
+                }
             }
         }
     }
