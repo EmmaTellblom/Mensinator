@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
-import com.mensinator.app.business.IExportImport
+import com.mensinator.app.business.IMensinatorExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
-    private val exportImport: IExportImport,
+    private val exportImport: IMensinatorExportImport,
     private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(

@@ -2,7 +2,7 @@ package com.mensinator.app.business
 
 import android.net.Uri
 
-interface IExportImport {
+interface IMensinatorExportImport {
     fun generateExportFileName(): String
     fun getDefaultImportFilePath(): String
     fun exportDatabase(filePath: Uri)

@@ -29,7 +29,7 @@ class App : Application() {
         singleOf(::CalculationsHelper) { bind<ICalculationsHelper>() }
         singleOf(::OvulationPrediction) { bind<IOvulationPrediction>() }
         singleOf(::PeriodPrediction) { bind<IPeriodPrediction>() }
-        singleOf(::ExportImport) { bind<IExportImport>() }
+        singleOf(::MensinatorExportImport) { bind<IMensinatorExportImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
         singleOf(::DefaultDispatcherProvider) { bind<IDispatcherProvider>() }
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }

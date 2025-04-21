@@ -17,10 +17,10 @@ import java.util.Date
 import java.util.Locale
 
 
-class ExportImport(
+class MensinatorExportImport(
     private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
-) : IExportImport {
+) : IMensinatorExportImport {
 
     override fun generateExportFileName(): String {
         // Create a date formatter to include the current date in the filename
