@@ -30,6 +30,7 @@ class App : Application() {
         singleOf(::OvulationPrediction) { bind<IOvulationPrediction>() }
         singleOf(::PeriodPrediction) { bind<IPeriodPrediction>() }
         singleOf(::MensinatorExportImport) { bind<IMensinatorExportImport>() }
+        singleOf(::ClueImport) { bind<IClueImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
         singleOf(::DefaultDispatcherProvider) { bind<IDispatcherProvider>() }
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }

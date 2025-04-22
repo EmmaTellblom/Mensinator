@@ -1,7 +1,6 @@
 package com.mensinator.app.business
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.widget.Toast
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -14,10 +13,9 @@ import com.mensinator.app.utils.DefaultDispatcherProvider
 import java.io.FileInputStream
 
 class ClueImport(
-    private val context: Context
+    private val context: Context,
+    private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
-
-    private val dbHelper = PeriodDatabaseHelper(context, DefaultDispatcherProvider())
 
     override fun getDefaultImportFilePath(): String {
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
