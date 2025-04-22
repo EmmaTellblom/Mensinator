@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
+import com.mensinator.app.business.IClueImport
 import com.mensinator.app.business.IMensinatorExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.data.ImportSource
 import com.mensinator.app.settings.ColorSetting.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +30,7 @@ class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IMensinatorExportImport,
+    private val clueImport: IClueImport,
     private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
@@ -203,9 +206,13 @@ class SettingsViewModel(
         _viewState.update { it.copy(showExportDialog = show) }
     }
 
-    fun handleImport(importPath: String) {
+    fun handleImport(importPath: String, source: ImportSource) {
         try {
-            exportImport.importDatabase(importPath)
+            when (source) {
+                ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
+                ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
+            }
+
             Toast.makeText(
                 appContext,
                 "Data imported successfully",

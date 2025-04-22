@@ -92,7 +92,7 @@ fun ExportDialog(
 fun ImportDialog(
     defaultImportFilePath: String,
     onDismissRequest: () -> Unit,
-    onImportClick: (String) -> Unit,
+    onImportClick: (String, ImportSource) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -112,7 +112,7 @@ fun ImportDialog(
             val outputStream = FileOutputStream(file)
             try {
                 inputStream?.copyTo(outputStream)
-                onImportClick(file.absolutePath)
+                onImportClick(file.absolutePath, selectedOption)
                 Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
@@ -248,7 +248,7 @@ private fun ImportDialogPreview() {
         ImportDialog(
             defaultImportFilePath = "",
             onDismissRequest = {},
-            onImportClick = {}
+            onImportClick = { _, _ -> }
         )
     }
 }

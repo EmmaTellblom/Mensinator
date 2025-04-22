@@ -9,7 +9,6 @@ import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import androidx.core.database.sqlite.transaction
-import com.mensinator.app.utils.DefaultDispatcherProvider
 import java.io.FileInputStream
 
 class ClueImport(
