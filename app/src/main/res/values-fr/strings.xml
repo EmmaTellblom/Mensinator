@@ -1,7 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
     <string name="app_name">Mensinator</string>
-
     <!-- Home -->
     <string name="previous">Précédent</string>
     <string name="next">Suivant</string>
@@ -13,21 +13,18 @@
     <string name="empty_click_alert">Aucune date à enregistrer ou supprimer</string>
     <string name="successfully_saved_alert">Modifications enregistrées avec succès</string>
     <string name="no_data_selected">Aucune date sélectionnée</string>
-    <string name="only_day_alert">L\'ovulation dure seulement une journée!</string>
+    <string name="only_day_alert">L\'ovulation dure seulement une journée !</string>
     <string name="success_saved_ovulation">Ovulation enregistrée avec succès</string>
     <string name="no_date_selected_ovulation">Aucune date sélectionnée pour l\'ovulation</string>
-
     <!-- navigation -->
     <string name="home_page">Accueil</string>
     <string name="statisic_page">Statistiques</string>
     <string name="symptoms_page">Symptômes</string>
     <string name="settings_page">Paramètres</string>
-
     <!-- symptoms page -->
     <string name="delete_symptom">Supprimer symptôme</string>
-    <string name="delete_question">Êtes-vous sûr de vouloir supprimer ce symptôme?</string>
+    <string name="delete_question">Êtes-vous sûr de vouloir supprimer ce symptôme  ?</string>
     <string name="delete_button">Supprimer</string>
-
     <!-- Settings -->
     <string name="app_settings">Paramètres de l\'application</string>
     <string name="colors">Couleurs</string>
@@ -51,7 +48,6 @@
     <string name="cycle_numbers_show">Afficher les numéros de cycle</string>
     <string name="close">Fermer</string>
     <string name="save">Enregistrer</string>
-
     <!-- Color values -->
     <string name="color_red">Rouge</string>
     <string name="color_green">Vert</string>
@@ -63,21 +59,19 @@
     <string name="color_white">Blanc</string>
     <string name="color_darkgray">Gris foncé</string>
     <string name="color_gray">Gris pâle</string>
-
     <!-- Statistics -->
     <string name="statistics_title">Statistiques</string>
-    <string name="period_count">Nombre de règles suivies: </string>
-    <string name="average_cycle_length">Durée moyenne du cycle: </string>
-    <string name="average_period_length">Durée moyenne des règles: </string>
-    <string name="next_period_start_past">Prochaine règle prévue: </string>
-    <string name="next_period_start_future">Prochaine règle prévue: </string>
-    <string name="ovulation_count">Nombre d\'ovulations suivies: </string>
-    <string name="average_ovulation_day">Jour moyen d\'ovulation: </string>
-    <string name="next_predicted_ovulation">Prochaine date d\'ovulation prévue: </string>
+    <string name="period_count">Nombre de règles suivies :</string>
+    <string name="average_cycle_length">Durée moyenne du cycle :</string>
+    <string name="average_period_length">Durée moyenne des règles :</string>
+    <string name="next_period_start_past">Prochaine règle prévue :</string>
+    <string name="next_period_start_future">Prochaine règle prévue :</string>
+    <string name="ovulation_count">Nombre d\'ovulations suivies :</string>
+    <string name="average_ovulation_day">Jour moyen d\'ovulation :</string>
+    <string name="next_predicted_ovulation">Prochaine date d\'ovulation prévue :</string>
     <string name="next_predicted_ovulation_default">Pas assez de données pour prédire la prochaine ovulation</string>
-    <string name="average_luteal_length">Durée moyenne de la phase lutéale: </string>
-    <string name="days">" jours"</string>
-
+    <string name="average_luteal_length">Durée moyenne de la phase lutéale :</string>
+    <string name="days">jours</string>
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Symptômes pour %1$s</string>
     <string name="create_new_symptom_button">Créer un nouveau symptôme</string>
@@ -86,13 +80,11 @@
     <string name="heavy">Flux abondant</string>
     <string name="medium">Flux moyen</string>
     <string name="light">Flux léger</string>
-
     <!-- CreateNewSymptomDialog -->
     <string name="create_new_symptom_dialog_title">Créer un nouveau symptôme</string>
     <string name="symptom_name_label">Nom du symptôme</string>
     <string name="save_button">Enregistrer</string>
     <string name="manage_symptoms">Gérer les symptômes</string>
-
     <!-- Calender -->
     <string name="mon">Lun</string>
     <string name="tue">Mar</string>
@@ -101,7 +93,6 @@
     <string name="fri">Ven</string>
     <string name="sat">Sam</string>
     <string name="sun">Dim</string>
-
     <!-- Import Export Dialog -->
     <string name="january">Janvier</string>
     <string name="february">Février</string>
@@ -122,10 +113,8 @@
     <string name="import_failure_toast">Échec de l\'importation du fichier</string>
     <string name="export_path_label">Chemin d\'exportation : %1$s</string>
     <string name="import_path_label">Chemin d\'importation : %1$s</string>
-
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Foire aux questions</string>
-
     <!-- User Manual Section -->
     <string name="user_manual_header">Guide de l\'utilisateur</string>
     <string name="how_to_use">Comment utiliser :</string>
@@ -137,12 +126,11 @@
     <string name="import_export">• Importer/Exporter : Cliquez sur le bouton "Importer/Exporter" pour importer ou exporter vos données. C\'est IMPÉRATIF lors du transfert des données vers un nouvel appareil !</string>
     <string name="calculations">• Calculs : \nLes règles sont calculées en fonction de la durée moyenne du cycle et durée des règles.\nLes règles peuvent être calculées en utilisant la phase lutéale moyenne. Les calculs prendront alors en compte les 5 derniers cycles pour faire une moyenne de la phase lutéale et l\'utiliser pour calculer les règles. Cela est activé dans les paramètres.\nL\'ovulation est calculée en fonction de la durée moyenne du cycle d\'ovulation.</string>
     <string name="features_coming_soon">Fonctionnalités à venir :</string>
-    <string name="upcoming_features">• Nouvelle interface utilisateur (quand j\'en ai l\'envie). • Autres petites améliorations de l\'IU</string>
+    <string name="upcoming_features">• Consultez notre Github pour les dernières nouveautés concernant le développement des applications !</string>
     <string name="our_story_header">Notre histoire</string>
-    <string name="our_story">Nous sommes deux femmes qui en avaient assez de vendre nos données à de grandes entreprises. Notre application stocke toutes vos données localement sur votre appareil et nous n\'avons aucun accès à celles-ci. Nous valorisons votre vie privée et ne sauvegardons ni ne partageons aucune information personnelle. Depuis le lancement de cette application, nous avons grandi et avons maintenant notre propre serveur Discord avec des personnes passionnées par cette application et souhaitant nous aider ! Rejoignez-nous sur Discord ici : https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">Nous sommes deux femmes qui en avaient assez de vendre nos données à de grandes entreprises. Notre application stocke toutes vos données localement sur votre appareil et nous n\'avons aucun accès à celles-ci.\nNous valorisons votre vie privée et ne sauvegardons ni ne partageons aucune information personnelle. Depuis le lancement de cette application, nous avons grandi et avons maintenant notre propre serveur Discord avec des personnes passionnées par cette application et souhaitant nous aider !\n\nRejoignez-nous sur Discord ici : https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Avertissement :</string>
     <string name="disclaimer">• Il s\'agit d\'un projet de loisir et n\'est pas destiné à un usage médical. Nous le faisons simplement pour nos propres besoins. Mais nous accueillons les idées et les demandes. Rejoignez-nous sur Discord ou envoyez-nous un e-mail :\nmensinator.app@gmail.com</string>
-
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Fermer</string>
     <string name="data_settings">Paramètres des données</string>
@@ -152,7 +140,7 @@
     <string name="export_data">Exporter les données</string>
     <string name="about_app">À propos de l\'application</string>
     <string name="screen_protection">empêcher les captures d\'écran</string>
-    <string name="rename_symptom" >Renommer le symptôme</string>
+    <string name="rename_symptom">Renommer le symptôme</string>
     <string name="december">Décembre</string>
     <string name="calendar_title">Calendrier</string>
     <string name="data">Données Enregistrées</string>
@@ -162,4 +150,8 @@
     <string name="period_button_not_selected">Ajouter la période</string>
     <string name="ovulation_button_selected">Supprimer l\'ovulation</string>
     <string name="select_file">Sélectionner le fichier</string>
+    <string name="warning">Avertissement</string>
+    <string name="import_dialog_message">Sélectionnez le fichier pour importer les données.</string>
+    <string name="export_dialog_message">Sélectionnez le chemin de sortie pour exporter les entrées de calendrier, les symptômes et autres données.</string>
+    <string name="luteal_calculation_message">Ce calcul utilisera votre nombre de jours lutéaux (jours entre l\'ovulation et les règles) pour prédire vos prochaines règles.\nPour que cela fonctionne, vous devez suivre vos ovulations dans l\'application et avoir au moins trois ovulations dans l\'historique.\nSi vous n\'êtes pas sûre de ce paramètere, désactivez le ou rejoignez notre serveur Discord pour demander de l\'aide.\nSi les critères ne sont pas remplis, la prédiction ne fonctionnera pas.\nCe calcul est bon si vous avez des ovulations irrégulières mais un nombre de jours lutéaux assez régulier.</string>
 </resources>
