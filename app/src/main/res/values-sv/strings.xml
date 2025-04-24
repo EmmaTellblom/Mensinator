@@ -152,4 +152,6 @@
     <string name="period_notification_message">Din mens börjar snart</string>
     <string name="export_dialog_message">Välj mapp att exportera data till.</string>
     <string name="import_dialog_message">Välj fil att importera.</string>
+    <string name="warning">Varning</string>
+    <string name="luteal_calculation_message">Den här beräkningen kommer använda din längd på lutealfasen (dagar från ägglossning till mens) för att beräkna din nästa mens.\nFör att det här ska fungera behöver du dels spara din ägglossning i appen och ha minst tre ägglossningar i historiken.\nOm du är osäker på den här inställningen, stäng av den eller gå med i vår Discord för att be om hjälp. \nOm kriterierna inte möts kommer Mensinator inte kunna göra en beräkning av nästa mens. \nDen här beräkningen passar bra om du har oregelbunden ägglossning men någorlunda regelbunden lutealfas.</string>
 </resources>
