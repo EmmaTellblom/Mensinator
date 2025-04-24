@@ -164,11 +164,6 @@ fun DropdownMenu(
     val roundedCornerShape = MaterialTheme.shapes.medium
 
     Column(modifier = modifier) {
-//        Text(
-//            text = label,
-//            style = MaterialTheme.typography.bodyMedium,
-//            modifier = Modifier.padding(bottom = 4.dp)
-//        )
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = { expanded = !expanded },

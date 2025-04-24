@@ -30,11 +30,6 @@ class ClueImport(
 
         Toast.makeText(context, "Importing file: ${file.name}", Toast.LENGTH_SHORT).show()
 
-        if (file.name != "measurements.json") {
-            Toast.makeText(context, "Invalid file! Expected measurements.json", Toast.LENGTH_SHORT).show()
-            return
-        }
-
         val stringBuilder = StringBuilder()
         var line: String? = reader.readLine()
         while (line != null) {
