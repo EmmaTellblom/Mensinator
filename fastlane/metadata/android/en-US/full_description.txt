@@ -1,7 +1,8 @@
-<b>Mensinator</b>
 Mensinator is the ultimate period tracker designed for those who prioritize simplicity, privacy, and user-friendliness. 🌟
-<h4>Overview</h4>
+
+<b>Overview</b>
 Mensinator provides a clean and intuitive interface for tracking your menstrual cycle, monitoring your periods, and viewing essential statistics—all without the need for sign-ups or sharing personal data. All information is stored securely on your device, ensuring your privacy is always protected. 🛡️
+
 <b>Key Features</b>
 <ul>
 <li>Effortless Period Tracking: Easily mark your periods, view your cycle, and access statistics all in one place. 📅</li>
@@ -14,8 +15,10 @@ Mensinator provides a clean and intuitive interface for tracking your menstrual 
 <li>Customizable Colors: Personalize the app's appearance by customizing colors to your preference. 🎨</li>
 <li>Export and Import Data: Easily export your data to a JSON file for backup or transfer and import it back into the app whenever needed. 📂</li>
 </ul>
+
 <b>Who Should Use It?</b>
 Mensinator is perfect for anyone seeking a straightforward and private period tracking solution. Whether you're tracking for health reasons or simply keeping an eye on your cycle, Mensinator makes it easy and secure.
+
 <b>Contributing</b>
 We welcome contributions to improve Mensinator! If you'd like to contribute, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss your proposed changes. You are also welcome to join <a href="https://discord.gg/tHA2k3bFRN">our Discord</a> to discuss further or simply to chat with us!
 
