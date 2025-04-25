@@ -49,33 +49,35 @@ class ClueImport(
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-        // Begin a transaction for the database
         db.transaction {
             try {
-                // Loop through the JSON array and process each entry
                 for (i in 0 until importArray.length()) {
                     val obj = importArray.getJSONObject(i)
+                    val type = obj.getString("type")
+                    val dateString = obj.getString("date")
+                    val date = LocalDate.parse(dateString, formatter)
 
-                    // Only process entries of type "period"
-                    if (obj.getString("type") == "period") {
-                        val dateString = obj.getString("date")
-                        val date = LocalDate.parse(dateString, formatter)
-
-                        // Get periodId from the helper function
+                    if (type == "period") {
                         val periodId = dbHelper.newFindOrCreatePeriodID(date)
-
-                        // Insert the record into the database using the helper method
                         dbHelper.addDateToPeriod(date, periodId)
+                    }
+                    else if (type == "tests") {
+                        val valueArray = obj.getJSONArray("value")
+                        // we need to loop in case there are several different tests
+                        for (j in 0 until valueArray.length()) {
+                            val optionObj = valueArray.getJSONObject(j)
+                            val option = optionObj.getString("option")
+                            if (option == "ovulation_positive") {
+                                dbHelper.addOvulationDate(date)
+                                break // if a positive ovulation test is found, break the loop
+                            }
+                        }
                     }
                 }
 
-                // Commit the transaction if everything went smoothly
             } catch (e: Exception) {
-                // Handle any potential errors here
                 Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
-            } finally {
-                // End the transaction
             }
         }
 
@@ -84,12 +86,12 @@ class ClueImport(
     }
 
     private fun validateImportData(importArray: JSONArray): Boolean {
-        // Check if the array is empty or does not contain any valid entries
+        // Check if the array is empty
         if (importArray.length() == 0) {
             return false
         }
 
-        // Validate that at least one entry has "type": "period"
+        // Check so that at least one entry has "type": "period"
         for (i in 0 until importArray.length()) {
             val obj = importArray.getJSONObject(i)
             if (obj.getString("type") == "period" && obj.has("date") && obj.has("value")) {

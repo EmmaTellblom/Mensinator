@@ -618,6 +618,34 @@ class PeriodDatabaseHelper(
         cursor.close()
     }
 
+    override fun addOvulationDate(date: LocalDate) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_DATE, date.toString())
+        }
+
+        // Check if date already exists, this is fail-safe for import functionality
+        val query = "SELECT COUNT(*) FROM OVULATIONS WHERE $COLUMN_DATE = ?"
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        cursor.use {
+            // If the ovulation already exists (count > 0), do nothing
+            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                return
+            } else {
+                // If date is new, insert
+                db.insert("OVULATIONS", null, values)
+            }
+        }
+    }
+
+    override fun removeOvulationDate(date: LocalDate) {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_DATE = ?"
+        val whereArgs = arrayOf(date.toString())
+        db.delete("OVULATIONS", whereClause, whereArgs)
+    }
+
     override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
         val dates = mutableSetOf<LocalDate>()
         val db = readableDatabase
