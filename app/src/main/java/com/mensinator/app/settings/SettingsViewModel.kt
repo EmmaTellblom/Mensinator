@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
 import com.mensinator.app.business.IClueImport
+import com.mensinator.app.business.IFloImport
 import com.mensinator.app.business.IMensinatorExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.notifications.INotificationScheduler
@@ -31,6 +32,7 @@ class SettingsViewModel(
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IMensinatorExportImport,
     private val clueImport: IClueImport,
+    private val floImport: IFloImport,
     private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
@@ -211,6 +213,7 @@ class SettingsViewModel(
             when (source) {
                 ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
                 ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
+                ImportSource.FLO -> floImport.importFileToDatabase(importPath)
             }
 
             Toast.makeText(
