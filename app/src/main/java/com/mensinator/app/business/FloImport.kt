@@ -13,7 +13,8 @@ import java.io.FileInputStream
 
 class FloImport (
     private val context: Context,
-    private val dbHelper: IPeriodDatabaseHelper,) : IFloImport {
+    private val dbHelper: IPeriodDatabaseHelper,
+    ) : IFloImport {
     override fun getDefaultImportFilePath(): String {
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
     }
