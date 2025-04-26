@@ -28,7 +28,7 @@ class ClueImport(
         val fileInputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        Toast.makeText(context, "Importing file: ${file.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
 
         val stringBuilder = StringBuilder()
         var line: String? = reader.readLine()
