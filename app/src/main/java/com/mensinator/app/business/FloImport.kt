@@ -14,9 +14,6 @@ class FloImport (
     private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IFloImport {
-    override fun getDefaultImportFilePath(): String {
-        return File(context.getExternalFilesDir(null), "import.json").absolutePath
-    }
 
     override fun importFileToDatabase(filePath: String) {
         val db = dbHelper.writableDb

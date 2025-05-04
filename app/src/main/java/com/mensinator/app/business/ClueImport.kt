@@ -16,10 +16,6 @@ class ClueImport(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
 
-    override fun getDefaultImportFilePath(): String {
-        return File(context.getExternalFilesDir(null), "import.json").absolutePath
-    }
-
     override fun importFileToDatabase(filePath: String) {
         val db = dbHelper.writableDb
 
@@ -57,19 +53,21 @@ class ClueImport(
                     val dateString = obj.getString("date")
                     val date = LocalDate.parse(dateString, formatter)
 
-                    if (type == "period") {
-                        val periodId = dbHelper.newFindOrCreatePeriodID(date)
-                        dbHelper.addDateToPeriod(date, periodId)
-                    }
-                    else if (type == "tests") {
-                        val valueArray = obj.getJSONArray("value")
-                        // we need to loop in case there are several different tests
-                        for (j in 0 until valueArray.length()) {
-                            val optionObj = valueArray.getJSONObject(j)
-                            val option = optionObj.getString("option")
-                            if (option == "ovulation_positive") {
-                                dbHelper.addOvulationDate(date)
-                                break // if a positive ovulation test is found, break the loop
+                    when (type) {
+                        "period" -> {
+                            val periodId = dbHelper.newFindOrCreatePeriodID(date)
+                            dbHelper.addDateToPeriod(date, periodId)
+                        }
+                        "tests" -> {
+                            val valueArray = obj.getJSONArray("value")
+                            // we need to loop in case there are several different tests
+                            for (j in 0 until valueArray.length()) {
+                                val optionObj = valueArray.getJSONObject(j)
+                                val option = optionObj.getString("option")
+                                if (option == "ovulation_positive") {
+                                    dbHelper.addOvulationDate(date)
+                                    break // if a positive ovulation test is found, break the loop
+                                }
                             }
                         }
                     }
