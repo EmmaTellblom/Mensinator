@@ -13,6 +13,7 @@ import com.mensinator.app.statistics.StatisticsViewModel
 import com.mensinator.app.symptoms.ManageSymptomsViewModel
 import com.mensinator.app.utils.DefaultDispatcherProvider
 import com.mensinator.app.utils.IDispatcherProvider
+import com.mensinator.app.widgets.MensinatorWidget
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

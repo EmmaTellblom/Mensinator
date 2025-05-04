@@ -1,4 +1,4 @@
-package com.mensinator.app
+package com.mensinator.app.widgets
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -8,18 +8,17 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.*
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
-import androidx.glance.appwidget.*
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.mensinator.app.MainActivity
 import com.mensinator.app.business.IPeriodPrediction
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext
 import java.time.LocalDate
 
 sealed interface NextPeriodFormat {
@@ -90,7 +89,7 @@ fun WidgetUI(daysUntilNextPeriod: String) {
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(GlanceTheme.colors.widgetBackground)
+            .background(GlanceTheme.colors.background)
             .padding(10.dp)
             .clickable(
                 actionStartActivity<MainActivity>()
@@ -101,23 +100,10 @@ fun WidgetUI(daysUntilNextPeriod: String) {
         Text(
             text = daysUntilNextPeriod,
             style = TextStyle(
-                color = GlanceTheme.colors.primary,
+                color = GlanceTheme.colors.onSurface,
                 fontSize = 18.sp
             ),
         )
     }
 }
 
-class MensinatorWidgetReceiver : GlanceAppWidgetReceiver() {
-    private val koin = GlobalContext.get()
-    override val glanceAppWidget: MensinatorWidget = koin.get()
-
-    override fun onEnabled(context: Context?) {
-        super.onEnabled(context)
-        context?.let {
-            CoroutineScope(Dispatchers.IO).launch {
-                glanceAppWidget.updateAll(it)
-            }
-        }
-    }
-}
