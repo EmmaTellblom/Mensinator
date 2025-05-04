@@ -44,6 +44,9 @@ class CalendarViewModel(
             val showCycleNumbersSetting =
                 (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull() ?: 1) == 1
 
+            // HACK: Must be replaced by a service/repository that only updates the period prediction date consistently
+            periodPrediction.updatePeriodPrediction()
+
             _viewState.update {
                 it.copy(
                     showCycleNumbers = showCycleNumbersSetting,
