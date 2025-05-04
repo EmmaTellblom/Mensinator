@@ -25,16 +25,10 @@ class FloImport (
 
         Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
 
-        val stringBuilder = StringBuilder()
-        var line: String? = reader.readLine()
-        while (line != null) {
-            stringBuilder.append(line)
-            line = reader.readLine()
-        }
-        reader.close()
+        val fileContent = reader.use { it.readText() }
 
         // Parse JSON object from the file
-        val importObject = JSONObject(stringBuilder.toString())
+        val importObject = JSONObject(fileContent)
 
         // Validate the data before cleanup
         if (!validateImportData(importObject)) {

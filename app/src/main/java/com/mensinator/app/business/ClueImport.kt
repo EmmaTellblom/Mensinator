@@ -26,16 +26,10 @@ class ClueImport(
 
         Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
 
-        val stringBuilder = StringBuilder()
-        var line: String? = reader.readLine()
-        while (line != null) {
-            stringBuilder.append(line)
-            line = reader.readLine()
-        }
-        reader.close()
+        val fileContent = reader.use { it.readText() }
 
         // Parse JSON array from the file
-        val importArray = JSONArray(stringBuilder.toString())
+        val importArray = JSONArray(fileContent)
 
         // Validate the data before cleanup
         if (!validateImportData(importArray)) {
