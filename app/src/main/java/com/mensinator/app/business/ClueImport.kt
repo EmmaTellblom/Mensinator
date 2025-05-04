@@ -37,46 +37,20 @@ class ClueImport(
             return false
         }
 
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-        db.transaction {
-            try {
-                for (i in 0 until importArray.length()) {
-                    val obj = importArray.getJSONObject(i)
-                    val type = obj.getString("type")
-                    val dateString = obj.getString("date")
-                    val date = LocalDate.parse(dateString, formatter)
-
-                    when (type) {
-                        "period" -> {
-                            val periodId = dbHelper.newFindOrCreatePeriodID(date)
-                            dbHelper.addDateToPeriod(date, periodId)
-                        }
-                        "tests" -> {
-                            val valueArray = obj.getJSONArray("value")
-                            // we need to loop in case there are several different tests
-                            for (j in 0 until valueArray.length()) {
-                                val optionObj = valueArray.getJSONObject(j)
-                                val option = optionObj.getString("option")
-                                if (option == "ovulation_positive") {
-                                    dbHelper.addOvulationDate(date)
-                                    break // if a positive ovulation test is found, break the loop
-                                }
-                            }
-                        }
-                    }
-                }
-
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT)
-                    .show()
-                return false
+        val success = try {
+            db.transaction {
+                processData(importArray)
             }
+            true
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+            false
         }
 
         // Close the database
         db.close()
-        return true
+
+        return success
     }
 
     private fun validateImportData(importArray: JSONArray): Boolean {
@@ -95,6 +69,36 @@ class ClueImport(
 
         // If no valid data found, return false
         return false
+    }
+
+    private fun processData(importArray: JSONArray) {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+        for (i in 0 until importArray.length()) {
+            val obj = importArray.getJSONObject(i)
+            val type = obj.getString("type")
+            val dateString = obj.getString("date")
+            val date = LocalDate.parse(dateString, formatter)
+
+            when (type) {
+                "period" -> {
+                    val periodId = dbHelper.newFindOrCreatePeriodID(date)
+                    dbHelper.addDateToPeriod(date, periodId)
+                }
+                "tests" -> {
+                    val valueArray = obj.getJSONArray("value")
+                    // we need to loop in case there are several different tests
+                    for (j in 0 until valueArray.length()) {
+                        val optionObj = valueArray.getJSONObject(j)
+                        val option = optionObj.getString("option")
+                        if (option == "ovulation_positive") {
+                            dbHelper.addOvulationDate(date)
+                            break // if a positive ovulation test is found, break the loop
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

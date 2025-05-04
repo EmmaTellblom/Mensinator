@@ -36,66 +36,17 @@ class FloImport (
             return false
         }
 
-        db.transaction {
-            try {
-                val operationalData = importObject.getJSONObject("operationalData")
-
-                // Handle cycles first
-                val cyclesArray = operationalData.getJSONArray("cycles")
-                for (i in 0 until cyclesArray.length()) {
-                    val cycle = cyclesArray.getJSONObject(i)
-
-                    val startDateString = cycle.optString("period_start_date")
-                    val endDateString = cycle.optString("period_end_date")
-
-                    if (startDateString.isNotEmpty() && endDateString.isNotEmpty()) {
-                        try {
-                            val startDate = LocalDate.parse(startDateString.substring(0, 10)) // "YYYY-MM-DD"
-                            val endDate = LocalDate.parse(endDateString.substring(0, 10))
-
-                            val dates = getPeriodDates(startDate, endDate)
-
-                            for (date in dates) {
-                                val periodId = dbHelper.newFindOrCreatePeriodID(date)
-                                dbHelper.addDateToPeriod(date, periodId)
-                            }
-                        } catch (e: Exception) {
-                            Toast.makeText(context, "Invalid date format in cycle, error is: ${e.message}", Toast.LENGTH_SHORT).show()
-                            return false
-                        }
-                    }
-                }
-
-                // Get Ovulations from either OvulationTests or "own judgement"
-                val pointEventsArray = operationalData.getJSONArray("point_events_manual_v2")
-                for (i in 0 until pointEventsArray.length()) {
-                    val event = pointEventsArray.getJSONObject(i)
-
-                    val category = event.optString("category")
-                    val subcategory = event.optString("subcategory")
-
-                    if ((category == "OvulationTest" && subcategory == "Positive") ||
-                        (category == "Ovulation" && subcategory == "OtherMethods")) {
-
-                        val dateString = event.optString("date")
-                        if (dateString.isNotEmpty()) {
-                            try {
-                                val date = LocalDate.parse(dateString.substring(0, 10))
-                                dbHelper.addOvulationDate(date)
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "Invalid date format in ovulation event, error is: ${e.message}", Toast.LENGTH_SHORT).show()
-                                return false
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
-                return false
+        val success = try {
+            db.transaction {
+                processData(importObject)
             }
+            true
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+            false
         }
         db.close()
-        return true
+        return success
     }
 
     private fun validateImportData(importObject: JSONObject): Boolean {
@@ -133,5 +84,49 @@ class FloImport (
             currentDate = currentDate.plusDays(1)
         }
         return periodDates
+    }
+
+    private fun processData(importObject: JSONObject) {
+        val operationalData = importObject.getJSONObject("operationalData")
+
+        // Handle cycles first
+        val cyclesArray = operationalData.getJSONArray("cycles")
+        for (i in 0 until cyclesArray.length()) {
+            val cycle = cyclesArray.getJSONObject(i)
+
+            val startDateString = cycle.optString("period_start_date")
+            val endDateString = cycle.optString("period_end_date")
+
+            if (startDateString.isNotEmpty() && endDateString.isNotEmpty()) {
+                val startDate = LocalDate.parse(startDateString.substring(0, 10)) // "YYYY-MM-DD"
+                val endDate = LocalDate.parse(endDateString.substring(0, 10))
+
+                val dates = getPeriodDates(startDate, endDate)
+
+                for (date in dates) {
+                    val periodId = dbHelper.newFindOrCreatePeriodID(date)
+                    dbHelper.addDateToPeriod(date, periodId)
+                }
+            }
+        }
+
+        // Get Ovulations from either OvulationTests or "own judgement"
+        val pointEventsArray = operationalData.getJSONArray("point_events_manual_v2")
+        for (i in 0 until pointEventsArray.length()) {
+            val event = pointEventsArray.getJSONObject(i)
+
+            val category = event.optString("category")
+            val subcategory = event.optString("subcategory")
+
+            if ((category == "OvulationTest" && subcategory == "Positive") ||
+                (category == "Ovulation" && subcategory == "OtherMethods")) {
+
+                val dateString = event.optString("date")
+                if (dateString.isNotEmpty()) {
+                    val date = LocalDate.parse(dateString.substring(0, 10))
+                    dbHelper.addOvulationDate(date)
+                }
+            }
+        }
     }
 }
