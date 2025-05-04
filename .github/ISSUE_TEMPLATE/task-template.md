@@ -1,7 +1,7 @@
 ---
-name: Fix template
+name: Task template
 about: Internal issue for code improvment
-title: "[FIX]"
+title: "[Task]"
 labels: ''
 assignees: ''
 
