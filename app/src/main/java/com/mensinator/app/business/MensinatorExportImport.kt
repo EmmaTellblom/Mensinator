@@ -89,7 +89,7 @@ class MensinatorExportImport(
         return jsonArray
     }
 
-    override fun importDatabase(filePath: String) {
+    override fun importDatabase(filePath: String) : Boolean {
         val db = dbHelper.writableDb
 
         // Read JSON data from file
@@ -144,6 +144,7 @@ class MensinatorExportImport(
         }
 
         db.close()
+        return true
     }
 
     // This function will delete all period, ovulation, symptoms and symptomdates before importing the file

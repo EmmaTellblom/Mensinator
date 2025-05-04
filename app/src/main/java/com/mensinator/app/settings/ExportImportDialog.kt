@@ -90,7 +90,7 @@ fun ImportDialog(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val impSuccess = stringResource(id = R.string.import_success_toast)
+    //val impSuccess = stringResource(id = R.string.import_success_toast)
     val impFailure = stringResource(id = R.string.import_failure_toast)
 
     var selectedOption by remember { mutableStateOf(ImportSource.MENSINATOR) }
@@ -107,7 +107,7 @@ fun ImportDialog(
             try {
                 inputStream?.copyTo(outputStream)
                 onImportClick(file.absolutePath, selectedOption)
-                Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
                 Log.d("ImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")

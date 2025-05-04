@@ -16,7 +16,7 @@ class ClueImport(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
 
-    override fun importFileToDatabase(filePath: String) {
+    override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
 
         // Read JSON data from the file
@@ -40,7 +40,7 @@ class ClueImport(
         // Validate the data before cleanup
         if (!validateImportData(importArray)) {
             Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -76,11 +76,13 @@ class ClueImport(
             } catch (e: Exception) {
                 Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT)
                     .show()
+                return false
             }
         }
 
         // Close the database
         db.close()
+        return true
     }
 
     private fun validateImportData(importArray: JSONArray): Boolean {

@@ -15,7 +15,7 @@ class FloImport (
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IFloImport {
 
-    override fun importFileToDatabase(filePath: String) {
+    override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
 
         // Read JSON data from the file
@@ -39,7 +39,7 @@ class FloImport (
         // Validate the data before cleanup
         if (!validateImportData(importObject)) {
             Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
-            return
+            return false
         }
 
         db.transaction {
@@ -67,6 +67,7 @@ class FloImport (
                             }
                         } catch (e: Exception) {
                             Toast.makeText(context, "Invalid date format in cycle, error is: ${e.message}", Toast.LENGTH_SHORT).show()
+                            return false
                         }
                     }
                 }
@@ -89,15 +90,18 @@ class FloImport (
                                 dbHelper.addOvulationDate(date)
                             } catch (e: Exception) {
                                 Toast.makeText(context, "Invalid date format in ovulation event, error is: ${e.message}", Toast.LENGTH_SHORT).show()
+                                return false
                             }
                         }
                     }
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+                return false
             }
         }
         db.close()
+        return true
     }
 
     private fun validateImportData(importObject: JSONObject): Boolean {

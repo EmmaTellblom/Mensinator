@@ -1,5 +1,5 @@
 package com.mensinator.app.business
 
 interface IFloImport {
-    fun importFileToDatabase(filePath: String)
+    fun importFileToDatabase(filePath: String) : Boolean
 }

@@ -210,17 +210,25 @@ class SettingsViewModel(
 
     fun handleImport(importPath: String, source: ImportSource) {
         try {
-            when (source) {
+            val importSuccess: Boolean = when (source) {
                 ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
                 ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
                 ImportSource.FLO -> floImport.importFileToDatabase(importPath)
             }
-
+        if(importSuccess){
             Toast.makeText(
                 appContext,
                 "Data imported successfully",
                 Toast.LENGTH_SHORT
             ).show()
+        }
+        else{
+            Toast.makeText(
+                appContext,
+                "Error during import",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         } catch (e: Exception) {
             Toast.makeText(
                 appContext,
