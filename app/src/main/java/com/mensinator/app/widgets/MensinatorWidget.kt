@@ -90,7 +90,7 @@ fun WidgetUI(daysUntilNextPeriod: String) {
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(GlanceTheme.colors.background)
+            .background(GlanceTheme.colors.widgetBackground)
             .padding(10.dp)
             .clickable(
                 actionStartActivity<MainActivity>()
