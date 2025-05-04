@@ -109,20 +109,6 @@ class PeriodDatabaseHelper(
         }
     }
 
-//    override fun addDateToPeriod(date: LocalDate, periodId: Int) {
-//        val db = writableDatabase
-//        val values = ContentValues().apply {
-//            put(COLUMN_DATE, date.toString())
-//            put(COLUMN_PERIOD_ID, periodId)
-//        }
-//        val whereClause = "$COLUMN_DATE = ? AND $COLUMN_PERIOD_ID = ?"
-//        val whereArgs = arrayOf(date.toString(), periodId.toString())
-//        val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
-//        if (rowsUpdated == 0) {
-//            db.insert(TABLE_PERIODS, null, values)
-//        }
-//    }
-
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
         val db = writableDatabase
         val values = ContentValues().apply {
