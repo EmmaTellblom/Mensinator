@@ -72,7 +72,7 @@ class ClueImport(
     }
 
     private fun processData(importArray: JSONArray) {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
         for (i in 0 until importArray.length()) {
             val obj = importArray.getJSONObject(i)

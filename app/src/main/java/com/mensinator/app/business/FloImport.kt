@@ -9,6 +9,7 @@ import java.time.LocalDate
 import androidx.core.database.sqlite.transaction
 import org.json.JSONObject
 import java.io.FileInputStream
+import java.time.format.DateTimeFormatter
 
 class FloImport (
     private val context: Context,
@@ -98,8 +99,8 @@ class FloImport (
             val endDateString = cycle.optString("period_end_date")
 
             if (startDateString.isNotEmpty() && endDateString.isNotEmpty()) {
-                val startDate = LocalDate.parse(startDateString.substring(0, 10)) // "YYYY-MM-DD"
-                val endDate = LocalDate.parse(endDateString.substring(0, 10))
+                val startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_LOCAL_DATE)
+                val endDate = LocalDate.parse(endDateString, DateTimeFormatter.ISO_LOCAL_DATE)
 
                 val dates = getPeriodDates(startDate, endDate)
 
@@ -123,7 +124,7 @@ class FloImport (
 
                 val dateString = event.optString("date")
                 if (dateString.isNotEmpty()) {
-                    val date = LocalDate.parse(dateString.substring(0, 10))
+                    val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
                     dbHelper.addOvulationDate(date)
                 }
             }
