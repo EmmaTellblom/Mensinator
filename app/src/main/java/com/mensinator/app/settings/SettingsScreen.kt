@@ -251,7 +251,6 @@ private fun ColorSection(
         },
         onOpenColorPicker = { viewModel.showColorPicker(it) },
     )
-
     SettingColorSelection(
         colorSetting = ColorSetting.EXPECTED_PERIOD,
         currentColor = viewState.expectedPeriodColor,
