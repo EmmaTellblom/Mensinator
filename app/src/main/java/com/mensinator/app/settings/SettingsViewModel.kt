@@ -221,8 +221,7 @@ class SettingsViewModel(
                 "Data imported successfully",
                 Toast.LENGTH_SHORT
             ).show()
-        }
-        else{
+        } else{
             Toast.makeText(
                 appContext,
                 "Error during import",

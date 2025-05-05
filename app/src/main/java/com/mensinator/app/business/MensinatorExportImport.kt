@@ -106,6 +106,9 @@ class MensinatorExportImport(
         val importData = JSONObject(stringBuilder.toString())
 
         db.beginTransaction()
+
+        var result = true
+
         try {
             // Import periods table
             importJsonArrayToTable(db, "periods", importData.getJSONArray("periods"))
@@ -139,12 +142,16 @@ class MensinatorExportImport(
             }
 
             db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
+        } catch (e: Exception) {
+            Log.e("Import", "Error during import", e)
+            result = false
         }
 
+        db.endTransaction()
         db.close()
-        return true
+
+        return result
+
     }
 
     // This function will delete all period, ovulation, symptoms and symptomdates before importing the file
