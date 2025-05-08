@@ -29,7 +29,9 @@ class App : Application() {
         singleOf(::CalculationsHelper) { bind<ICalculationsHelper>() }
         singleOf(::OvulationPrediction) { bind<IOvulationPrediction>() }
         singleOf(::PeriodPrediction) { bind<IPeriodPrediction>() }
-        singleOf(::ExportImport) { bind<IExportImport>() }
+        singleOf(::MensinatorExportImport) { bind<IMensinatorExportImport>() }
+        singleOf(::ClueImport) { bind<IClueImport>() }
+        singleOf(::FloImport) { bind<IFloImport>() }
         singleOf(::NotificationScheduler) { bind<INotificationScheduler>() }
         singleOf(::DefaultDispatcherProvider) { bind<IDispatcherProvider>() }
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }
@@ -37,7 +39,7 @@ class App : Application() {
 
         viewModel { CalendarViewModel(get(), get(), get(), get()) }
         viewModel { ManageSymptomsViewModel(get()) }
-        viewModel { SettingsViewModel(get(), get(), get(), get()) }
+        viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }
 

@@ -203,5 +203,37 @@ object DatabaseUtils {
         )
     }
 
+    fun databaseVersion11(db: SQLiteDatabase){
+        // Remove duplicate date values, keeping the first one based on rowid
+        db.execSQL("""
+        DELETE FROM periods
+        WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM periods
+            GROUP BY date
+        );
+    """)
+
+        // Add a unique constraint to the date column via unique index
+        db.execSQL("""
+        CREATE UNIQUE INDEX IF NOT EXISTS unique_date ON periods(date);
+    """)
+
+        // Remove duplicate date values, keeping the first one based on rowid
+        db.execSQL("""
+        DELETE FROM ovulations
+        WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM ovulations
+            GROUP BY date
+        );
+    """)
+
+        // Add a unique constraint to the date column via unique index
+        db.execSQL("""
+        CREATE UNIQUE INDEX IF NOT EXISTS unique_date_ovulation ON ovulations(date);
+    """)
+    }
+
 
 }

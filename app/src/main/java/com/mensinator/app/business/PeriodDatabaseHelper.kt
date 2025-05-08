@@ -30,7 +30,7 @@ class PeriodDatabaseHelper(
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 10
+        private const val DATABASE_VERSION = 11
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -103,6 +103,10 @@ class PeriodDatabaseHelper(
         if (oldVersion < 10) {
             DatabaseUtils.databaseVersion10(db)
         }
+
+        if (oldVersion < 11) {
+            DatabaseUtils.databaseVersion11(db)
+        }
     }
 
     override fun addDateToPeriod(date: LocalDate, periodId: Int) {
@@ -111,11 +115,19 @@ class PeriodDatabaseHelper(
             put(COLUMN_DATE, date.toString())
             put(COLUMN_PERIOD_ID, periodId)
         }
-        val whereClause = "$COLUMN_DATE = ? AND $COLUMN_PERIOD_ID = ?"
-        val whereArgs = arrayOf(date.toString(), periodId.toString())
-        val rowsUpdated = db.update(TABLE_PERIODS, values, whereClause, whereArgs)
-        if (rowsUpdated == 0) {
-            db.insert(TABLE_PERIODS, null, values)
+
+        // Check if date already exists, this is fail-safe for import functionality
+        val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        cursor.use {
+            // If the period already exists (count > 0), do nothing
+            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                return
+            } else {
+                // If date is new, insert
+                db.insert(TABLE_PERIODS, null, values)
+            }
         }
     }
 
@@ -590,6 +602,34 @@ class PeriodDatabaseHelper(
         }
 
         cursor.close()
+    }
+
+    override fun addOvulationDate(date: LocalDate) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_DATE, date.toString())
+        }
+
+        // Check if date already exists, this is fail-safe for import functionality
+        val query = "SELECT COUNT(*) FROM OVULATIONS WHERE $COLUMN_DATE = ?"
+        val cursor = db.rawQuery(query, arrayOf(date.toString()))
+
+        cursor.use {
+            // If the ovulation already exists (count > 0), do nothing
+            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                return
+            } else {
+                // If date is new, insert
+                db.insert("OVULATIONS", null, values)
+            }
+        }
+    }
+
+    override fun removeOvulationDate(date: LocalDate) {
+        val db = writableDatabase
+        val whereClause = "$COLUMN_DATE = ?"
+        val whereArgs = arrayOf(date.toString())
+        db.delete("OVULATIONS", whereClause, whereArgs)
     }
 
     override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {

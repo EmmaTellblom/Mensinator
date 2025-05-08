@@ -13,10 +13,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
-import com.mensinator.app.business.IExportImport
+import com.mensinator.app.business.IClueImport
+import com.mensinator.app.business.IFloImport
+import com.mensinator.app.business.IMensinatorExportImport
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.data.ImportSource
 import com.mensinator.app.settings.ColorSetting.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +30,9 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
     @SuppressLint("StaticFieldLeak") private val appContext: Context,
-    private val exportImport: IExportImport,
+    private val exportImport: IMensinatorExportImport,
+    private val clueImport: IClueImport,
+    private val floImport: IFloImport,
     private val notificationScheduler: INotificationScheduler,
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(
@@ -207,22 +212,19 @@ class SettingsViewModel(
         _viewState.update { it.copy(showExportDialog = show) }
     }
 
-    fun handleImport(importPath: String) {
-        try {
-            exportImport.importDatabase(importPath)
-            Toast.makeText(
-                appContext,
-                "Data imported successfully",
-                Toast.LENGTH_SHORT
-            ).show()
-        } catch (e: Exception) {
-            Toast.makeText(
-                appContext,
-                "Error during import: ${e.message}",
-                Toast.LENGTH_SHORT
-            ).show()
-            Log.e("Import", "Import error: ${e.message}", e)
+    fun handleImport(importPath: String, source: ImportSource) {
+        val importSuccessful = when (source) {
+            ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
+            ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
+            ImportSource.FLO -> floImport.importFileToDatabase(importPath)
         }
+
+        val toastText = if (importSuccessful) {
+            "Data imported successfully"
+        } else {
+            "Error during import"
+        }
+        Toast.makeText(appContext, toastText, Toast.LENGTH_SHORT).show()
     }
 
     fun getExportFileName(): String = exportImport.generateExportFileName()
