@@ -66,6 +66,11 @@ interface IPeriodDatabaseHelper {
     // This function is used for adding/removing ovulation dates from the database
     fun updateOvulationDate(date: LocalDate)
 
+    //Add ovulation to database
+    fun addOvulationDate(date: LocalDate)
+    // Remove ovulation from database
+    fun removeOvulationDate(date: LocalDate)
+
     // This function is used to get ovulation date for a given month
     fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate>
 

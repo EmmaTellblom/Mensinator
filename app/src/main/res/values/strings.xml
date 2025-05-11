@@ -139,6 +139,7 @@
     <string name="import_path_label">Import Path: %1$s</string>
     <string name="import_dialog_message">Select file to import data.</string>
     <string name="export_dialog_message">Select the output path to export calendar entries, symptoms and other data.</string>
+    <string name="select_source">Select app source</string>
 
     <!-- Frequently Asked Questions -->
     <string name="faq_title">Frequently Asked Questions</string>

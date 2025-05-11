@@ -17,10 +17,10 @@ import java.util.Date
 import java.util.Locale
 
 
-class ExportImport(
+class MensinatorExportImport(
     private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
-) : IExportImport {
+) : IMensinatorExportImport {
 
     override fun generateExportFileName(): String {
         // Create a date formatter to include the current date in the filename
@@ -89,7 +89,7 @@ class ExportImport(
         return jsonArray
     }
 
-    override fun importDatabase(filePath: String) {
+    override fun importDatabase(filePath: String) : Boolean {
         val db = dbHelper.writableDb
 
         // Read JSON data from file
@@ -106,6 +106,9 @@ class ExportImport(
         val importData = JSONObject(stringBuilder.toString())
 
         db.beginTransaction()
+
+        var result = true
+
         try {
             // Import periods table
             importJsonArrayToTable(db, "periods", importData.getJSONArray("periods"))
@@ -139,11 +142,16 @@ class ExportImport(
             }
 
             db.setTransactionSuccessful()
-        } finally {
-            db.endTransaction()
+        } catch (e: Exception) {
+            Log.e("Import", "Error during import", e)
+            result = false
         }
 
+        db.endTransaction()
         db.close()
+
+        return result
+
     }
 
     // This function will delete all period, ovulation, symptoms and symptomdates before importing the file

@@ -179,8 +179,8 @@ fun SettingsScreen(
             ImportDialog(
                 defaultImportFilePath = viewState.defaultImportFilePath,
                 onDismissRequest = { viewModel.showImportDialog(false) },
-                onImportClick = { importPath ->
-                    viewModel.handleImport(importPath)
+                onImportClick = { importPath, source ->
+                    viewModel.handleImport(importPath, source)
                 }
             )
         }
