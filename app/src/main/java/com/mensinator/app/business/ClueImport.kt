@@ -24,7 +24,7 @@ class ClueImport(
         val fileInputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
 
         val fileContent = reader.use { it.readText() }
 
@@ -33,7 +33,7 @@ class ClueImport(
 
         // Validate the data before cleanup
         if (!validateImportData(importArray)) {
-            Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -43,7 +43,7 @@ class ClueImport(
             }
             true
         } catch (e: Exception) {
-            Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
             false
         }
 

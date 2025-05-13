@@ -154,10 +154,8 @@ class MensinatorExportImport(
 
     }
 
-    // This function will delete all period, ovulation, symptoms and symptomdates before importing the file
-    // User should never do any changes before importing their file
+    // This function will import all period, ovulation, symptoms and symptomdates
     private fun importJsonArrayToTable(db: SQLiteDatabase, tableName: String, jsonArray: JSONArray) {
-        db.delete(tableName, null, null)
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val contentValues = ContentValues()
