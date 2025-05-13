@@ -1,7 +1,5 @@
 package com.mensinator.app.business
 
-import android.content.Context
-import android.widget.Toast
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.File
@@ -12,7 +10,6 @@ import androidx.core.database.sqlite.transaction
 import java.io.FileInputStream
 
 class ClueImport(
-    private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
 
@@ -24,8 +21,6 @@ class ClueImport(
         val fileInputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        //Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
-
         val fileContent = reader.use { it.readText() }
 
         // Parse JSON array from the file
@@ -33,7 +28,6 @@ class ClueImport(
 
         // Validate the data before cleanup
         if (!validateImportData(importArray)) {
-            //Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -43,7 +37,6 @@ class ClueImport(
             }
             true
         } catch (e: Exception) {
-            //Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
             false
         }
 

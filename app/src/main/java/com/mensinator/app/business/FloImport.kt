@@ -1,8 +1,6 @@
 package com.mensinator.app.business
 
 import java.io.File
-import android.content.Context
-import android.widget.Toast
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.LocalDate
@@ -12,7 +10,6 @@ import java.io.FileInputStream
 import java.time.format.DateTimeFormatter
 
 class FloImport (
-    private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IFloImport {
 
@@ -24,8 +21,6 @@ class FloImport (
         val fileInputStream = FileInputStream(file)
         val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        //Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
-
         val fileContent = reader.use { it.readText() }
 
         // Parse JSON object from the file
@@ -33,7 +28,6 @@ class FloImport (
 
         // Validate the data before cleanup
         if (!validateImportData(importObject)) {
-            //Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -43,7 +37,6 @@ class FloImport (
             }
             true
         } catch (e: Exception) {
-            //Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
             false
         }
         db.close()
