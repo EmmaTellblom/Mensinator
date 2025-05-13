@@ -150,7 +150,7 @@ class MensinatorExportImport(
 
     }
 
-    // This function will import all period, ovulation, symptoms and symptomdates
+    // This function will import all period, ovulation, symptoms and symptom dates
     private fun importJsonArrayToTable(db: SQLiteDatabase, tableName: String, jsonArray: JSONArray) {
         db.delete(tableName, null, null)
         for (i in 0 until jsonArray.length()) {
@@ -208,7 +208,7 @@ class MensinatorExportImport(
         return success
     }
 
-    // This function will only update values of the settings provided in the importfile
+    // This function will only update values of the settings provided in the import file
     // Due to different db-versions there should never be a time where we want data from the file
     // to insert into the database. It should always up update based on setting_key
     private fun importAppSettings(db: SQLiteDatabase, jsonArray: JSONArray) {
