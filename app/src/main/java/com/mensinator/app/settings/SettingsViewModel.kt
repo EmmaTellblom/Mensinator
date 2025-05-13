@@ -212,19 +212,13 @@ class SettingsViewModel(
         _viewState.update { it.copy(showExportDialog = show) }
     }
 
-    fun handleImport(importPath: String, source: ImportSource) {
+    fun handleImport(importPath: String, source: ImportSource): Boolean {
         val importSuccessful = when (source) {
             ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
             ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
             ImportSource.FLO -> floImport.importFileToDatabase(importPath)
         }
-
-        val toastText = if (importSuccessful) {
-            "Data imported successfully"
-        } else {
-            "Error during import"
-        }
-        Toast.makeText(appContext, toastText, Toast.LENGTH_SHORT).show()
+        return importSuccessful
     }
 
     fun getExportFileName(): String = exportImport.generateExportFileName()

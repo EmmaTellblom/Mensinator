@@ -1,8 +1,6 @@
 package com.mensinator.app.settings
 
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -90,8 +88,6 @@ fun ImportDialog(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    //val impSuccess = stringResource(id = R.string.import_success_toast)
-    val impFailure = stringResource(id = R.string.import_failure_toast)
 
     var selectedOption by remember { mutableStateOf(ImportSource.MENSINATOR) }
     val options = ImportSource.entries.toTypedArray()
@@ -107,10 +103,6 @@ fun ImportDialog(
             try {
                 inputStream?.copyTo(outputStream)
                 onImportClick(file.absolutePath, selectedOption)
-                //Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
-                Log.d("ImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
             } finally {
                 inputStream?.close()
                 outputStream.close()
