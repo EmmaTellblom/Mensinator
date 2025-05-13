@@ -13,6 +13,8 @@ import java.io.BufferedReader
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -107,11 +109,12 @@ class MensinatorExportImport(
 
         db.beginTransaction()
 
-        var result = true
+        var result = false
 
         try {
-            // Import periods table
-            importJsonArrayToTable(db, "periods", importData.getJSONArray("periods"))
+            // Import periods and ovulations
+            // if something has been imported it will return true
+            result = importPeriodsAndOvulations(importData)
 
             // Check if "symptoms" key exists and import if present
             if (importData.has("symptoms")) {
@@ -125,13 +128,6 @@ class MensinatorExportImport(
                 importJsonArrayToTable(db, "symptom_date", importData.getJSONArray("symptom_date"))
             } else {
                 Log.d("Import", "No symptom_date data found in the file.")
-            }
-
-            // Check if "ovulations" key exists and import if present
-            if (importData.has("ovulations")) {
-                importJsonArrayToTable(db, "ovulations", importData.getJSONArray("ovulations"))
-            } else {
-                Log.d("Import", "No ovulations data found in the file.")
             }
 
             // Check if "app_settings" key exists and import if present
@@ -156,6 +152,7 @@ class MensinatorExportImport(
 
     // This function will import all period, ovulation, symptoms and symptomdates
     private fun importJsonArrayToTable(db: SQLiteDatabase, tableName: String, jsonArray: JSONArray) {
+        db.delete(tableName, null, null)
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val contentValues = ContentValues()
@@ -166,6 +163,49 @@ class MensinatorExportImport(
             }
             db.insert(tableName, null, contentValues)
         }
+    }
+
+    // This is used for periods and ovulations since these tables have constraints on dates in the db
+    private fun importPeriodsAndOvulations(importData: JSONObject): Boolean {
+        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+        val db = dbHelper.writableDb
+        var success = false
+
+        db.beginTransaction()
+
+        try {
+            // Handle periods
+            if (importData.has("periods")) {
+                val periodsArray = importData.getJSONArray("periods")
+                for (i in 0 until periodsArray.length()) {
+                    val periodObj = periodsArray.getJSONObject(i)
+                    val dateString = periodObj.getString("date")
+                    val date = LocalDate.parse(dateString, formatter)
+                    val periodId = dbHelper.newFindOrCreatePeriodID(date)
+                    dbHelper.addDateToPeriod(date, periodId)
+                }
+                success = true
+            }
+
+            // Handle ovulations
+            if (importData.has("ovulations")) {
+                val ovulationsArray = importData.getJSONArray("ovulations")
+                for (i in 0 until ovulationsArray.length()) {
+                    val ovulationObj = ovulationsArray.getJSONObject(i)
+                    val dateString = ovulationObj.getString("date")
+                    val date = LocalDate.parse(dateString, formatter)
+                    dbHelper.addOvulationDate(date)
+                }
+                success = true
+            }
+
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
+        }
+        return success
     }
 
     // This function will only update values of the settings provided in the importfile
