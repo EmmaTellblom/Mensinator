@@ -168,10 +168,7 @@ class MensinatorExportImport(
     // This is used for periods and ovulations since these tables have constraints on dates in the db
     private fun importPeriodsAndOvulations(importData: JSONObject): Boolean {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-        val db = dbHelper.writableDb
         var success = false
-
-        db.beginTransaction()
 
         try {
             // Handle periods
@@ -198,12 +195,8 @@ class MensinatorExportImport(
                 }
                 success = true
             }
-
-            db.setTransactionSuccessful()
         } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            db.endTransaction()
+            success = false
         }
         return success
     }
