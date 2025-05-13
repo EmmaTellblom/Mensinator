@@ -15,32 +15,30 @@ class FloImport (
 
     override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
+        return try {
+            // Read JSON data from the file
+            val file = File(filePath)
+            val fileInputStream = FileInputStream(file)
+            val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        // Read JSON data from the file
-        val file = File(filePath)
-        val fileInputStream = FileInputStream(file)
-        val reader = BufferedReader(InputStreamReader(fileInputStream))
+            val fileContent = reader.use { it.readText() }
 
-        val fileContent = reader.use { it.readText() }
+            // Parse JSON object from the file
+            val importObject = JSONObject(fileContent)
 
-        // Parse JSON object from the file
-        val importObject = JSONObject(fileContent)
+            // Validate the data before cleanup
+            if (!validateImportData(importObject)) return false
 
-        // Validate the data before cleanup
-        if (!validateImportData(importObject)) {
-            return false
-        }
-
-        val success = try {
             db.transaction {
                 processData(importObject)
             }
-            true
+
+            db.close()
+            return true
         } catch (e: Exception) {
-            false
+            db.close()
+            return false
         }
-        db.close()
-        return success
     }
 
     private fun validateImportData(importObject: JSONObject): Boolean {

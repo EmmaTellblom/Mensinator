@@ -15,35 +15,31 @@ class ClueImport(
 
     override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
+        return try {
+            // Read JSON data from the file
+            val file = File(filePath)
+            val fileInputStream = FileInputStream(file)
+            val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        // Read JSON data from the file
-        val file = File(filePath)
-        val fileInputStream = FileInputStream(file)
-        val reader = BufferedReader(InputStreamReader(fileInputStream))
+            val fileContent = reader.use { it.readText() }
 
-        val fileContent = reader.use { it.readText() }
+            // Parse JSON array from the file
+            val importArray = JSONArray(fileContent)
 
-        // Parse JSON array from the file
-        val importArray = JSONArray(fileContent)
+            // Validate the data before cleanup
+            if (!validateImportData(importArray)) return false
 
-        // Validate the data before cleanup
-        if (!validateImportData(importArray)) {
-            return false
-        }
-
-        val success = try {
             db.transaction {
                 processData(importArray)
             }
-            true
+            // Close the database
+            db.close()
+
+            return true
         } catch (e: Exception) {
-            false
+            db.close()
+            return false
         }
-
-        // Close the database
-        db.close()
-
-        return success
     }
 
     private fun validateImportData(importArray: JSONArray): Boolean {

@@ -188,14 +188,14 @@ fun SettingsScreen(
                     importResult = viewModel.handleImport(importPath, source)
                 }
             )
-            importResult?.let {
-                if (it) {
-                    Toast.makeText(context, R.string.import_success_toast, Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(context, R.string.import_failure_toast, Toast.LENGTH_SHORT).show()
-                }
-                importResult = null
+        }
+        importResult?.let {
+            if (it) {
+                Toast.makeText(context, R.string.import_success_toast, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, R.string.import_failure_toast, Toast.LENGTH_SHORT).show()
             }
+            importResult = null
         }
 
         if (viewState.showExportDialog) {
