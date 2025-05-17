@@ -139,4 +139,5 @@
     <string name="export_data">تصدير البيانات</string>
     <string name="about_app">حول التطبيق</string>
     <string name="rename_symptom">إعادة تسمية العرض</string>
+    <string name="select_source">تحديد مصدر التطبيق</string>
 </resources>
