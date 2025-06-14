@@ -1,6 +1,7 @@
 package com.mensinator.app.settings
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import com.mensinator.app.data.ImportSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 @Composable
 fun ExportDialog(
@@ -99,14 +101,19 @@ fun ImportDialog(
 
             val inputStream = context.contentResolver.openInputStream(uri)
             val file = File(defaultImportFilePath)
-            val outputStream = FileOutputStream(file)
-            try {
-                inputStream?.copyTo(outputStream)
-                onImportClick(file.absolutePath, selectedOption)
-            } finally {
-                inputStream?.close()
-                outputStream.close()
+
+            if (inputStream != null) {
+                try {
+                    val outputStream = FileOutputStream(file)
+                    outputStream.use { out ->
+                        inputStream.use { it.copyTo(out) }
+                    }
+                    onImportClick(file.absolutePath, selectedOption)
+                } catch (e: IOException) {
+                    Log.d("ImportExport", "Error importing file: $e")
+                }
             }
+
             onDismissRequest()
         }
 
