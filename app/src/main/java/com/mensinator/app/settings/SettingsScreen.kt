@@ -16,10 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -178,24 +175,21 @@ fun SettingsScreen(
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
         }
-
-        var importResult by remember { mutableStateOf<Boolean?>(null) }
+        
         if (viewState.showImportDialog) {
             ImportDialog(
                 defaultImportFilePath = viewState.defaultImportFilePath,
                 onDismissRequest = { viewModel.showImportDialog(false) },
                 onImportClick = { importPath, source ->
-                    importResult = viewModel.handleImport(importPath, source)
+                    val importSuccessful = viewModel.handleImport(importPath, source)
+                    val stringId = if (importSuccessful) {
+                        R.string.import_success_toast
+                    } else {
+                        R.string.import_failure_toast
+                    }
+                    Toast.makeText(context, stringId, Toast.LENGTH_SHORT).show()
                 }
             )
-        }
-        importResult?.let {
-            if (it) {
-                Toast.makeText(context, R.string.import_success_toast, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, R.string.import_failure_toast, Toast.LENGTH_SHORT).show()
-            }
-            importResult = null
         }
 
         if (viewState.showExportDialog) {

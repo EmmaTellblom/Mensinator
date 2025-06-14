@@ -1,5 +1,6 @@
 package com.mensinator.app.business
 
+import android.util.Log
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.File
@@ -35,10 +36,11 @@ class ClueImport(
             // Close the database
             db.close()
 
-            return true
+            true
         } catch (e: Exception) {
+            Log.d("ClueImport", "Error importing file: $e")
             db.close()
-            return false
+            false
         }
     }
 

@@ -1,5 +1,6 @@
 package com.mensinator.app.business
 
+import android.util.Log
 import java.io.File
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -34,10 +35,11 @@ class FloImport (
             }
 
             db.close()
-            return true
+            true
         } catch (e: Exception) {
+            Log.d("FloImport", "Error importing file: $e")
             db.close()
-            return false
+            false
         }
     }
 

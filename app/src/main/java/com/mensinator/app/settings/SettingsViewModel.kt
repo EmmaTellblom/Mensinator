@@ -213,12 +213,11 @@ class SettingsViewModel(
     }
 
     fun handleImport(importPath: String, source: ImportSource): Boolean {
-        val importSuccessful = when (source) {
+        return when (source) {
             ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
             ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
             ImportSource.FLO -> floImport.importFileToDatabase(importPath)
         }
-        return importSuccessful
     }
 
     fun getExportFileName(): String = exportImport.generateExportFileName()
