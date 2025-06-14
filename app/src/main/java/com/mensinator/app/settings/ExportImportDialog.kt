@@ -2,7 +2,6 @@ package com.mensinator.app.settings
 
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -34,6 +33,7 @@ import com.mensinator.app.data.ImportSource
 import com.mensinator.app.ui.theme.MensinatorTheme
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 
 @Composable
 fun ExportDialog(
@@ -90,8 +90,6 @@ fun ImportDialog(
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    //val impSuccess = stringResource(id = R.string.import_success_toast)
-    val impFailure = stringResource(id = R.string.import_failure_toast)
 
     var selectedOption by remember { mutableStateOf(ImportSource.MENSINATOR) }
     val options = ImportSource.entries.toTypedArray()
@@ -103,18 +101,19 @@ fun ImportDialog(
 
             val inputStream = context.contentResolver.openInputStream(uri)
             val file = File(defaultImportFilePath)
-            val outputStream = FileOutputStream(file)
-            try {
-                inputStream?.copyTo(outputStream)
-                onImportClick(file.absolutePath, selectedOption)
-                //Toast.makeText(context, impSuccess, Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(context, impFailure, Toast.LENGTH_SHORT).show()
-                Log.d("ImportDialog", "Failed to import file: ${e.message}, ${e.stackTraceToString()}")
-            } finally {
-                inputStream?.close()
-                outputStream.close()
+
+            if (inputStream != null) {
+                try {
+                    val outputStream = FileOutputStream(file)
+                    outputStream.use { out ->
+                        inputStream.use { it.copyTo(out) }
+                    }
+                    onImportClick(file.absolutePath, selectedOption)
+                } catch (e: IOException) {
+                    Log.d("ImportExport", "Error importing file: $e")
+                }
             }
+
             onDismissRequest()
         }
 

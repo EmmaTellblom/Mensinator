@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -174,13 +175,19 @@ fun SettingsScreen(
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
         }
-
+        
         if (viewState.showImportDialog) {
             ImportDialog(
                 defaultImportFilePath = viewState.defaultImportFilePath,
                 onDismissRequest = { viewModel.showImportDialog(false) },
                 onImportClick = { importPath, source ->
-                    viewModel.handleImport(importPath, source)
+                    val importSuccessful = viewModel.handleImport(importPath, source)
+                    val stringId = if (importSuccessful) {
+                        R.string.import_success_toast
+                    } else {
+                        R.string.import_failure_toast
+                    }
+                    Toast.makeText(context, stringId, Toast.LENGTH_SHORT).show()
                 }
             )
         }

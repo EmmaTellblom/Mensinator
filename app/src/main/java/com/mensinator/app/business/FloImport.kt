@@ -1,8 +1,7 @@
 package com.mensinator.app.business
 
+import android.util.Log
 import java.io.File
-import android.content.Context
-import android.widget.Toast
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.LocalDate
@@ -12,42 +11,36 @@ import java.io.FileInputStream
 import java.time.format.DateTimeFormatter
 
 class FloImport (
-    private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IFloImport {
 
     override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
+        return try {
+            // Read JSON data from the file
+            val file = File(filePath)
+            val fileInputStream = FileInputStream(file)
+            val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        // Read JSON data from the file
-        val file = File(filePath)
-        val fileInputStream = FileInputStream(file)
-        val reader = BufferedReader(InputStreamReader(fileInputStream))
+            val fileContent = reader.use { it.readText() }
 
-        Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
+            // Parse JSON object from the file
+            val importObject = JSONObject(fileContent)
 
-        val fileContent = reader.use { it.readText() }
+            // Validate the data before cleanup
+            if (!validateImportData(importObject)) return false
 
-        // Parse JSON object from the file
-        val importObject = JSONObject(fileContent)
-
-        // Validate the data before cleanup
-        if (!validateImportData(importObject)) {
-            Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        val success = try {
             db.transaction {
                 processData(importObject)
             }
+
+            db.close()
             true
         } catch (e: Exception) {
-            Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+            Log.d("FloImport", "Error importing file: $e")
+            db.close()
             false
         }
-        db.close()
-        return success
     }
 
     private fun validateImportData(importObject: JSONObject): Boolean {
