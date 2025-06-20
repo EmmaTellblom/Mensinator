@@ -1,49 +1,45 @@
 package com.mensinator.app.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
-import androidx.glance.GlanceId
-import androidx.glance.GlanceModifier
+import androidx.glance.*
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.provideContent
-import androidx.glance.currentState
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.text.Text
+import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
+import androidx.glance.state.GlanceStateDefinition
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
+import com.mensinator.app.R
 import com.mensinator.app.business.CalculationsHelper
 import com.mensinator.app.business.PeriodDatabaseHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.File
 import java.time.LocalDate
-import android.util.Log
-import androidx.compose.ui.unit.dp
-import androidx.glance.ImageProvider
-import androidx.glance.action.clickable
-import androidx.glance.appwidget.GlanceAppWidgetReceiver
-import androidx.glance.appwidget.SizeMode
-import androidx.glance.background
-import androidx.glance.layout.Alignment
-import com.mensinator.app.R
 
 object MensinatorWidget : GlanceAppWidget() {
 
     override val sizeMode: SizeMode = SizeMode.Single
 
-    override val stateDefinition: GlanceStateDefinition<LocalDate>
-        get() = object : GlanceStateDefinition<LocalDate> {
+    override val stateDefinition: GlanceStateDefinition<String>
+        get() = object : GlanceStateDefinition<String> {
             override suspend fun getDataStore(
                 context: Context,
                 fileKey: String
-            ): DataStore<LocalDate> {
+            ): DataStore<String> {
                 return PeriodDataStore(context)
             }
 
             override fun getLocation(context: Context, fileKey: String): File {
-                throw NotImplementedError("Not implemented")
+                throw NotImplementedError("Not implemented yet")
             }
         }
 
@@ -56,23 +52,41 @@ object MensinatorWidget : GlanceAppWidget() {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     @Composable
-    private fun MyContent(value: LocalDate) {
-        Box(GlanceModifier.background(ImageProvider(R.drawable.circle_widget)), contentAlignment = Alignment.Center) {
-            Text(text = value.toString())
+    private fun MyContent(value: String) {
+        Box(
+            modifier = GlanceModifier
+                .background(ImageProvider(R.drawable.circle_widget)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = value,
+                style = TextStyle(
+                    color = ColorProvider(Color.White),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 24.sp
+                )
+            )
         }
     }
 }
 
-class PeriodDataStore(private val context: Context) : DataStore<LocalDate> {
-    override val data: Flow<LocalDate>
+class PeriodDataStore(private val context: Context) : DataStore<String> {
+    val dbHelper by lazy { PeriodDatabaseHelper(context, DefaultDispatcherProvider()) }
+
+    override val data: Flow<String>
         get() {
-            val dbHelper = PeriodDatabaseHelper(context, DefaultDispatcherProvider())
             val calculationsHelper = CalculationsHelper(dbHelper = dbHelper)
-            return flow { calculationsHelper.calculateNextPeriod()?.let { emit(it) } }
+            val remainingDays = getDaysUntil(nextDay = calculationsHelper.calculateNextPeriod())
+            return flow { calculationsHelper.calculateNextPeriod()?.let { emit(remainingDays) } }
         }
 
-    override suspend fun updateData(transform: suspend (LocalDate) -> LocalDate): LocalDate {
-        throw NotImplementedError("Not implemented")
+    override suspend fun updateData(transform: suspend (String) -> String): String {
+        throw NotImplementedError("Not implemented yet")
+    }
+
+    private fun getDaysUntil(nextDay: LocalDate?): String {
+        return LocalDate.now().until(nextDay).days.toString()
     }
 }
