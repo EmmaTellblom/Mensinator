@@ -100,6 +100,12 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
 
+    // For AppWidgets support
+    implementation(libs.glance.appwidget)
+
+    // For interop APIs with Material 3
+    implementation(libs.androidx.glance.material3)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.kotlinx.coroutines.test)

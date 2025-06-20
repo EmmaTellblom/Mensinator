@@ -1,5 +1,6 @@
 package com.mensinator.app.calendar
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.kizitonwose.calendar.compose.VerticalCalendar
@@ -37,6 +39,7 @@ import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
+import com.mensinator.app.utils.MensinatorWidget
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -68,6 +71,12 @@ fun CalendarScreen(
     val showSymptomsDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
+
+    val context = LocalContext.current
+    LaunchedEffect(state.value.periodDates) {
+        MensinatorWidget.updateAll(context)
+    }
+
 
     LaunchedEffect(Unit) {
         setToolbarOnClick {
@@ -189,9 +198,11 @@ private fun PeriodButton(
             selectedIsPeriod && isPeriodButtonEnabled -> {
                 stringResource(id = R.string.period_button_selected)
             }
+
             !selectedIsPeriod && isPeriodButtonEnabled -> {
                 stringResource(id = R.string.period_button_not_selected)
             }
+
             else -> stringResource(id = R.string.period_button)
         }
         ButtonText(text)
@@ -244,9 +255,11 @@ private fun OvulationButton(
             selectedIsOvulation && ovulationButtonEnabled -> {
                 stringResource(id = R.string.ovulation_button_selected)
             }
+
             !selectedIsOvulation && ovulationButtonEnabled -> {
                 stringResource(id = R.string.ovulation_button_not_selected)
             }
+
             else -> stringResource(id = R.string.ovulation_button)
         }
         ButtonText(text)
@@ -334,6 +347,7 @@ fun Day(
         wideWindow -> {
             Modifier.aspectRatio(2f) // Make cells less tall
         }
+
         else -> {
             Modifier.aspectRatio(1f) // Ensure cells remain square
         }
