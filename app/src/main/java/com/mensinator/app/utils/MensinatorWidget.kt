@@ -2,13 +2,16 @@ package com.mensinator.app.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.glance.*
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -17,6 +20,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.mensinator.app.MainActivity
 import com.mensinator.app.R
 import com.mensinator.app.business.CalculationsHelper
 import com.mensinator.app.business.PeriodDatabaseHelper
@@ -26,8 +30,6 @@ import java.io.File
 import java.time.LocalDate
 
 object MensinatorWidget : GlanceAppWidget() {
-
-    override val sizeMode: SizeMode = SizeMode.Single
 
     override val stateDefinition: GlanceStateDefinition<String>
         get() = object : GlanceStateDefinition<String> {
@@ -48,16 +50,21 @@ object MensinatorWidget : GlanceAppWidget() {
         // Use `withContext` to switch to another thread for long-running
         // operations.
         provideContent {
-            MyContent(currentState())
+            MyContent(currentState(), context)
         }
     }
 
     @SuppressLint("RestrictedApi")
     @Composable
-    private fun MyContent(value: String) {
+    private fun MyContent(value: String, context: Context) {
         Box(
             modifier = GlanceModifier
-                .background(ImageProvider(R.drawable.circle_widget)),
+                .background(ImageProvider(R.drawable.circle_widget))
+                .clickable(
+                    onClick = actionStartActivity(
+                        Intent(context, MainActivity::class.java)
+                    )
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
