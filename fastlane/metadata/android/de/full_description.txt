@@ -1,0 +1,22 @@
+<i>Mensinator</i> ist der ultimative Perioden-Tracker für alle, die eine einfache, private und benutzerfreundliche Möglichkeit zur Verwaltung ihres Menstruationszyklus suchen. 🌟
+
+Mit <i>Mensinator</i> erhalten Sie eine übersichtliche und intuitive App mit nur einer Ansicht, mit der Sie Ihre Perioden verfolgen, Ihren Zyklus überwachen und wichtige Statistiken anzeigen können – ohne dass Sie sich anmelden oder persönliche Daten weitergeben müssen. Alle Ihre Informationen werden sicher auf Ihrem Telefon gespeichert, sodass Ihre Privatsphäre stets geschützt ist. 🛡️
+
+<b>Features</b>
+<ul>
+<li><b>Mühelose Verfolgung von Periode und Eisprung:</b> Mit einer einzigen, benutzerfreundlichen Ansicht können Sie Ihre Periode und Ihren Eisprung markieren, Ihren Zyklus sehen und Statistiken an einem Ort anzeigen. 📅</li>
+<li><b>Keine Anmeldung erforderlich:</b> Legen Sie sofort los – Sie müssen kein Konto erstellen oder persönliche Daten weitergeben. 🎉</li>
+<li><b>Vollständiger Datenschutz:</b> Ihre Daten bleiben auf Ihrem Telefon. Wir sammeln, teilen oder verkaufen keine Ihrer persönlichen Daten. 🔒</li>
+<li><b>Lokale Speicherung:</b> Alle Ihre Perioden- und Eisprungdaten werden lokal auf Ihrem Gerät gespeichert, sodass Sie die volle Kontrolle über Ihre Informationen haben. 📱</li>
+<li><b>Klare Statistiken:</b> Zeigen Sie Ihre durchschnittliche Zykluslänge, die durchschnittliche Periodenlänge, die Vorhersage der nächsten Periode und die Vorhersage des nächsten Eisprungs an. 📊</li>
+<li><b>Anpassbare Farben:</b> Personalisieren Sie Ihr Erlebnis, indem Sie die Farben in der App an Ihre Vorlieben anpassen. 🎨</li>
+<li><b>Datenexport und -import:</b> Exportieren Sie Ihre Daten ganz einfach zur Sicherung in eine JSON-Datei oder importieren Sie sie für eine nahtlose Datenwiederherstellung wieder in die App. 📂🔄</li>
+</ul>
+
+<b>Warum <i>Mensinator</i> wählen?</b>
+
+<i>Mensinator</i> zeichnet sich durch seine Einfachheit und Privatsphäre aus. Mit nur einer Hauptansicht können Sie ganz einfach Ihre Periode und Ihren Eisprung verfolgen, Statistiken anzeigen und Ihre Menstruationsgesundheit ohne Komplikationen verwalten. Keine Anmeldung, keine Erhebung persönlicher Daten – nur eine effektive und private Möglichkeit, den Überblick über Ihren Zyklus zu behalten.
+
+<b>Wer sollte es nutzen?</b>
+
+<i>Mensinator</i> ist perfekt für alle, die eine unkomplizierte und private Lösung zur Periodenverfolgung wünschen. Ganz gleich, ob Sie die Datenerfassung aus gesundheitlichen Gründen durchführen oder einfach nur Ihren Zyklus im Auge behalten möchten – Mensinator macht es einfach und sicher.
