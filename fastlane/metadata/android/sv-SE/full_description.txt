@@ -1,6 +1,7 @@
 Mensinator är den ultimata menskalendern designad för dig som prioriterar enkelhet, integritet och användarvänlighet. 🌟
 
 <b>Översikt</b>
+
 Mensinator erbjuder ett rent och intuitivt gränssnitt för att spåra din menstruationscykel, övervaka dina perioder och se viktig statistik – allt utan att behöva registrera dig eller dela personlig data. All information lagras säkert på din enhet, vilket säkerställer att din integritet alltid skyddas. 🛡️
 
 <b>Huvudfunktioner</b>
@@ -17,7 +18,9 @@ Mensinator erbjuder ett rent och intuitivt gränssnitt för att spåra din menst
 </ul>
 
 <b>Vem bör använda den?</b>
+
 Mensinator är perfekt för alla som söker en enkel och privat menskalender. Oavsett om du spårar av hälsoskäl eller bara vill hålla koll på din cykel gör Mensinator det enkelt och säkert.
 
 <b>Bidra</b>
+
 Vi välkomnar hjälp för att förbättra Mensinator! Om du vill bidra, vänligen gör en fork av repot och skicka in en pull request. För större ändringar, vänligen skapa ett ärende först för att diskutera dina föreslagna ändringar. Du är också välkommen att gå med i <a href="https://discord.gg/tHA2k3bFRN">vår Discord</a> för att diskutera vidare eller bara för att chatta med oss!
