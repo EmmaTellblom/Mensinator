@@ -2,5 +2,5 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="50dp"
     android:minHeight="50dp"
-    android:description="@string/widget_days_until_period_no_label"
+    android:description="@string/widget_days_until_period_with_label"
 />
