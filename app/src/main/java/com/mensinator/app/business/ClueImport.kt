@@ -1,7 +1,6 @@
 package com.mensinator.app.business
 
-import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.File
@@ -12,45 +11,37 @@ import androidx.core.database.sqlite.transaction
 import java.io.FileInputStream
 
 class ClueImport(
-    private val context: Context,
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
 
     override fun importFileToDatabase(filePath: String): Boolean {
         val db = dbHelper.writableDb
+        return try {
+            // Read JSON data from the file
+            val file = File(filePath)
+            val fileInputStream = FileInputStream(file)
+            val reader = BufferedReader(InputStreamReader(fileInputStream))
 
-        // Read JSON data from the file
-        val file = File(filePath)
-        val fileInputStream = FileInputStream(file)
-        val reader = BufferedReader(InputStreamReader(fileInputStream))
+            val fileContent = reader.use { it.readText() }
 
-        Toast.makeText(context, "Importing file...", Toast.LENGTH_SHORT).show()
+            // Parse JSON array from the file
+            val importArray = JSONArray(fileContent)
 
-        val fileContent = reader.use { it.readText() }
+            // Validate the data before cleanup
+            if (!validateImportData(importArray)) return false
 
-        // Parse JSON array from the file
-        val importArray = JSONArray(fileContent)
-
-        // Validate the data before cleanup
-        if (!validateImportData(importArray)) {
-            Toast.makeText(context, "Invalid data in import file", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        val success = try {
             db.transaction {
                 processData(importArray)
             }
+            // Close the database
+            db.close()
+
             true
         } catch (e: Exception) {
-            Toast.makeText(context, "Error importing data: ${e.message}", Toast.LENGTH_SHORT).show()
+            Log.d("ClueImport", "Error importing file: $e")
+            db.close()
             false
         }
-
-        // Close the database
-        db.close()
-
-        return success
     }
 
     private fun validateImportData(importArray: JSONArray): Boolean {
