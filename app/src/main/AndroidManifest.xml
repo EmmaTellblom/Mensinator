@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS"/>
+    <uses-permission android:name="android.permission.HIDE_OVERLAY_WINDOWS" />
 
 
     <application
+        android:name=".App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="false"
-        android:name=".App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -24,6 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <receiver
             android:name=".NotificationReceiver"
             android:exported="true"
@@ -33,15 +33,28 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".utils.MensinatorWidgetReceiver"
-                  android:exported="true">
+        <receiver
+            android:name=".widgets.WidgetPeriodDaysWithoutLabelReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <meta-data
-                    android:name="android.appwidget.provider"
-                    android:resource="@xml/mensinator_widget_provider" />
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensinator_widget_provider" />
         </receiver>
+
+        <receiver
+            android:name=".widgets.WidgetPeriodDaysWithLabelReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/mensinator_widget_provider2" />
+        </receiver>
+
     </application>
 
 </manifest>

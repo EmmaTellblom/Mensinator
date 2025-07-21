@@ -1,6 +1,5 @@
 package com.mensinator.app.calendar
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -31,7 +30,7 @@ import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.mensinator.app.R
-import com.mensinator.app.business.IPeriodDatabaseHelper
+import com.mensinator.app.business.ICalculationsHelper
 import com.mensinator.app.calendar.CalendarViewModel.UiAction
 import com.mensinator.app.extensions.stringRes
 import com.mensinator.app.settings.ColorSetting
@@ -39,7 +38,7 @@ import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
-import com.mensinator.app.utils.MensinatorWidget
+import com.mensinator.app.widgets.WidgetPeriodDaysWithoutLabel
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -47,7 +46,6 @@ import org.koin.compose.koinInject
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.temporal.ChronoUnit
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -74,7 +72,7 @@ fun CalendarScreen(
 
     val context = LocalContext.current
     LaunchedEffect(state.value.periodDates) {
-        MensinatorWidget.updateAll(context)
+        WidgetPeriodDaysWithoutLabel.updateAll(context)
     }
 
 
@@ -335,7 +333,7 @@ fun Day(
     val localDateNow = remember { LocalDate.now() }
 
     val settingColors = state.calendarColors.settingColors
-    val dbHelper: IPeriodDatabaseHelper = koinInject()
+    val calculationsHelper: ICalculationsHelper = koinInject()
 
     /**
      * Make sure the cells don't occupy so much space in landscape or on big (wide) screens.
@@ -436,7 +434,7 @@ fun Day(
             }
 
             if (state.showCycleNumbers) {
-                calculateCycleNumber(day.date, localDateNow, dbHelper)?.let { cycleNumber ->
+                calculationsHelper.getCycleDay(day.date)?.let { cycleNumber ->
                     Surface(
                         shape = shape,
                         color = Color.Transparent,
@@ -453,16 +451,4 @@ fun Day(
             }
         }
     }
-}
-
-/**
- * Calculate the cycle number for a given date.
- */
-fun calculateCycleNumber(day: LocalDate, now: LocalDate, dbHelper: IPeriodDatabaseHelper): Int? {
-    // Don't generate cycle numbers for future dates
-    if (day > now) return null
-
-    val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(day) ?: return null
-
-    return ChronoUnit.DAYS.between(lastPeriodStartDate, day).toInt() + 1
 }
