@@ -161,6 +161,10 @@
     <string name="disclaimer_header">Disclaimer:</string>
     <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
 
+    <!-- Widget Strings -->
+    <string name="widget_days_until_period_no_label">Days until period, without label</string>
+    <string name="widget_days_until_period_with_label">Days until period, with label</string>
+
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Close</string>
     <string name="data_settings">Backup</string>
