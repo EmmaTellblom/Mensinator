@@ -1,6 +1,7 @@
 package com.mensinator.app.widgets
 
 import android.content.Context
+import androidx.core.graphics.createBitmap
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -18,8 +19,9 @@ object WidgetPeriodDaysWithoutLabel : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
+            // TODO: Fix
             val data = currentState<WidgetData>()
-            WidgetContent(data.daysUntilPeriodWithoutText)
+            WidgetContentWithoutLabel(data.daysUntilPeriodWithoutText, "P", false)
         }
     }
 
@@ -29,9 +31,10 @@ object WidgetPeriodDaysWithoutLabel : GlanceAppWidget() {
             val data = WidgetData(
                 daysUntilPeriodWithoutText = "10",
                 daysUntilPeriodWithText = "10 days left",
+                daysUntilPeriodBitmap = createBitmap(100, 100),
                 nextPeriod = null
             )
-            WidgetContent(data.daysUntilPeriodWithoutText)
+            WidgetContentWithoutLabel(data.daysUntilPeriodWithoutText, "P", true)
         }
     }
 }
