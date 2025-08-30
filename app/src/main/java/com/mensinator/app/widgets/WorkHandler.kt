@@ -20,7 +20,7 @@ object WorkHandler {
             .build()
 
         Log.d("WorkHandler", "Scheduling work with initial delay: ${initialDelay.toMillis()} ms")
-        WorkManager.Companion.getInstance(appContext).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(appContext).enqueueUniquePeriodicWork(
             "WidgetWorker",
             ExistingPeriodicWorkPolicy.REPLACE,
             workRequest

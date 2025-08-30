@@ -1,13 +1,16 @@
 package com.mensinator.app.widgets
 
 import android.content.Context
+import androidx.compose.runtime.Composable
 import androidx.core.graphics.createBitmap
 import androidx.glance.GlanceId
+import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.currentState
 import androidx.glance.state.GlanceStateDefinition
+import com.mensinator.app.R
 
 class WidgetPeriodDaysWithoutLabelReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = WidgetPeriodDaysWithoutLabel
@@ -19,9 +22,8 @@ object WidgetPeriodDaysWithoutLabel : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            // TODO: Fix
             val data = currentState<WidgetData>()
-            WidgetContentWithoutLabel(data.daysUntilPeriodWithoutText, "P", false)
+            WidgetContent(data)
         }
     }
 
@@ -34,8 +36,19 @@ object WidgetPeriodDaysWithoutLabel : GlanceAppWidget() {
                 daysUntilPeriodBitmap = createBitmap(100, 100),
                 nextPeriod = null
             )
-            WidgetContentWithoutLabel(data.daysUntilPeriodWithoutText, "P", true)
+            WidgetContent(data)
+        }
+    }
+
+    @Composable
+    private fun WidgetContent(data: WidgetData) {
+        val context = LocalContext.current
+        MensinatorGlanceTheme {
+            WidgetContentWithoutLabel(
+                data.daysUntilPeriodWithoutText,
+                context.getString(R.string.widget_period_abbreviation),
+                true
+            )
         }
     }
 }
-
