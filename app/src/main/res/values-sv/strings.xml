@@ -13,14 +13,14 @@
     <string name="empty_click_alert">Inga datum att spara eller ta bort</string>
     <string name="successfully_saved_alert">Ändringarna sparades</string>
     <string name="no_data_selected">Inga datum är valda</string>
-    <string name="only_day_alert">Bara en dag kan ha ägglossning</string>
+    <string name="only_day_alert">Bara en dag kan ha ägglossning!</string>
     <string name="success_saved_ovulation">Ägglossning sparad</string>
     <string name="no_date_selected_ovulation">Inget datum valt för ägglossning</string>
     <!-- navigation -->
     <string name="home_page">Hem</string>
     <string name="statisic_page">Statistik</string>
     <!-- Settings -->
-    <string name="app_settings">Inställningar</string>
+    <string name="app_settings">App Inställningar</string>
     <string name="colors">Färger</string>
     <string name="period_color">Mens</string>
     <string name="selection_color">Markering</string>
@@ -55,17 +55,17 @@
     <!-- Statistics -->
     <string name="statistics_title">Statistik</string>
     <string name="period_count">Antal cykler: </string>
-    <string name="average_cycle_length">Medellängd cykel: days</string>
-    <string name="average_period_length">Medellängd mens:  days</string>
+    <string name="average_cycle_length">Medellängd cykel:</string>
+    <string name="average_period_length">Medellängd mens:</string>
     <string name="next_period_start_past">Nästa beräknade mens: </string>
-    <string name="next_period_start_future">"Nästa beräknade mens: "</string>
-    <string name="ovulation_count">"Antal ägglossningar: "</string>
-    <string name="average_ovulation_day">"Medeldag för ägglossning: "</string>
-    <string name="next_predicted_ovulation">"Nästa beräknade ägglossning: "</string>
+    <string name="next_period_start_future">Nästa beräknade mens:</string>
+    <string name="ovulation_count">Antal ägglossningar:</string>
+    <string name="average_ovulation_day">Medeldag för ägglossning:</string>
+    <string name="next_predicted_ovulation">Nästa beräknade ägglossning:</string>
     <string name="next_predicted_ovulation_default">Inte tillräckligt mycket data för att beräkna ägglossning</string>
-    <string name="average_luteal_length">Medellängd lutealfas:  days</string>
+    <string name="average_luteal_length">Medellängd lutealfas:</string>
     <!-- Symptoms -->
-    <string name="days">" dagar"</string>
+    <string name="days">dagar</string>
     <string name="symptoms_dialog_title">Symptom for %1$s</string>
     <string name="create_new_symptom_button">Skapa nytt symptom</string>
     <string name="save_symptoms_button">Spara symptom</string>
@@ -112,19 +112,19 @@
     <!-- User Manual Section -->
     <string name="user_manual_header">Användarmanual</string>
     <string name="how_to_use">Användning:</string>
-    <string name="select_dates">• Välja datum: Klicka på ett datum för att markera/avmarkera</string>
+    <string name="select_dates">• Välj datum: Klicka på ett datum för att markera/avmarkera.</string>
     <string name="add_or_remove_dates">• Lägg till eller ta bort dagar för mens: Klicka på Mens efter att du har valt datum.</string>
     <string name="symptoms">• Symptom: Klicka på symptom efter att du har markerat ett datum för att se symptom på aktuellt datum.</string>
     <string name="ovulation">• Ägglossning: Välj ett datum och klicka på ägglossning. För att ta bort ägglossning, markera datumet och tryck på ägglossning igen.</string>
     <string name="statistics">• Statistik: I den nedre menyn välj Statistik.</string>
-    <string name="import_export">• Importera/Exportera: Klicka på inställningarna i den nedre menyn och scrolla ner och välj Importera/Exportera. Detta är ett MÅSTE när du ska flytta din data till en ny enhet.</string>
+    <string name="import_export">• Importera/Exportera: Klicka på inställningarna i den nedre menyn och scrolla ner och välj Importera/Exportera. Detta är ett MÅSTE när du ska flytta din data till en ny enhet!</string>
     <string name="calculations">• Beräkningar: \nMens är beräknad utifrån medellängd på din menscykel.\nMensen kan beräknas utifrån medellängd på din lutealfas. Beräkningen kollar då historiskt (på antal cykler som du väljer i inställningarna) för att komma fram till en medellängd på lutealfasen och beräknar mens. Detta ställer du in i inställningarna. \nÄgglossning är beräknat utifrån medellängd på ägglossningscykeln. </string>
     <string name="features_coming_soon">Funktioner som kommer snart:</string>
     <string name="upcoming_features">• Kolla in vår Github för att se det senaste som är pågång i utvecklingen!</string>
     <string name="our_story_header">Vår bakgrund</string>
-    <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. Vi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. Häng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">Vi är två kvinnor som tröttnade på att sälja vår data till stora företag. Vår app lagrar all din data lokalt på din enhet och vi har ingen tillgång alls. \nVi värdesätter ditt privatliv och skickar inte din data någonstans. Sedan lanseringen av appen har vi växt och vi har nu vår egna Discord-server med personer som brinner för projektet och vill vara delaktiga. \n\nHäng med oss på Discord här: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Viktigt:</string>
-    <string name="disclaimer">• Det här är ett hobby-projekt och är inte tänkt för medicinsk användning. Vi är gör helt enkelt detta för vår egna behov. Men vi välkommnar ideer och förfrågningar! Häng med oss på Discord eller skicka ett mail: mensinator.app@gmail.com</string>
+    <string name="disclaimer">• Det här är ett hobby-projekt och är inte tänkt för medicinsk användning. Vi är gör helt enkelt detta för vår egna behov. Men vi välkommnar ideer och förfrågningar! Häng med oss på Discord eller skicka ett mail: \nmensinator.app@gmail.com</string>
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Stäng</string>
     <string name="symptoms_page">Symptom</string>
@@ -154,4 +154,5 @@
     <string name="import_dialog_message">Välj fil att importera.</string>
     <string name="warning">Varning</string>
     <string name="luteal_calculation_message">Den här beräkningen kommer använda din längd på lutealfasen (dagar från ägglossning till mens) för att beräkna din nästa mens.\nFör att det här ska fungera behöver du dels spara din ägglossning i appen och ha minst tre ägglossningar i historiken.\nOm du är osäker på den här inställningen, stäng av den eller gå med i vår Discord för att be om hjälp. \nOm kriterierna inte möts kommer Mensinator inte kunna göra en beräkning av nästa mens. \nDen här beräkningen passar bra om du har oregelbunden ägglossning men någorlunda regelbunden lutealfas.</string>
+    <string name="select_source">Välj källa</string>
 </resources>
