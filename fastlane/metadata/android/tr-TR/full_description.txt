@@ -1,0 +1,27 @@
+Mensinator, sadeliğe, gizliliğe ve kullanıcı dostu olmaya öncelik verenler için tasarlanmış en üst düzey regl takip uygulamasıdır. 🌟
+
+<b>Genel Bakış</b>
+
+Mensinator, regl döngünüzü takip etmek, regl dönemlerinizi izlemek ve temel istatistikleri görüntülemek için temiz ve sezgisel bir arayüz sunar; tüm bunlar kayıt olmanıza veya kişisel verilerinizi paylaşmanıza gerek kalmadan gerçekleşir. Tüm bilgiler cihazınızda güvenli bir şekilde saklanır ve gizliliğinizin her zaman korunmasını sağlar. 🛡️
+
+<b>Temel Özellikler</b>
+
+<ul>
+<li>Zahmetsiz Regl Takibi: Regl dönemlerinizi kolayca işaretleyin, döngünüzü görüntüleyin ve istatistiklere tek bir yerden erişin. 📅</li>
+<li>Kayıt Gerekmez: Uygulamayı hemen kullanmaya başlayın; hesap oluşturma veya kişisel bilgi gerekmez. 🎉</li>
+<li>Tam Gizlilik: Verileriniz cihazınızda yerel olarak saklanır. Hiçbir kişisel bilgi toplamıyor, paylaşmıyor veya satmıyoruz. 🔒</li>
+<li>Kolay Gezinme: Aylar arasında hızlıca geçiş yapın ve döngünüzü sadece birkaç dokunuşla takip edin. 🖐️</li>
+<li>Net İstatistikler: Ortalama döngü uzunluğunuzu, ortalama regl sürenizi ve bir sonraki regl dönemi tahmininizi takviminizin hemen altında anında görüntüleyin. 📊</li>
+<li>Geçmişe Dayalı İçgörüler: Regl sağlığınızı zaman içinde daha iyi anlamak için takip ettiğiniz tüm regl dönemlerinizin özetini alın. 📈</li>
+<li>Görsel Göstergeler: Mevcut regl dönemleri ve seçili tarihler için takvimde görsel göstergeler görün. 🔴🔵</li>
+<li>Özelleştirilebilir Renkler: Renkleri tercihinize göre özelleştirerek uygulamanın görünümünü kişiselleştirin. 🎨</li>
+<li>Verileri Dışa ve İçe Aktarma: Verilerinizi yedeklemek veya gerektiğinde uygulamaya geri aktarmak için kolayca bir JSON dosyasına aktarın. 📂</li>
+</ul>
+
+<b>Kimler Kullanmalı?</b>
+
+Mensinator, basit ve gizli bir regl döngüsü takibi çözümü arayan herkes için mükemmeldir. İster sağlık nedenleriyle ister sadece regl döngünüzü takip etmek için olsun, Mensinator bunu kolay ve güvenli hale getirir.
+
+<b>Katkıda Bulunma</b>
+
+Mensinator’ı geliştirmeye yönelik katkılara açığız! Katkıda bulunmak isterseniz, depoyu (repository) forklayıp bir pull request gönderebilirsiniz. Büyük değişiklikler için lütfen önce bir issue açarak önerdiğiniz değişiklikleri tartışın. Daha fazla tartışmak veya bizimle sohbet etmek için <a href="https://discord.gg/tHA2k3bFRN">Discord</a>'umuza katılabilirsiniz!
