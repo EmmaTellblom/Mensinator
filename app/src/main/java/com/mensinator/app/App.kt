@@ -1,5 +1,6 @@
 package com.mensinator.app
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
 import android.os.Build
@@ -15,9 +16,7 @@ import com.mensinator.app.statistics.StatisticsViewModel
 import com.mensinator.app.symptoms.ManageSymptomsViewModel
 import com.mensinator.app.utils.DefaultDispatcherProvider
 import com.mensinator.app.utils.IDispatcherProvider
-import com.mensinator.app.widgets.WidgetPeriodDaysWithLabelReceiver
-import com.mensinator.app.widgets.WidgetPeriodDaysWithoutLabelReceiver
-import com.mensinator.app.widgets.WorkHandler
+import com.mensinator.app.widgets.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -60,7 +59,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(appModule)
+            modules(appModule, WidgetModule)
         }
 
         WorkHandler.scheduleWork(this.applicationContext)
@@ -72,9 +71,21 @@ class App : Application() {
         val appContext = this.applicationContext
 
         val glanceAppWidgetManager = GlanceAppWidgetManager(appContext)
+
+        @SuppressLint("CheckResult")
         applicationScope.launch {
-            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithoutLabelReceiver::class)
-            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithLabelReceiver::class)
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithLabelWithBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithoutLabelWithBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithLabelWithoutBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver::class
+            )
         }
     }
 }

@@ -166,7 +166,7 @@
     <string name="widget_days_until_period_with_label">Days until period, with label</string>
     <!-- When a period widget without labels is shown, the widget only shows "7 P" for example -->
     <string name="widget_period_abbreviation">P</string>
-    <string name="widget_ovulation_abbreviation">P</string>
+    <string name="widget_ovulation_abbreviation">O</string>
 
 
     <!-- Universal/ Repeated Strings -->

@@ -2,7 +2,6 @@ package com.mensinator.app.widgets
 
 import android.content.Context
 import android.graphics.*
-import androidx.core.graphics.createBitmap
 import androidx.datastore.core.DataStore
 import androidx.glance.state.GlanceStateDefinition
 import com.mensinator.app.business.ICalculationsHelper
@@ -43,7 +42,9 @@ class WidgetDataStore() : DataStore<WidgetData>, KoinComponent {
                 calculationsHelper.calculateNextPeriod(),
                 NextPeriodFormat.MediumLengthText
             ),
-            daysUntilPeriodBitmap = getBitmap(calculationsHelper.calculateNextPeriod()),
+            daysUntilOvulationWithText = "ov with text",
+            daysUntilOvulationWithoutText = "ov",
+            cycleDay = calculationsHelper.getCycleDay(LocalDate.now()),
             nextPeriod = calculationsHelper.calculateNextPeriod()
         )
     )
@@ -79,31 +80,4 @@ class WidgetDataStore() : DataStore<WidgetData>, KoinComponent {
             }
         }
     }
-
-    private fun getBitmap(calculateNextPeriod: LocalDate?): Bitmap {
-        val bitmap = createBitmap(150, 300)
-        val canvas = Canvas(bitmap)
-
-        val paint = Paint().apply {
-            color = Color.RED
-            style = Paint.Style.STROKE
-            strokeWidth = 4f
-        }
-
-        val arcSize = 130f
-        canvas.drawArc(10f, 40f, 10f+arcSize, 40+arcSize, 135f, 270f, false, paint)
-        canvas.drawText("7 days", 32f, 115f, Paint().apply {
-            color = Color.BLACK
-            textSize = 32f
-            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-        })
-
-        canvas.drawText("until next period", 10f, 200f, Paint().apply {
-            color = Color.BLACK
-            textSize = 18f
-        })
-
-        return bitmap
-    }
-
 }

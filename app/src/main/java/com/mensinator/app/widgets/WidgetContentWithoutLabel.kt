@@ -8,10 +8,7 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
-import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.padding
+import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -29,7 +26,10 @@ fun WidgetContentWithoutLabel(text: String, label: String, showBackground: Boole
     }
 
     val bgModifier = if (showBackground) {
-        GlanceModifier.background(ImageProvider(R.drawable.widget_background))
+        GlanceModifier.background(
+            ImageProvider(R.drawable.widget_background),
+            contentScale = ContentScale.Crop
+        )
     } else {
         GlanceModifier.background(GlanceTheme.colors.widgetBackground)
     }

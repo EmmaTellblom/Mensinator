@@ -10,6 +10,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.layout.ContentScale
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
@@ -22,7 +23,7 @@ import com.mensinator.app.R
 
 @GlanceComposable
 @Composable
-fun WidgetContentWithLabel(text: String, subText: String, showBackground: Boolean) {
+fun WidgetContentWithLabel(text: String, showBackground: Boolean) {
     val cornerRadiusModifier = if (Build.VERSION.SDK_INT >= 31) {
         GlanceModifier.cornerRadius(android.R.dimen.system_app_widget_background_radius)
     } else {
@@ -30,7 +31,10 @@ fun WidgetContentWithLabel(text: String, subText: String, showBackground: Boolea
     }
 
     val bgModifier = if (showBackground) {
-        GlanceModifier.background(ImageProvider(R.drawable.widget_background))
+        GlanceModifier.background(
+            ImageProvider(R.drawable.widget_background),
+            contentScale = ContentScale.Crop
+        )
     } else {
         GlanceModifier.background(GlanceTheme.colors.widgetBackground)
     }
@@ -45,7 +49,7 @@ fun WidgetContentWithLabel(text: String, subText: String, showBackground: Boolea
         modifier = cornerRadiusModifier
             .then(bgModifier)
             .appWidgetBackground()
-            .clickable(actionStartActivity<MainActivity>())
+            .clickable(actionStartActivity<MainActivity>()) // TODO: Does nothing right now
             .fillMaxSize()
             .padding(8.dp),
     ) {
@@ -55,22 +59,11 @@ fun WidgetContentWithLabel(text: String, subText: String, showBackground: Boolea
                 modifier = GlanceModifier.fillMaxWidth(),
                 style = TextStyle(
                     color = textColor,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
                     textAlign = TextAlign.Center
                 ),
             )
         }
-        item {
-            Text(
-                text = subText,
-                style = TextStyle(
-                    color = textColor,
-                    //fontSize = 18.sp,
-                    textAlign = TextAlign.Center
-                ),
-            )
-        }
-
     }
 }

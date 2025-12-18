@@ -13,8 +13,9 @@ class WidgetWorker(
 
     override suspend fun doWork(): Result {
         Log.d("WidgetWorker", "Updating widget")
-        WidgetPeriodDaysWithoutLabel.updateAll(appContext)
-        WidgetPeriodDaysWithLabel.updateAll(appContext)
+            WidgetInstances.forEach {
+                it.glanceAppWidget.updateAll(appContext)
+            }
         return Result.success()
     }
 }

@@ -38,7 +38,7 @@ import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
-import com.mensinator.app.widgets.WidgetPeriodDaysWithoutLabel
+import com.mensinator.app.widgets.WidgetInstances
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -72,7 +72,9 @@ fun CalendarScreen(
 
     val context = LocalContext.current
     LaunchedEffect(state.value.periodDates) {
-        WidgetPeriodDaysWithoutLabel.updateAll(context)
+        WidgetInstances.forEach {
+            it.glanceAppWidget.updateAll(context)
+        }
     }
 
 
