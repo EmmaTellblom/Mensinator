@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val periodDatabaseHelper: IPeriodDatabaseHelper,
-    @SuppressLint("StaticFieldLeak") private val appContext: Context,
+    @param:SuppressLint("StaticFieldLeak") private val appContext: Context,
     private val exportImport: IMensinatorExportImport,
     private val clueImport: IClueImport,
     private val floImport: IFloImport,
