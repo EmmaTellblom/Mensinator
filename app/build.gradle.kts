@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.mensinator.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mensinator.app"
@@ -95,6 +95,7 @@ dependencies {
     implementation(libs.androidx.navigation.common.ktx)
 
     implementation(libs.kizitonwose.calendar.compose)
+    implementation(libs.androidx.compose.material.icons.core)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin)
