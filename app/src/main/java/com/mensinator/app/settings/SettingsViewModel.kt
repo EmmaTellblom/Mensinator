@@ -145,7 +145,7 @@ class SettingsViewModel(
 
     suspend fun getDaysBeforeReminderText(): String {
         return if (!areNotificationsEnabled(appContext)) {
-            "?"
+            "0"
         } else {
             getInt(IntSetting.REMINDER_DAYS.settingDbKey).toString()
         }

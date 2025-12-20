@@ -90,7 +90,9 @@ fun SettingsScreen(
                     openNotificationSettings(context)
                 }
             },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) },
+            minNumber = 0,
+            maxNumber = 12
         )
         SettingText(
             text = stringResource(StringSetting.PERIOD_NOTIFICATION_MESSAGE.stringResId),
@@ -131,7 +133,9 @@ fun SettingsScreen(
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
             },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) },
+            minNumber = 1,
+            maxNumber = 12
         )
         SettingNumberSelection(
             intSetting = IntSetting.OVULATION_HISTORY,
@@ -141,7 +145,9 @@ fun SettingsScreen(
             onNumberChange = { intSetting: IntSetting, newNumber: Int ->
                 viewModel.updateIntSetting(intSetting, newNumber)
             },
-            onOpenIntPicker = { viewModel.showIntPicker(it) }
+            onOpenIntPicker = { viewModel.showIntPicker(it) },
+            minNumber = 1,
+            maxNumber = 12
         )
         SettingLanguagePicker()
         SettingSwitch(
@@ -461,6 +467,8 @@ private fun SettingNumberSelection(
     onClosePicker: () -> Unit,
     onNumberChange: (IntSetting, Int) -> Unit,
     onOpenIntPicker: (setting: IntSetting) -> Unit,
+    minNumber: Number,
+    maxNumber: Number,
 ) {
     Row(
         modifier = modifier
@@ -485,7 +493,9 @@ private fun SettingNumberSelection(
                 intSetting = intSetting,
                 onClosePicker = onClosePicker,
                 onNumberChange = onNumberChange,
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
+                minNumber = minNumber,
+                maxNumber = maxNumber
             )
         }
     }
@@ -497,8 +507,10 @@ fun IntPicker(
     onClosePicker: () -> Unit,
     onNumberChange: (IntSetting, Int) -> Unit,
     modifier: Modifier = Modifier,
+    minNumber: Number,
+    maxNumber: Number
 ) {
-    val pickableNumbers = 1..12
+    val pickableNumbers = minNumber.toInt()..maxNumber.toInt()
     DropdownMenu(
         expanded = true,
         onDismissRequest = { onClosePicker() },
@@ -524,7 +536,9 @@ private fun SettingNumberSelectionPreview() {
             openIntPickerForSetting = null,
             onClosePicker = { },
             onNumberChange = { _: IntSetting, _: Int -> },
-            onOpenIntPicker = { }
+            onOpenIntPicker = { },
+            minNumber = 1,
+            maxNumber = 12
         )
     }
 }
