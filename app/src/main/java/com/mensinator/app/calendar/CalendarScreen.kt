@@ -21,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.kizitonwose.calendar.compose.VerticalCalendar
@@ -38,7 +37,6 @@ import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
-import com.mensinator.app.widgets.WidgetInstances
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -69,14 +67,6 @@ fun CalendarScreen(
     val showSymptomsDialog = remember { mutableStateOf(false) }
 
     LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
-
-    val context = LocalContext.current
-    LaunchedEffect(state.value.periodDates) {
-        WidgetInstances.forEach {
-            it.glanceAppWidget.updateAll(context)
-        }
-    }
-
 
     LaunchedEffect(Unit) {
         setToolbarOnClick {

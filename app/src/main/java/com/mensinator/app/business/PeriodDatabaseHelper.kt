@@ -11,6 +11,9 @@ import com.mensinator.app.data.Setting
 import com.mensinator.app.data.Symptom
 import com.mensinator.app.extensions.until
 import com.mensinator.app.utils.IDispatcherProvider
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.YearMonth
@@ -64,6 +67,13 @@ class PeriodDatabaseHelper(
         get() = writableDatabase
 
     private val surroundingMonthsToConsider = 2L
+
+    // A flow that must be triggered every time data is changed -- this is to enable reactive flows like Room providers
+    private val _dbWriteTrigger = MutableSharedFlow<Unit>(replay = 1).apply {
+        tryEmit(Unit)
+    }
+
+    override val dbWriteTrigger: Flow<Unit> = _dbWriteTrigger
 
     //See DatabaseUtils
     override fun onCreate(db: SQLiteDatabase) {
@@ -127,6 +137,7 @@ class PeriodDatabaseHelper(
             } else {
                 // If date is new, insert
                 db.insert(TABLE_PERIODS, null, values)
+                _dbWriteTrigger.tryEmit(Unit)
             }
         }
     }
@@ -144,7 +155,7 @@ class PeriodDatabaseHelper(
             null, null, null
         )
 
-        try {
+        cursor.use { cursor ->
             // Get column indices
             val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
             val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
@@ -162,8 +173,6 @@ class PeriodDatabaseHelper(
                     "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
                 )
             }
-        } finally {
-            cursor.close()
         }
 
         return dates
@@ -201,7 +210,7 @@ class PeriodDatabaseHelper(
             null, null, null
         )
 
-        try {
+        cursor.use { cursor ->
             // Get column indices
             val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
             val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
@@ -219,8 +228,6 @@ class PeriodDatabaseHelper(
                     "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
                 )
             }
-        } finally {
-            cursor.close()
         }
 
         dates
@@ -244,6 +251,8 @@ class PeriodDatabaseHelper(
         val whereClause = "$COLUMN_DATE = ?"
         val whereArgs = arrayOf(date.toString())
         val rowsDeleted = db.delete(TABLE_PERIODS, whereClause, whereArgs)
+        _dbWriteTrigger.tryEmit(Unit)
+
         if (rowsDeleted > 0) {
             Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
         } else {
@@ -282,6 +291,7 @@ class PeriodDatabaseHelper(
         }
         // Insert the new symptom into the symptoms table
         db.insert(TABLE_SYMPTOMS, null, values)
+        _dbWriteTrigger.tryEmit(Unit)
     }
 
     override fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
@@ -461,6 +471,7 @@ class PeriodDatabaseHelper(
                 // Handle exceptions
                 e.printStackTrace()
             }
+            _dbWriteTrigger.tryEmit(Unit)
         }
     }
 
@@ -536,13 +547,13 @@ class PeriodDatabaseHelper(
         val contentValues = ContentValues().apply {
             put(COLUMN_SETTING_VALUE, value)
         }
-        val rowsUpdated =
-            db.update(
-                TABLE_APP_SETTINGS,
-                contentValues,
-                "$COLUMN_SETTING_KEY = ?",
-                arrayOf(key)
-            )
+        val rowsUpdated = db.update(
+            TABLE_APP_SETTINGS,
+            contentValues,
+            "$COLUMN_SETTING_KEY = ?",
+            arrayOf(key)
+        )
+        _dbWriteTrigger.emit(Unit)
         rowsUpdated > 0
     }
 
@@ -600,6 +611,7 @@ class PeriodDatabaseHelper(
             }
             db.insert("OVULATIONS", null, contentValues)
         }
+        _dbWriteTrigger.tryEmit(Unit)
 
         cursor.close()
     }
@@ -622,6 +634,7 @@ class PeriodDatabaseHelper(
                 // If date is new, insert
                 db.insert("OVULATIONS", null, values)
             }
+            _dbWriteTrigger.tryEmit(Unit)
         }
     }
 
@@ -630,6 +643,7 @@ class PeriodDatabaseHelper(
         val whereClause = "$COLUMN_DATE = ?"
         val whereArgs = arrayOf(date.toString())
         db.delete("OVULATIONS", whereClause, whereArgs)
+        _dbWriteTrigger.tryEmit(Unit)
     }
 
     override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
@@ -693,7 +707,7 @@ class PeriodDatabaseHelper(
                     null, null, null
                 )
 
-                try {
+                cursor.use { cursor ->
                     // Get the column index for the date
                     val dateIndex = cursor.getColumnIndex("date")
 
@@ -711,8 +725,6 @@ class PeriodDatabaseHelper(
                     } else {
                         Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
                     }
-                } finally {
-                    cursor.close()
                 }
             } catch (e: Exception) {
                 Log.e("TAG", "Error querying for ovulation dates", e)
@@ -747,7 +759,7 @@ class PeriodDatabaseHelper(
         val args = arrayOf(dateStr, date.minusDays(1).toString(), date.plusDays(1).toString())
         val cursor = db.rawQuery(query, args)
 
-        try {
+        cursor.use { cursor ->
             if (cursor.count > 1) {
                 cursor.moveToFirst()
                 val primaryPeriodID = cursor.getInt(0)
@@ -778,8 +790,7 @@ class PeriodDatabaseHelper(
                 }
                 maxPeriodIdCursor.close()
             }
-        } finally {
-            cursor.close()
+            _dbWriteTrigger.tryEmit(Unit)
         }
 
         return periodId
@@ -925,6 +936,10 @@ class PeriodDatabaseHelper(
         return ovulationDate
     }
 
+    override fun lastOvulation(): Flow<LocalDate?> = _dbWriteTrigger.map {
+        getLastOvulation()
+    }
+
     override fun getLatestXPeriodStart(number: Int): List<LocalDate> {
         val dateList = mutableListOf<LocalDate>()
         val db = readableDatabase
@@ -1024,6 +1039,7 @@ class PeriodDatabaseHelper(
         } else {
             Log.d(TAG, "No symptoms to delete")
         }
+        _dbWriteTrigger.tryEmit(Unit)
     }
 
     override fun getDBVersion(): String {
@@ -1037,7 +1053,7 @@ class PeriodDatabaseHelper(
             put("symptom_name", trimmedSymptomName)
         }
         db.update("symptoms", contentValues, "id = ?", arrayOf(symptomId.toString()))
-
+        _dbWriteTrigger.tryEmit(Unit)
     }
 
     override fun getLatestPeriodStart(): LocalDate? {

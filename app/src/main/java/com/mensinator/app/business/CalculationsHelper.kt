@@ -2,6 +2,8 @@ package com.mensinator.app.business
 
 import android.util.Log
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -54,6 +56,10 @@ class CalculationsHelper(
                 Log.d("TAG", "Expected period date Basic: $it")
             }
         }
+    }
+
+    override fun nextPeriod(): Flow<LocalDate?> = dbHelper.dbWriteTrigger.map {
+        calculateNextPeriod()
     }
 
     /**
@@ -238,5 +244,9 @@ class CalculationsHelper(
 
         val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(date) ?: return null
         return ChronoUnit.DAYS.between(lastPeriodStartDate, date).toInt() + 1
+    }
+
+    override fun cycleDay(date: LocalDate): Flow<Int?> = dbHelper.dbWriteTrigger.map {
+        getCycleDay(date)
     }
 }

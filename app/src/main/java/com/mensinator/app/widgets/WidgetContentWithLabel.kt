@@ -10,9 +10,9 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.layout.Box
 import androidx.glance.layout.ContentScale
 import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
@@ -49,21 +49,23 @@ fun WidgetContentWithLabel(text: String, showBackground: Boolean) {
         modifier = cornerRadiusModifier
             .then(bgModifier)
             .appWidgetBackground()
-            .clickable(actionStartActivity<MainActivity>()) // TODO: Does nothing right now
             .fillMaxSize()
             .padding(8.dp),
     ) {
         item {
-            Text(
-                text = text,
-                modifier = GlanceModifier.fillMaxWidth(),
-                style = TextStyle(
-                    color = textColor,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center
-                ),
-            )
+            Box(
+                modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>()),
+            ) {
+                Text(
+                    text = text,
+                    style = TextStyle(
+                        color = textColor,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Center
+                    ),
+                )
+            }
         }
     }
 }

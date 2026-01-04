@@ -62,7 +62,6 @@ class App : Application() {
             modules(appModule, WidgetModule)
         }
 
-        WorkHandler.scheduleWork(this.applicationContext)
         initWidgetPreviews()
     }
 
