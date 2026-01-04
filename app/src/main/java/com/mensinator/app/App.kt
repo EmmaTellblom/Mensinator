@@ -62,6 +62,7 @@ class App : Application() {
             modules(appModule, WidgetModule)
         }
 
+        MidnightWorker.scheduleNextMidnight(this.applicationContext)
         initWidgetPreviews()
     }
 

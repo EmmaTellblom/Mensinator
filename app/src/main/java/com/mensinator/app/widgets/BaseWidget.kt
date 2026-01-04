@@ -41,7 +41,8 @@ class BaseWidget(
     val getData = combine(
         calculationsHelper.nextPeriod(),
         calculationsHelper.cycleDay(LocalDate.now()),
-    ) { nextPeriod, cycleDay ->
+        MidnightTrigger.midnightTrigger,
+    ) { nextPeriod, cycleDay, _ ->
         WidgetData(
             daysUntilPeriodWithoutText = formatDaysUntilPeriod(
                 nextPeriod,
