@@ -2,8 +2,11 @@ package com.mensinator.app.business
 
 import android.util.Log
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -39,7 +42,7 @@ class CalculationsHelper(
                 // Calculate the cycle lengths between consecutive periods
                 val cycleLengths = mutableListOf<Long>()
                 for (i in 0 until listPeriodDates.size - 1) {
-                    val cycleLength = java.time.temporal.ChronoUnit.DAYS.between(
+                    val cycleLength = ChronoUnit.DAYS.between(
                         listPeriodDates[i],
                         listPeriodDates[i + 1]
                     )
@@ -53,6 +56,10 @@ class CalculationsHelper(
                 Log.d("TAG", "Expected period date Basic: $it")
             }
         }
+    }
+
+    override fun nextPeriod(): Flow<LocalDate?> = dbHelper.dbWriteTrigger.map {
+        calculateNextPeriod()
     }
 
     /**
@@ -149,7 +156,7 @@ class CalculationsHelper(
         // Calculate the cycle lengths between consecutive periods
         for (i in 0 until periodDates.size - 1) {
             val cycleLength =
-                java.time.temporal.ChronoUnit.DAYS.between(periodDates[i], periodDates[i + 1])
+                ChronoUnit.DAYS.between(periodDates[i], periodDates[i + 1])
             cycleLengths.add(cycleLength)
         }
 
@@ -202,7 +209,7 @@ class CalculationsHelper(
             if (nextPeriodDate != null) {
                 // Calculate the number of days between the ovulation date and the next period date
                 val daysBetween =
-                    java.time.temporal.ChronoUnit.DAYS.between(ovulationDate, nextPeriodDate)
+                    ChronoUnit.DAYS.between(ovulationDate, nextPeriodDate)
                 // Add the result to the list
                 lutealLengths.add(daysBetween)
             } else {
@@ -222,12 +229,24 @@ class CalculationsHelper(
         val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
         if (firstNextPeriodDate != null) {
             val lutealLength =
-                java.time.temporal.ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+                ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
             Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
             return lutealLength
         } else {
             return 0
         }
 
+    }
+
+    override fun getCycleDay(date: LocalDate): Int? {
+        // Don't generate cycle numbers for future dates
+        if (date > LocalDate.now()) return null
+
+        val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(date) ?: return null
+        return ChronoUnit.DAYS.between(lastPeriodStartDate, date).toInt() + 1
+    }
+
+    override fun cycleDay(date: LocalDate): Flow<Int?> = dbHelper.dbWriteTrigger.map {
+        getCycleDay(date)
     }
 }

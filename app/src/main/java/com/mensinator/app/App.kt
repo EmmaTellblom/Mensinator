@@ -1,7 +1,10 @@
 package com.mensinator.app
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
+import android.os.Build
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.mensinator.app.business.*
 import com.mensinator.app.business.notifications.AndroidNotificationScheduler
 import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
@@ -13,6 +16,11 @@ import com.mensinator.app.statistics.StatisticsViewModel
 import com.mensinator.app.symptoms.ManageSymptomsViewModel
 import com.mensinator.app.utils.DefaultDispatcherProvider
 import com.mensinator.app.utils.IDispatcherProvider
+import com.mensinator.app.widgets.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -43,13 +51,41 @@ class App : Application() {
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }
     }
 
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(appModule)
+            modules(appModule, WidgetModule)
+        }
+
+        MidnightWorker.scheduleNextMidnight(this.applicationContext)
+        initWidgetPreviews()
+    }
+
+    private fun initWidgetPreviews() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return
+        val appContext = this.applicationContext
+
+        val glanceAppWidgetManager = GlanceAppWidgetManager(appContext)
+
+        @SuppressLint("CheckResult")
+        applicationScope.launch {
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithLabelWithBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithoutLabelWithBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithLabelWithoutBackgroundReceiver::class
+            )
+            glanceAppWidgetManager.setWidgetPreviews(
+                WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver::class
+            )
         }
     }
 }

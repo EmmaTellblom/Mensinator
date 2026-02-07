@@ -3,6 +3,7 @@ package com.mensinator.app.business
 import android.database.sqlite.SQLiteDatabase
 import com.mensinator.app.data.Setting
 import com.mensinator.app.data.Symptom
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 interface IPeriodDatabaseHelper {
@@ -14,6 +15,8 @@ interface IPeriodDatabaseHelper {
     // TODO: The database should only be accessible via the functions of this interface.
     //       Refactor this soon!
     val writableDb: SQLiteDatabase
+
+    val dbWriteTrigger: Flow<Unit>
 
     // This function is used to add a date together with a period id to the periods table
     fun addDateToPeriod(date: LocalDate, periodId: PeriodId)
@@ -102,8 +105,12 @@ interface IPeriodDatabaseHelper {
     // Retrieve the most recent ovulation date
     fun getLastOvulation(): LocalDate?
 
+    fun lastOvulation(): Flow<LocalDate?>
+
     // Retrieve the latest X period start dates
     fun getLatestXPeriodStart(number: Int): List<LocalDate>
+
+    //fun latestXPeriodStart(number: Int): Flow<List<LocalDate>>
 
     // Retrieve the next period start date after a given date
     fun getFirstNextPeriodDate(date: LocalDate): LocalDate?

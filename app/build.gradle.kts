@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.mensinator.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.mensinator.app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 24
         versionName = "2.0"
 
@@ -39,6 +39,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+        freeCompilerArgs += listOf("-Xdebug")
     }
     buildFeatures {
         compose = true
@@ -65,7 +66,6 @@ android {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
         metricsDestination = layout.buildDirectory.dir("compose_compiler")
     }
-    @Suppress("UnstableApiUsage")
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
@@ -85,6 +85,7 @@ dependencies {
     implementation(libs.androidx.material3.adaptive)
     implementation(libs.androidx.material3.adaptive.layout)
     implementation(libs.androidx.material3.window.size.classes)
+    implementation(libs.androidx.material.material.icons)
     implementation(libs.androidx.window)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.navigation.runtime.ktx)
@@ -99,6 +100,14 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.collections.immutable)
+
+    // For AppWidgets support
+    implementation(libs.androidx.glance)
+    implementation(libs.androidx.glance.appwidget)
+
+    // For interop APIs with Material 3
+    implementation(libs.androidx.glance.material3)
+    implementation(libs.androidx.work.runtime.ktx)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockk)

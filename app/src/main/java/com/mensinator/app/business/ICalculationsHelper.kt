@@ -1,5 +1,6 @@
 package com.mensinator.app.business
 
+import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 /**
@@ -13,6 +14,8 @@ interface ICalculationsHelper {
      * @return The next expected period date.
      */
     fun calculateNextPeriod(): LocalDate?
+
+    fun nextPeriod(): Flow<LocalDate?>
 
     /**
      * Calculates the average number of days from the first day of the last period to ovulation.
@@ -49,4 +52,15 @@ interface ICalculationsHelper {
      * @return The luteal phase length as an integer.
      */
     fun getLutealLengthForPeriod(date: LocalDate): Int
+
+    /**
+     * Calculates the cycle day of a period for a given date.
+     *
+     * Example:
+     * - The latest period began 2025-02-01. The cycle day for 2025-02-01 is 1.
+     * - The latest period began 2025-02-01. The cycle day for 2025-02-10 is 10.
+     */
+    fun getCycleDay(date: LocalDate): Int?
+
+    fun cycleDay(date: LocalDate): Flow<Int?>
 }
