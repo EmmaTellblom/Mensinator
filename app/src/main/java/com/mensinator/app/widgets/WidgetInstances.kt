@@ -23,70 +23,45 @@ val WidgetInstances
         get().get<WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver>(),
     )
 
-class WidgetPeriodDaysWithLabelWithBackgroundReceiver : GlanceAppWidgetReceiver() {
+abstract class BaseWidgetReceiver : GlanceAppWidgetReceiver() {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        MidnightWorker.scheduleNextMidnight(context)
+    }
+}
+
+class WidgetPeriodDaysWithLabelWithBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = true,
         showBackground = true
     )
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        MidnightWorker.scheduleNextMidnight(context)
-    }
 }
 
-class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = false,
         showBackground = true
     )
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        MidnightWorker.scheduleNextMidnight(context)
-    }
 }
 
-class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = true,
         showBackground = false
     )
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        MidnightWorker.scheduleNextMidnight(context)
-    }
 }
 
-class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = false,
         showBackground = false
     )
-
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
-    ) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        MidnightWorker.scheduleNextMidnight(context)
-    }
 }

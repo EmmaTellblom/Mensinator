@@ -9,6 +9,7 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.mensinator.app.NotificationChannelConstants.channelDescription
 import com.mensinator.app.NotificationChannelConstants.channelId
 import com.mensinator.app.NotificationChannelConstants.channelName
@@ -16,9 +17,6 @@ import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.widgets.MidnightTrigger
 import com.mensinator.app.widgets.WidgetInstances
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.KoinAndroidContext
 import androidx.glance.appwidget.updateAll
@@ -31,8 +29,6 @@ object NotificationChannelConstants {
 }
 
 class MainActivity : AppCompatActivity() {
-    private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateWidgetsOnAppStart() {
-        activityScope.launch {
+        lifecycleScope.launch {
             // Emit to midnight trigger to force widget data refresh
             MidnightTrigger.midnightTrigger.emit(Unit)
             // Update all widgets
