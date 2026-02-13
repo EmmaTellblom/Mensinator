@@ -56,11 +56,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateWidgetsOnAppStart() {
         lifecycleScope.launch {
-            // Emit to midnight trigger to force widget data refresh
-            MidnightTrigger.midnightTrigger.emit(Unit)
-            // Update all widgets
-            WidgetInstances.forEach { receiver ->
-                receiver.glanceAppWidget.updateAll(this@MainActivity)
+            try {
+                // Emit to midnight trigger to force widget data refresh
+                MidnightTrigger.midnightTrigger.emit(Unit)
+                // Update all widgets
+                WidgetInstances.forEach { receiver ->
+                    receiver.glanceAppWidget.updateAll(this@MainActivity)
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Failed to update widgets on app start", e)
             }
         }
     }
