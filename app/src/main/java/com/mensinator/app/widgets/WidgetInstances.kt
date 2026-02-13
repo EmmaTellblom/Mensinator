@@ -1,5 +1,7 @@
 package com.mensinator.app.widgets
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import org.koin.core.context.GlobalContext.get
@@ -21,7 +23,19 @@ val WidgetInstances
         get().get<WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver>(),
     )
 
-class WidgetPeriodDaysWithLabelWithBackgroundReceiver : GlanceAppWidgetReceiver() {
+abstract class BaseWidgetReceiver : GlanceAppWidgetReceiver() {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        // Schedule midnight worker - WorkManager's REPLACE policy ensures no duplicates
+        MidnightWorker.scheduleNextMidnight(context)
+    }
+}
+
+class WidgetPeriodDaysWithLabelWithBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = true,
@@ -29,7 +43,7 @@ class WidgetPeriodDaysWithLabelWithBackgroundReceiver : GlanceAppWidgetReceiver(
     )
 }
 
-class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = false,
@@ -37,7 +51,7 @@ class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : GlanceAppWidgetReceiv
     )
 }
 
-class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = true,
@@ -45,7 +59,7 @@ class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiv
     )
 }
 
-class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
+class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : BaseWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = BaseWidget(
         widgetType = WidgetType.Period,
         showLabel = false,
