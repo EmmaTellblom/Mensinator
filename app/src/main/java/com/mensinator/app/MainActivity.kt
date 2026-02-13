@@ -14,7 +14,14 @@ import com.mensinator.app.NotificationChannelConstants.channelId
 import com.mensinator.app.NotificationChannelConstants.channelName
 import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
+import com.mensinator.app.widgets.MidnightTrigger
+import com.mensinator.app.widgets.WidgetInstances
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.KoinAndroidContext
+import androidx.glance.appwidget.updateAll
 
 @Suppress("ConstPropertyName")
 object NotificationChannelConstants {
@@ -24,6 +31,8 @@ object NotificationChannelConstants {
 }
 
 class MainActivity : AppCompatActivity() {
+    private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -36,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         createNotificationChannel(this)
+        updateWidgetsOnAppStart()
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -46,6 +56,17 @@ class MainActivity : AppCompatActivity() {
 
         val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
+    }
+
+    private fun updateWidgetsOnAppStart() {
+        activityScope.launch {
+            // Emit to midnight trigger to force widget data refresh
+            MidnightTrigger.midnightTrigger.emit(Unit)
+            // Update all widgets
+            WidgetInstances.forEach { receiver ->
+                receiver.glanceAppWidget.updateAll(this@MainActivity)
+            }
+        }
     }
 
     private fun handleScreenProtection(isScreenProtectionEnabled: Boolean) {

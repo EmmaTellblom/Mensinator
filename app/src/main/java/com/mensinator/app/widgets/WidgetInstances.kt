@@ -1,5 +1,7 @@
 package com.mensinator.app.widgets
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import org.koin.core.context.GlobalContext.get
@@ -27,6 +29,15 @@ class WidgetPeriodDaysWithLabelWithBackgroundReceiver : GlanceAppWidgetReceiver(
         showLabel = true,
         showBackground = true
     )
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        MidnightWorker.scheduleNextMidnight(context)
+    }
 }
 
 class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : GlanceAppWidgetReceiver() {
@@ -35,6 +46,15 @@ class WidgetPeriodDaysWithoutLabelWithBackgroundReceiver : GlanceAppWidgetReceiv
         showLabel = false,
         showBackground = true
     )
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        MidnightWorker.scheduleNextMidnight(context)
+    }
 }
 
 class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
@@ -43,6 +63,15 @@ class WidgetPeriodDaysWithLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiv
         showLabel = true,
         showBackground = false
     )
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        MidnightWorker.scheduleNextMidnight(context)
+    }
 }
 
 class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : GlanceAppWidgetReceiver() {
@@ -51,4 +80,13 @@ class WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver : GlanceAppWidgetRec
         showLabel = false,
         showBackground = false
     )
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray
+    ) {
+        super.onUpdate(context, appWidgetManager, appWidgetIds)
+        MidnightWorker.scheduleNextMidnight(context)
+    }
 }
