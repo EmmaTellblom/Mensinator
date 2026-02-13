@@ -30,6 +30,7 @@ abstract class BaseWidgetReceiver : GlanceAppWidgetReceiver() {
         appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        // Schedule midnight worker - WorkManager's REPLACE policy ensures no duplicates
         MidnightWorker.scheduleNextMidnight(context)
     }
 }

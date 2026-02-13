@@ -18,6 +18,7 @@ import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.widgets.MidnightTrigger
 import com.mensinator.app.widgets.WidgetInstances
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateWidgetsOnAppStart() {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 // Emit to midnight trigger to force widget data refresh
                 MidnightTrigger.midnightTrigger.emit(Unit)
