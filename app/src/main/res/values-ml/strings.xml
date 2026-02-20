@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">മെൻസിനേറ്റർ</string>
+    <string name="previous">മുമ്പ്</string>
+    <string name="next">ശേഷം</string>
+    <string name="period_button_not_selected">ആർത്തവ ദിനം ചേർക്കുക</string>
+    <string name="ovulation_button_selected">ഒവുലേഷൻ(അണ്ഡവിസർജനം) നീക്കം ചെയ്യുക</string>
+    <string name="ovulation_button_not_selected">ഒവുലേഷൻ(അണ്ഡവിസർജനം) ചേർക്കുക</string>
+    <string name="empty_click_alert">സേവ് ചെയ്യാനോ നീക്കം ചെയ്യാനോ തീയതികളില്ല</string>
+    <string name="successfully_saved_alert">മാറ്റങ്ങൾ വിജയകരമായി സേവ് ചെയ്തു</string>
+    <string name="no_data_selected">തീയതികളൊന്നും തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല</string>
+    <string name="only_day_alert">ഒവുലേഷൻ(അണ്ഡവിസർജനം) ഒരു ദിവസം മാത്രമേ ഉണ്ടാകുകയുള്ളൂ!</string>
+    <string name="success_saved_ovulation">ഒവുലേഷൻ(അണ്ഡവിസർജനം) വിജയകരമായി സേവ് ചെയ്തിരിക്കുന്നു</string>
 </resources>
