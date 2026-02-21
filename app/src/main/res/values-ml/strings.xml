@@ -11,4 +11,25 @@
     <string name="no_data_selected">തീയതികളൊന്നും തിരഞ്ഞെടുക്കപ്പെട്ടിട്ടില്ല</string>
     <string name="only_day_alert">ഒവുലേഷൻ(അണ്ഡവിസർജനം) ഒരു ദിവസം മാത്രമേ ഉണ്ടാകുകയുള്ളൂ!</string>
     <string name="success_saved_ovulation">ഒവുലേഷൻ(അണ്ഡവിസർജനം) വിജയകരമായി സേവ് ചെയ്തിരിക്കുന്നു</string>
+    <string name="period_button">ആർത്തവം</string>
+    <string name="symptoms_button">ലക്ഷണങ്ങൾ</string>
+    <string name="ovulation_button">ഓവുലേഷൻ(അണ്ഡവിസർജനം)</string>
+    <string name="period_button_selected">ഒവുലേഷൻ നീക്കം ചെയ്യുക</string>
+    <string name="no_date_selected_ovulation">ഒവുലേഷനായി തീയതി തിരഞ്ഞെടുത്തിട്ടില്ല</string>
+    <string name="home_page">ഹോം പേജ്</string>
+    <string name="statisic_page">സ്ഥിതിവിവരക്കണക്കുകൾ</string>
+    <string name="symptoms_page">ലക്ഷണങ്ങൾ</string>
+    <string name="settings_page">സെറ്റിംഗ്സ്</string>
+    <string name="delete_symptom">ലക്ഷണം ഇല്ലാതാക്കുക</string>
+    <string name="delete_question">ഈ ലക്ഷണം ഇല്ലാതാക്കണം എന്ന് നിങ്ങൾക്ക് ഉറപ്പാണോ?</string>
+    <string name="delete_button">നീക്കം ചെയ്യുക</string>
+    <string name="app_settings">ആപ്പ് സെറ്റിംഗ്സ്</string>
+    <string name="colors">നിറങ്ങൾ</string>
+    <string name="period_color">ആർത്തവം</string>
+    <string name="selection_color">തിരഞ്ഞെടുക്കൽ</string>
+    <string name="period_selection_color">ആർത്തവ ദിനം തിരഞ്ഞെടുക്കൽ</string>
+    <string name="expected_period_color">പ്രതീക്ഷിക്കുന്ന ആർത്തവ തീയതി</string>
+    <string name="ovulation_color">ഓവുലേഷൻ(അണ്ഡവിസർജനം)</string>
+    <string name="expected_ovulation_color">പ്രതീക്ഷിക്കുന്ന ഓവുലേഷൻ തീയതി</string>
+    <string name="reminders">ഓർമ്മപ്പെടുത്തലുകൾ</string>
 </resources>
