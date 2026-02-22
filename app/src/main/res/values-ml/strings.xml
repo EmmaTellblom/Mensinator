@@ -120,4 +120,23 @@
     <string name="symptoms">• ലക്ഷണങ്ങൾ: തിരഞ്ഞെടുക്കപ്പെട്ട തീയതിക്കായുള്ള ലക്ഷണങ്ങൾ കാണാനോ ചേർക്കാനോ ഉണ്ടെങ്കിൽ \'ലക്ഷണങ്ങൾ\' എന്ന ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.</string>
     <string name="ovulation">• ഒവുലേഷൻ: ഒരു തീയതി തിരഞ്ഞെടുക്കുക, പിന്നെ ഒവുലേഷൻ ബട്ടൺ ക്ലിക്ക് ചെയ്യുക. നീക്കാൻ, തീയതി വീണ്ടും തിരഞ്ഞെടുത്ത് ഓവുലേഷൻ ബട്ടൺ ക്ലിക്ക് ചെയ്യുക.</string>
     <string name="statistics">• സ്ഥിതിവിവരക്കണക്കുകൾ: താഴത്തെ മെനുവിൽ സ്ഥിതിവിവരക്കണക്കുകൾ ക്ലിക്ക് ചെയ്ത് സ്ഥിതിവിവരക്കണക്കുകൾ തിരഞ്ഞെടുക്കുക.</string>
+    <string name="import_export">• ഇംപോർട്ട്/എക്സ്പോർട്ട്: താഴത്തെ മെനുവിലുള്ള സെറ്റിംഗ്സ് ബട്ടൺ ക്ലിക്ക് ചെയ്യുക, ശേഷം സെറ്റിംഗ്സിൽ താഴേക്ക് സ്ക്രോൾ ചെയ്യുക. നിങ്ങളുടെ ഡാറ്റ ഇംപോർട്ട് ചെയ്യാനും എക്സ്പോർട്ട് ചെയ്യാനും ഇംപോർട്ട്/എക്സ്പോർട്ട് ക്ലിക്ക് ചെയ്യുക. പുതിയ ഉപകരണത്തിലേക്ക് ഡാറ്റ മാറ്റുമ്പോൾ ഇത് നിർബന്ധമാണ്!</string>
+    <string name="disclaimer_header">ഡിസ്ക്ലെയിമർ:</string>
+    <string name="disclaimer">ഇത് ഒരു ഹോബിയോട് ബന്ധപ്പെട്ട പ്രോജക്ടാണ്, മെഡിക്കൽ ഉപയോഗത്തിനായി രൂപകൽപ്പന ചെയ്തതല്ല. ഇത് ഞങ്ങളുടെ വ്യക്തിഗത ആവശ്യങ്ങൾക്കായി മാത്രം നിർമ്മിച്ചതാണ്. എന്നാൽ, ആശയങ്ങളും അഭ്യർത്ഥനകളും സ്വാഗതം ചെയ്യുന്നു. Discord-ൽ ഞങ്ങളോടൊപ്പം ചേരുക അല്ലെങ്കിൽ ഇമെയിൽ അയയ്ക്കുക:\nmensinator.app@gmail.com</string>
+    <string name="widget_days_until_period_no_label">ആർത്തവം വരെ ഉള്ള ദിനങ്ങൾ, ലേബൽ ഇല്ലാതെ</string>
+    <string name="widget_days_until_period_with_label">ആർത്തവം വരെ ഉള്ള ദിനങ്ങൾ, ലേബൽ ഇല്ലാതെ</string>
+    <string name="widget_period_abbreviation">പി</string>
+    <string name="widget_ovulation_abbreviation">ഓ</string>
+    <string name="close_button">അടയ്ക്കുക</string>
+    <string name="data_settings">ബാക്കപ്പ്</string>
+    <string name="data">സേവ് ചെയ്ത ഡാറ്റ</string>
+    <string name="Import">ഇംപോർട്ട്</string>
+    <string name="data_export">എക്സ്പോർട്ട്</string>
+    <string name="select_file">ഇംപോർട്ട് ചെയ്യുന്നതിനായി തിരഞ്ഞെടുക്കുക</string>
+    <string name="select_file_button">തിരഞ്ഞെടുക്കുക</string>
+    <string name="import_export_data">ഇംപോർട്ട് / എക്സ്പോർട്ട് ഡാറ്റ</string>
+    <string name="import_data">ഇംപോർട്ട് ഡാറ്റ</string>
+    <string name="export_data">എക്സ്പോർട്ട് ഡാറ്റ</string>
+    <string name="about_app">ആപ്പിനെ കുറിച്ച്</string>
+    <string name="rename_symptom">ലക്ഷണത്തിന്റെ പേര് മാറ്റുക</string>
 </resources>
