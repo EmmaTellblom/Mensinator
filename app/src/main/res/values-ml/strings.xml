@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">മെൻസിനേറ്റർ</string>
+    <string name="app_name">മുൻപിലേക്ക്</string>
     <string name="previous">മുമ്പ്</string>
     <string name="next">ശേഷം</string>
     <string name="period_button_not_selected">ആർത്തവ ദിനം ചേർക്കുക</string>
@@ -33,7 +33,7 @@
     <string name="expected_ovulation_color">പ്രതീക്ഷിക്കുന്ന ഓവുലേഷൻ തീയതി</string>
     <string name="reminders">ഓർമ്മപ്പെടുത്തലുകൾ</string>
     <string name="days_before_reminder">ഓർമ്മപ്പെടുത്തലിന് മുമ്പുള്ള ദിവസങ്ങളുടെ എണ്ണം</string>
-    <string name="period_notification_title">ആർത്തവ ദിവസ അറിയിപ്പ് സന്ദേശം</string>
+    <string name="period_notification_title">ആർത്തവ അറിയിപ്പ്</string>
     <string name="period_notification_message">നിങ്ങളുടെ ആർത്തവം ഉടൻ ആരംഭിക്കും</string>
     <string name="change_text">ടെക്സ്റ്റ് മാറ്റുക</string>
     <string name="other_settings">മറ്റ് സെറ്റിംഗ്സുകൾ</string>
@@ -107,7 +107,7 @@
     <string name="export_success_toast">%1$sലേക്ക് എക്സ്പോർട്ട് ചെയ്തു</string>
     <string name="import_success_toast">ഫയൽ വിജയകരമായി ഇംപോർട്ട് ചെയ്തു</string>
     <string name="import_failure_toast">ഫയൽ ഇംപോർട്ട് പരാജയപ്പെട്ടു</string>
-    <string name="export_path_label">"ഫയൽ  എക്സ്പോർട്ട് ചെയ്തു : %1$s ലേക്ക്"</string>
+    <string name="export_path_label">ഫയൽ എക്സ്പോർട്ട് ചെയ്തു : %1$s ലേക്ക്</string>
     <string name="import_path_label">ഇംപോർട്ട് പാഥ: %1$s</string>
     <string name="import_dialog_message">ഡാറ്റ ഇംപോർട്ട് ചെയ്യാൻ ഫയൽ തിരഞ്ഞെടുക്കുക.</string>
     <string name="export_dialog_message">കലണ്ടർ എൻട്രികൾ, ലക്ഷണങ്ങൾ, മറ്റ് ഡാറ്റ എന്നിവ എക്സ്പോർട്ട് ചെയ്യാനുള്ള ഔട്ട്‌പുട്ട് പാത തിരഞ്ഞെടുക്കുക.</string>
@@ -123,8 +123,8 @@
     <string name="import_export">• ഇംപോർട്ട്/എക്സ്പോർട്ട്: താഴത്തെ മെനുവിലുള്ള സെറ്റിംഗ്സ് ബട്ടൺ ക്ലിക്ക് ചെയ്യുക, ശേഷം സെറ്റിംഗ്സിൽ താഴേക്ക് സ്ക്രോൾ ചെയ്യുക. നിങ്ങളുടെ ഡാറ്റ ഇംപോർട്ട് ചെയ്യാനും എക്സ്പോർട്ട് ചെയ്യാനും ഇംപോർട്ട്/എക്സ്പോർട്ട് ക്ലിക്ക് ചെയ്യുക. പുതിയ ഉപകരണത്തിലേക്ക് ഡാറ്റ മാറ്റുമ്പോൾ ഇത് നിർബന്ധമാണ്!</string>
     <string name="disclaimer_header">ഡിസ്ക്ലെയിമർ:</string>
     <string name="disclaimer">ഇത് ഒരു ഹോബിയോട് ബന്ധപ്പെട്ട പ്രോജക്ടാണ്, മെഡിക്കൽ ഉപയോഗത്തിനായി രൂപകൽപ്പന ചെയ്തതല്ല. ഇത് ഞങ്ങളുടെ വ്യക്തിഗത ആവശ്യങ്ങൾക്കായി മാത്രം നിർമ്മിച്ചതാണ്. എന്നാൽ, ആശയങ്ങളും അഭ്യർത്ഥനകളും സ്വാഗതം ചെയ്യുന്നു. Discord-ൽ ഞങ്ങളോടൊപ്പം ചേരുക അല്ലെങ്കിൽ ഇമെയിൽ അയയ്ക്കുക:\nmensinator.app@gmail.com</string>
-    <string name="widget_days_until_period_no_label">ആർത്തവം വരെ ഉള്ള ദിനങ്ങൾ, ലേബൽ ഇല്ലാതെ</string>
-    <string name="widget_days_until_period_with_label">ആർത്തവം വരെ ഉള്ള ദിനങ്ങൾ, ലേബൽ ഇല്ലാതെ</string>
+    <string name="widget_days_until_period_no_label">ആർത്തവം വരെയുള്ള ദിനങ്ങൾ, ലേബൽ ഇല്ലാതെ</string>
+    <string name="widget_days_until_period_with_label">ആർത്തവം വരെ ഉള്ള ദിനങ്ങൾ, ലേബൽ ഉൾപ്പെടെ</string>
     <string name="widget_period_abbreviation">പി</string>
     <string name="widget_ovulation_abbreviation">ഓ</string>
     <string name="close_button">അടയ്ക്കുക</string>
@@ -139,4 +139,9 @@
     <string name="export_data">എക്സ്പോർട്ട് ഡാറ്റ</string>
     <string name="about_app">ആപ്പിനെ കുറിച്ച്</string>
     <string name="rename_symptom">ലക്ഷണത്തിന്റെ പേര് മാറ്റുക</string>
+    <string name="calculations">• കണക്ക്കൂട്ടൽ:\nആർത്തവ സമയം കണക്ക് കൂട്ടുന്നത് ശരാശരി ആർത്തവചക്ര ദൈർഖ്യവും ആർത്തവസമയ ദൈർഖ്യവും അടിസ്ഥാനമാക്കിയാണ്.\nആർത്തവം ലൂടിയൽഘട്ടത്തിന്റെ അടിത്തനത്തിൽ ആണ് കണക്കുകൂട്ടുന്നത്. അവസാന അഞ്ചു ലൂടിയൽഘട്ടങ്ങളെ നോക്കി ശരാശരി ലുടിയൽഘട്ടത്തിന്റെ ദൈർഖ്യം കണ്ടെത്തിയ ശേഷം ആണ് ആർത്തവ സമയം കണ്ട്പിടിക്കുന്നത്. ഇത് സെറ്റിംഗ്സിൽ സ്വിച്ച് ഓൺ ചെയ്യാവുന്നതാണ്.\nഓവുലേഷൻ സമയം കണ്ട്പിടിക്കുന്നത് ശരാശരി ഓവുലേഷൻ സൈക്കിൾ അടിസ്ഥാനമാക്കിയാണ്.</string>
+    <string name="features_coming_soon">ഉടൻ വരുന്ന ഫീച്ചറുകൾ:</string>
+    <string name="upcoming_features">ആപ്പിന്റെ ഏറ്റവും പുതിയ ഡെവലൊപ്മെന്റ് വാർത്തകൾക്ക് ഗിറ്റ്ഹബ്ബ് സന്ദർശിക്കുക!</string>
+    <string name="our_story_header">ഞങ്ങളുടെ കഥ</string>
+    <string name="our_story">ഞങ്ങൾ വലിയ കോർപൊറേഷനുകൾക്ക് സ്വന്തം ഡാറ്റ കൊടുത്തു മടുത്ത രണ്ട് സ്ത്രീകളാണ്. ഞങ്ങളുടെ ആപ്പ് നിങ്ങളുടെ ഫോണിൽ തന്നെ നിങ്ങളുടെ ഡാറ്റ സ്റ്റോർ ചെയ്യുന്നു, അതിനാൽ നിങ്ങളുടെ ഡാറ്റ മറ്റാരുടെയും കയ്യിൽ എത്തില്ല. \nനിങ്ങളുടെ സ്വകാര്യതയെ ഞങ്ങൾ മാനിക്കുന്നു അത്കൊണ്ട് തന്നെ വ്യക്തിഗതമായ യാതൊരു വിവരവും ഞങ്ങൾ സേവ് ചെയ്യുകയോ ഷെയർ ചെയ്യുകയോ ചെയ്യുന്നില്ല. ഈ ആപ്പിന്റെ പ്രസിദ്ധീകരണത്തിന് ശേഷം ഞങ്ങളുടെ കൂട്ടായ്മ ഒരുപാട് വളർന്നു. ഇപ്പോൾ നമുക്ക് നമ്മുടേതായ, ഈ ആപ്പിൽ ആവേശം കൊള്ളുന്നവരും ഞങ്ങളെ സഹായിക്കാൻ ആഗ്രഹിക്കുന്നതുമായ ആളുകൾ നിറഞ്ഞ, ഡിസ്കോഡ് സെർവർ ഉണ്ട്. \n\nഡിസ്കോഡ് സെർവർ ഇവിടെ ജോയിൻ ചെയ്യുക: https://discord.gg/tHA2k3ബഫൺ</string>
 </resources>
