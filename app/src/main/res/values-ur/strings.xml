@@ -25,7 +25,7 @@
     <string name="app_settings">ایپ کی ترتیبات</string>
     <string name="colors">رنگ</string>
     <string name="period_color">حیض</string>
-    <string name="selection_color">انتخاب</string>
+    <string name="selection_color">انتخاب کریں</string>
     <string name="period_selection_color">انتخاب ِحیض</string>
     <string name="expected_period_color">توقع حیض</string>
     <string name="ovulation_color">بیضہ دانی کا اخراج</string>
@@ -62,7 +62,7 @@
     <string name="next_predicted_ovulation">اگلی بیضہ دانی کے اخراج کی توقع:</string>
     <string name="next_predicted_ovulation_default">-</string>
     <string name="days">ایام</string>
-    <string name="symptoms_dialog_title">%15$s کے لئے علامات</string>
+    <string name="symptoms_dialog_title">%1$s کے لئے علامات</string>
     <string name="create_new_symptom_button">ننئ علامت کا اندراج کریں</string>
     <string name="save_symptoms_button">علامت محفوظ کریں</string>
     <string name="heavy">تیز بہاوء</string>
@@ -117,7 +117,7 @@
     <string name="widget_period_abbreviation">ح</string>
     <string name="widget_ovulation_abbreviation">ب</string>
     <string name="close_button">بند</string>
-    <string name="data_settings">امدادی نقل</string>
+    <string name="data_settings">بیک اپ</string>
     <string name="data">محفوظ ڈیٹا</string>
     <string name="select_file_button">انتخاب</string>
     <string name="about_app">ایپ کے بارے میں</string>
@@ -141,4 +141,7 @@
     <string name="luteal_phase_calculation">لوٹئیل پھیز کا حساب</string>
     <string name="cycle_numbers_show">دور کے شمار دکھائیں</string>
     <string name="export_success_toast">%1$s برآمد ہوچکا ہے</string>
+    <string name="luteal_calculation_message">یہ حساب آپ کی اگلی ماہواری کی پیشین گوئی کرنے کے لیے آپ کے luteal دنوں (بیضہ دانی کے اخراج سے لے کر ماہواری تک کے دن) کا استعمال کرے گا۔\n اس کے کام کرنے کے لیے، آپ کو ایپ میں اپنے بیضہ دانی کے اخراج کو ٹریک کرنا ہوگا اور تاریخ میں کم از کم تین بیضہ دانی کے اخراج کی ضرورت ہے۔\n اگر آپ کو اس ترتیب کے بارے میں یقین نہیں ہے، تو اسے آف کریں یا مدد طلب کرنے کے لیے ہمارے ڈسکورڈ سرور میں شامل ہوں۔\n اگر معیار پر پورا نہیں اترا تو پیشین گوئی کام نہیں کرے گی۔\n یہ حساب اچھا ہے اگر آپ کا بیضہ دانی کا اخراج بے قاعدہ ہیں لیکن کافی تعداد میں لیوٹیل دن ہیں۔</string>
+    <string name="import_export">برامد/درامد:نیچے دئے گئے مینیو میں ترتیبات کے بٹن پر کلک کریں اور ترتیبات میں نیچے جائیں۔ درامد/برامد کے بٹن پر کلک کریں اپنا ڈیٹا درامد یا برامد کرنے کے لئے۔ اپنا ڈیٹا نئے موبائل میں لانے کے لئے یہ کرنا لازمی ہے!</string>
+    <string name="calculations">•حسابات:\nماہواری کا حساب اوسط سائیکل کی لمبائی اور حیض کی لمبائی پر مبنی ہے۔\nحیض کا حساب اوسط لوٹیئل پھیز سے لگایا جاسکتا ہے۔ یہ حساب پھر اخری پانچ سائیکل کو دیکھ کر ایک اوسط لوٹیئل پھیز بنائے گا اور اس کخ مدد سے حیض کا حساب کروگا۔ یہ ترتیبات میں شروع ہے۔\nبیضہ دانی کے اخراج کا حساب اوسط بیضہ دانی کھ اخراج کے سائیکل کی لمبائی سے لگایا جاتا ہے۔</string>
 </resources>
