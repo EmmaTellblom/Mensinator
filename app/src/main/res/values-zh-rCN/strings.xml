@@ -1,39 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Name -->
     <string name="app_name">Mensinator</string>
-
     <!-- Home -->
     <string name="previous">上月</string>
     <string name="next">下月</string>
     <string name="period_button">月经日</string>
     <string name="symptoms_button">症状</string>
     <string name="ovulation_button">排卵日</string>
-
     <string name="period_button_selected">移除月经日</string>
     <string name="period_button_not_selected">添加月经日</string>
-
     <string name="ovulation_button_selected">移除排卵日</string>
     <string name="ovulation_button_not_selected">添加排卵日</string>
-    
     <!-- Home Alerts -->
     <string name="empty_click_alert">没有可保存或移除的日期</string>
     <string name="successfully_saved_alert">更改保存成功</string>
     <string name="no_data_selected">没有选中日期</string>
-    <string name="only_day_alert">只有一天可以是排卵日！</string>
+    <string name="only_day_alert">排卵日只能设置一天！</string>
     <string name="success_saved_ovulation">排卵日保存成功</string>
     <string name="no_date_selected_ovulation">未选择排卵日期</string>
-
     <!-- navigation -->
     <string name="home_page">主页</string>
     <string name="statisic_page">统计</string>
     <string name="symptoms_page">症状</string>
     <string name="settings_page">设置</string>
-
     <!-- symptoms page -->
     <string name="delete_symptom">删除症状</string>
-    <string name="delete_question">请确认是否要删除此症状？</string>
+    <string name="delete_question">您确定要删除此症状吗？</string>
     <string name="delete_button">删除</string>
-
     <!-- Settings -->
     <string name="app_settings">应用程序设置</string>
     <string name="colors">颜色</string>
@@ -58,7 +52,6 @@
     <string name="screen_protection">禁止截屏</string>
     <string name="close">关闭</string>
     <string name="save">保存</string>
-    
     <!-- Color values -->
     <string name="color_red">红色</string>
     <string name="color_green">绿色</string>
@@ -70,11 +63,10 @@
     <string name="color_white">白色</string>
     <string name="color_darkgray">深灰色</string>
     <string name="color_gray">浅灰色</string>
-
     <!-- Statistics -->
     <string name="statistics_title">统计</string>
     <string name="period_count">记录的经期数量：</string>
-    <string name="average_cycle_length">平均月经周期长度：</string>
+    <string name="average_cycle_length">平均生理周期长度：</string>
     <string name="average_period_length">平均经期长度：</string>
     <string name="next_period_start_past">下个经期的预计开始日期：</string>
     <string name="next_period_start_future">下个经期的预计开始日期：</string>
@@ -84,7 +76,6 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">平均黄体期长度：</string>
     <string name="days"> 天</string>
-
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">编辑症状</string>
     <string name="create_new_symptom_button">创建新症状</string>
@@ -93,15 +84,12 @@
     <string name="heavy">经血量大</string>
     <string name="medium">经血量中等</string>
     <string name="light">经血量少</string>
-
     <!-- CreateNewSymptomDialog -->
     <string name="create_new_symptom_dialog_title">创建新症状</string>
     <string name="symptom_name_label">症状名称</string>
     <string name="save_button">保存</string>
-
     <!-- CreateNewSymptomDialog -->
     <string name="manage_symptoms">管理症状</string>
-
     <!-- Calender -->
     <string name="calendar_title">日历</string>
     <string name="mon">周一</string>
@@ -111,7 +99,6 @@
     <string name="fri">周五</string>
     <string name="sat">周六</string>
     <string name="sun">周日</string>
-
     <string name="january">一月</string>
     <string name="february">二月</string>
     <string name="march">三月</string>
@@ -124,7 +111,6 @@
     <string name="october">十月</string>
     <string name="november">十一月</string>
     <string name="december">十二月</string>
-
     <!-- Import Export Dialog -->
     <string name="export_import_title">导出/导入数据</string>
     <string name="export_button">导出</string>
@@ -134,27 +120,24 @@
     <string name="import_failure_toast">文件导入失败</string>
     <string name="export_path_label">导出文件到：%1$s</string>
     <string name="import_path_label">导入路径：%1$s</string>
-
     <!-- Frequently Asked Questions -->
     <string name="faq_title">常见问题</string>
-
     <!-- User Manual Section -->
     <string name="user_manual_header">用户手册</string>
     <string name="how_to_use">如何使用：</string>
-    <string name="select_dates">• 选择日期：点击某个日期以选中或取消选中。</string>
-    <string name="add_or_remove_dates">• 添加或移除经期日期：在选中日期后点击\'添加或移除日期\' 按钮。</string>
-    <string name="symptoms">• 症状：点击\'症状\' 按钮以查看或添加某个选中的日期的症状。</string>
-    <string name="ovulation">• 排卵日：选择单个日期并点击排卵日按钮。若要移除排卵日，选中该日期并再次点击排卵日按钮。</string>
-    <string name="statistics">• 统计：点击底部菜单中的统计按钮以查看统计资料。</string>
-    <string name="import_export">• 导入/导出：点击底部菜单中的设置按钮，然后在设置中向下滚动到底部。点击导入/导出以导入或导出您的数据。这是将数据迁移到新设备时的必需步骤！</string>
-    <string name="calculations">• 计算：\n经期是根据平均周期长度和经期长度计算的。\n经期也可通过平均黄体期来计算。即使用最近的五个周期得出一个平均黄体期，并以此来计算经期。此功能可以在设置中启用。\n排卵日是根据平均排卵周期长度计算的。</string>
+    <string name="select_dates">• 选择日期：点击日期即可选中或取消选中。</string>
+    <string name="add_or_remove_dates">• 添加或移除经期日期：选择日期后点击“添加或移除日期”按钮。</string>
+    <string name="symptoms">• 症状：点击“症状”按钮可查看或添加所选日期的症状。</string>
+    <string name="ovulation">• 排卵日：选择单一日期并点击“排卵日”按钮。若需移除，请选中日期后再次点击该按钮。</string>
+    <string name="statistics">• 统计：点击底部菜单中的“统计”，然后选择“统计”。</string>
+    <string name="import_export">• 导入/导出：点击底部菜单中的“设置”按钮，然后在设置选项中向下滚动。点击“导入/导出”即可导入或导出您的数据。将数据转移至新设备时，此操作必不可少！</string>
+    <string name="calculations">• 计算方式：\n经期根据平均周期长度和经期长度计算得出。\n经期也可通过平均黄体期计算。系统将分析最近5个周期以得出平均黄体期，并据此推算经期。此功能需在“设置”中启用。\n排卵日根据平均排卵周期长度计算得出。</string>
     <string name="features_coming_soon">即将推出的功能：</string>
-    <string name="upcoming_features">• 查看我们的GitHub 主页获得应用程序开发的最新消息！</string>
+    <string name="upcoming_features">• 请访问我们的Github获取应用程序开发的最新动态！</string>
     <string name="our_story_header">我们的故事</string>
-    <string name="our_story">我们是两位厌倦了将自己的数据出卖给大型企业的女性。我们的应用程序将所有数据本地保存在您的设备上，我们对您的数据没有任何访问权限。\n我们重视您的隐私，不会保存或共享任何个人信息。自从推出这个应用程序以来，我们不断发展，现在已拥有了自己的Discord服务器，那里有许多对这个应用程序充满热情并愿意帮助我们的用户！\n\n加入我们的Discord：https://discord.gg/tHA2k3bFRN</string>
+    <string name="our_story">我们是两位厌倦了向大公司出售个人数据的女性。我们的应用程序将所有数据本地存储在您的设备上，我们完全无法访问这些数据。\n我们重视您的隐私，不会保存或分享任何个人信息。自应用上线以来，我们不断发展壮大，如今拥有了自己的Discord服务器，聚集了众多热爱这款应用并愿意协助我们的用户！\n\n欢迎加入我们的Discord社区：https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">免责声明：</string>
-    <string name="disclaimer">• 这是一个业余爱好项目，不用于医疗用途。我们制作这个应用程序仅为了我们自己的需要，但我们非常欢迎您提出想法和需求。加入我们的 Discord 或发送电子邮件到：\nmensinator.app@gmail.com</string>
-
+    <string name="disclaimer">• 这是一个业余项目，并非用于医疗用途。我们只是为满足自身需求而开发它。但我们欢迎各种想法和需求。欢迎加入我们的Discord频道或发送邮件至：\nmensinator.app@gmail.com</string>
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">关闭</string>
     <string name="data_settings">备份</string>
@@ -168,4 +151,13 @@
     <string name="export_data">导出数据</string>
     <string name="about_app">关于本应用程序</string>
     <string name="rename_symptom">重命名症状</string>
+    <string name="warning">提醒注意</string>
+    <string name="luteal_calculation_message">此计算将根据您的黄体期天数（从排卵到下次月经的天数）预测下次月经日期。\n为确保准确性，您需在应用中记录排卵情况，且历史记录中至少包含三次排卵数据。\n若对该设置存疑，请关闭功能或加入我们的Discord服务器寻求帮助。\n若未满足上述条件，预测功能将无法生效。\n此计算方式适用于排卵周期不规律但黄体期天数相对稳定的情况。</string>
+    <string name="import_dialog_message">选择文件以导入数据。</string>
+    <string name="export_dialog_message">选择输出路径以导出日历条目、症状及其他数据。</string>
+    <string name="select_source">选择应用程序来源</string>
+    <string name="widget_days_until_period_no_label">距下次月经天数，不含标签</string>
+    <string name="widget_days_until_period_with_label">距下次月经天数，含标签</string>
+    <string name="widget_period_abbreviation">经期</string>
+    <string name="widget_ovulation_abbreviation">排卵期</string>
 </resources>
