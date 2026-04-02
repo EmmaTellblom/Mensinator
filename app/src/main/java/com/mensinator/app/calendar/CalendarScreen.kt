@@ -414,12 +414,13 @@ fun Day(
                 ) {
                     symptomsForDay.forEach { symptom ->
                         val symptomColor = state.calendarColors.symptomColors[symptom] ?: Color.Red
-
+                        var circleBorder = Color.White
+                        if(isDarkMode()) { circleBorder = Color.Black }
                         Box(
                             modifier = Modifier
                                 .size(11.dp)
                                 .background(symptomColor, CircleShape)
-                                .border(1.dp, Color.LightGray.copy(alpha = 0.25f), CircleShape)
+                                .border(1.dp, circleBorder, CircleShape)
                         )
                     }
                 }

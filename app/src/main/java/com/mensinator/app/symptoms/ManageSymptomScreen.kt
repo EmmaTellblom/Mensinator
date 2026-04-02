@@ -256,7 +256,7 @@ private fun SymptomItemPreview() {
     MensinatorTheme {
         SymptomItem(
             onAction = {},
-            symptom = Symptom(1, "Medium flow", 1, "Red"),
+            symptom = Symptom(1, "Medium flow", 1, "Pink"),
             showDeletionIcon = true,
             modifier = Modifier.padding(8.dp)
         )

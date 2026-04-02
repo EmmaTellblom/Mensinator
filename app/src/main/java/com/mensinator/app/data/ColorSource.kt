@@ -58,6 +58,10 @@ object ColorSource {
         "Black" to Color(0xFF212121),
         "DarkGray" to Color(0xFFABABAB),
         "LightGray" to Color(0xFFDFDDDD),
+
+        "LightPink" to Color(0xFFCC95BB),
+        "Pink" to Color(0xFFB36098),
+        "DarkPink" to Color(0xFF7E3366)
     )
 
     private val darkColorMap = mapOf(
@@ -91,6 +95,10 @@ object ColorSource {
 
         "White" to Color(0xFFF5F5F5),
         "DarkGray" to Color(0xFF585858),
-        "LightGray" to Color(0xFF8F8F8F)
+        "LightGray" to Color(0xFF8F8F8F),
+
+        "LightPink" to Color(0xFFCC95BB),
+        "Pink" to Color(0xFFB36098),
+        "DarkPink" to Color(0xFF7E3366)
     )
 }
