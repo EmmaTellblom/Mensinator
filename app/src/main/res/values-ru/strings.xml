@@ -134,10 +134,10 @@
     <string name="our_story_header">Наша история</string>
     <string name="our_story">Мы - две женщины, которым надоело продавать свои данные крупным корпорациям. Наше приложение хранит все ваши данные локально на вашем устройстве, и у нас нет к ним никакого доступа.\nМы ценим вашу конфиденциальность и не сохраняем и не передаем никакую личную информацию. С момента запуска этого приложения мы выросли и теперь у нас есть свой собственный сервер Discord с людьми, которые увлечены этим приложением и хотят помочь нам!\n\nПрисоединяйтесь к нам в Discord здесь: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">Отказ от ответственности:</string>
-    <string name="disclaimer">• Это проект для хобби и не предназначен для использования в медицинских целях. Мы просто делаем это для собственных нужд. Но мы приветствуем идеи и пожелания. Присоединяйтесь к нам в Discord или пишите нам на почту:\nmensinator.app@gmail.com</string>
+    <string name="disclaimer">• Это хобби-проект и не предназначен для использования в медицинских целях. Мы просто делаем это для собственных нужд. Но мы приветствуем идеи и пожелания. Присоединяйтесь к нам в Discord или пишите нам на почту:\nmensinator.app@gmail.com</string>
     <!-- Universal/ Repeated Strings -->
     <string name="close_button">Закрыть</string>
-    <string name="data_settings">Бекап</string>
+    <string name="data_settings">Резервное копирование</string>
     <string name="data">Данные</string>
     <string name="Import">Импорт</string>
     <string name="data_export">Экспорт</string>
@@ -156,4 +156,8 @@
     <string name="warning">Предупреждение</string>
     <string name="luteal_calculation_message">В этом расчёте используется ваше количество лютеиновых дней (дни от овуляции до периода менструации) для прогнозирования вашего следующей менструации.\nЧтобы это работало, вам нужно отслеживать свои овуляции в приложении и иметь запись как минимум трёх овуляций в истории.\nЕсли вы не уверены в этой настройке то выключите её или присоединяйтесь к нашему чату в Discord, чтобы обратиться за помощью.\nЕсли критериев недостаточно то прогноз не сработает.\nЭтот расчёт хорош если у вас нерегулярные овуляции но довольно постоянное количество лютеиновых дней.</string>
     <string name="select_source">Выберите источник приложения</string>
+    <string name="widget_days_until_period_no_label">Дни до месячных, без названия</string>
+    <string name="widget_days_until_period_with_label">Дней до месячных, с названием</string>
+    <string name="widget_period_abbreviation">М</string>
+    <string name="widget_ovulation_abbreviation">О</string>
 </resources>
