@@ -74,7 +74,7 @@
     <string name="average_luteal_length">Средняя продолжительность лютеиновой фазы: </string>
     <string name="days">дней</string>
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Симптомы для %1$s</string>
+    <string name="symptoms_dialog_title">Редактировать симптомы</string>
     <string name="create_new_symptom_button">Добавить новый симптом</string>
     <string name="save_symptoms_button">Сохранить симптомы</string>
     <string name="cancel_button">Отмена</string>

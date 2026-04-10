@@ -72,7 +72,7 @@
     <string name="days"> zile</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Simptome la data %1$s</string>
+    <string name="symptoms_dialog_title">Editare simptome</string>
     <string name="create_new_symptom_button">Adaugă un simptom nou</string>
     <string name="save_symptoms_button">Salvează simptomele</string>
     <string name="cancel_button">Anulează</string>
