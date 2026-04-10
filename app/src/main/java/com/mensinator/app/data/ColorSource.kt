@@ -23,7 +23,8 @@ object ColorSource {
         listOf("LightCyan", "Cyan", "DarkCyan"),    // Cyan shades
         listOf("LightBlue", "Blue", "DarkBlue"),    // Blue shades
         listOf("LightMagenta", "Magenta", "DarkMagenta"), // Magenta shades
-        listOf("White", "LightGray", "DarkGray")    // Gray and Black shades
+        listOf("LightPink", "Pink", "DarkPink"),  // Pink Shades
+        listOf("LightGray", "DarkGray", "WhiteBlack")   // Gray, White and Black shades
     )
 
     private val lightColorMap = mapOf(
@@ -55,8 +56,8 @@ object ColorSource {
         "Orange" to Color(0xFFF2CBA6),
         "DarkOrange" to Color(0xFFF0B175),
 
-        "Black" to Color(0xFF212121),
         "DarkGray" to Color(0xFFABABAB),
+        "WhiteBlack" to Color(0xFF212121),
         "LightGray" to Color(0xFFDFDDDD),
 
         "LightPink" to Color(0xFFCC95BB),
@@ -93,8 +94,8 @@ object ColorSource {
         "Orange" to Color(0xFFB37E4D),
         "DarkOrange" to Color(0xFF6B4B2E),
 
-        "White" to Color(0xFFF5F5F5),
         "DarkGray" to Color(0xFF585858),
+        "WhiteBlack" to Color(0xFFF5F5F5),
         "LightGray" to Color(0xFF8F8F8F),
 
         "LightPink" to Color(0xFFCC95BB),
