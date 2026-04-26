@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -70,9 +71,9 @@ class App : Application() {
 
     private fun observeWidgetUpdates(dbHelper: IPeriodDatabaseHelper) {
         applicationScope.launch(Dispatchers.IO) {
-            dbHelper.dbWriteTrigger.collect {
-                updateAllWidgets(applicationContext)
-            }
+            dbHelper.dbWriteTrigger
+                .onEach { updateAllWidgets(applicationContext) }
+                .collect()
         }
     }
 
