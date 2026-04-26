@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.android.ext.koin.androidContext
@@ -32,6 +33,10 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 class App : Application() {
+
+    companion object {
+        private const val WIDGET_REFRESH_DEBOUNCE_MS = 250L
+    }
 
     // Koin dependency injection definitions
     private val appModule = module {
@@ -72,6 +77,7 @@ class App : Application() {
     private fun observeWidgetUpdates(dbHelper: IPeriodDatabaseHelper) {
         applicationScope.launch(Dispatchers.IO) {
             dbHelper.dbWriteTrigger
+                .debounce(WIDGET_REFRESH_DEBOUNCE_MS)
                 .onEach { updateAllWidgets(applicationContext) }
                 .collect()
         }

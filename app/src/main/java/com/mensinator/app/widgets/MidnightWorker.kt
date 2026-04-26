@@ -37,6 +37,7 @@ class MidnightWorker(val context: Context, params: WorkerParameters) : Coroutine
     }
 
     override suspend fun doWork(): Result {
+        // Let the date boundary settle before recomputing countdown-based widget text.
         delay(MIDNIGHT_UPDATE_DELAY_MS)
         updateAllWidgets(applicationContext)
         // Schedule the next update for the following midnight
