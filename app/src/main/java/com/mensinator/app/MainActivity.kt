@@ -9,18 +9,14 @@ import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.lifecycleScope
 import com.mensinator.app.NotificationChannelConstants.channelDescription
 import com.mensinator.app.NotificationChannelConstants.channelId
 import com.mensinator.app.NotificationChannelConstants.channelName
 import com.mensinator.app.ui.navigation.MensinatorApp
 import com.mensinator.app.ui.theme.MensinatorTheme
-import com.mensinator.app.widgets.MidnightTrigger
-import com.mensinator.app.widgets.WidgetInstances
+import com.mensinator.app.widgets.updateAllWidgets
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.KoinAndroidContext
 
@@ -60,12 +56,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateWidgetsOnAppStart() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Emit to midnight trigger to force widget data refresh
-                MidnightTrigger.midnightTrigger.emit(Unit)
-                // Update all widgets concurrently for better performance
-                WidgetInstances.map { receiver ->
-                    async { receiver.glanceAppWidget.updateAll(this@MainActivity) }
-                }.awaitAll()
+                updateAllWidgets(this@MainActivity)
             } catch (e: Exception) {
                 Log.e("MainActivity", "Failed to update widgets on app start", e)
             }

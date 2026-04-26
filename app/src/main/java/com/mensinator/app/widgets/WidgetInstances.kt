@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.updateAll
 import org.koin.core.context.GlobalContext.get
 import org.koin.dsl.module
 
@@ -22,6 +23,10 @@ val WidgetInstances
         get().get<WidgetPeriodDaysWithLabelWithoutBackgroundReceiver>(),
         get().get<WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver>(),
     )
+
+suspend fun updateAllWidgets(context: Context) {
+    WidgetInstances.forEach { it.glanceAppWidget.updateAll(context) }
+}
 
 abstract class BaseWidgetReceiver : GlanceAppWidgetReceiver() {
     override fun onUpdate(

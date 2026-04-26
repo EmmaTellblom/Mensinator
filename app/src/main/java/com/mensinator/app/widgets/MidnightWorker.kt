@@ -1,12 +1,12 @@
 package com.mensinator.app.widgets
 
 import android.content.Context
-import androidx.glance.appwidget.updateAll
 import androidx.work.*
 import java.time.Duration
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
 
 class MidnightWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -35,8 +35,8 @@ class MidnightWorker(val context: Context, params: WorkerParameters) : Coroutine
     }
 
     override suspend fun doWork(): Result {
-        MidnightTrigger.midnightTrigger.emit(Unit)
-        WidgetInstances.forEach { it.glanceAppWidget.updateAll(context) }
+        delay(1000)
+        updateAllWidgets(applicationContext)
         // Schedule the next update for the following midnight
         scheduleNextMidnight(applicationContext)
         
