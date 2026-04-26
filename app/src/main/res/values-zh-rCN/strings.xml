@@ -86,7 +86,7 @@
     <string name="days"> 天</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">关于%1$s的症状</string>
+    <string name="symptoms_dialog_title">编辑症状</string>
     <string name="create_new_symptom_button">创建新症状</string>
     <string name="save_symptoms_button">保存症状</string>
     <string name="cancel_button">取消</string>

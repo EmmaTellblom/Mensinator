@@ -73,7 +73,7 @@
     <string name="average_luteal_length">Durée moyenne de la phase lutéale :</string>
     <string name="days">jours</string>
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Symptômes pour %1$s</string>
+    <string name="symptoms_dialog_title">Modifier les symptômes</string>
     <string name="create_new_symptom_button">Créer un nouveau symptôme</string>
     <string name="save_symptoms_button">Enregistrer les symptômes</string>
     <string name="cancel_button">Annuler</string>

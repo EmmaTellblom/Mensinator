@@ -127,10 +127,8 @@ fun CalendarScreen(
         // Show the SymptomsDialog
         if (showSymptomsDialog.value && state.value.selectedDays.isNotEmpty()) {
             val activeSymptoms = state.value.activeSymptoms
-            val date = state.value.selectedDays.last()
 
             EditSymptomsForDaysDialog(
-                date = date,  // Pass the last selected date
                 symptoms = activeSymptoms,
                 currentlyActiveSymptomIds = state.value.activeSymptomIdsForLatestSelectedDay,
                 onSave = { selectedSymptoms ->
@@ -414,12 +412,13 @@ fun Day(
                 ) {
                     symptomsForDay.forEach { symptom ->
                         val symptomColor = state.calendarColors.symptomColors[symptom] ?: Color.Red
-
+                        var circleBorder = Color.White
+                        if(isDarkMode()) { circleBorder = Color.Black }
                         Box(
                             modifier = Modifier
                                 .size(11.dp)
                                 .background(symptomColor, CircleShape)
-                                .border(1.dp, Color.LightGray.copy(alpha = 0.25f), CircleShape)
+                                .border(1.dp, circleBorder, CircleShape)
                         )
                     }
                 }

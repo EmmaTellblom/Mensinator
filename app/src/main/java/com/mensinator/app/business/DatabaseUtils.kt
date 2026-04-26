@@ -155,13 +155,13 @@ object DatabaseUtils {
         """)
         // Set all colors for the standard symptoms
         db.execSQL("""
-            UPDATE symptoms SET color = 'DarkRed' where symptom_name = 'Heavy_Flow'
+            UPDATE symptoms SET color = 'DarkPink' where symptom_name = 'Heavy_Flow'
         """)
         db.execSQL("""
-            UPDATE symptoms SET color = 'Red' where symptom_name = 'Medium_Flow'
+            UPDATE symptoms SET color = 'Pink' where symptom_name = 'Medium_Flow'
         """)
         db.execSQL("""
-            UPDATE symptoms SET color = 'LightRed' where symptom_name = 'Light_Flow'
+            UPDATE symptoms SET color = 'LightPink' where symptom_name = 'Light_Flow'
         """)
 
         // Fixed symptom colors, so we can remove setting for symptom indicator
