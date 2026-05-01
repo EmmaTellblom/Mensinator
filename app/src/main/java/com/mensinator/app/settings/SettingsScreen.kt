@@ -143,6 +143,16 @@ fun SettingsScreen(
             },
             onOpenIntPicker = { viewModel.showIntPicker(it) }
         )
+        SettingNumberSelection(
+            intSetting = IntSetting.USER_DEFINED_PERIOD_LENGTH,
+            text = "${viewState.userDefinedPeriodLength}",
+            openIntPickerForSetting = viewState.openIntPickerForSetting,
+            onClosePicker = { viewModel.showIntPicker(null) },
+            onNumberChange = { intSetting: IntSetting, newNumber: Int ->
+                viewModel.updateIntSetting(intSetting, newNumber)
+            },
+            onOpenIntPicker = { viewModel.showIntPicker(it) }
+        )
         SettingLanguagePicker()
         SettingSwitch(
             text = stringResource(BooleanSetting.SHOW_CYCLE_NUMBERS.stringResId),

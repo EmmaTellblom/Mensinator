@@ -45,7 +45,7 @@ class App : Application() {
         singleOf(::AndroidNotificationScheduler) { bind<IAndroidNotificationScheduler>() }
         single { androidContext().getSystemService(ALARM_SERVICE) as AlarmManager }
 
-        viewModel { CalendarViewModel(get(), get(), get(), get()) }
+        viewModel { CalendarViewModel(get(), get(), get(), get(), get()) }
         viewModel { ManageSymptomsViewModel(get()) }
         viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get()) }
         viewModel { StatisticsViewModel(get(), get(), get(), get(), get()) }

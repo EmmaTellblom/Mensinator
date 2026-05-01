@@ -32,6 +32,7 @@ object ResourceMapper {
         "Medium_Flow" to R.string.medium,
         "Light_Flow" to R.string.light,
         "screen_protection" to R.string.screen_protection,
+        "user_defined_period_length" to R.string.user_defined_period_length,
         // colors
 //        "Red" to R.string.color_red,
 //        "Green" to R.string.color_green,
