@@ -62,7 +62,7 @@
     <string name="next_predicted_ovulation">اگلی بیضہ دانی کے اخراج کی توقع:</string>
     <string name="next_predicted_ovulation_default">-</string>
     <string name="days">ایام</string>
-    <string name="symptoms_dialog_title">%1$s کے لئے علامات</string>
+    <string name="symptoms_dialog_title">کے لئے علامات</string>
     <string name="create_new_symptom_button">ننئ علامت کا اندراج کریں</string>
     <string name="save_symptoms_button">علامت محفوظ کریں</string>
     <string name="heavy">تیز بہاوء</string>
