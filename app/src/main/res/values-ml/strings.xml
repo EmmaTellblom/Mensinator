@@ -70,7 +70,7 @@
     <string name="next_predicted_ovulation_default">അടുത്ത ഓവുലേഷൻ പ്രവചിക്കാൻ മതിയായ ഡാറ്റ ഇല്ല</string>
     <string name="average_luteal_length">ശരാശരി ല്യൂട്ടിയൽ ഘട്ട ദൈർഘ്യം:</string>
     <string name="days">ദിവസങ്ങൾ</string>
-    <string name="symptoms_dialog_title">%1$sനുള്ള ലക്ഷണങ്ങൾ</string>
+    <string name="symptoms_dialog_title">നുള്ള ലക്ഷണങ്ങൾ</string>
     <string name="create_new_symptom_button">പുതിയ ലക്ഷണം സൃഷ്ടിക്കുക</string>
     <string name="save_symptoms_button">ലക്ഷണങ്ങൾ സേവ് ചെയ്യുക</string>
     <string name="cancel_button">റദ്ദാക്കുക</string>
