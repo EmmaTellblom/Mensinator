@@ -14,7 +14,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -183,7 +183,7 @@ fun DropdownMenu(
                 ),
                 shape = roundedCornerShape,
                 modifier = Modifier.menuAnchor(
-                    type = MenuAnchorType.PrimaryNotEditable,
+                    type = ExposedDropdownMenuAnchorType.PrimaryNotEditable,
                     enabled = true
                 )
             )

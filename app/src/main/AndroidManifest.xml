@@ -87,6 +87,10 @@
             </intent-filter>
         </receiver>
 
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="dataSync" />
+
     </application>
 
 </manifest>

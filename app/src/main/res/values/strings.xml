@@ -162,8 +162,10 @@
     <string name="disclaimer">• This is a hobby project and is not intended for medical use. We are simply doing this for our own needs. But we do welcome ideas and requests. Join us on Discord or send us an email:\nmensinator.app@gmail.com</string>
 
     <!-- Widget Strings -->
-    <string name="widget_days_until_period_no_label">Days until period, without label</string>
-    <string name="widget_days_until_period_with_label">Days until period, with label</string>
+    <string name="widget_days_until_period_no_label_with_bg">Days until period, without label, with background</string>
+    <string name="widget_days_until_period_with_label_with_bg">Days until period, with label, with background</string>
+    <string name="widget_days_until_period_no_label_no_bg">Days until period, without label, without background</string>
+    <string name="widget_days_until_period_with_label_no_bg">Days until period, with label, without background</string>
     <!-- When a period widget without labels is shown, the widget only shows "7 P" for example -->
     <string name="widget_period_abbreviation">P</string>
     <string name="widget_ovulation_abbreviation">O</string>
