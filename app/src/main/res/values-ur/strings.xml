@@ -112,8 +112,6 @@
     <string name="our_story">ہم دو عورتیں ہیں جو بڑی کورپریشنس کے ہمارے ڈیٹا بیچنے سے تھک چکی تھیں۔ ہمارا ایپ تمام ڈیٹا مقامی طور پر آپکے موبائیل میں محفوظ ہوتا ہے اور ہمیں اس تک رسائی حاصل نہیں۔\n ہم آپکی رازداری کی قدر کرتے ہیں اور کوئی ذاتی معلومات محفوظ یا بانٹتے نہیں ہیں۔ اس ایپ کو لانچ کرنے کے بعد سے ہم مزید بڑھ چکے ہیں اور اب ہمارا اپنا ڈسکورڈ سرور بھی ہے جہاں لوگ اس ایپ کے حوالے سے پرجوش ہیں اور ہماری اور مدد کرنا چاہتے ہیں۔\n\nیہاں سے ہمارے ڈسکورڈ سرور میں شامل ہوں: https://discord.gg/tHA2k3bFRN</string>
     <string name="disclaimer_header">دستبردار:</string>
     <string name="disclaimer">• یہ ایک مشغولیہ پروجیکٹ ہے اور طبی استعمال کے لئے نہیں ہے۔ ہم اسے فقط اپنی ضروریات کے لئے کر رہے ہیں۔ لیکن ہم درخواست خیالات اور نظریات کو خوشآمد کرتے ہیں۔ ڈسکورڈ پر ہمارے ساتھ شامل ہوں یا ہمیں ا ِی میل کریں:\nmensinator.app@gmail.com</string>
-    <string name="widget_days_until_period_no_label">حیض آنے تک ایام، غیر لیبل</string>
-    <string name="widget_days_until_period_with_label">حیض آنے تک ایام، لیبل کے ساتھ</string>
     <string name="widget_period_abbreviation">ح</string>
     <string name="widget_ovulation_abbreviation">ب</string>
     <string name="close_button">بند</string>
