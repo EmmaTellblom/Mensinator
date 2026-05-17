@@ -21,11 +21,8 @@ import com.mensinator.app.ui.theme.MensinatorTheme
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentSet
-import java.time.LocalDate
-
 @Composable
 fun EditSymptomsForDaysDialog(
-    date: LocalDate,
     symptoms: PersistentSet<Symptom>,
     currentlyActiveSymptomIds: PersistentSet<Int>,
     onSave: (PersistentSet<Symptom>) -> Unit,
@@ -62,7 +59,7 @@ fun EditSymptomsForDaysDialog(
             }
         },
         title = {
-            Text(text = stringResource(id = R.string.symptoms_dialog_title, date))
+            Text(text = stringResource(id = R.string.symptoms_dialog_title))
         },
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
@@ -100,14 +97,14 @@ fun EditSymptomsForDaysDialog(
 @Composable
 private fun EditSymptomsForDaysDialog_OneDayPreview() {
     val symptoms = persistentSetOf(
-        Symptom(1, "Light", 0, ""),
-        Symptom(2, "Medium", 1, ""),
+        Symptom(1, "Heavy Flow", 0, ""),
+        Symptom(2, "Light Flow", 1, ""),
+        Symptom(3, "Medium Flow", 2, ""),
     )
     MensinatorTheme {
         EditSymptomsForDaysDialog(
-            date = LocalDate.now(),
             symptoms = symptoms,
-            currentlyActiveSymptomIds = persistentSetOf(2),
+            currentlyActiveSymptomIds = persistentSetOf(3),
             onSave = {},
             onCancel = { },
         )
@@ -119,14 +116,14 @@ private fun EditSymptomsForDaysDialog_OneDayPreview() {
 @Composable
 private fun EditSymptomsForDaysDialog_MultipleDaysPreview() {
     val symptoms = persistentSetOf(
-        Symptom(1, "Light", 0, ""),
-        Symptom(2, "Medium", 1, ""),
+        Symptom(1, "Heavy Flow", 0, ""),
+        Symptom(2, "Light Flow", 1, ""),
+        Symptom(3, "Medium Flow", 2, ""),
     )
     MensinatorTheme {
         EditSymptomsForDaysDialog(
-            date = LocalDate.now(),
             symptoms = symptoms,
-            currentlyActiveSymptomIds = persistentSetOf(2),
+            currentlyActiveSymptomIds = persistentSetOf(3),
             onSave = {},
             onCancel = { },
         )

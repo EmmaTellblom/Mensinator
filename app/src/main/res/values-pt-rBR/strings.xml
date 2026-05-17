@@ -62,7 +62,7 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Duração médio da fase lútea:</string>
     <string name="days">Dias</string>
-    <string name="symptoms_dialog_title">Sintomas para %1$s</string>
+    <string name="symptoms_dialog_title">Editar sintomas</string>
     <string name="create_new_symptom_button">Criar novo sintoma</string>
     <string name="save_symptoms_button">Salvar sintoma</string>
     <string name="cancel_button">Cancelar</string>

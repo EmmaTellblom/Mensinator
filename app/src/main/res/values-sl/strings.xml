@@ -79,7 +79,7 @@
     <string name="days"> dni</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Simptomi za %1$s</string>
+    <string name="symptoms_dialog_title">Uredi simptome</string>
     <string name="create_new_symptom_button">Ustvari nov simptom</string>
     <string name="save_symptoms_button">Shrani simptome</string>
     <string name="cancel_button">Prekliči</string>

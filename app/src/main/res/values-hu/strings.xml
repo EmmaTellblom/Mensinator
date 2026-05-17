@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">Mensinator</string>
+
+    <!-- Home -->
+    <string name="previous">Előző</string>
+    <string name="next">Következő</string>
+    <string name="period_button">Menstruáció</string>
+    <string name="symptoms_button">Tünetek</string>
+    <string name="ovulation_button">Ovuláció</string>
+    <string name="period_button_selected">Menstruáció eltávolítása</string>
+    <string name="period_button_not_selected">Menstruáció hozzáadása</string>
+    <string name="ovulation_button_selected">Ovuláció eltávolítása</string>
+    <string name="ovulation_button_not_selected">Ovuláció hozzáadása</string>
+
+    <!-- Home Alerts -->
+    <string name="empty_click_alert">Nincs mentendő vagy eltávolítandó dátum</string>
+    <string name="successfully_saved_alert">Változtatások sikeresen mentve</string>
+    <string name="no_data_selected">Nincs kijelölt dátum</string>
+    <string name="only_day_alert">Az ovuláció csak egy napra vonatkozhat!</string>
+    <string name="success_saved_ovulation">Ovuláció sikeresen mentve</string>
+    <string name="no_date_selected_ovulation">Nem lett ovulációs nap kijelölve</string>
+
+    <!-- navigation -->
+    <string name="home_page">Kezdőlap</string>
+    <string name="statisic_page">Statisztikák</string>
+    <string name="symptoms_page">Tünetek</string>
+    <string name="settings_page">Beállítások</string>
+
+    <!-- symptoms page -->
+    <string name="delete_symptom">Tünet törlése</string>
+    <string name="delete_question">Biztosan törölni szeretnéd ezt a tünetet?</string>
+    <string name="delete_button">Törlés</string>
+
+    <!-- Settings -->
+    <string name="app_settings">Alkalmazásbeállítások</string>
+    <string name="colors">Színek</string>
+    <string name="period_color">Menstruáció</string>
+    <string name="selection_color">Kijelölés</string>
+    <string name="period_selection_color">Menstruáció kijelölés</string>
+    <string name="expected_period_color">Várható menstruáció</string>
+    <string name="ovulation_color">Ovuláció</string>
+    <string name="expected_ovulation_color">Várható ovuláció</string>
+    <string name="reminders">Emlékeztetők</string>
+    <string name="days_before_reminder">Napok az emlékeztetőig</string>
+    <string name="period_notification_title">Menstruációs értesítés üzenete</string>
+    <string name="period_notification_message">A menstruációd hamarosan kezdődik</string>
+    <string name="change_text">Szöveg módosítása</string>
+    <string name="other_settings">Egyéb beállítások</string>
+    <string name="luteal_phase_calculation">Luteális fázis számítása</string>
+    <string name="period_history">Menstruációs előzmények</string>
+    <string name="ovulation_history">Ovulációs előzmények</string>
+    <string name="language">Nyelv</string>
+    <string name="change_language">Nyelv módosítása</string>
+    <string name="cycle_numbers_show">Ciklus számok megjelenítése</string>
+    <string name="screen_protection">Képernyőfelvétel tiltása</string>
+    <string name="close">Bezárás</string>
+    <string name="save">Mentés</string>
+    <string name="warning">Figyelmeztetés</string>
+    <string name="luteal_calculation_message">Ez a számítás a luteális napok száma (ovulációtól a menstruációig eltelt napok) alapján jelzi előre a következő menstruációt.\nEnnek működéséhez az alkalmazásban kell követned az ovulációkat, és legalább három ovulációnak kell szerepelnie az előzményekben.\nHa nem vagy biztos ebben a beállításban, kapcsold ki, vagy csatlakozz a Discord szerverünkhöz segítségért.\nHa a feltételek nem teljesülnek, az előrejelzés nem fog működni.\nEz a számítás akkor hasznos, ha szabálytalan az ovulációd, de viszonylag szabályos a luteális napok száma.
+    </string>
+
+    <!-- Color values -->
+    <string name="color_red">Piros</string>
+    <string name="color_green">Zöld</string>
+    <string name="color_blue">Kék</string>
+    <string name="color_yellow">Sárga</string>
+    <string name="color_cyan">Cián</string>
+    <string name="color_magenta">Magenta</string>
+    <string name="color_black">Fekete</string>
+    <string name="color_white">Fehér</string>
+    <string name="color_darkgray">Sötétszürke</string>
+    <string name="color_gray">Világosszürke</string>
+
+    <!-- Statistics -->
+    <string name="statistics_title">Statisztikák</string>
+    <string name="period_count">Követett menstruációk: </string>
+    <string name="average_cycle_length">Átlagos ciklushossz: </string>
+    <string name="average_period_length">Átlagos menstruáció hossza: </string>
+    <string name="next_period_start_past">Következő várható menstruáció: </string>
+    <string name="next_period_start_future">Következő várható menstruáció: </string>
+    <string name="ovulation_count">Követett ovulációk: </string>
+    <string name="average_ovulation_day">Átlagos ovulációs nap: </string>
+    <string name="next_predicted_ovulation">Következő várható ovuláció: </string>
+    <string name="next_predicted_ovulation_default">-</string>
+    <string name="average_luteal_length">Átlagos luteális fázis hossza: </string>
+    <string name="days"> nap</string>
+
+    <!-- Symptoms -->
+    <string name="symptoms_dialog_title">Tünetek szerkesztése</string>
+    <string name="create_new_symptom_button">Új tünet létrehozása</string>
+    <string name="save_symptoms_button">Tünetek mentése</string>
+    <string name="cancel_button">Mégse</string>
+    <string name="heavy">Erős vérzés</string>
+    <string name="medium">Közepes vérzés</string>
+    <string name="light">Gyenge vérzés</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="create_new_symptom_dialog_title">Új tünet létrehozása</string>
+    <string name="symptom_name_label">Tünet neve</string>
+    <string name="save_button">Mentés</string>
+
+    <!-- CreateNewSymptomDialog -->
+    <string name="manage_symptoms">Tünetek kezelése</string>
+
+    <!-- Calender -->
+    <string name="calendar_title">Naptár</string>
+    <string name="mon">H</string>
+    <string name="tue">K</string>
+    <string name="wed">Sze</string>
+    <string name="thu">Cs</string>
+    <string name="fri">P</string>
+    <string name="sat">Szo</string>
+    <string name="sun">V</string>
+
+    <string name="january">Január</string>
+    <string name="february">Február</string>
+    <string name="march">Március</string>
+    <string name="april">Április</string>
+    <string name="may">Május</string>
+    <string name="june">Június</string>
+    <string name="july">Július</string>
+    <string name="august">Augusztus</string>
+    <string name="september">Szeptember</string>
+    <string name="october">Október</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <!-- Import Export Dialog -->
+    <string name="export_import_title">Adatok exportálása/importálása</string>
+    <string name="export_button">Exportálás</string>
+    <string name="import_button">Importálás</string>
+    <string name="export_success_toast">Exportálva ide: %1$s</string>
+    <string name="import_success_toast">A fájl sikeresen importálva</string>
+    <string name="import_failure_toast">A fájl importálása sikertelen</string>
+    <string name="export_path_label">Exportálás ide: %1$s</string>
+    <string name="import_path_label">Importálási útvonal: %1$s</string>
+    <string name="import_dialog_message">Válassz fájlt az adatok importálásához.</string>
+    <string name="export_dialog_message">Válassz célmappát a naptár bejegyzések, tünetek és egyéb adatok exportálásához.</string>
+    <string name="select_source">Forrásalkalmazás kiválasztása</string>
+
+    <!-- Frequently Asked Questions -->
+    <string name="faq_title">Gyakran Ismételt Kérdések</string>
+
+    <!-- User Manual Section -->
+    <string name="user_manual_header">Felhasználói kézikönyv</string>
+    <string name="how_to_use">Használat:</string>
+    <string name="select_dates">• Dátumok kijelölése: Érintsd meg a dátumot a kijelöléséhez vagy megszüntetéséhez.</string>
+    <string name="add_or_remove_dates">• Menstruációs napok hozzáadása vagy eltávolítása: A dátumok kijelölése után kattints a \'Hozzáadás vagy eltávolítás\' gombra.</string>
+    <string name="symptoms">• Tünetek: Kattints a \'Tünetek\' gombra a kijelölt naphoz tartozó tünetek megtekintéséhez vagy hozzáadásához.</string>
+    <string name="ovulation">• Ovuláció: Jelölj ki egyetlen dátumot, majd kattints az ovuláció gombra. Az eltávolításhoz jelöld ki a dátumot, és nyomd meg újra a gombot.</string>
+    <string name="statistics">• Statisztikák: Kattints az alsó menüben a statisztikák ikonra.</string>
+    <string name="import_export">• Import/Export: Kattints a beállítások gombra az alsó menüben, majd görgess le a beállítások között. Kattints az import/export opcióra az adataid importálásához vagy exportálásához. Ez KÖTELEZŐ, ha új eszközre viszed át az adataidat!</string>
+    <string name="calculations">• Számítások: \nA menstruációk a ciklus átlagos hossza és a vérzés átlagos hossza alapján kerülnek kiszámításra.\nA menstruációk az átlagos luteális fázis alapján is kiszámíthatók. A számítás az utolsó 5 ciklust veszi figyelembe az átlagos luteális fázis meghatározásához. Ez a beállításokban aktiválható.\nAz ovuláció az átlagos ovulációs ciklushossz alapján kerül kiszámításra.</string>
+    <string name="features_coming_soon">Hamarosan érkező funkciók:</string>
+    <string name="upcoming_features">• Nézd meg a Github oldalunkat a legújabb fejlesztésekért!</string>
+    <string name="our_story_header">A mi történetünk</string>
+    <string name="our_story">Két nő vagyunk, akik belefáradtak abba, hogy adataikat nagy vállalatoknak adják el. Az alkalmazásunk minden adatot helyben tárol az eszközödön, és mi semmilyen hozzáféréssel nem rendelkezünk hozzá.\nNagyra értékeljük az adatvédelmedet, és nem mentünk vagy osztunk meg semmilyen személyes adatot. Az alkalmazás indítása óta növekedtünk, és most már saját Discord szerverünk van, ahol lelkes emberek segítenek nekünk!\n\nCsatlakozz hozzánk a Discordon: https://discord.gg/tHA2k3bFRN</string>
+    <string name="disclaimer_header">Jogi nyilatkozat:</string>
+    <string name="disclaimer">• Ez egy hobbi projekt, és nem orvosi célokra készült. Egyszerűen a saját igényeinkre fejlesztjük. De szívesen fogadunk ötleteket és kéréseket. Csatlakozz hozzánk a Discordon, vagy küldj nekünk e-mailt:\nmensinator.app@gmail.com</string>
+
+    <!-- Widget Strings -->
+    <string name="widget_days_until_period_no_label">Napok a menstruációig, felirat nélkül</string>
+    <string name="widget_days_until_period_with_label">Napok a menstruációig, felirattal</string>
+    <string name="widget_period_abbreviation">M</string>
+    <string name="widget_ovulation_abbreviation">O</string>
+
+    <!-- Universal/ Repeated Strings -->
+    <string name="close_button">Bezárás</string>
+    <string name="data_settings">Biztonsági mentés</string>
+    <string name="data">Mentett adatok</string>
+    <string name="Import">Importálás</string>
+    <string name="data_export">Exportálás</string>
+    <string name="select_file">Fájl kiválasztása importáláshoz</string>
+    <string name="select_file_button">Kiválasztás</string>
+    <string name="import_export_data">Import / Export</string>
+    <string name="import_data">Adatok importálása</string>
+    <string name="export_data">Adatok exportálása</string>
+    <string name="about_app">Az alkalmazásról</string>
+    <string name="rename_symptom">Tünet átnevezése</string>
+</resources>
