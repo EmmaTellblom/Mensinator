@@ -161,8 +161,6 @@
     <string name="disclaimer">• Ez egy hobbi projekt, és nem orvosi célokra készült. Egyszerűen a saját igényeinkre fejlesztjük. De szívesen fogadunk ötleteket és kéréseket. Csatlakozz hozzánk a Discordon, vagy küldj nekünk e-mailt:\nmensinator.app@gmail.com</string>
 
     <!-- Widget Strings -->
-    <string name="widget_days_until_period_no_label">Napok a menstruációig, felirat nélkül</string>
-    <string name="widget_days_until_period_with_label">Napok a menstruációig, felirattal</string>
     <string name="widget_period_abbreviation">M</string>
     <string name="widget_ovulation_abbreviation">O</string>
 

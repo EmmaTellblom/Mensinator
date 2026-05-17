@@ -156,8 +156,6 @@
     <string name="warning">Предупреждение</string>
     <string name="luteal_calculation_message">В этом расчёте используется ваше количество лютеиновых дней (дни от овуляции до периода менструации) для прогнозирования вашего следующей менструации.\nЧтобы это работало, вам нужно отслеживать свои овуляции в приложении и иметь запись как минимум трёх овуляций в истории.\nЕсли вы не уверены в этой настройке то выключите её или присоединяйтесь к нашему чату в Discord, чтобы обратиться за помощью.\nЕсли критериев недостаточно то прогноз не сработает.\nЭтот расчёт хорош если у вас нерегулярные овуляции но довольно постоянное количество лютеиновых дней.</string>
     <string name="select_source">Выберите источник приложения</string>
-    <string name="widget_days_until_period_no_label">Дни до месячных, без названия</string>
-    <string name="widget_days_until_period_with_label">Дней до месячных, с названием</string>
     <string name="widget_period_abbreviation">М</string>
     <string name="widget_ovulation_abbreviation">О</string>
 </resources>
