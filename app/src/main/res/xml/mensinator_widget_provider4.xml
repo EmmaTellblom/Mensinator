@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="50dp"
-    android:minHeight="50dp"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:targetCellWidth="1"
+    android:targetCellHeight="1"
+    android:previewLayout="@layout/widget_preview_without_label_no_bg"
     android:description="@string/widget_days_until_period_no_label_no_bg"
 />

@@ -60,9 +60,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateWidgetsOnAppStart() {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                // Emit to midnight trigger to force widget data refresh
                 MidnightTrigger.midnightTrigger.emit(Unit)
-                // Update all widgets concurrently for better performance
                 WidgetInstances.map { receiver ->
                     async { receiver.glanceAppWidget.updateAll(this@MainActivity) }
                 }.awaitAll()

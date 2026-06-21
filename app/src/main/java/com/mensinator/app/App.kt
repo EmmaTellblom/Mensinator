@@ -74,18 +74,10 @@ class App : Application() {
 
         @SuppressLint("CheckResult")
         applicationScope.launch {
-            glanceAppWidgetManager.setWidgetPreviews(
-                WidgetPeriodDaysWithLabelWithBackgroundReceiver::class
-            )
-            glanceAppWidgetManager.setWidgetPreviews(
-                WidgetPeriodDaysWithoutLabelWithBackgroundReceiver::class
-            )
-            glanceAppWidgetManager.setWidgetPreviews(
-                WidgetPeriodDaysWithLabelWithoutBackgroundReceiver::class
-            )
-            glanceAppWidgetManager.setWidgetPreviews(
-                WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver::class
-            )
+            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithLabelWithBackgroundReceiver::class)
+            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithLabelWithoutBackgroundReceiver::class)
+            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithoutLabelWithBackgroundReceiver::class)
+            glanceAppWidgetManager.setWidgetPreviews(WidgetPeriodDaysWithoutLabelWithoutBackgroundReceiver::class)
         }
     }
 }

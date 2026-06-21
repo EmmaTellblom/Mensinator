@@ -16,7 +16,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,8 +36,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.mensinator.app.BuildConfig
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
+import com.mensinator.app.widgets.WidgetDebugDayShift
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -168,6 +176,11 @@ fun SettingsScreen(
         AboutSection(viewModel, viewState)
         Spacer(Modifier.height(16.dp))
 
+        if (BuildConfig.DEBUG) {
+            WidgetDebugSection()
+            Spacer(Modifier.height(16.dp))
+        }
+
         if (viewState.showLutealWarningDialog) {
             LutealWarningDialog(onDismissRequest = { viewModel.showLutealWarningDialog(false) })
         }
@@ -292,6 +305,58 @@ private fun ColorSection(
             viewModel.updateColorSetting(colorSetting, newColor)
         },
         onOpenColorPicker = { viewModel.showColorPicker(it) },
+    )
+}
+
+/**
+ * Debug-only controls for simulating a day change so widgets can be tested without
+ * altering the system clock. Hidden in release builds via [BuildConfig.DEBUG].
+ */
+@Composable
+private fun WidgetDebugSection() {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var offset by remember { mutableIntStateOf(WidgetDebugDayShift.getOffset(context)) }
+
+    fun apply(newOffset: Int) {
+        offset = newOffset
+        WidgetDebugDayShift.setOffset(context, newOffset)
+        scope.launch(Dispatchers.IO) {
+            WidgetDebugDayShift.refreshWidgets(context)
+        }
+    }
+
+    SettingSectionHeader(text = "Debug (debug builds only)")
+    Spacer(Modifier.height(4.dp))
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "Simulated day offset: $offset",
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = { apply(offset - 1) },
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) { Text("-1") }
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = { apply(offset + 1) },
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) { Text("+1") }
+        Spacer(Modifier.width(4.dp))
+        TextButton(
+            onClick = { apply(0) },
+            colors = ButtonDefaults.filledTonalButtonColors()
+        ) { Text("Reset") }
+    }
+    Text(
+        text = "Advances the day the widgets use to count down, without changing the system clock.",
+        style = MaterialTheme.typography.labelSmall,
     )
 }
 

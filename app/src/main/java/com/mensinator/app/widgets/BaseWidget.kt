@@ -15,26 +15,27 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
 
-sealed class WidgetType {
-    data object Period : WidgetType()
-    data object Ovulation : WidgetType()
-}
-
-class BaseWidget(
-    val widgetType: WidgetType,
+/**
+ * Shared rendering logic for the period widgets. Each on-screen design is a distinct
+ * subclass (see [WidgetInstances]) — this matters because Glance resolves which widget
+ * instances to refresh in [androidx.glance.appwidget.GlanceAppWidget.updateAll] by the
+ * concrete class. If several receivers shared one class, updateAll() would update the
+ * wrong instances and designs would stomp on each other.
+ */
+abstract class BaseWidget(
     val showLabel: Boolean,
     val showBackground: Boolean,
 ) : GlanceAppWidget(), KoinComponent {
 
     private val calculationsHelper: CalculationsHelper by inject()
+    private val appContext: Context by inject()
 
-    override val stateDefinition: GlanceStateDefinition<*> =
-        PreferencesGlanceStateDefinition
+    override val stateDefinition: GlanceStateDefinition<*> = PreferencesGlanceStateDefinition
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             val state = getData.collectAsState(WidgetData("", "", "", ""))
-            WidgetContent(widgetType, showLabel, showBackground, state)
+            WidgetContent(showLabel, showBackground, state)
         }
     }
 
@@ -42,14 +43,8 @@ class BaseWidget(
         MidnightTrigger.midnightTrigger
     ) { nextPeriod, _ ->
         WidgetData(
-            daysUntilPeriodWithoutText = formatDaysUntilPeriod(
-                nextPeriod,
-                NextPeriodFormat.OnlyDays
-            ),
-            daysUntilPeriodWithText = formatDaysUntilPeriod(
-                nextPeriod,
-                NextPeriodFormat.MediumLengthText
-            ),
+            daysUntilPeriodWithoutText = formatDaysUntilPeriod(nextPeriod, NextPeriodFormat.OnlyDays),
+            daysUntilPeriodWithText = formatDaysUntilPeriod(nextPeriod, NextPeriodFormat.MediumLengthText),
             daysUntilOvulationWithText = "",
             daysUntilOvulationWithoutText = ""
         )
@@ -68,44 +63,21 @@ class BaseWidget(
                     )
                 )
             }
-            WidgetContent(widgetType, showLabel, showBackground, state)
+            WidgetContent(showLabel, showBackground, state)
         }
     }
 
     @Composable
-    private fun WidgetContent(
-        widgetType: WidgetType,
-        showLabel: Boolean,
-        showBackground: Boolean,
-        state: State<WidgetData>
-    ) {
+    private fun WidgetContent(showLabel: Boolean, showBackground: Boolean, state: State<WidgetData>) {
         val data = state.value
         val context = LocalContext.current
-        val textWithoutLabel = when (widgetType) {
-            WidgetType.Period -> data.daysUntilPeriodWithoutText
-            WidgetType.Ovulation -> data.daysUntilOvulationWithoutText
-        }
-        val textWithLabel = when (widgetType) {
-            WidgetType.Period -> data.daysUntilPeriodWithText
-            WidgetType.Ovulation -> data.daysUntilOvulationWithText
-        }
-        val label = when (widgetType) {
-            WidgetType.Period -> context.getString(R.string.widget_period_abbreviation)
-            WidgetType.Ovulation -> context.getString(R.string.widget_ovulation_abbreviation)
-        }
+        val label = context.getString(R.string.widget_period_abbreviation)
 
         MensinatorGlanceTheme {
             if (showLabel) {
-                WidgetContentWithLabel(
-                    text = textWithLabel,
-                    showBackground = showBackground
-                )
+                WidgetContentWithLabel(text = data.daysUntilPeriodWithText, showBackground = showBackground)
             } else {
-                WidgetContentWithoutLabel(
-                    text = textWithoutLabel,
-                    label = label,
-                    showBackground = showBackground
-                )
+                WidgetContentWithoutLabel(text = data.daysUntilPeriodWithoutText, label = label, showBackground = showBackground)
             }
         }
     }
@@ -115,26 +87,19 @@ class BaseWidget(
         data object MediumLengthText : NextPeriodFormat
     }
 
-    private fun formatDaysUntilPeriod(
-        date: LocalDate?,
-        format: NextPeriodFormat
-    ): String {
-        val daysUntilNextPeriod = LocalDate.now().until(date).days
+    private fun formatDaysUntilPeriod(date: LocalDate?, format: NextPeriodFormat): String {
+        // date is null when no period has been tracked yet. Guard before calling
+        // until(), which throws NullPointerException on a null temporal.
+        if (date == null) {
+            return when (format) {
+                NextPeriodFormat.OnlyDays -> "?"
+                NextPeriodFormat.MediumLengthText -> "Unknown"
+            }
+        }
+        val daysUntilNextPeriod = WidgetDebugDayShift.today(appContext).until(date).days
         return when (format) {
-            NextPeriodFormat.OnlyDays -> {
-                if (date == null) {
-                    "?"
-                } else {
-                    "$daysUntilNextPeriod"
-                }
-            }
-            NextPeriodFormat.MediumLengthText -> {
-                if (date == null) {
-                    "Unknown"
-                } else {
-                    "Period in $daysUntilNextPeriod days"
-                }
-            }
+            NextPeriodFormat.OnlyDays -> "$daysUntilNextPeriod"
+            NextPeriodFormat.MediumLengthText -> "Period in $daysUntilNextPeriod days"
         }
     }
 }

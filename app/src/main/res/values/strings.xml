@@ -169,6 +169,9 @@
     <!-- When a period widget without labels is shown, the widget only shows "7 P" for example -->
     <string name="widget_period_abbreviation">P</string>
     <string name="widget_ovulation_abbreviation">O</string>
+    <!-- Sample values shown only in the widget picker preview -->
+    <string name="widget_preview_sample_number">10</string>
+    <string name="widget_preview_sample_with_label">Period in 10 days</string>
 
 
     <!-- Universal/ Repeated Strings -->

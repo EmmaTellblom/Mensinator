@@ -9,11 +9,7 @@ import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.cornerRadius
-import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.layout.Box
-import androidx.glance.layout.ContentScale
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.padding
+import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
@@ -44,28 +40,23 @@ fun WidgetContentWithLabel(text: String, showBackground: Boolean) {
         GlanceTheme.colors.onSurface
     }
 
-    // Scrollable LazyColumn in case the translations are long
-    LazyColumn(
+    Box(
         modifier = cornerRadiusModifier
             .then(bgModifier)
             .appWidgetBackground()
             .fillMaxSize()
-            .padding(8.dp),
+            .clickable(actionStartActivity<MainActivity>()),
+        contentAlignment = Alignment.Center
     ) {
-        item {
-            Box(
-                modifier = GlanceModifier.clickable(actionStartActivity<MainActivity>()),
-            ) {
-                Text(
-                    text = text,
-                    style = TextStyle(
-                        color = textColor,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Center
-                    ),
-                )
-            }
-        }
+        Text(
+            text = text,
+            modifier = GlanceModifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            style = TextStyle(
+                color = textColor,
+                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            ),
+        )
     }
 }
