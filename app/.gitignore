@@ -111,4 +111,3 @@ cinterop/
 release/
 
 #secrets
-/src/main/assets/adi-registration.properties
