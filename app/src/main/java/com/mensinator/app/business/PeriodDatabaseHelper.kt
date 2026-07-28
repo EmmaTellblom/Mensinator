@@ -132,7 +132,7 @@ class PeriodDatabaseHelper(
 
         cursor.use {
             // If the period already exists (count > 0), do nothing
-            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+            if (cursor.moveToFirst() && (cursor.getInt(0) > 0)) {
                 return
             } else {
                 // If date is new, insert
@@ -152,7 +152,7 @@ class PeriodDatabaseHelper(
             arrayOf(COLUMN_DATE, COLUMN_PERIOD_ID),
             "strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?",
             arrayOf(year.toString(), month.toString().padStart(2, '0')),
-            null, null, null
+            null, null, null,
         )
 
         cursor.use { cursor ->
@@ -160,7 +160,7 @@ class PeriodDatabaseHelper(
             val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
             val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
 
-            if (dateIndex != -1 && periodIdIndex != -1) {
+            if ((dateIndex != -1) && (periodIdIndex != -1)) {
                 while (cursor.moveToNext()) {
                     val dateStr = cursor.getString(dateIndex)
                     val periodId = cursor.getInt(periodIdIndex)
@@ -170,7 +170,7 @@ class PeriodDatabaseHelper(
             } else {
                 Log.e(
                     TAG,
-                    "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
+                    "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex",
                 )
             }
         }
