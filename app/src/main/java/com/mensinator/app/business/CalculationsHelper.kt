@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -34,25 +36,19 @@ class CalculationsHelper(
             // Basic calculation using latest period start dates
             Log.d("TAG", "Basic calculation")
             //do basic calculation here
-            //Use X latest periodstartdates (will return list of X+1)
+            //Use averageCycleLength function
             val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
             if (listPeriodDates.isEmpty()) {
                 null
             } else {
                 // Calculate the cycle lengths between consecutive periods
-                val cycleLengths = mutableListOf<Long>()
-                for (i in 0 until listPeriodDates.size - 1) {
-                    val cycleLength = ChronoUnit.DAYS.between(
-                        listPeriodDates[i],
-                        listPeriodDates[i + 1]
-                    )
-                    cycleLengths.add(cycleLength)
+                val averageCycleLength: Double? = averageCycleLength();
+                if (averageCycleLength == null) {
+                    null
+                } else {
+                    listPeriodDates.last().plusDays(averageCycleLength.toLong())
                 }
-                // Calculate the average cycle length
-                val averageLength = cycleLengths.average()
-
-                listPeriodDates.last().plusDays(averageLength.toLong())
             }.also {
                 Log.d("TAG", "Expected period date Basic: $it")
             }
@@ -144,13 +140,13 @@ class CalculationsHelper(
 
     // Takes the X (periodHistory) latest period start dates and calculates the average cycle length
     // X comes from app_settings in the database
-    override fun averageCycleLength(): Double {
+    override fun averageCycleLength(): Double? {
         val periodDates = dbHelper.getLatestXPeriodStart(periodHistory)
 
         // Check if there are enough dates to calculate cycle lengths
         if (periodDates.size < 2) {
             // Not enough data to calculate cycle lengths
-            return 0.0
+            return null
         }
 
         // List to store cycle lengths
@@ -251,5 +247,40 @@ class CalculationsHelper(
 
     override fun cycleDay(date: LocalDate): Flow<Int?> = dbHelper.dbWriteTrigger.map {
         getCycleDay(date)
+    }
+
+    override fun calculateNextPeriodDates(): PersistentSet<LocalDate> {
+
+        var datesSet: PersistentSet<LocalDate> = persistentSetOf()
+
+        val firstNextPeriodDate: LocalDate? =  if (lutealCalculation == 1) {
+            //go to advanced calculation using X latest ovulations (set by user in settings)
+            Log.d("TAG", "Advanced calculation")
+            advancedNextPeriod()
+        } else {
+            calculateNextPeriod()
+        }
+
+        if (firstNextPeriodDate == null) {
+            return datesSet
+        } else {
+            datesSet = datesSet.add(firstNextPeriodDate)
+        }
+
+        // Basic calculation for far-away periods
+        Log.d("TAG", "Basic calculation")
+        val listPeriodDates = dbHelper.getLatestXPeriodStart(periodHistory)
+
+        if (!listPeriodDates.isEmpty()) {
+            // Calculate the cycle lengths between consecutive periods
+            val averageCycleLength: Double? = averageCycleLength();
+            if (averageCycleLength != null) {
+                for (numberOfCycles in 2..14) {
+                    val daysShift = averageCycleLength * numberOfCycles
+                    datesSet = datesSet.add(listPeriodDates.last().plusDays(daysShift.toLong()))
+                }
+            }
+        }
+        return datesSet
     }
 }

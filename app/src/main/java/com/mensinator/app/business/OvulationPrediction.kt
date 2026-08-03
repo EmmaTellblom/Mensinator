@@ -12,7 +12,7 @@ class OvulationPrediction(
     override fun getPredictedOvulationDate(): LocalDate? {
         val periodCount = dbHelper.getPeriodCount()
         val ovulationCount = dbHelper.getOvulationCount()
-        val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
+        val periodPredictionDate = periodPrediction.getPredictedPeriodDates().firstOrNull()
         val lastOvulationDate = dbHelper.getNewestOvulationDate()
         val firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1)
         val previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)

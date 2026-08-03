@@ -47,18 +47,21 @@ class StatisticsViewModel(
         _viewState.update {
             it.copy(
                 trackedPeriods = periodDatabaseHelper.getPeriodCount().toString(),
-                averageCycleLength = formatDays(calcHelper.averageCycleLength().formatToOneDecimalPoint()),
+                averageCycleLength = formatDays(calcHelper.averageCycleLength()?.formatToOneDecimalPoint()),
                 averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
                 averageLutealLength =formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
                 follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
                 ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
-                periodPredictionDate = periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash,
+                periodPredictionDate = periodPrediction.getPredictedPeriodDates().firstOrNull()?.format(dateFormatter) ?: dash,
                 ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
             )
         }
     }
 
-    private fun formatDays(text: String): String {
+    private fun formatDays(text: String?): String? {
+        if (text == null) {
+            return null;
+        }
         val days = appContext.getString(R.string.days)
         return "$text $days"
     }

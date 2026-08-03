@@ -2,6 +2,7 @@ package com.mensinator.app.business
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import kotlinx.collections.immutable.PersistentSet
 
 /**
  * This helper provides methods to calculate menstrual cycle related data
@@ -29,7 +30,7 @@ interface ICalculationsHelper {
      * X comes from app_settings in the database
      * @return The average cycle length as a double.
      */
-    fun averageCycleLength(): Double
+    fun averageCycleLength(): Double?
 
     /**
      * Calculates the average period length using the latest period start dates.
@@ -63,4 +64,6 @@ interface ICalculationsHelper {
     fun getCycleDay(date: LocalDate): Int?
 
     fun cycleDay(date: LocalDate): Flow<Int?>
+
+    fun calculateNextPeriodDates(): PersistentSet<LocalDate>
 }

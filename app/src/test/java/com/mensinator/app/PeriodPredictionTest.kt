@@ -33,6 +33,6 @@ class PeriodPredictionTest {
 
         periodPrediction = PeriodPrediction(dbHelper, calcHelper)
 
-        assertEquals(null, periodPrediction.getPredictedPeriodDate())
+        assertEquals(null, periodPrediction.getPredictedPeriodDates().firstOrNull())
     }
 }

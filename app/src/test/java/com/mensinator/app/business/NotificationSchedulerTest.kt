@@ -14,6 +14,7 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.collections.immutable.persistentSetOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -76,6 +77,7 @@ class NotificationSchedulerTest {
         val reminderDays = 2
         val today = LocalDate.now()
         val predictedDate = today.plusDays(5)
+        val predictedDates = persistentSetOf(predictedDate)
         val expectedNotificationDate = predictedDate.minusDays(reminderDays.toLong())
         val customMessage = "Custom period message"
         val mappedMessage = "Your period is coming in 2 days"
@@ -83,7 +85,7 @@ class NotificationSchedulerTest {
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns reminderDays.toString()
         }
-        every { periodPrediction.getPredictedPeriodDate() } returns predictedDate
+        every { periodPrediction.getPredictedPeriodDates() } returns predictedDates
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns customMessage
         every {
             ResourceMapper.getPeriodReminderMessage(customMessage, any())
@@ -104,12 +106,12 @@ class NotificationSchedulerTest {
     fun `do not schedule notification when reminder days is zero`() = runTest(testDispatcher) {
         // Given
         val reminderDays = 0
-        val predictedDate = LocalDate.now().plusDays(5)
+        val predictedDates = persistentSetOf(LocalDate.now().plusDays(5))
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns reminderDays.toString()
         }
-        every { periodPrediction.getPredictedPeriodDate() } returns predictedDate
+        every { periodPrediction.getPredictedPeriodDates() } returns predictedDates
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns "message"
         every { ResourceMapper.getPeriodReminderMessage(any(), any()) } returns "mapped message"
 
@@ -126,11 +128,12 @@ class NotificationSchedulerTest {
         val reminderDays = 3
         val today = LocalDate.now()
         val predictedDate = today.plusDays(2) // This makes the reminder date in the past
+        val predictedDates = persistentSetOf(predictedDate)
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns reminderDays.toString()
         }
-        every { periodPrediction.getPredictedPeriodDate() } returns predictedDate
+        every { periodPrediction.getPredictedPeriodDates() } returns predictedDates
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns "message"
         every {
             ResourceMapper.getPeriodReminderMessage(any(), any())
@@ -151,7 +154,7 @@ class NotificationSchedulerTest {
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns reminderDays.toString()
         }
-        every { periodPrediction.getPredictedPeriodDate() } returns null
+        every { periodPrediction.getPredictedPeriodDates() } returns persistentSetOf()
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns "message"
         every { ResourceMapper.getPeriodReminderMessage(any(), any()) } returns "mapped message"
 
@@ -168,11 +171,12 @@ class NotificationSchedulerTest {
         val defaultReminderDays = 2
         val today = LocalDate.now()
         val predictedDate = today.plusDays(5)
+        val predictedDates = persistentSetOf(predictedDate)
         val expectedNotificationDate = predictedDate.minusDays(defaultReminderDays.toLong())
         val message = "message"
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns null
-        every { periodPrediction.getPredictedPeriodDate() } returns predictedDate
+        every { periodPrediction.getPredictedPeriodDates() } returns predictedDates
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns message
         every { ResourceMapper.getPeriodReminderMessage(any(), any()) } returns message
 
@@ -191,13 +195,14 @@ class NotificationSchedulerTest {
         val defaultReminderDays = 2
         val today = LocalDate.now()
         val predictedDate = today.plusDays(5)
+        val predictedDates = persistentSetOf(predictedDate)
         val expectedNotificationDate = predictedDate.minusDays(defaultReminderDays.toLong())
         val message = "message"
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns "not a number"
         }
-        every { periodPrediction.getPredictedPeriodDate() } returns predictedDate
+        every { periodPrediction.getPredictedPeriodDates() } returns predictedDates
         coEvery { dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey) } returns message
         every { ResourceMapper.getPeriodReminderMessage(any(), any()) } returns message
 

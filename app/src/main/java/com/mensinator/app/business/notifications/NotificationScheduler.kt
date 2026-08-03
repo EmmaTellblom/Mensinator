@@ -34,7 +34,7 @@ class NotificationScheduler(
         withContext(dispatcherProvider.IO) {
             val periodReminderDays =
                 dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull() ?: defaultReminderDays
-            val nextPeriodDate = periodPrediction.getPredictedPeriodDate()
+            val nextPeriodDate = periodPrediction.getPredictedPeriodDates().firstOrNull()
             val initPeriodKeyOrCustomMessage =
                 dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
             val periodMessageText =

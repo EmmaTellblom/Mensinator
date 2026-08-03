@@ -1,18 +1,20 @@
 package com.mensinator.app.business
 
 import java.time.LocalDate
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentSetOf
 
 class PeriodPrediction(
     private val dbHelper: IPeriodDatabaseHelper,
     private val calcHelper: ICalculationsHelper,
 ) : IPeriodPrediction {
 
-    override fun getPredictedPeriodDate(): LocalDate? {
+    override fun getPredictedPeriodDates(): PersistentSet<LocalDate> {
         val periodCount = dbHelper.getPeriodCount()
         if (periodCount < 2) {
-            return null
+            return persistentSetOf()
         }
 
-        return calcHelper.calculateNextPeriod()
+        return calcHelper.calculateNextPeriodDates()
     }
 }
