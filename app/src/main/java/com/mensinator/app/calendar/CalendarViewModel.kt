@@ -42,24 +42,25 @@ class CalendarViewModel(
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             val showCycleNumbersSetting =
-                (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull() ?: 1) == 1
+                (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull()
+                    ?: 1) == 1
 
             _viewState.update {
                 it.copy(
                     showCycleNumbers = showCycleNumbersSetting,
                     periodPredictionDate = periodPrediction.getPredictedPeriodDate(),
                     ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate(),
-                    periodDates = dbHelper.getPeriodDatesForMonthNew(
+                    periodDates = dbHelper.getPeriodDatesForMonth(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
                     ).toPersistentMap(),
                     symptomDates = dbHelper.getSymptomsForDates().toPersistentMap(),
-                    ovulationDates = dbHelper.getOvulationDatesForMonthNew(
+                    ovulationDates = dbHelper.getOvulationDatesForMonth(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
                     ).toPersistentSet(),
                     activeSymptoms = dbHelper.getAllSymptoms()
-                        .filter { symptom->  symptom.isActive }
+                        .filter { symptom -> symptom.isActive }
                         .toPersistentSet(),
                 )
             }
@@ -75,58 +76,70 @@ class CalendarViewModel(
         }
     }
 
-    fun onAction(uiAction: UiAction): Unit = when (uiAction) {
-        is UiAction.UpdateFocusedYearMonth -> {
-            _viewState.update {
-                it.copy(focusedYearMonth = uiAction.focusedYearMonth)
-            }
-            deselectDatesIfFocusChangedTooMuch(uiAction.focusedYearMonth)
-            refreshData()
-        }
-        is UiAction.SelectDays -> {
-            viewModelScope.launch {
+    fun onAction(uiAction: UiAction) {
+        when (uiAction) {
+            is UiAction.UpdateFocusedYearMonth -> {
                 _viewState.update {
-                    val activeSymptoms = if (uiAction.days.isEmpty()) {
-                        persistentSetOf()
-                    } else {
-                        dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+                    it.copy(focusedYearMonth = uiAction.focusedYearMonth)
+                }
+                deselectDatesIfFocusChangedTooMuch(uiAction.focusedYearMonth)
+                refreshData()
+            }
+
+            is UiAction.SelectDays -> {
+                viewModelScope.launch {
+                    _viewState.update {
+                        val activeSymptoms = if (uiAction.days.isEmpty()) {
+                            persistentSetOf()
+                        } else {
+                            dbHelper.getActiveSymptomIdsForDate(uiAction.days.last()).toPersistentSet()
+                        }
+                        it.copy(
+                            selectedDays = uiAction.days,
+                            activeSymptomIdsForLatestSelectedDay = activeSymptoms
+                        )
                     }
-                    it.copy(
-                        selectedDays = uiAction.days,
-                        activeSymptomIdsForLatestSelectedDay = activeSymptoms
-                    )
+                }
+                Unit
+            }
+
+            is UiAction.UpdateSymptomDates -> {
+                viewModelScope.launch {
+                    dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
                 }
             }
-            Unit
-        }
-        is UiAction.UpdateSymptomDates -> {
-            dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
-        }
-        is UiAction.UpdateOvulationDay -> {
-            dbHelper.updateOvulationDate(uiAction.ovulationDay)
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
-        }
-        is UiAction.UpdatePeriodDates -> {
-            /**
-             * Make sure that if two or more days are selected (and at least one is already marked as period),
-             * we should make sure that all days are removed.
-             */
-            val datesAlreadyMarkedAsPeriod =
-                uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
-            if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                uiAction.selectedDays.forEach {
-                    val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                    dbHelper.addDateToPeriod(it, periodId)
+
+            is UiAction.UpdateOvulationDay -> {
+                viewModelScope.launch {
+                    dbHelper.updateOvulationDate(uiAction.ovulationDay)
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
                 }
-            } else {
-                datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
             }
-            viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
+
+            is UiAction.UpdatePeriodDates -> {
+                viewModelScope.launch {
+                    /**
+                     * Make sure that if two or more days are selected (and at least one is already marked as period),
+                     * we should make sure that all days are removed.
+                     */
+                    val datesAlreadyMarkedAsPeriod =
+                        uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
+                    if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                        uiAction.selectedDays.forEach {
+                            val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                            dbHelper.addDateToPeriod(it, periodId)
+                        }
+                    } else {
+                        datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                    }
+                    notificationScheduler.schedulePeriodNotification()
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
+                }
+            }
         }
     }
 

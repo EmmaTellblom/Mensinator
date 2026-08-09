@@ -54,24 +54,24 @@ class ManageSymptomsViewModel(
         }
     }
 
-    private fun createNewSymptom(name: String) {
+    private fun createNewSymptom(name: String) = viewModelScope.launch {
         periodDatabaseHelper.createNewSymptom(name)
-        viewModelScope.launch { refreshData() }
+        refreshData()
     }
 
-    private fun updateSymptom(symptom: Symptom) {
+    private fun updateSymptom(symptom: Symptom) = viewModelScope.launch {
         periodDatabaseHelper.updateSymptom(symptom.id, symptom.active, symptom.color)
-        viewModelScope.launch { refreshData() }
+        refreshData()
     }
 
-    private fun renameSymptom(symptom: Symptom) {
+    private fun renameSymptom(symptom: Symptom) = viewModelScope.launch {
         periodDatabaseHelper.renameSymptom(symptom.id, symptom.name)
-        viewModelScope.launch { refreshData() }
+        refreshData()
     }
 
-    private fun deleteSymptom(symptom: Symptom) {
+    private fun deleteSymptom(symptom: Symptom) = viewModelScope.launch {
         periodDatabaseHelper.deleteSymptom(symptom.id)
-        viewModelScope.launch { refreshData() }
+        refreshData()
     }
 
     sealed class UiAction {

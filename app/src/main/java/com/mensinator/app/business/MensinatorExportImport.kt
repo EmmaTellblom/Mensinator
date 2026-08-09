@@ -1,18 +1,10 @@
 package com.mensinator.app.business
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
-import android.util.Log
-import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
 import java.io.File
-import java.io.FileInputStream
-import java.io.InputStreamReader
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -40,133 +32,35 @@ class MensinatorExportImport(
         return File(context.getExternalFilesDir(null), "import.json").absolutePath
     }
 
-    override fun exportDatabase(filePath: Uri) {
-        val db = dbHelper.readableDb
-
-        val exportData = JSONObject()
-
-        // Export periods table
-        val periodsCursor = db.query("periods", null, null, null, null, null, null)
-        exportData.put("periods", cursorToJsonArray(periodsCursor))
-        periodsCursor.close()
-
-        // Export symptoms table
-        val symptomsCursor = db.query("symptoms", null, null, null, null, null, null)
-        exportData.put("symptoms", cursorToJsonArray(symptomsCursor))
-        symptomsCursor.close()
-
-        // Export symptom_date table
-        val symptomDatesCursor = db.query("symptom_date", null, null, null, null, null, null)
-        exportData.put("symptom_date", cursorToJsonArray(symptomDatesCursor))
-        symptomDatesCursor.close()
-
-        // Export ovulations table
-        val ovulationsCursor = db.query("ovulations", null, null, null, null, null, null)
-        exportData.put("ovulations", cursorToJsonArray(ovulationsCursor))
-        ovulationsCursor.close()
-
-        // Export app_settings table
-        val settingsCursor = db.query("app_settings", null, null, null, null, null, null)
-        exportData.put("app_settings", cursorToJsonArray(settingsCursor))
-        settingsCursor.close()
-
-        // Write JSON data to file
+    override suspend fun exportDatabase(filePath: Uri) {
+        val exportData = dbHelper.exportAllTablesToJson()
         val contentResolver = context.contentResolver
         contentResolver.openOutputStream(filePath)?.use { outputStream ->
             outputStream.write(exportData.toString().toByteArray())
         }
-
-        db.close()
     }
 
-    private fun cursorToJsonArray(cursor: Cursor): JSONArray {
-        val jsonArray = JSONArray()
-        while (cursor.moveToNext()) {
-            val jsonObject = JSONObject()
-            for (i in 0 until cursor.columnCount) {
-                jsonObject.put(cursor.getColumnName(i), cursor.getString(i))
-            }
-            jsonArray.put(jsonObject)
-        }
-        return jsonArray
-    }
-
-    override fun importDatabase(filePath: String) : Boolean {
-        val db = dbHelper.writableDb
-
-        // Read JSON data from file
+    override suspend fun importDatabase(filePath: String): Boolean {
         val file = File(filePath)
-        val fileInputStream = FileInputStream(file)
-        val reader = BufferedReader(InputStreamReader(fileInputStream))
-        val stringBuilder = StringBuilder()
-        var line: String? = reader.readLine()
-        while (line != null) {
-            stringBuilder.append(line)
-            line = reader.readLine()
-        }
-        reader.close()
-        val importData = JSONObject(stringBuilder.toString())
-
-        db.beginTransaction()
-
-        var result = false
-
-        try {
-            // Import periods and ovulations
-            // if something has been imported it will return true
-            result = importPeriodsAndOvulations(importData)
-
-            // Check if "symptoms" key exists and import if present
+        val fileContent = file.readText()
+        val importData = JSONObject(fileContent)
+        return dbHelper.executeInTransaction {
+            var result = importPeriodsAndOvulations(importData)
             if (importData.has("symptoms")) {
-                importJsonArrayToTable(db, "symptoms", importData.getJSONArray("symptoms"))
-            } else {
-                Log.d("Import", "No symptoms data found in the file.")
+                dbHelper.importTableData("symptoms", importData.getJSONArray("symptoms"))
             }
-
-            // Check if "symptom_date" key exists and import if present
             if (importData.has("symptom_date")) {
-                importJsonArrayToTable(db, "symptom_date", importData.getJSONArray("symptom_date"))
-            } else {
-                Log.d("Import", "No symptom_date data found in the file.")
+                dbHelper.importTableData("symptom_date", importData.getJSONArray("symptom_date"))
             }
-
-            // Check if "app_settings" key exists and import if present
             if (importData.has("app_settings")) {
-                importAppSettings(db, importData.getJSONArray("app_settings"))
-            } else {
-                Log.d("Import", "No app_settings data found in the file.")
+                dbHelper.importAppSettings(importData.getJSONArray("app_settings"))
             }
-
-            db.setTransactionSuccessful()
-        } catch (e: Exception) {
-            Log.e("Import", "Error during import", e)
-            result = false
-        }
-
-        db.endTransaction()
-        db.close()
-
-        return result
-
-    }
-
-    // This function will import all period, ovulation, symptoms and symptom dates
-    private fun importJsonArrayToTable(db: SQLiteDatabase, tableName: String, jsonArray: JSONArray) {
-        db.delete(tableName, null, null)
-        for (i in 0 until jsonArray.length()) {
-            val jsonObject = jsonArray.getJSONObject(i)
-            val contentValues = ContentValues()
-            val keys = jsonObject.keys()
-            while (keys.hasNext()) {
-                val key = keys.next()
-                contentValues.put(key, jsonObject.getString(key))
-            }
-            db.insert(tableName, null, contentValues)
+            result
         }
     }
 
     // This is used for periods and ovulations since these tables have constraints on dates in the db
-    private fun importPeriodsAndOvulations(importData: JSONObject): Boolean {
+    private suspend fun importPeriodsAndOvulations(importData: JSONObject): Boolean {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE
         var success = false
 
@@ -199,28 +93,5 @@ class MensinatorExportImport(
             success = false
         }
         return success
-    }
-
-    // This function will only update values of the settings provided in the import file
-    // Due to different db-versions there should never be a time where we want data from the file
-    // to insert into the database. It should always up update based on setting_key
-    private fun importAppSettings(db: SQLiteDatabase, jsonArray: JSONArray) {
-        // Loop through each JSON object in the array
-        for (i in 0 until jsonArray.length()) {
-            // Get the JSON object
-            val jsonObject = jsonArray.getJSONObject(i)
-
-            // Extract the setting_key to use as the condition for updating
-            val settingKey = jsonObject.getString("setting_key")
-            val settingValue = jsonObject.getString("setting_value")
-
-            // Create a ContentValues object to hold the updated values
-            val contentValues = ContentValues()
-            contentValues.put("setting_value", settingValue)
-
-            // Update the setting in the database
-                db.update("app_settings", contentValues, "setting_key = ?", arrayOf(settingKey))
-
-        }
     }
 }

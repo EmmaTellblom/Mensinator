@@ -6,5 +6,5 @@ interface IFloImport {
      *
      * @return true if the import was successful, false otherwise
      */
-    fun importFileToDatabase(filePath: String) : Boolean
+    suspend fun importFileToDatabase(filePath: String): Boolean
 }

@@ -2,6 +2,7 @@ package com.mensinator.app.business
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -15,6 +16,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -59,12 +62,6 @@ class PeriodDatabaseHelper(
 
         private const val TAG = "PeriodDatabaseHelper"
     }
-
-    override val readableDb: SQLiteDatabase
-        get() = readableDatabase
-
-    override val writableDb: SQLiteDatabase
-        get() = writableDatabase
 
     private val surroundingMonthsToConsider = 2L
 
@@ -119,66 +116,94 @@ class PeriodDatabaseHelper(
         }
     }
 
-    override fun addDateToPeriod(date: LocalDate, periodId: Int) {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_DATE, date.toString())
-            put(COLUMN_PERIOD_ID, periodId)
-        }
-
-        // Check if date already exists, this is fail-safe for import functionality
-        val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
-        val cursor = db.rawQuery(query, arrayOf(date.toString()))
-
-        cursor.use {
-            // If the period already exists (count > 0), do nothing
-            if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
-                return
-            } else {
-                // If date is new, insert
-                db.insert(TABLE_PERIODS, null, values)
-                _dbWriteTrigger.tryEmit(Unit)
-            }
-        }
-    }
-
-    override fun getPeriodDatesForMonth(year: Int, month: Int): Map<LocalDate, PeriodId> {
-        val dates = mutableMapOf<LocalDate, PeriodId>()
+    override suspend fun exportAllTablesToJson(): JSONObject = withContext(dispatcherProvider.IO) {
         val db = readableDatabase
+        val exportData = JSONObject()
+        val tables = listOf("periods", "symptoms", "symptom_date", "ovulations", "app_settings")
 
-        // Query the database for dates in the specified month and year
-        val cursor = db.query(
-            TABLE_PERIODS,
-            arrayOf(COLUMN_DATE, COLUMN_PERIOD_ID),
-            "strftime('%Y', $COLUMN_DATE) = ? AND strftime('%m', $COLUMN_DATE) = ?",
-            arrayOf(year.toString(), month.toString().padStart(2, '0')),
-            null, null, null
-        )
+        for (table in tables) {
+            val cursor = db.query(table, null, null, null, null, null, null)
+            exportData.put(table, cursorToJsonArray(cursor))
+            cursor.close()
+        }
+        exportData
+    }
 
-        cursor.use { cursor ->
-            // Get column indices
-            val dateIndex = cursor.getColumnIndex(COLUMN_DATE)
-            val periodIdIndex = cursor.getColumnIndex(COLUMN_PERIOD_ID)
+    private fun cursorToJsonArray(cursor: Cursor): JSONArray {
+        val jsonArray = JSONArray()
+        while (cursor.moveToNext()) {
+            val jsonObject = JSONObject()
+            for (i in 0 until cursor.columnCount) {
+                jsonObject.put(cursor.getColumnName(i), cursor.getString(i))
+            }
+            jsonArray.put(jsonObject)
+        }
+        return jsonArray
+    }
 
-            if (dateIndex != -1 && periodIdIndex != -1) {
-                while (cursor.moveToNext()) {
-                    val dateStr = cursor.getString(dateIndex)
-                    val periodId = cursor.getInt(periodIdIndex)
-                    val date = LocalDate.parse(dateStr)
-                    dates[date] = periodId
-                }
-            } else {
-                Log.e(
-                    TAG,
-                    "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
-                )
+    override suspend fun executeInTransaction(block: suspend () -> Boolean): Boolean =
+        withContext(dispatcherProvider.IO) {
+            val db = writableDatabase
+            db.beginTransaction()
+            try {
+                val success = block()
+                if (success) db.setTransactionSuccessful()
+                success
+            } finally {
+                db.endTransaction()
             }
         }
 
-        return dates
-    }
+    override suspend fun importTableData(tableName: String, jsonArray: JSONArray) =
+        withContext(dispatcherProvider.IO) {
+            val db = writableDatabase
+            db.delete(tableName, null, null)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val contentValues = ContentValues()
+                val keys = jsonObject.keys()
+                while (keys.hasNext()) {
+                    val key = keys.next()
+                    contentValues.put(key, jsonObject.getString(key))
+                }
+                db.insert(tableName, null, contentValues)
+            }
+        }
 
-    override suspend fun getPeriodDatesForMonthNew(
+    override suspend fun importAppSettings(jsonArray: JSONArray) =
+        withContext(dispatcherProvider.IO) {
+            val db = writableDatabase
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val settingKey = jsonObject.getString("setting_key")
+                val settingValue = jsonObject.getString("setting_value")
+                val contentValues = ContentValues().apply {
+                    put("setting_value", settingValue)
+                }
+                db.update("app_settings", contentValues, "setting_key = ?", arrayOf(settingKey))
+            }
+        }
+
+    override suspend fun addDateToPeriod(date: LocalDate, periodId: Int) =
+        withContext(dispatcherProvider.IO) {
+            val db = writableDatabase
+            val values = ContentValues().apply {
+                put(COLUMN_DATE, date.toString())
+                put(COLUMN_PERIOD_ID, periodId)
+            }
+
+            val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
+            db.rawQuery(query, arrayOf(date.toString())).use { cursor ->
+                if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                    return@use
+                } else {
+                    db.insert(TABLE_PERIODS, null, values)
+                    _dbWriteTrigger.tryEmit(Unit)
+                }
+            }
+        }
+
+    override suspend fun getPeriodDatesForMonth(
         year: Int,
         month: Int
     ): Map<LocalDate, PeriodId> = withContext(dispatcherProvider.IO) {
@@ -234,7 +259,7 @@ class PeriodDatabaseHelper(
     }
 
 
-    override fun getPeriodCount(): Int {
+    override suspend fun getPeriodCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT $COLUMN_PERIOD_ID) FROM $TABLE_PERIODS"
         val cursor = db.rawQuery(countQuery, null)
@@ -246,7 +271,7 @@ class PeriodDatabaseHelper(
         return count
     }
 
-    override fun removeDateFromPeriod(date: LocalDate) {
+    override suspend fun removeDateFromPeriod(date: LocalDate) {
         val db = writableDatabase
         val whereClause = "$COLUMN_DATE = ?"
         val whereArgs = arrayOf(date.toString())
@@ -282,7 +307,7 @@ class PeriodDatabaseHelper(
         symptoms
     }
 
-    override fun createNewSymptom(symptomName: String) {
+    override suspend fun createNewSymptom(symptomName: String) {
         val db = writableDatabase
         val trimmedSymptomName = symptomName.trim()
         val values = ContentValues().apply {
@@ -294,51 +319,7 @@ class PeriodDatabaseHelper(
         _dbWriteTrigger.tryEmit(Unit)
     }
 
-    override fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> {
-        val dates = mutableSetOf<LocalDate>()
-        val db = readableDatabase
-
-        // Define the raw SQL query
-        val query = """
-        SELECT sd.symptom_date
-        FROM $TABLE_SYMPTOM_DATE AS sd
-        INNER JOIN $TABLE_SYMPTOMS AS s ON sd.$COLUMN_SYMPTOM_ID = s.$COLUMN_ID
-        WHERE strftime('%Y', sd.symptom_date) = ? 
-        AND strftime('%m', sd.symptom_date) = ? 
-        AND s.$COLUMN_SYMPTOM_ACTIVE = 1
-    """
-
-        // Execute the query with the provided parameters
-        val cursor = db.rawQuery(query, arrayOf(year.toString(), month.toString().padStart(2, '0')))
-
-        try {
-            // Get the column index for the date
-            val dateIndex = cursor.getColumnIndex("symptom_date")
-
-            if (dateIndex != -1) {
-                while (cursor.moveToNext()) {
-                    val dateStr = cursor.getString(dateIndex)
-                    try {
-                        val date = LocalDate.parse(dateStr)
-                        // Add the date to the set of dates with active symptoms
-                        dates.add(date)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to parse date string: $dateStr", e)
-                    }
-                }
-            } else {
-                Log.e(TAG, "Column index is invalid: dateIndex=$dateIndex")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error querying for symptom dates", e)
-        } finally {
-            cursor.close()
-        }
-
-        return dates
-    }
-
-    override suspend fun getSymptomDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
+    override suspend fun getSymptomDatesForMonth(year: Int, month: Int): Set<LocalDate> =
         withContext(dispatcherProvider.IO) {
             val dates = mutableSetOf<LocalDate>()
             val db = readableDatabase
@@ -440,7 +421,7 @@ class PeriodDatabaseHelper(
             dates
         }
 
-    override fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
+    override suspend fun updateSymptomDate(dates: List<LocalDate>, symptomId: List<Int>) {
         val db = writableDatabase
 
         // Convert dates to strings for database operations
@@ -501,7 +482,7 @@ class PeriodDatabaseHelper(
             symptoms
         }
 
-    override fun getSymptomColorForDate(date: LocalDate): List<String> {
+    override suspend fun getSymptomColorForDate(date: LocalDate): List<String> {
         val db = readableDatabase
         val query = """
         SELECT s.color
@@ -525,7 +506,7 @@ class PeriodDatabaseHelper(
         return symptomColors
     }
 
-    override fun getAllSettings(): List<Setting> {
+    override suspend fun getAllSettings(): List<Setting> {
         val settings = mutableListOf<Setting>()
         val db = readableDatabase
         val cursor = db.query(TABLE_APP_SETTINGS, null, null, null, null, null, null)
@@ -542,57 +523,60 @@ class PeriodDatabaseHelper(
         return settings
     }
 
-    override suspend fun updateSetting(key: String, value: String): Boolean = withContext(dispatcherProvider.IO) {
-        val db = writableDatabase
-        val contentValues = ContentValues().apply {
-            put(COLUMN_SETTING_VALUE, value)
-        }
-        val rowsUpdated = db.update(
-            TABLE_APP_SETTINGS,
-            contentValues,
-            "$COLUMN_SETTING_KEY = ?",
-            arrayOf(key)
-        )
-        _dbWriteTrigger.emit(Unit)
-        rowsUpdated > 0
-    }
-
-    override suspend fun getSettingByKey(key: String): Setting? = withContext(dispatcherProvider.IO) {
-        val db = readableDatabase
-        val cursor = db.query(
-            TABLE_APP_SETTINGS,
-            null,
-            "$COLUMN_SETTING_KEY = ?",
-            arrayOf(key),
-            null,
-            null,
-            null
-        )
-        val setting = if (cursor.moveToFirst()) {
-            val key = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_KEY))
-            val value = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_VALUE))
-            val label = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_LABEL))
-            val groupId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SETTING_GROUP_ID))
-            val type = cursor.getString(cursor.getColumnIndexOrThrow("setting_type"))
-            Setting(key, value, label, groupId, type)
-        } else {
-            null
+    override suspend fun updateSetting(key: String, value: String): Boolean =
+        withContext(dispatcherProvider.IO) {
+            val db = writableDatabase
+            val contentValues = ContentValues().apply {
+                put(COLUMN_SETTING_VALUE, value)
+            }
+            val rowsUpdated = db.update(
+                TABLE_APP_SETTINGS,
+                contentValues,
+                "$COLUMN_SETTING_KEY = ?",
+                arrayOf(key)
+            )
+            _dbWriteTrigger.emit(Unit)
+            rowsUpdated > 0
         }
 
-        cursor.close()
-        setting
-    }
+    override suspend fun getSettingByKey(key: String): Setting? =
+        withContext(dispatcherProvider.IO) {
+            val db = readableDatabase
+            val cursor = db.query(
+                TABLE_APP_SETTINGS,
+                null,
+                "$COLUMN_SETTING_KEY = ?",
+                arrayOf(key),
+                null,
+                null,
+                null
+            )
+            val setting = if (cursor.moveToFirst()) {
+                val key = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_KEY))
+                val value = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_VALUE))
+                val label = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SETTING_LABEL))
+                val groupId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SETTING_GROUP_ID))
+                val type = cursor.getString(cursor.getColumnIndexOrThrow("setting_type"))
+                Setting(key, value, label, groupId, type)
+            } else {
+                null
+            }
 
-    override suspend fun getStringSettingByKey(key: String): String = withContext(dispatcherProvider.IO) {
-        val string = getSettingByKey(key)?.value
-        if (string == null) {
-            Log.e("getStringSettingByKey", "key '$key' is null")
-            return@withContext "Unknown"
+            cursor.close()
+            setting
         }
-        string
-    }
 
-    override fun updateOvulationDate(date: LocalDate) {
+    override suspend fun getStringSettingByKey(key: String): String =
+        withContext(dispatcherProvider.IO) {
+            val string = getSettingByKey(key)?.value
+            if (string == null) {
+                Log.e("getStringSettingByKey", "key '$key' is null")
+                return@withContext "Unknown"
+            }
+            string
+        }
+
+    override suspend fun updateOvulationDate(date: LocalDate) {
         val db = writableDatabase
 
         // Convert LocalDate to String for SQLite compatibility
@@ -616,7 +600,7 @@ class PeriodDatabaseHelper(
         cursor.close()
     }
 
-    override fun addOvulationDate(date: LocalDate) {
+    override suspend fun addOvulationDate(date: LocalDate) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_DATE, date.toString())
@@ -638,7 +622,7 @@ class PeriodDatabaseHelper(
         }
     }
 
-    override fun removeOvulationDate(date: LocalDate) {
+    override suspend fun removeOvulationDate(date: LocalDate) {
         val db = writableDatabase
         val whereClause = "$COLUMN_DATE = ?"
         val whereArgs = arrayOf(date.toString())
@@ -646,47 +630,7 @@ class PeriodDatabaseHelper(
         _dbWriteTrigger.tryEmit(Unit)
     }
 
-    override fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> {
-        val dates = mutableSetOf<LocalDate>()
-        val db = readableDatabase
-
-        // Query the database for dates in the specified month and year
-        val cursor = db.query(
-            "ovulations", // Table name
-            arrayOf("date"), // Column name
-            "strftime('%Y', date) = ? AND strftime('%m', date) = ?",
-            arrayOf(year.toString(), month.toString().padStart(2, '0')),
-            null, null, null
-        )
-
-        try {
-            // Get the column index for the date
-            val dateIndex = cursor.getColumnIndex("date")
-
-            if (dateIndex != -1) {
-                while (cursor.moveToNext()) {
-                    val dateStr = cursor.getString(dateIndex)
-                    try {
-                        val date = LocalDate.parse(dateStr)
-                        // Add the date to the set of dates
-                        dates.add(date)
-                    } catch (e: Exception) {
-                        Log.e("TAG", "Failed to parse date string: $dateStr", e)
-                    }
-                }
-            } else {
-                Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
-            }
-        } catch (e: Exception) {
-            Log.e("TAG", "Error querying for ovulation dates", e)
-        } finally {
-            cursor.close()
-        }
-
-        return dates
-    }
-
-    override suspend fun getOvulationDatesForMonthNew(year: Int, month: Int): Set<LocalDate> =
+    override suspend fun getOvulationDatesForMonth(year: Int, month: Int): Set<LocalDate> =
         withContext(dispatcherProvider.IO) {
             val dates = mutableSetOf<LocalDate>()
             val db = readableDatabase
@@ -695,7 +639,8 @@ class PeriodDatabaseHelper(
                 // Calculate the date range
                 val currentMonth = YearMonth.of(year, month)
 
-                val rangeStart = currentMonth.minusMonths(surroundingMonthsToConsider).atStartOfMonth()
+                val rangeStart =
+                    currentMonth.minusMonths(surroundingMonthsToConsider).atStartOfMonth()
                 val rangeEnd = currentMonth.plusMonths(surroundingMonthsToConsider).atEndOfMonth()
 
                 // Query the database for dates within the calculated range
@@ -734,7 +679,7 @@ class PeriodDatabaseHelper(
             dates
         }
 
-    override fun getOvulationCount(): Int {
+    override suspend fun getOvulationCount(): Int {
         val db = readableDatabase
         val countQuery = "SELECT COUNT(DISTINCT DATE) FROM OVULATIONS"
         val cursor = db.rawQuery(countQuery, null)
@@ -747,7 +692,7 @@ class PeriodDatabaseHelper(
     }
 
 
-    override fun newFindOrCreatePeriodID(date: LocalDate): Int {
+    override suspend fun newFindOrCreatePeriodID(date: LocalDate): Int {
         val db = readableDatabase
         val dateStr = date.toString()
         var periodId = 1
@@ -797,7 +742,7 @@ class PeriodDatabaseHelper(
     }
 
     //This function is used to get the previous period start date from given input date
-    override fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate? {
+    override suspend fun getFirstPreviousPeriodDate(date: LocalDate): LocalDate? {
         val db = readableDatabase
         var firstLatestDate: LocalDate? = null
 
@@ -827,7 +772,7 @@ class PeriodDatabaseHelper(
     }
 
     //This function is to get the oldest period date in the database
-    override fun getOldestPeriodDate(): LocalDate? {
+    override suspend fun getOldestPeriodDate(): LocalDate? {
         val db = readableDatabase
         var oldestPeriodDate: LocalDate? = null
 
@@ -845,7 +790,7 @@ class PeriodDatabaseHelper(
     }
 
     //This function is to get the oldest period date in the database
-    override fun getNewestOvulationDate(): LocalDate? {
+    override suspend fun getNewestOvulationDate(): LocalDate? {
         val db = readableDatabase
         var newestOvulationDate: LocalDate? = null
 
@@ -864,7 +809,7 @@ class PeriodDatabaseHelper(
 
 
     //This function is used for updating symptom active status
-    override fun updateSymptom(id: Int, active: Int, color: String) {
+    override suspend fun updateSymptom(id: Int, active: Int, color: String) {
         val db = writableDatabase
 
         // Ensure that active is either 0 or 1
@@ -891,7 +836,7 @@ class PeriodDatabaseHelper(
 
     // This function is used to get the latest X ovulation dates where they are followed by a period
     // Used for calculations
-    override fun getLatestXOvulationsWithPeriod(number: Int): List<LocalDate> {
+    override suspend fun getLatestXOvulationsWithPeriod(number: Int): List<LocalDate> {
         val ovulationDates = mutableListOf<LocalDate>()
         val db = readableDatabase
         // only include ovulations that has a period coming afterwards
@@ -918,7 +863,7 @@ class PeriodDatabaseHelper(
         return ovulationDates
     }
 
-    override fun getLastOvulation(): LocalDate? {
+    override suspend fun getLastOvulation(): LocalDate? {
         val db = readableDatabase
         val query = """
         SELECT DATE FROM OVULATIONS ORDER BY DATE DESC LIMIT 1
@@ -940,7 +885,7 @@ class PeriodDatabaseHelper(
         getLastOvulation()
     }
 
-    override fun getLatestXPeriodStart(number: Int): List<LocalDate> {
+    override suspend fun getLatestXPeriodStart(number: Int): List<LocalDate> {
         val dateList = mutableListOf<LocalDate>()
         val db = readableDatabase
         val numberOfPeriods = number + 1 // Include the current ongoing period if applicable
@@ -972,7 +917,7 @@ class PeriodDatabaseHelper(
         return dateList
     }
 
-    override fun getFirstNextPeriodDate(date: LocalDate): LocalDate? {
+    override suspend fun getFirstNextPeriodDate(date: LocalDate): LocalDate? {
         val db = readableDatabase
         var firstNextDate: LocalDate? = null
 
@@ -995,7 +940,7 @@ class PeriodDatabaseHelper(
         return firstNextDate
     }
 
-    override fun getNoOfDatesInPeriod(date: LocalDate): Int {
+    override suspend fun getNoOfDatesInPeriod(date: LocalDate): Int {
         val db = readableDatabase
         val query = """
             SELECT COUNT(DATE) FROM PERIODS WHERE period_id in (SELECT period_id FROM PERIODS WHERE date = ?)
@@ -1010,7 +955,7 @@ class PeriodDatabaseHelper(
         return count
     }
 
-    override fun getXLatestOvulationsDates(number: Int): List<LocalDate> {
+    override suspend fun getXLatestOvulationsDates(number: Int): List<LocalDate> {
         val db = readableDatabase
         val ovulationDates = mutableListOf<LocalDate>()
         val query = """
@@ -1029,7 +974,7 @@ class PeriodDatabaseHelper(
     }
 
     //This function is used to remove a date from the periods table
-    override fun deleteSymptom(symptomId: Int) {
+    override suspend fun deleteSymptom(symptomId: Int) {
         val db = writableDatabase
         val whereClause = "id = ?"
         val whereArgs = arrayOf(symptomId.toString())
@@ -1046,7 +991,7 @@ class PeriodDatabaseHelper(
         return DATABASE_VERSION.toString()
     }
 
-    override fun renameSymptom(symptomId: Int, newName: String) {
+    override suspend fun renameSymptom(symptomId: Int, newName: String) {
         val db = writableDatabase
         val trimmedSymptomName = newName.trim()
         val contentValues = ContentValues().apply {
@@ -1056,14 +1001,16 @@ class PeriodDatabaseHelper(
         _dbWriteTrigger.tryEmit(Unit)
     }
 
-    override fun getLatestPeriodStart(): LocalDate? {
+    override suspend fun getLatestPeriodStart(): LocalDate? {
         val db = readableDatabase
         val query =
-            "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
+            "SELECT MIN(date) AS date FROM periods WHERE period_id = (SELECT period_id FROM periods ORDER BY date DESC LIMIT 1)"
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))
-            return LocalDate.parse(dateString)
+            if (dateString != null) {
+                return LocalDate.parse(dateString)
+            }
         }
         cursor.close()
         return null

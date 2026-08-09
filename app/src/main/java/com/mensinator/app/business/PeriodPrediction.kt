@@ -7,7 +7,7 @@ class PeriodPrediction(
     private val calcHelper: ICalculationsHelper,
 ) : IPeriodPrediction {
 
-    override fun getPredictedPeriodDate(): LocalDate? {
+    override suspend fun getPredictedPeriodDate(): LocalDate? {
         val periodCount = dbHelper.getPeriodCount()
         if (periodCount < 2) {
             return null

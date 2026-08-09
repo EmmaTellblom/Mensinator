@@ -212,17 +212,23 @@ class SettingsViewModel(
         _viewState.update { it.copy(showExportDialog = show) }
     }
 
-    fun handleImport(importPath: String, source: ImportSource): Boolean {
-        return when (source) {
+    fun handleImport(importPath: String, source: ImportSource) = viewModelScope.launch {
+        val success = when (source) {
             ImportSource.MENSINATOR -> exportImport.importDatabase(importPath)
             ImportSource.CLUE -> clueImport.importFileToDatabase(importPath)
             ImportSource.FLO -> floImport.importFileToDatabase(importPath)
         }
+        val stringId = if (success) {
+            R.string.import_success_toast
+        } else {
+            R.string.import_failure_toast
+        }
+        Toast.makeText(appContext, stringId, Toast.LENGTH_SHORT).show()
     }
 
     fun getExportFileName(): String = exportImport.generateExportFileName()
 
-    fun handleExport(exportUri: Uri) {
+    fun handleExport(exportUri: Uri) = viewModelScope.launch {
         fun showToast(errorMessage: String) {
             Toast.makeText(appContext, errorMessage, Toast.LENGTH_SHORT).show()
         }
