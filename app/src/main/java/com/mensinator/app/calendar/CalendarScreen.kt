@@ -357,7 +357,7 @@ fun Day(
     val dayColors = when {
         day.date in state.selectedDays -> settingColors[ColorSetting.SELECTION]
         day.date in state.periodDates.keys -> settingColors[ColorSetting.PERIOD]
-        state.periodPredictionDate?.isEqual(day.date) == true -> settingColors[ColorSetting.EXPECTED_PERIOD]
+	day.date in state.periodPredictionDates -> settingColors[ColorSetting.EXPECTED_PERIOD]
         day.date in state.ovulationDates -> settingColors[ColorSetting.OVULATION]
         state.ovulationPredictionDate?.isEqual(day.date) == true -> settingColors[ColorSetting.EXPECTED_OVULATION]
         else -> null
