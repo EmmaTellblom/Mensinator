@@ -1,14 +1,12 @@
 package com.mensinator.app.business
 
 import android.util.Log
+import kotlinx.datetime.LocalDate
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import androidx.core.database.sqlite.transaction
 import java.io.FileInputStream
+import java.io.InputStreamReader
 
 class ClueImport(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -55,13 +53,11 @@ class ClueImport(
     }
 
     private suspend fun processData(importArray: JSONArray) {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-
         for (i in 0 until importArray.length()) {
             val obj = importArray.getJSONObject(i)
             val type = obj.getString("type")
             val dateString = obj.getString("date")
-            val date = LocalDate.parse(dateString, formatter)
+            val date = LocalDate.parse(dateString)
 
             when (type) {
                 "period" -> {

@@ -1,6 +1,6 @@
 package com.mensinator.app.business
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class PeriodPrediction(
     private val dbHelper: IPeriodDatabaseHelper,

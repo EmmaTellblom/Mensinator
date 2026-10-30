@@ -39,6 +39,7 @@ import com.mensinator.app.ui.theme.DarkGrey
 import com.mensinator.app.ui.theme.isDarkMode
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toKotlinLocalDate
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import java.time.DayOfWeek
@@ -413,7 +414,9 @@ fun Day(
                     symptomsForDay.forEach { symptom ->
                         val symptomColor = state.calendarColors.symptomColors[symptom] ?: Color.Red
                         var circleBorder = Color.White
-                        if(isDarkMode()) { circleBorder = Color.Black }
+                        if (isDarkMode()) {
+                            circleBorder = Color.Black
+                        }
                         Box(
                             modifier = Modifier
                                 .size(11.dp)
@@ -425,8 +428,11 @@ fun Day(
             }
 
             if (state.showCycleNumbers) {
-                val cycleNumber by androidx.compose.runtime.produceState<Int?>(initialValue = null, day.date) {
-                    value = calculationsHelper.getCycleDay(day.date)
+                val cycleNumber by androidx.compose.runtime.produceState<Int?>(
+                    initialValue = null,
+                    day.date
+                ) {
+                    value = calculationsHelper.getCycleDay(day.date.toKotlinLocalDate())
                 }
                 cycleNumber?.let { cycle ->
                     Surface(

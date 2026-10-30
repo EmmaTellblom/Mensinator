@@ -5,7 +5,7 @@ import com.mensinator.app.data.Symptom
 import kotlinx.coroutines.flow.Flow
 import org.json.JSONArray
 import org.json.JSONObject
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 interface IPeriodDatabaseHelper {
     val dbWriteTrigger: Flow<Unit>

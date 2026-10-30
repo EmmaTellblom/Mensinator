@@ -11,6 +11,7 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.mensinator.app.R
 import com.mensinator.app.business.CalculationsHelper
 import kotlinx.coroutines.flow.combine
+import kotlinx.datetime.toJavaLocalDate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
@@ -43,8 +44,14 @@ abstract class BaseWidget(
         MidnightTrigger.midnightTrigger
     ) { nextPeriod, _ ->
         WidgetData(
-            daysUntilPeriodWithoutText = formatDaysUntilPeriod(nextPeriod, NextPeriodFormat.OnlyDays),
-            daysUntilPeriodWithText = formatDaysUntilPeriod(nextPeriod, NextPeriodFormat.MediumLengthText),
+            daysUntilPeriodWithoutText = formatDaysUntilPeriod(
+                nextPeriod?.toJavaLocalDate(),
+                NextPeriodFormat.OnlyDays
+            ),
+            daysUntilPeriodWithText = formatDaysUntilPeriod(
+                nextPeriod?.toJavaLocalDate(),
+                NextPeriodFormat.MediumLengthText
+            ),
             daysUntilOvulationWithText = "",
             daysUntilOvulationWithoutText = ""
         )
@@ -68,16 +75,27 @@ abstract class BaseWidget(
     }
 
     @Composable
-    private fun WidgetContent(showLabel: Boolean, showBackground: Boolean, state: State<WidgetData>) {
+    private fun WidgetContent(
+        showLabel: Boolean,
+        showBackground: Boolean,
+        state: State<WidgetData>
+    ) {
         val data = state.value
         val context = LocalContext.current
         val label = context.getString(R.string.widget_period_abbreviation)
 
         MensinatorGlanceTheme {
             if (showLabel) {
-                WidgetContentWithLabel(text = data.daysUntilPeriodWithText, showBackground = showBackground)
+                WidgetContentWithLabel(
+                    text = data.daysUntilPeriodWithText,
+                    showBackground = showBackground
+                )
             } else {
-                WidgetContentWithoutLabel(text = data.daysUntilPeriodWithoutText, label = label, showBackground = showBackground)
+                WidgetContentWithoutLabel(
+                    text = data.daysUntilPeriodWithoutText,
+                    label = label,
+                    showBackground = showBackground
+                )
             }
         }
     }
