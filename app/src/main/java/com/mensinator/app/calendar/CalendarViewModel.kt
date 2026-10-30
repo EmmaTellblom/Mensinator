@@ -7,7 +7,6 @@ import com.kizitonwose.calendar.core.yearMonth
 import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
-import com.mensinator.app.business.ICalculationsHelper
 import com.mensinator.app.business.PeriodId
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
@@ -16,9 +15,10 @@ import com.mensinator.app.data.isActive
 import com.mensinator.app.extensions.pickBestContrastTextColorForThisBackground
 import com.mensinator.app.settings.BooleanSetting
 import com.mensinator.app.settings.ColorSetting
+import com.mensinator.app.settings.DEFAULT_PERIOD_LENGTH
+import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
-import kotlin.math.roundToInt
 import kotlinx.collections.immutable.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -35,18 +34,12 @@ class CalendarViewModel(
     private val periodPrediction: IPeriodPrediction,
     private val ovulationPrediction: IOvulationPrediction,
     private val notificationScheduler: INotificationScheduler,
-    private val calculations: ICalculationsHelper,
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(
         ViewState()
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
-
-    private val userDefinedPeriodLength
-        get() = runBlocking {
-            dbHelper.getSettingByKey("user_defined_period_length")?.value?.toIntOrNull() ?: 5
-        }
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -119,38 +112,35 @@ class CalendarViewModel(
             refreshData()
         }
         is UiAction.UpdatePeriodDates -> {
-            var selectedDays = uiAction.selectedDays
+            viewModelScope.launch(Dispatchers.IO) {
+                val userDefinedPeriodLength = dbHelper
+                    .getSettingByKey(IntSetting.USER_DEFINED_PERIOD_LENGTH.settingDbKey)
+                    ?.value?.toIntOrNull() ?: DEFAULT_PERIOD_LENGTH
 
-            if (uiAction.selectedDays.size == 1 && userDefinedPeriodLength > 0) {
-                val statsAveragePeriodLength = calculations.averagePeriodLength().roundToInt()
-                val periodLength = if (statsAveragePeriodLength > 0) statsAveragePeriodLength else userDefinedPeriodLength
-                val firstDay = uiAction.selectedDays.first()
-                if (firstDay !in uiAction.currentPeriodDays.keys) {
-                    for (daysShift in 1..<periodLength) {
-                        val newDay = firstDay.plusDays(daysShift.toLong())
-                        if (newDay !in uiAction.currentPeriodDays.keys) {
-                            selectedDays += newDay
-                        }
+                /**
+                 * Make sure that if two or more days are selected (and at least one is already marked as period),
+                 * we should make sure that all days are removed.
+                 */
+                val datesAlreadyMarkedAsPeriod =
+                    uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
+                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                    val daysToMark = expandPeriodSelection(
+                        selectedDays = uiAction.selectedDays,
+                        currentPeriodDays = uiAction.currentPeriodDays,
+                        periodLength = userDefinedPeriodLength,
+                    )
+                    daysToMark.forEach {
+                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                        dbHelper.addDateToPeriod(it, periodId)
                     }
+                } else {
+                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
                 }
+                notificationScheduler.schedulePeriodNotification()
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
             }
-            /**
-             * Make sure that if two or more days are selected (and at least one is already marked as period),
-             * we should make sure that all days are removed.
-             */
-            val datesAlreadyMarkedAsPeriod =
-                selectedDays.intersect(uiAction.currentPeriodDays.keys)
-            if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                selectedDays.forEach {
-                    val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                    dbHelper.addDateToPeriod(it, periodId)
-                }
-            } else {
-                datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
-            }
-            viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
+            Unit
         }
     }
 

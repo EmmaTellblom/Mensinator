@@ -65,7 +65,7 @@ class SettingsViewModel(
 
             appVersion = getAppVersion(appContext),
             dbVersion = periodDatabaseHelper.getDBVersion(),
-            userDefinedPeriodLength = -1, 
+            userDefinedPeriodLength = DEFAULT_PERIOD_LENGTH,
         )
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
@@ -283,6 +283,8 @@ enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
     OVULATION(R.string.ovulation_color, "ovulation_color"),
     EXPECTED_OVULATION(R.string.expected_ovulation_color, "expected_ovulation_color"),
 }
+
+const val DEFAULT_PERIOD_LENGTH = 5
 
 enum class IntSetting(val stringResId: Int, val settingDbKey: String) {
     REMINDER_DAYS(R.string.days_before_reminder, "reminder_days"),

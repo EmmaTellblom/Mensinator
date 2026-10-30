@@ -242,7 +242,7 @@ object DatabaseUtils {
         db.execSQL("""
             INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
             VALUES
-            ('user_defined_period_length','Roughly estimated period length is days','5','3','NO')
+            ('user_defined_period_length','Estimated period length in days','5','3','NO')
         """)
     }
 
