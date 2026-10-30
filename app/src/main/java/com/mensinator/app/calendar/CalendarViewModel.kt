@@ -15,6 +15,8 @@ import com.mensinator.app.data.isActive
 import com.mensinator.app.extensions.pickBestContrastTextColorForThisBackground
 import com.mensinator.app.settings.BooleanSetting
 import com.mensinator.app.settings.ColorSetting
+import com.mensinator.app.settings.DEFAULT_PERIOD_LENGTH
+import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.ui.theme.Black
 import com.mensinator.app.ui.theme.DarkGrey
 import kotlinx.collections.immutable.*
@@ -110,23 +112,35 @@ class CalendarViewModel(
             refreshData()
         }
         is UiAction.UpdatePeriodDates -> {
-            /**
-             * Make sure that if two or more days are selected (and at least one is already marked as period),
-             * we should make sure that all days are removed.
-             */
-            val datesAlreadyMarkedAsPeriod =
-                uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
-            if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                uiAction.selectedDays.forEach {
-                    val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                    dbHelper.addDateToPeriod(it, periodId)
+            viewModelScope.launch(Dispatchers.IO) {
+                val userDefinedPeriodLength = dbHelper
+                    .getSettingByKey(IntSetting.USER_DEFINED_PERIOD_LENGTH.settingDbKey)
+                    ?.value?.toIntOrNull() ?: DEFAULT_PERIOD_LENGTH
+
+                /**
+                 * Make sure that if two or more days are selected (and at least one is already marked as period),
+                 * we should make sure that all days are removed.
+                 */
+                val datesAlreadyMarkedAsPeriod =
+                    uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
+                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                    val daysToMark = expandPeriodSelection(
+                        selectedDays = uiAction.selectedDays,
+                        currentPeriodDays = uiAction.currentPeriodDays,
+                        periodLength = userDefinedPeriodLength,
+                    )
+                    daysToMark.forEach {
+                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                        dbHelper.addDateToPeriod(it, periodId)
+                    }
+                } else {
+                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
                 }
-            } else {
-                datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                notificationScheduler.schedulePeriodNotification()
+                onAction(UiAction.SelectDays(persistentSetOf()))
+                refreshData()
             }
-            viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
-            onAction(UiAction.SelectDays(persistentSetOf()))
-            refreshData()
+            Unit
         }
     }
 

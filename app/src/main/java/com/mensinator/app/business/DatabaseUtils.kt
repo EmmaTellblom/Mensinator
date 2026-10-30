@@ -52,6 +52,7 @@ object DatabaseUtils {
         databaseVersion9(db)
         databaseVersion10(db)
         databaseVersion11(db)
+        databaseVersion12(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -234,6 +235,15 @@ object DatabaseUtils {
         db.execSQL("""
         CREATE UNIQUE INDEX IF NOT EXISTS unique_date_ovulation ON ovulations(date);
     """)
+    }
+
+    fun databaseVersion12(db: SQLiteDatabase) {
+
+        db.execSQL("""
+            INSERT INTO app_settings (setting_key, setting_label, setting_value, group_label_id, setting_type) 
+            VALUES
+            ('user_defined_period_length','Estimated period length in days','5','3','NO')
+        """)
     }
 
 

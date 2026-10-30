@@ -33,7 +33,7 @@ class PeriodDatabaseHelper(
 
     companion object {
         private const val DATABASE_NAME = "periods.db"
-        private const val DATABASE_VERSION = 11
+        private const val DATABASE_VERSION = 12
         private const val TABLE_PERIODS = "periods"
         private const val COLUMN_ID = "id"
         private const val COLUMN_DATE = "date"
@@ -116,6 +116,9 @@ class PeriodDatabaseHelper(
 
         if (oldVersion < 11) {
             DatabaseUtils.databaseVersion11(db)
+        }
+        if (oldVersion < 12) {
+            DatabaseUtils.databaseVersion12(db)
         }
     }
 
@@ -1058,8 +1061,14 @@ class PeriodDatabaseHelper(
 
     override fun getLatestPeriodStart(): LocalDate? {
         val db = readableDatabase
-        val query =
-            "SELECT date FROM periods where period_id = (SELECT MAX(period_id) FROM periods) ORDER BY date asc LIMIT 1"
+        // Period IDs are not chronological: adding a period in the past creates a higher ID.
+        // Always look up the period containing the most recent date instead.
+        val query = """
+            SELECT date FROM periods WHERE period_id = (
+                SELECT period_id FROM periods ORDER BY date DESC LIMIT 1
+            )
+            ORDER BY date ASC LIMIT 1
+        """
         val cursor = db.rawQuery(query, null)
         if (cursor.moveToFirst()) {
             val dateString = cursor.getString(cursor.getColumnIndexOrThrow("date"))

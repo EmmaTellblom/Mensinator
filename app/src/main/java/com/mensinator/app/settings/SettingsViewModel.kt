@@ -65,6 +65,7 @@ class SettingsViewModel(
 
             appVersion = getAppVersion(appContext),
             dbVersion = periodDatabaseHelper.getDBVersion(),
+            userDefinedPeriodLength = DEFAULT_PERIOD_LENGTH,
         )
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
@@ -99,6 +100,7 @@ class SettingsViewModel(
         val showFaqDialog: Boolean,
         val appVersion: String,
         val dbVersion: String,
+        val userDefinedPeriodLength: Int,
     )
 
     fun init() {
@@ -138,6 +140,7 @@ class SettingsViewModel(
                     lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
                     showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
                     preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
+                    userDefinedPeriodLength = getInt(IntSetting.USER_DEFINED_PERIOD_LENGTH.settingDbKey),
                 )
             }
         }
@@ -281,10 +284,13 @@ enum class ColorSetting(val stringResId: Int, val settingDbKey: String) {
     EXPECTED_OVULATION(R.string.expected_ovulation_color, "expected_ovulation_color"),
 }
 
+const val DEFAULT_PERIOD_LENGTH = 5
+
 enum class IntSetting(val stringResId: Int, val settingDbKey: String) {
     REMINDER_DAYS(R.string.days_before_reminder, "reminder_days"),
     PERIOD_HISTORY(R.string.period_history, "period_history"),
     OVULATION_HISTORY(R.string.ovulation_history, "ovulation_history"),
+    USER_DEFINED_PERIOD_LENGTH(R.string.user_defined_period_length, "user_defined_period_length"),
 }
 
 enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
