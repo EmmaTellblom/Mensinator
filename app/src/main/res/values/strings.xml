@@ -87,6 +87,15 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Average luteal phase length: </string>
     <string name="days"> days</string>
+    <string name="period_history_past">Past</string>
+    <string name="period_history_prediction">Prediction</string>
+    <string name="period_history_start_date">Start date</string>
+    <string name="period_history_cycle_length_days">Cycle length (days)</string>
+    <string name="period_history_no_completed_periods">No completed periods yet</string>
+    <string name="period_history_not_enough_data">Not enough data to predict</string>
+    <string name="period_history_older_periods">Older periods</string>
+    <string name="period_history_newer_periods">Newer periods</string>
+    <string name="period_history_page_indicator">%1$d / %2$d</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Edit Symptoms</string>
