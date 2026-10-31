@@ -246,6 +246,51 @@ class PeriodDatabaseHelper(
         return count
     }
 
+    override suspend fun getAllPeriodSummaries(): List<PeriodSummary> =
+        withContext(dispatcherProvider.IO) {
+            val summaries = mutableListOf<PeriodSummary>()
+            val query = """
+                SELECT p.period_id,
+                       p.start_date,
+                       p.end_date,
+                       (SELECT MIN(p2.date) FROM $TABLE_PERIODS p2 WHERE p2.date > p.end_date) AS next_start_date
+                FROM (
+                    SELECT $COLUMN_PERIOD_ID AS period_id,
+                           MIN($COLUMN_DATE) AS start_date,
+                           MAX($COLUMN_DATE) AS end_date
+                    FROM $TABLE_PERIODS
+                    GROUP BY $COLUMN_PERIOD_ID
+                ) p
+                ORDER BY p.start_date DESC
+            """
+
+            readableDatabase.rawQuery(query, null).use { cursor ->
+                val periodIdIndex = cursor.getColumnIndexOrThrow("period_id")
+                val startDateIndex = cursor.getColumnIndexOrThrow("start_date")
+                val endDateIndex = cursor.getColumnIndexOrThrow("end_date")
+                val nextStartDateIndex = cursor.getColumnIndexOrThrow("next_start_date")
+
+                while (cursor.moveToNext()) {
+                    val nextStartDate = if (cursor.isNull(nextStartDateIndex)) {
+                        null
+                    } else {
+                        LocalDate.parse(cursor.getString(nextStartDateIndex))
+                    }
+
+                    summaries.add(
+                        PeriodSummary(
+                            periodId = cursor.getInt(periodIdIndex),
+                            startDate = LocalDate.parse(cursor.getString(startDateIndex)),
+                            endDate = LocalDate.parse(cursor.getString(endDateIndex)),
+                            nextStartDate = nextStartDate,
+                        )
+                    )
+                }
+            }
+
+            summaries
+        }
+
     override fun removeDateFromPeriod(date: LocalDate) {
         val db = writableDatabase
         val whereClause = "$COLUMN_DATE = ?"
