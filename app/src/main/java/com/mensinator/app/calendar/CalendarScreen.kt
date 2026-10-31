@@ -65,7 +65,7 @@ fun CalendarScreen(
         firstVisibleMonth = currentYearMonth,
     )
     val coroutineScope = rememberCoroutineScope()
-    val showSymptomsDialog = remember { mutableStateOf(false) }
+    val showSymptomsDialog = remember { mutableStateOf(value = false) }
 
     LaunchedEffect(isDarkMode) { viewModel.updateDarkModeStatus(isDarkMode) }
 
@@ -82,7 +82,7 @@ fun CalendarScreen(
         modifier = modifier
             .fillMaxSize()
             .displayCutoutExcludingStatusBarsPadding()
-            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp)
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
     ) {
         LaunchedEffect(calendarState.firstVisibleMonth) {
             viewModel.onAction(UiAction.UpdateFocusedYearMonth(calendarState.firstVisibleMonth.yearMonth))

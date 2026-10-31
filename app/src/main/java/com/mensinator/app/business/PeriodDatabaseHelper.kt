@@ -197,7 +197,7 @@ class PeriodDatabaseHelper(
 
             val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
             db.rawQuery(query, arrayOf(date.toString())).use { cursor ->
-                if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                if (cursor.moveToFirst() && (cursor.getInt(0) > 0)) {
                     return@use
                 } else {
                     db.insert(TABLE_PERIODS, null, values)

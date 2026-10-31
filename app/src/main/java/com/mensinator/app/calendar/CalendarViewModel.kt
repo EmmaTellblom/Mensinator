@@ -37,7 +37,7 @@ class CalendarViewModel(
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(
-        ViewState()
+        ViewState(),
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
@@ -56,7 +56,7 @@ class CalendarViewModel(
                         ?.toJavaLocalDate(),
                     periodDates = dbHelper.getPeriodDatesForMonth(
                         it.focusedYearMonth.year,
-                        it.focusedYearMonth.monthValue
+                        it.focusedYearMonth.monthValue,
                     ).mapKeys { entry -> entry.key.toJavaLocalDate() }.toPersistentMap(),
                     symptomDates = dbHelper.getSymptomsForDates()
                         .mapKeys { entry -> entry.key.toJavaLocalDate() }.toPersistentMap(),
@@ -108,7 +108,6 @@ class CalendarViewModel(
                         )
                     }
                 }
-                Unit
             }
 
             is UiAction.UpdateSymptomDates -> {
@@ -168,7 +167,7 @@ class CalendarViewModel(
         val minAllowedMonth = minSelectedMonth.minusMonths(2)
         val maxAllowedMonth = maxSelectedMonth.plusMonths(1)
 
-        if (newFocus >= minAllowedMonth && newFocus <= maxAllowedMonth) return
+        if ((newFocus in minAllowedMonth..maxAllowedMonth)) return
 
         _viewState.update {
             it.copy(
