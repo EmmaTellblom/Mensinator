@@ -2,6 +2,7 @@ package com.mensinator.app.business
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
@@ -193,7 +194,7 @@ class PeriodDatabaseHelper(
 
             val query = "SELECT COUNT(*) FROM $TABLE_PERIODS WHERE $COLUMN_DATE = ?"
             db.rawQuery(query, arrayOf(date.toString())).use { cursor ->
-                if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                if (cursor.moveToFirst() && (cursor.getInt(0) > 0)) {
                     return@use
                 } else {
                     db.insert(TABLE_PERIODS, null, values)

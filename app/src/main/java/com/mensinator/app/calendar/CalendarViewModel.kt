@@ -35,7 +35,7 @@ class CalendarViewModel(
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(
-        ViewState()
+        ViewState(),
     )
     val viewState: StateFlow<ViewState> = _viewState.asStateFlow()
 
@@ -51,7 +51,7 @@ class CalendarViewModel(
                     ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate(),
                     periodDates = dbHelper.getPeriodDatesForMonth(
                         it.focusedYearMonth.year,
-                        it.focusedYearMonth.monthValue
+                        it.focusedYearMonth.monthValue,
                     ).toPersistentMap(),
                     symptomDates = dbHelper.getSymptomsForDates().toPersistentMap(),
                     ovulationDates = dbHelper.getOvulationDatesForMonth(
@@ -59,7 +59,7 @@ class CalendarViewModel(
                         it.focusedYearMonth.monthValue
                     ).toPersistentSet(),
                     activeSymptoms = dbHelper.getAllSymptoms()
-                        .filter { symptom->  symptom.isActive }
+                        .filter { symptom -> symptom.isActive }
                         .toPersistentSet(),
                 )
             }
@@ -103,35 +103,41 @@ class CalendarViewModel(
             }
 
             is UiAction.UpdateSymptomDates -> {
-                dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
-                onAction(UiAction.SelectDays(persistentSetOf()))
-                refreshData()
+                viewModelScope.launch {
+                    dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
+                }
             }
 
             is UiAction.UpdateOvulationDay -> {
-                dbHelper.updateOvulationDate(uiAction.ovulationDay)
-                onAction(UiAction.SelectDays(persistentSetOf()))
-                refreshData()
+                viewModelScope.launch {
+                    dbHelper.updateOvulationDate(uiAction.ovulationDay)
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
+                }
             }
 
             is UiAction.UpdatePeriodDates -> {
-                /**
-                 * Make sure that if two or more days are selected (and at least one is already marked as period),
-                 * we should make sure that all days are removed.
-                 */
-                val datesAlreadyMarkedAsPeriod =
-                    uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
-                if (datesAlreadyMarkedAsPeriod.isEmpty()) {
-                    uiAction.selectedDays.forEach {
-                        val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                        dbHelper.addDateToPeriod(it, periodId)
+                viewModelScope.launch {
+                    /**
+                     * Make sure that if two or more days are selected (and at least one is already marked as period),
+                     * we should make sure that all days are removed.
+                     */
+                    val datesAlreadyMarkedAsPeriod =
+                        uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
+                    if (datesAlreadyMarkedAsPeriod.isEmpty()) {
+                        uiAction.selectedDays.forEach {
+                            val periodId = dbHelper.newFindOrCreatePeriodID(it)
+                            dbHelper.addDateToPeriod(it, periodId)
+                        }
+                    } else {
+                        datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
                     }
-                } else {
-                    datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                    notificationScheduler.schedulePeriodNotification()
+                    onAction(UiAction.SelectDays(persistentSetOf()))
+                    refreshData()
                 }
-                viewModelScope.launch { notificationScheduler.schedulePeriodNotification() }
-                onAction(UiAction.SelectDays(persistentSetOf()))
-                refreshData()
             }
         }
     }
