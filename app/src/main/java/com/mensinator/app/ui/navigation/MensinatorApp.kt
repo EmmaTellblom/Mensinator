@@ -122,6 +122,7 @@ private fun MainScaffold(
                             selected = currentScreen == item.screen,
                             onClick = { onItemClick(item) },
                             icon = { NavigationItemIcon(currentScreen, item) },
+                            label = { Text(stringResource(item.screen.titleRes)) }
                         )
                     }
                 }
@@ -138,7 +139,8 @@ private fun MainScaffold(
                             NavigationBarItem(
                                 selected = currentScreen == item.screen,
                                 onClick = { onItemClick(item) },
-                                icon = { NavigationItemIcon(currentScreen, item) }
+                                icon = { NavigationItemIcon(currentScreen, item) },
+                                label = { Text(stringResource(item.screen.titleRes)) }
                             )
                         }
                     }
@@ -248,7 +250,7 @@ private val navigationItems = listOf(
     NavigationItem(
         screen = Screen.Calendar,
         R.drawable.baseline_calendar_month_24,
-        R.drawable.baseline_calendar_month_24 //here you can add not_field icon if you want. when its not selected
+        R.drawable.baseline_calendar_month_24 //here you can add not_field icon if you want. when it's not selected
     ),
     NavigationItem(
         screen = Screen.Statistic,
