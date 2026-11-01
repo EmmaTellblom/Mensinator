@@ -1,14 +1,15 @@
 package com.mensinator.app.business
 
 import android.util.Log
-import java.io.File
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.time.LocalDate
-import androidx.core.database.sqlite.transaction
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
+import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.File
 import java.io.FileInputStream
-import java.time.format.DateTimeFormatter
+import java.io.InputStreamReader
 
 class FloImport(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -66,9 +67,9 @@ class FloImport(
     private fun getPeriodDates(startDate: LocalDate, endDate: LocalDate): List<LocalDate> {
         val periodDates = mutableListOf<LocalDate>()
         var currentDate = startDate
-        while (!currentDate.isAfter(endDate)) {
+        while (currentDate <= endDate) {
             periodDates.add(currentDate)
-            currentDate = currentDate.plusDays(1)
+            currentDate = currentDate.plus(1, DateTimeUnit.DAY)
         }
         return periodDates
     }
@@ -85,8 +86,8 @@ class FloImport(
             val endDateString = cycle.optString("period_end_date")
 
             if (startDateString.isNotEmpty() && endDateString.isNotEmpty()) {
-                val startDate = LocalDate.parse(startDateString, DateTimeFormatter.ISO_LOCAL_DATE)
-                val endDate = LocalDate.parse(endDateString, DateTimeFormatter.ISO_LOCAL_DATE)
+                val startDate = parseFloDate(startDateString)
+                val endDate = parseFloDate(endDateString)
 
                 val dates = getPeriodDates(startDate, endDate)
 
@@ -98,7 +99,7 @@ class FloImport(
         }
 
         // Get Ovulations from either OvulationTests or "own judgement"
-        val pointEventsArray = operationalData.getJSONArray("point_events_manual_v2")
+        val pointEventsArray = operationalData.getJSONArray("point_events_manual_v2") ?: JSONArray()
         for (i in 0 until pointEventsArray.length()) {
             val event = pointEventsArray.getJSONObject(i)
 
@@ -109,10 +110,15 @@ class FloImport(
 
                 val dateString = event.optString("date")
                 if (dateString.isNotEmpty()) {
-                    val date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE)
+                    val date = LocalDate.parse(dateString)
                     dbHelper.addOvulationDate(date)
                 }
             }
         }
+    }
+
+    private fun parseFloDate(dateString: String): LocalDate {
+        val cleanDate = dateString.trim().substringBefore(' ').substringBefore('T')
+        return LocalDate.parse(cleanDate)
     }
 }

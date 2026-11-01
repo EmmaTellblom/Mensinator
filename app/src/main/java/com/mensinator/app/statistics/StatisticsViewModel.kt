@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toJavaLocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -53,9 +54,11 @@ class StatisticsViewModel(
             val avgLuteal = formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint())
             val follicleGrowth = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint()
             val ovulationPred =
-                ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash
+                ovulationPrediction.getPredictedOvulationDate()?.toJavaLocalDate()
+                    ?.format(dateFormatter) ?: dash
             val periodPred =
-                periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash
+                periodPrediction.getPredictedPeriodDate()?.toJavaLocalDate()?.format(dateFormatter)
+                    ?: dash
             val ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
 
             _viewState.update {

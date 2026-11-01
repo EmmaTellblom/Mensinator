@@ -4,6 +4,7 @@ import android.content.Context
 import com.mensinator.app.business.notifications.IAndroidNotificationScheduler
 import com.mensinator.app.business.notifications.NotificationScheduler
 import com.mensinator.app.data.Setting
+import com.mensinator.app.extensions.now
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.ResourceMapper
@@ -14,12 +15,15 @@ import io.mockk.impl.annotations.RelaxedMockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.DateTimeUnit
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import java.time.ZoneOffset
 import java.util.TimeZone
 
@@ -75,8 +79,8 @@ class NotificationSchedulerTest {
         // Given
         val reminderDays = 2
         val today = LocalDate.now()
-        val predictedDate = today.plusDays(5)
-        val expectedNotificationDate = predictedDate.minusDays(reminderDays.toLong())
+        val predictedDate = today.plus(5, DateTimeUnit.DAY)
+        val expectedNotificationDate = predictedDate.minus(reminderDays.toLong(), DateTimeUnit.DAY)
         val customMessage = "Custom period message"
         val mappedMessage = "Your period is coming in 2 days"
 
@@ -104,7 +108,7 @@ class NotificationSchedulerTest {
     fun `do not schedule notification when reminder days is zero`() = runTest(testDispatcher) {
         // Given
         val reminderDays = 0
-        val predictedDate = LocalDate.now().plusDays(5)
+        val predictedDate = LocalDate.now().plus(5, DateTimeUnit.DAY)
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
             every { value } returns reminderDays.toString()
@@ -126,7 +130,8 @@ class NotificationSchedulerTest {
             // Given
             val reminderDays = 3
             val today = LocalDate.now()
-            val predictedDate = today.plusDays(2) // This makes the reminder date in the past
+            val predictedDate =
+                today.plus(2, DateTimeUnit.DAY) // This makes the reminder date in the past
 
             coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {
                 every { value } returns reminderDays.toString()
@@ -168,8 +173,11 @@ class NotificationSchedulerTest {
         // Given
         val defaultReminderDays = 2
         val today = LocalDate.now()
-        val predictedDate = today.plusDays(5)
-        val expectedNotificationDate = predictedDate.minusDays(defaultReminderDays.toLong())
+        val predictedDate = today.plus(5, DateTimeUnit.DAY)
+        val expectedNotificationDate = predictedDate.minus(
+            defaultReminderDays.toLong(),
+            DateTimeUnit.DAY
+        )
         val message = "message"
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns null
@@ -191,8 +199,11 @@ class NotificationSchedulerTest {
         // Given
         val defaultReminderDays = 2
         val today = LocalDate.now()
-        val predictedDate = today.plusDays(5)
-        val expectedNotificationDate = predictedDate.minusDays(defaultReminderDays.toLong())
+        val predictedDate = today.plus(5, DateTimeUnit.DAY)
+        val expectedNotificationDate = predictedDate.minus(
+            defaultReminderDays.toLong(),
+            DateTimeUnit.DAY
+        )
         val message = "message"
 
         coEvery { dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey) } returns mockk<Setting> {

@@ -1,7 +1,7 @@
 package com.mensinator.app.business
 
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * This helper provides methods to calculate menstrual cycle related data

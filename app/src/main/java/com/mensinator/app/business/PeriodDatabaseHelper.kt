@@ -18,7 +18,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import java.time.LocalDate
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import java.time.YearMonth
 
 
@@ -701,7 +704,12 @@ class PeriodDatabaseHelper(
         val query = """
         SELECT DISTINCT PERIOD_ID FROM PERIODS WHERE DATE = ? OR DATE BETWEEN ? AND ?
     """
-        val args = arrayOf(dateStr, date.minusDays(1).toString(), date.plusDays(1).toString())
+        val args = arrayOf(
+            dateStr, date.minus(1, DateTimeUnit.DAY).toString(), date.plus(
+                1,
+                DateTimeUnit.DAY
+            ).toString()
+        )
         val cursor = db.rawQuery(query, args)
 
         cursor.use { cursor ->

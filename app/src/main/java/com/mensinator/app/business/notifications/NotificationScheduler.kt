@@ -5,12 +5,15 @@ import android.content.Context
 import android.util.Log
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
+import com.mensinator.app.extensions.now
 import com.mensinator.app.settings.IntSetting
 import com.mensinator.app.settings.StringSetting
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.utils.IDispatcherProvider
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
 
 /**
  * Service that checks whether a notification should be scheduled or cancelled.
@@ -33,7 +36,8 @@ class NotificationScheduler(
     override suspend fun schedulePeriodNotification() {
         withContext(dispatcherProvider.IO) {
             val periodReminderDays =
-                dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull() ?: defaultReminderDays
+                dbHelper.getSettingByKey(IntSetting.REMINDER_DAYS.settingDbKey)?.value?.toIntOrNull()
+                    ?: defaultReminderDays
             val nextPeriodDate = periodPrediction.getPredictedPeriodDate()
             val initPeriodKeyOrCustomMessage =
                 dbHelper.getStringSettingByKey(StringSetting.PERIOD_NOTIFICATION_MESSAGE.settingDbKey)
@@ -43,7 +47,10 @@ class NotificationScheduler(
             val notificationDate = getNotificationScheduleDate(periodReminderDays, nextPeriodDate)
             withContext(dispatcherProvider.Main) {
                 if (notificationDate != null) {
-                    androidNotificationScheduler.scheduleNotification(periodMessageText, notificationDate)
+                    androidNotificationScheduler.scheduleNotification(
+                        periodMessageText,
+                        notificationDate
+                    )
                 } else {
                     // Make sure the scheduled notification is cancelled, if the user data/conditions become invalid.
                     androidNotificationScheduler.cancelScheduledNotification()
@@ -59,8 +66,8 @@ class NotificationScheduler(
     ): LocalDate? {
         if (periodReminderDays <= 0 || nextPeriodDate == null) return null
 
-        val notificationDate = nextPeriodDate.minusDays(periodReminderDays.toLong())
-        if (notificationDate.isBefore(LocalDate.now())) {
+        val notificationDate = nextPeriodDate.minus(periodReminderDays.toLong(), DateTimeUnit.DAY)
+        if (notificationDate < LocalDate.now()) {
             Log.d(
                 "CalendarScreen",
                 "Notification not scheduled because the reminder date is in the past"
@@ -68,6 +75,6 @@ class NotificationScheduler(
             return null
         }
 
-        return nextPeriodDate.minusDays(periodReminderDays.toLong())
+        return nextPeriodDate.minus(periodReminderDays.toLong(), DateTimeUnit.DAY)
     }
 }

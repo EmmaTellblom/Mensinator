@@ -6,7 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.mensinator.app.NotificationReceiver
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toJavaLocalDate
 import java.time.ZoneId
 
 /**
@@ -21,7 +22,8 @@ class AndroidNotificationScheduler(
         notificationDate: LocalDate
     ) {
         val notificationTimeMillis =
-            notificationDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            notificationDate.toJavaLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant()
+                .toEpochMilli()
         alarmManager.set(
             AlarmManager.RTC_WAKEUP,
             notificationTimeMillis,

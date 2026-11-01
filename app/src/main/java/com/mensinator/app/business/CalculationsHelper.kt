@@ -1,13 +1,16 @@
 package com.mensinator.app.business
 
-import com.mensinator.app.widgets.PeriodCalculationWidgetUpdater
-
 import android.util.Log
+import com.mensinator.app.extensions.now
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
+import com.mensinator.app.widgets.PeriodCalculationWidgetUpdater
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.until
 
 class CalculationsHelper(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -40,16 +43,14 @@ class CalculationsHelper(
                 // Calculate the cycle lengths between consecutive periods
                 val cycleLengths = mutableListOf<Long>()
                 for (i in 0 until listPeriodDates.size - 1) {
-                    val cycleLength = ChronoUnit.DAYS.between(
-                        listPeriodDates[i],
-                        listPeriodDates[i + 1]
-                    )
-                    cycleLengths.add(cycleLength)
+                    val cycleLength =
+                        listPeriodDates[i].until(listPeriodDates[i + 1], DateTimeUnit.DAY)
+                    cycleLengths.add(cycleLength.toLong())
                 }
                 // Calculate the average cycle length
                 val averageLength = cycleLengths.average()
 
-                listPeriodDates.last().plusDays(averageLength.toLong())
+                listPeriodDates.last().plus(averageLength.toLong(), DateTimeUnit.DAY)
             }.also {
                 Log.d("TAG", "Expected period date Basic: $it")
             }
@@ -58,7 +59,7 @@ class CalculationsHelper(
 
     override fun nextPeriod(): Flow<LocalDate?> = dbHelper.dbWriteTrigger.map {
         val result = calculateNextPeriod()
-        PeriodCalculationWidgetUpdater.updateWidgetsIfPeriodChanged(result)
+        PeriodCalculationWidgetUpdater.updateWidgetsIfPeriodChanged(result?.toJavaLocalDate())
         result
     }
 
@@ -104,12 +105,19 @@ class CalculationsHelper(
             //There is a period start date after last ovulation date
             //We need to recalculate according to next calculated ovulation
             val avgGrowthRate = averageFollicalGrowthInDays()
-            val expectedOvulation = periodDates.last().plusDays(avgGrowthRate.toInt().toLong())
-            val expectedPeriodDate = expectedOvulation.plusDays(averageLutealLength.toLong())
+            val expectedOvulation = periodDates.last().plus(
+                avgGrowthRate.toInt().toLong(),
+                DateTimeUnit.DAY
+            )
+            val expectedPeriodDate = expectedOvulation.plus(
+                averageLutealLength.toLong(),
+                DateTimeUnit.DAY
+            )
             Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
             return expectedPeriodDate
         } else {
-            val expectedPeriodDate = lastOvulation.plusDays(averageLutealLength.toLong())
+            val expectedPeriodDate =
+                lastOvulation.plus(averageLutealLength.toLong(), DateTimeUnit.DAY)
             Log.d("TAG", "Next expected period: $expectedPeriodDate")
             // Calculate the expected period date
             return expectedPeriodDate
@@ -125,7 +133,7 @@ class CalculationsHelper(
 
         val growthRate = ovulationDates.mapNotNull { d ->
             dbHelper.getFirstPreviousPeriodDate(d)?.let { firstDate ->
-                d.toEpochDay().toInt() - firstDate.toEpochDay().toInt()
+                d.toEpochDays() - firstDate.toEpochDays()
             }
         }
 
@@ -141,7 +149,7 @@ class CalculationsHelper(
         }
 
         val cycleLengths = listPeriodDates.zipWithNext { a, b ->
-            ChronoUnit.DAYS.between(a, b)
+            a.until(b, DateTimeUnit.DAY)
         }
 
         return cycleLengths.average()
@@ -189,10 +197,9 @@ class CalculationsHelper(
             // Check if the nextPeriodDate is not null
             if (nextPeriodDate != null) {
                 // Calculate the number of days between the ovulation date and the next period date
-                val daysBetween =
-                    ChronoUnit.DAYS.between(ovulationDate, nextPeriodDate)
+                val daysBetween = ovulationDate.until(nextPeriodDate, DateTimeUnit.DAY)
                 // Add the result to the list
-                lutealLengths.add(daysBetween)
+                lutealLengths.add(daysBetween.toLong())
             } else {
                 Log.d("TAG", "Next period date is null")
                 return 0.0
@@ -209,14 +216,12 @@ class CalculationsHelper(
     override suspend fun getLutealLengthForPeriod(date: LocalDate): Int {
         val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
         if (firstNextPeriodDate != null) {
-            val lutealLength =
-                ChronoUnit.DAYS.between(date, firstNextPeriodDate).toInt()
+            val lutealLength = date.until(firstNextPeriodDate, DateTimeUnit.DAY).toInt()
             Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
             return lutealLength
         } else {
             return 0
         }
-
     }
 
     override suspend fun getCycleDay(date: LocalDate): Int? {
@@ -224,7 +229,7 @@ class CalculationsHelper(
         if (date > LocalDate.now()) return null
 
         val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(date) ?: return null
-        return ChronoUnit.DAYS.between(lastPeriodStartDate, date).toInt() + 1
+        return lastPeriodStartDate.until(date, DateTimeUnit.DAY).toInt() + 1
     }
 
     override fun cycleDay(date: LocalDate): Flow<Int?> = dbHelper.dbWriteTrigger.map {

@@ -3,10 +3,9 @@ package com.mensinator.app.business
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.net.Uri
+import kotlinx.datetime.LocalDate
 import org.json.JSONObject
 import java.io.File
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -61,7 +60,6 @@ class MensinatorExportImport(
 
     // This is used for periods and ovulations since these tables have constraints on dates in the db
     private suspend fun importPeriodsAndOvulations(importData: JSONObject): Boolean {
-        val formatter = DateTimeFormatter.ISO_LOCAL_DATE
         var success = false
 
         try {
@@ -71,7 +69,7 @@ class MensinatorExportImport(
                 for (i in 0 until periodsArray.length()) {
                     val periodObj = periodsArray.getJSONObject(i)
                     val dateString = periodObj.getString("date")
-                    val date = LocalDate.parse(dateString, formatter)
+                    val date = LocalDate.parse(dateString)
                     val periodId = dbHelper.newFindOrCreatePeriodID(date)
                     dbHelper.addDateToPeriod(date, periodId)
                 }
@@ -84,7 +82,7 @@ class MensinatorExportImport(
                 for (i in 0 until ovulationsArray.length()) {
                     val ovulationObj = ovulationsArray.getJSONObject(i)
                     val dateString = ovulationObj.getString("date")
-                    val date = LocalDate.parse(dateString, formatter)
+                    val date = LocalDate.parse(dateString)
                     dbHelper.addOvulationDate(date)
                 }
                 success = true

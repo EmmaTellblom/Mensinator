@@ -1,6 +1,6 @@
 package com.mensinator.app.business.notifications
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 interface IAndroidNotificationScheduler {
     fun scheduleNotification(

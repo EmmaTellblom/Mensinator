@@ -1,7 +1,10 @@
 package com.mensinator.app.business
 
 import android.util.Log
-import java.time.LocalDate
+import com.mensinator.app.extensions.now
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 
 class OvulationPrediction(
     private val dbHelper: IPeriodDatabaseHelper,
@@ -14,7 +17,8 @@ class OvulationPrediction(
         val ovulationCount = dbHelper.getOvulationCount()
         val periodPredictionDate = periodPrediction.getPredictedPeriodDate()
         val lastOvulationDate = dbHelper.getNewestOvulationDate()
-        val firstDayOfNextMonth = LocalDate.now().withDayOfMonth(1).plusMonths(1)
+        val today = LocalDate.now()
+        val firstDayOfNextMonth = LocalDate(today.year, today.month, 1).plus(1, DateTimeUnit.MONTH)
         val previousFirstPeriodDate = dbHelper.getFirstPreviousPeriodDate(firstDayOfNextMonth)
 
         // No data at all in database
@@ -33,7 +37,7 @@ class OvulationPrediction(
             val averageOvulationDay = calcHelper.averageFollicalGrowthInDays().toInt()
             if (averageOvulationDay > 0) {
                 val latestPeriodStart = dbHelper.getLatestPeriodStart()
-                latestPeriodStart?.plusDays(averageOvulationDay.toLong())
+                latestPeriodStart?.plus(averageOvulationDay.toLong(), DateTimeUnit.DAY)
             } else {
                 // Return a default value, not enough data to predict ovulation, averageFollicalGrowthInDays() returns 0
                 null
@@ -48,7 +52,7 @@ class OvulationPrediction(
             val follicleGrowthDaysLong = follicleGrowthDays.toLong()
 
             if (follicleGrowthDaysLong > 0) {
-                periodPredictionDate?.plusDays(follicleGrowthDaysLong)
+                periodPredictionDate?.plus(follicleGrowthDaysLong, DateTimeUnit.DAY)
             } else {
                 // Return a default value, not enough data to predict ovulation, averageFollicalGrowthInDays() returns 0
                 null

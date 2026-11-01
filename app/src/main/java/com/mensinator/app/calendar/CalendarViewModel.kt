@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toKotlinLocalDate
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -42,22 +44,26 @@ class CalendarViewModel(
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             val showCycleNumbersSetting =
-                (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull() ?: 1) == 1
+                (dbHelper.getSettingByKey(BooleanSetting.SHOW_CYCLE_NUMBERS.settingDbKey)?.value?.toIntOrNull()
+                    ?: 1) == 1
 
             _viewState.update {
                 it.copy(
                     showCycleNumbers = showCycleNumbersSetting,
-                    periodPredictionDate = periodPrediction.getPredictedPeriodDate(),
-                    ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate(),
+                    periodPredictionDate = periodPrediction.getPredictedPeriodDate()
+                        ?.toJavaLocalDate(),
+                    ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()
+                        ?.toJavaLocalDate(),
                     periodDates = dbHelper.getPeriodDatesForMonth(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue,
-                    ).toPersistentMap(),
-                    symptomDates = dbHelper.getSymptomsForDates().toPersistentMap(),
+                    ).mapKeys { entry -> entry.key.toJavaLocalDate() }.toPersistentMap(),
+                    symptomDates = dbHelper.getSymptomsForDates()
+                        .mapKeys { entry -> entry.key.toJavaLocalDate() }.toPersistentMap(),
                     ovulationDates = dbHelper.getOvulationDatesForMonth(
                         it.focusedYearMonth.year,
                         it.focusedYearMonth.monthValue
-                    ).toPersistentSet(),
+                    ).map { date -> date.toJavaLocalDate() }.toPersistentSet(),
                     activeSymptoms = dbHelper.getAllSymptoms()
                         .filter { symptom -> symptom.isActive }
                         .toPersistentSet(),
@@ -91,7 +97,9 @@ class CalendarViewModel(
                         val activeSymptoms = if (uiAction.days.isEmpty()) {
                             persistentSetOf()
                         } else {
-                            dbHelper.getActiveSymptomIdsForDate(uiAction.days.last())
+                            dbHelper.getActiveSymptomIdsForDate(
+                                uiAction.days.last().toKotlinLocalDate()
+                            )
                                 .toPersistentSet()
                         }
                         it.copy(
@@ -104,7 +112,10 @@ class CalendarViewModel(
 
             is UiAction.UpdateSymptomDates -> {
                 viewModelScope.launch {
-                    dbHelper.updateSymptomDate(uiAction.days.toList(), uiAction.selectedSymptomIds)
+                    dbHelper.updateSymptomDate(
+                        uiAction.days.map { it.toKotlinLocalDate() },
+                        uiAction.selectedSymptomIds
+                    )
                     onAction(UiAction.SelectDays(persistentSetOf()))
                     refreshData()
                 }
@@ -112,7 +123,7 @@ class CalendarViewModel(
 
             is UiAction.UpdateOvulationDay -> {
                 viewModelScope.launch {
-                    dbHelper.updateOvulationDate(uiAction.ovulationDay)
+                    dbHelper.updateOvulationDate(uiAction.ovulationDay.toKotlinLocalDate())
                     onAction(UiAction.SelectDays(persistentSetOf()))
                     refreshData()
                 }
@@ -128,11 +139,11 @@ class CalendarViewModel(
                         uiAction.selectedDays.intersect(uiAction.currentPeriodDays.keys)
                     if (datesAlreadyMarkedAsPeriod.isEmpty()) {
                         uiAction.selectedDays.forEach {
-                            val periodId = dbHelper.newFindOrCreatePeriodID(it)
-                            dbHelper.addDateToPeriod(it, periodId)
+                            val periodId = dbHelper.newFindOrCreatePeriodID(it.toKotlinLocalDate())
+                            dbHelper.addDateToPeriod(it.toKotlinLocalDate(), periodId)
                         }
                     } else {
-                        datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it) }
+                        datesAlreadyMarkedAsPeriod.forEach { dbHelper.removeDateFromPeriod(it.toKotlinLocalDate()) }
                     }
                     notificationScheduler.schedulePeriodNotification()
                     onAction(UiAction.SelectDays(persistentSetOf()))
