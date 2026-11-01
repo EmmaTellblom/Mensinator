@@ -194,13 +194,7 @@ fun SettingsScreen(
                 defaultImportFilePath = viewState.defaultImportFilePath,
                 onDismissRequest = { viewModel.showImportDialog(false) },
                 onImportClick = { importPath, source ->
-                    val importSuccessful = viewModel.handleImport(importPath, source)
-                    val stringId = if (importSuccessful) {
-                        R.string.import_success_toast
-                    } else {
-                        R.string.import_failure_toast
-                    }
-                    Toast.makeText(context, stringId, Toast.LENGTH_SHORT).show()
+                    viewModel.handleImport(importPath, source)
                 }
             )
         }

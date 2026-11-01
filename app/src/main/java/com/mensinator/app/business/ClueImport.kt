@@ -14,14 +14,12 @@ class ClueImport(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IClueImport {
 
-    override fun importFileToDatabase(filePath: String): Boolean {
-        val db = dbHelper.writableDb
+    override suspend fun importFileToDatabase(filePath: String): Boolean {
         return try {
             // Read JSON data from the file
             val file = File(filePath)
             val fileInputStream = FileInputStream(file)
             val reader = BufferedReader(InputStreamReader(fileInputStream))
-
             val fileContent = reader.use { it.readText() }
 
             // Parse JSON array from the file
@@ -30,16 +28,10 @@ class ClueImport(
             // Validate the data before cleanup
             if (!validateImportData(importArray)) return false
 
-            db.transaction {
-                processData(importArray)
-            }
-            // Close the database
-            db.close()
-
+            processData(importArray)
             true
         } catch (e: Exception) {
             Log.d("ClueImport", "Error importing file: $e")
-            db.close()
             false
         }
     }
@@ -62,7 +54,7 @@ class ClueImport(
         return false
     }
 
-    private fun processData(importArray: JSONArray) {
+    private suspend fun processData(importArray: JSONArray) {
         val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
         for (i in 0 until importArray.length()) {
@@ -76,6 +68,7 @@ class ClueImport(
                     val periodId = dbHelper.newFindOrCreatePeriodID(date)
                     dbHelper.addDateToPeriod(date, periodId)
                 }
+
                 "tests" -> {
                     val valueArray = obj.getJSONArray("value")
                     // we need to loop in case there are several different tests

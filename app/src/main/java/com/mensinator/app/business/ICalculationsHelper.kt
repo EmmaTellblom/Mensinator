@@ -13,7 +13,7 @@ interface ICalculationsHelper {
      *
      * @return The next expected period date.
      */
-    fun calculateNextPeriod(): LocalDate?
+    suspend fun calculateNextPeriod(): LocalDate?
 
     fun nextPeriod(): Flow<LocalDate?>
 
@@ -22,28 +22,28 @@ interface ICalculationsHelper {
      *
      * @return The average follicular phase length as a string.
      */
-    fun averageFollicalGrowthInDays(): Double
+    suspend fun averageFollicalGrowthInDays(): Double
 
     /**
      * Calculates the average cycle length using the latest period start dates.
      * X comes from app_settings in the database
      * @return The average cycle length as a double.
      */
-    fun averageCycleLength(): Double
+    suspend fun averageCycleLength(): Double
 
     /**
      * Calculates the average period length using the latest period start dates.
      *
      * @return The average period length as a double.
      */
-    fun averagePeriodLength(): Double
+    suspend fun averagePeriodLength(): Double
 
     /**
      * Calculates the average luteal phase length using the latest ovulation dates.
      *
      * @return The average luteal phase length as a double.
      */
-    fun averageLutealLength(): Double
+    suspend fun averageLutealLength(): Double
 
     /**
      * Calculates the luteal phase length for a specific cycle.
@@ -51,7 +51,7 @@ interface ICalculationsHelper {
      * @param date The ovulation date.
      * @return The luteal phase length as an integer.
      */
-    fun getLutealLengthForPeriod(date: LocalDate): Int
+    suspend fun getLutealLengthForPeriod(date: LocalDate): Int
 
     /**
      * Calculates the cycle day of a period for a given date.
@@ -60,7 +60,7 @@ interface ICalculationsHelper {
      * - The latest period began 2025-02-01. The cycle day for 2025-02-01 is 1.
      * - The latest period began 2025-02-01. The cycle day for 2025-02-10 is 10.
      */
-    fun getCycleDay(date: LocalDate): Int?
+    suspend fun getCycleDay(date: LocalDate): Int?
 
     fun cycleDay(date: LocalDate): Flow<Int?>
 }

@@ -425,14 +425,17 @@ fun Day(
             }
 
             if (state.showCycleNumbers) {
-                calculationsHelper.getCycleDay(day.date)?.let { cycleNumber ->
+                val cycleNumber by androidx.compose.runtime.produceState<Int?>(initialValue = null, day.date) {
+                    value = calculationsHelper.getCycleDay(day.date)
+                }
+                cycleNumber?.let { cycle ->
                     Surface(
                         shape = shape,
                         color = Color.Transparent,
                         modifier = Modifier.align(Alignment.TopStart)
                     ) {
                         Text(
-                            text = cycleNumber.toString(),
+                            text = cycle.toString(),
                             fontSize = 8.sp,
                             modifier = Modifier.padding(horizontal = 4.dp),
                             color = dayColors.textColor,

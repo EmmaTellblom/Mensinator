@@ -10,18 +10,16 @@ import org.json.JSONObject
 import java.io.FileInputStream
 import java.time.format.DateTimeFormatter
 
-class FloImport (
+class FloImport(
     private val dbHelper: IPeriodDatabaseHelper,
 ) : IFloImport {
 
-    override fun importFileToDatabase(filePath: String): Boolean {
-        val db = dbHelper.writableDb
+    override suspend fun importFileToDatabase(filePath: String): Boolean {
         return try {
             // Read JSON data from the file
             val file = File(filePath)
             val fileInputStream = FileInputStream(file)
             val reader = BufferedReader(InputStreamReader(fileInputStream))
-
             val fileContent = reader.use { it.readText() }
 
             // Parse JSON object from the file
@@ -30,15 +28,10 @@ class FloImport (
             // Validate the data before cleanup
             if (!validateImportData(importObject)) return false
 
-            db.transaction {
-                processData(importObject)
-            }
-
-            db.close()
+            processData(importObject)
             true
         } catch (e: Exception) {
             Log.d("FloImport", "Error importing file: $e")
-            db.close()
             false
         }
     }
@@ -80,7 +73,7 @@ class FloImport (
         return periodDates
     }
 
-    private fun processData(importObject: JSONObject) {
+    private suspend fun processData(importObject: JSONObject) {
         val operationalData = importObject.getJSONObject("operationalData")
 
         // Handle cycles first
@@ -112,8 +105,7 @@ class FloImport (
             val category = event.optString("category")
             val subcategory = event.optString("subcategory")
 
-            if ((category == "OvulationTest" && subcategory == "Positive") ||
-                (category == "Ovulation" && subcategory == "OtherMethods")) {
+            if ((category == "OvulationTest" && subcategory == "Positive") || (category == "Ovulation" && subcategory == "OtherMethods")) {
 
                 val dateString = event.optString("date")
                 if (dateString.isNotEmpty()) {

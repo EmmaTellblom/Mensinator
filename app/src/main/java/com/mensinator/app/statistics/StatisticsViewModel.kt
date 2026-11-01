@@ -3,6 +3,7 @@ package com.mensinator.app.statistics
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mensinator.app.R
 import com.mensinator.app.business.ICalculationsHelper
 import com.mensinator.app.business.IOvulationPrediction
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -44,17 +46,30 @@ class StatisticsViewModel(
     )
 
     fun refreshData() {
-        _viewState.update {
-            it.copy(
-                trackedPeriods = periodDatabaseHelper.getPeriodCount().toString(),
-                averageCycleLength = formatDays(calcHelper.averageCycleLength().formatToOneDecimalPoint()),
-                averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
-                averageLutealLength =formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
-                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
-                ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
-                periodPredictionDate = periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash,
-                ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
-            )
+        viewModelScope.launch {
+            val trackedPeriods = periodDatabaseHelper.getPeriodCount().toString()
+            val avgCycle = formatDays(calcHelper.averageCycleLength().formatToOneDecimalPoint())
+            val avgPeriod = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint())
+            val avgLuteal = formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint())
+            val follicleGrowth = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint()
+            val ovulationPred =
+                ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash
+            val periodPred =
+                periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash
+            val ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
+
+            _viewState.update {
+                it.copy(
+                    trackedPeriods = trackedPeriods,
+                    averageCycleLength = avgCycle,
+                    averagePeriodLength = avgPeriod,
+                    averageLutealLength = avgLuteal,
+                    follicleGrowthDays = follicleGrowth,
+                    ovulationPredictionDate = ovulationPred,
+                    periodPredictionDate = periodPred,
+                    ovulationCount = ovulationCount
+                )
+            }
         }
     }
 
