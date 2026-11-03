@@ -4,13 +4,13 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.lifecycleScope
+import co.touchlab.kermit.Logger
 import com.mensinator.app.NotificationChannelConstants.channelDescription
 import com.mensinator.app.NotificationChannelConstants.channelId
 import com.mensinator.app.NotificationChannelConstants.channelName
@@ -53,7 +53,8 @@ class MainActivity : AppCompatActivity() {
             description = channelDescription
         }
 
-        val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
@@ -65,13 +66,13 @@ class MainActivity : AppCompatActivity() {
                     async { receiver.glanceAppWidget.updateAll(this@MainActivity) }
                 }.awaitAll()
             } catch (e: Exception) {
-                Log.e("MainActivity", "Failed to update widgets on app start", e)
+                Logger.withTag("MainActivity").e(e) { "Failed to update widgets on app start" }
             }
         }
     }
 
     private fun handleScreenProtection(isScreenProtectionEnabled: Boolean) {
-        Log.d("screenProtectionUI", "protect screen value $isScreenProtectionEnabled")
+        Logger.d(tag = "screenProtectionUI") { "protect screen value $isScreenProtectionEnabled" }
         // Sets the flags for screen protection if
         // isScreenProtectionEnabled == true
         // If isScreenProtectionEnabled == false it removes the flags

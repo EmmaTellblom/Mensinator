@@ -1,6 +1,6 @@
 package com.mensinator.app.business
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
@@ -32,7 +32,7 @@ class FloImport(
             processData(importObject)
             true
         } catch (e: Exception) {
-            Log.d("FloImport", "Error importing file: $e")
+            Logger.d(tag = "FloImport") { "Error importing file: $e" }
             false
         }
     }

@@ -1,6 +1,6 @@
 package com.mensinator.app.business
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import kotlinx.datetime.LocalDate
 import org.json.JSONArray
 import java.io.BufferedReader
@@ -29,7 +29,7 @@ class ClueImport(
             processData(importArray)
             true
         } catch (e: Exception) {
-            Log.d("ClueImport", "Error importing file: $e")
+            Logger.d(tag = "ClueImport") { "Error importing file: $e" }
             false
         }
     }

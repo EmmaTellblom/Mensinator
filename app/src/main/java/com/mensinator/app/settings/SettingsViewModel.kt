@@ -5,12 +5,12 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import co.touchlab.kermit.Logger
 import com.mensinator.app.NotificationChannelConstants
 import com.mensinator.app.R
 import com.mensinator.app.business.IClueImport
@@ -20,7 +20,11 @@ import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.notifications.INotificationScheduler
 import com.mensinator.app.data.ColorSource
 import com.mensinator.app.data.ImportSource
-import com.mensinator.app.settings.ColorSetting.*
+import com.mensinator.app.settings.ColorSetting.EXPECTED_OVULATION
+import com.mensinator.app.settings.ColorSetting.EXPECTED_PERIOD
+import com.mensinator.app.settings.ColorSetting.OVULATION
+import com.mensinator.app.settings.ColorSetting.PERIOD
+import com.mensinator.app.settings.ColorSetting.SELECTION
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -156,7 +160,8 @@ class SettingsViewModel(
      */
     fun areNotificationsEnabled(context: Context): Boolean {
         val notificationManager = NotificationManagerCompat.from(context)
-        val channel = notificationManager.getNotificationChannel(NotificationChannelConstants.channelId)
+        val channel =
+            notificationManager.getNotificationChannel(NotificationChannelConstants.channelId)
         return channel?.importance != NotificationManager.IMPORTANCE_NONE && notificationManager.areNotificationsEnabled()
     }
 
@@ -177,16 +182,18 @@ class SettingsViewModel(
         }
     }
 
-    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) = viewModelScope.launch {
-        val dbValue = if (newValue) "1" else "0"
-        periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
-        refreshData()
-    }
+    fun updateBooleanSetting(booleanSetting: BooleanSetting, newValue: Boolean) =
+        viewModelScope.launch {
+            val dbValue = if (newValue) "1" else "0"
+            periodDatabaseHelper.updateSetting(booleanSetting.settingDbKey, dbValue)
+            refreshData()
+        }
 
-    fun updateStringSetting(stringSetting: StringSetting, newString: String) = viewModelScope.launch {
-        periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
-        refreshData()
-    }
+    fun updateStringSetting(stringSetting: StringSetting, newString: String) =
+        viewModelScope.launch {
+            periodDatabaseHelper.updateSetting(stringSetting.settingDbKey, newString)
+            refreshData()
+        }
 
     fun showColorPicker(colorSetting: ColorSetting?) {
         _viewState.update { it.copy(openColorPickerForSetting = colorSetting) }
@@ -238,7 +245,7 @@ class SettingsViewModel(
             showToast("Data exported successfully")
         } catch (e: Exception) {
             showToast("Error during export: ${e.message}")
-            Log.e("Export", "Error during export", e)
+            Logger.withTag("Export").e(e) { "Error during export" }
         }
     }
 
@@ -273,7 +280,7 @@ class SettingsViewModel(
             // Returns the version name, e.g., "1.8.4"
             packageInfo.versionName ?: throw PackageManager.NameNotFoundException()
         } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("SettingsViewModel", "Error getting app version", e)
+            Logger.withTag("SettingsViewModel").e(e) { "Error getting app version" }
             "Unknown" // Fallback if the version name is not found
         }
     }

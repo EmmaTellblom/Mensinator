@@ -10,6 +10,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import co.touchlab.kermit.Logger
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -29,7 +30,7 @@ class BootReceiver : BroadcastReceiver() {
                     async { receiver.glanceAppWidget.updateAll(appContext) }
                 }.awaitAll()
             } catch (e: Exception) {
-                android.util.Log.e("BootReceiver", "Failed to refresh widgets on boot", e)
+                Logger.withTag("BootReceiver").e(e) { "Failed to refresh widgets on boot" }
             } finally {
                 pendingResult.finish()
             }

@@ -8,8 +8,10 @@ import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.delay
+import co.touchlab.kermit.Logger
 
-class MidnightWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+class MidnightWorker(val context: Context, params: WorkerParameters) :
+    CoroutineWorker(context, params) {
 
     companion object {
         fun scheduleNextMidnight(context: Context) {
@@ -42,7 +44,7 @@ class MidnightWorker(val context: Context, params: WorkerParameters) : Coroutine
             MidnightTrigger.midnightTrigger.emit(Unit)
             WidgetInstances.forEach { it.glanceAppWidget.updateAll(context) }
         } catch (e: Exception) {
-            android.util.Log.e("MidnightWorker", "Failed to refresh widgets at midnight", e)
+            Logger.withTag("MidnightWorker").e(e) { "Failed to refresh widgets at midnight" }
         } finally {
             // Always schedule the next midnight, even if this run failed,
             // so the daily cycle keeps going.
