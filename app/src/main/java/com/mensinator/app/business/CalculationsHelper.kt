@@ -1,6 +1,6 @@
 package com.mensinator.app.business
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.mensinator.app.extensions.now
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
 import com.mensinator.app.widgets.PeriodCalculationWidgetUpdater
@@ -28,11 +28,11 @@ class CalculationsHelper(
     override suspend fun calculateNextPeriod(): LocalDate? {
         return if (getLutealCalculation() == 1) {
             //go to advanced calculation using X latest ovulations (set by user in settings)
-            Log.d("TAG", "Advanced calculation")
+            Logger.d(tag = "TAG") { "Advanced calculation" }
             advancedNextPeriod()
         } else {
             // Basic calculation using latest period start dates
-            Log.d("TAG", "Basic calculation")
+            Logger.d(tag = "TAG") { "Basic calculation" }
             //do basic calculation here
             //Use X latest periodstartdates (will return list of X+1)
             val listPeriodDates = dbHelper.getLatestXPeriodStart(getPeriodHistory())
@@ -52,7 +52,7 @@ class CalculationsHelper(
 
                 listPeriodDates.last().plus(averageLength.toLong(), DateTimeUnit.DAY)
             }.also {
-                Log.d("TAG", "Expected period date Basic: $it")
+                Logger.d(tag = "TAG") { "Expected period date Basic: $it" }
             }
         }
     }
@@ -71,32 +71,32 @@ class CalculationsHelper(
     private suspend fun advancedNextPeriod(): LocalDate? {
         // Get the list of the latest ovulation dates
         val ovulationDates = dbHelper.getLatestXOvulationsWithPeriod(getOvulationHistory())
-        //Log.d("TAG", "Ovulation dates: $ovulationDates")
+        //Logger.d("TAG", "Ovulation dates: $ovulationDates")
         if (ovulationDates.isEmpty()) {
             // Return null or handle the case where no ovulations are available
-            Log.d("TAG", "Ovulationdates are empty")
+            Logger.d(tag = "TAG") { "Ovulation dates are empty" }
             return null
         }
 
         var lutealLength = 0
-        Log.d("TAG", "Ovulation dates: $ovulationDates")
+        Logger.d(tag = "TAG") { "Ovulation dates: $ovulationDates" }
         for (date in ovulationDates) {
             val lutealDay = getLutealLengthForPeriod(date)
             lutealLength += lutealDay
-            Log.d("TAG", "Luteal for date $date: $lutealDay")
+            Logger.d(tag = "TAG") { "Luteal for date $date: $lutealDay" }
         }
 
         // Calculate average luteal length
         val averageLutealLength = lutealLength / ovulationDates.size
-        Log.d("TAG", "Average luteal length calc: $averageLutealLength")
+        Logger.d(tag = "TAG") { "Average luteal length calc: $averageLutealLength" }
 
         // Get the last ovulation date
         val lastOvulation = dbHelper.getLastOvulation()
-        Log.d("TAG", "Last ovulation: $lastOvulation")
+        Logger.d(tag = "TAG") { "Last ovulation: $lastOvulation" }
 
         if (lastOvulation == null) {
             // Return null or handle the case where no last ovulation date is available
-            Log.d("TAG", "Ovulation is null")
+            Logger.d(tag = "TAG") { "Ovulation is null" }
             return null
         }
         val periodDates =
@@ -113,12 +113,12 @@ class CalculationsHelper(
                 averageLutealLength.toLong(),
                 DateTimeUnit.DAY
             )
-            Log.d("TAG", "Calculating according to calculated ovulation: $expectedPeriodDate")
+            Logger.d(tag = "TAG") { "Calculating according to calculated ovulation: $expectedPeriodDate" }
             return expectedPeriodDate
         } else {
             val expectedPeriodDate =
                 lastOvulation.plus(averageLutealLength.toLong(), DateTimeUnit.DAY)
-            Log.d("TAG", "Next expected period: $expectedPeriodDate")
+            Logger.d(tag = "TAG") { "Next expected period: $expectedPeriodDate" }
             // Calculate the expected period date
             return expectedPeriodDate
         }
@@ -201,7 +201,7 @@ class CalculationsHelper(
                 // Add the result to the list
                 lutealLengths.add(daysBetween.toLong())
             } else {
-                Log.d("TAG", "Next period date is null")
+                Logger.d(tag = "TAG") { "Next period date is null" }
                 return 0.0
             }
         }
@@ -216,8 +216,8 @@ class CalculationsHelper(
     override suspend fun getLutealLengthForPeriod(date: LocalDate): Int {
         val firstNextPeriodDate = dbHelper.getFirstNextPeriodDate(date)
         if (firstNextPeriodDate != null) {
-            val lutealLength = date.until(firstNextPeriodDate, DateTimeUnit.DAY).toInt()
-            Log.d("TAG", "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength")
+            val lutealLength = date.until(firstNextPeriodDate, DateTimeUnit.DAY)
+            Logger.d(tag = "TAG") { "Luteal for single date PDH $firstNextPeriodDate $date: $lutealLength" }
             return lutealLength
         } else {
             return 0
@@ -229,7 +229,7 @@ class CalculationsHelper(
         if (date > LocalDate.now()) return null
 
         val lastPeriodStartDate = dbHelper.getFirstPreviousPeriodDate(date) ?: return null
-        return lastPeriodStartDate.until(date, DateTimeUnit.DAY).toInt() + 1
+        return lastPeriodStartDate.until(date, DateTimeUnit.DAY) + 1
     }
 
     override fun cycleDay(date: LocalDate): Flow<Int?> = dbHelper.dbWriteTrigger.map {

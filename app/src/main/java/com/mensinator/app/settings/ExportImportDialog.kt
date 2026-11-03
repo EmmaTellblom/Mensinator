@@ -1,7 +1,6 @@
 package com.mensinator.app.settings
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -11,23 +10,24 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.TextField
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import co.touchlab.kermit.Logger
 import com.mensinator.app.R
 import com.mensinator.app.data.ImportSource
 import com.mensinator.app.ui.theme.MensinatorTheme
@@ -110,7 +110,7 @@ fun ImportDialog(
                     }
                     onImportClick(file.absolutePath, selectedOption)
                 } catch (e: IOException) {
-                    Log.d("ImportExport", "Error importing file: $e")
+                    Logger.d(tag = "ImportExport") { "Error importing file: $e" }
                 }
             }
 
@@ -128,7 +128,8 @@ fun ImportDialog(
                     },
                     options = options,
                     label = stringResource(R.string.select_source),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(bottom = 10.dp)
                 )
                 Text(stringResource(R.string.import_dialog_message))

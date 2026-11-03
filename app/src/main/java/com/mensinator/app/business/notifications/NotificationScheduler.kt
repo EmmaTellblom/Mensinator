@@ -2,7 +2,7 @@ package com.mensinator.app.business.notifications
 
 
 import android.content.Context
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.extensions.now
@@ -68,10 +68,10 @@ class NotificationScheduler(
 
         val notificationDate = nextPeriodDate.minus(periodReminderDays.toLong(), DateTimeUnit.DAY)
         if (notificationDate < LocalDate.now()) {
-            Log.d(
-                "CalendarScreen",
+            Logger.d(tag = "CalendarScreen") {
                 "Notification not scheduled because the reminder date is in the past"
-            )
+            }
+
             return null
         }
 

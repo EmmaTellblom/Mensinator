@@ -5,15 +5,33 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,16 +54,17 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import co.touchlab.kermit.Logger
 import com.mensinator.app.BuildConfig
 import com.mensinator.app.R
 import com.mensinator.app.data.ColorSource
-import com.mensinator.app.widgets.WidgetDebugDayShift
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import com.mensinator.app.ui.ResourceMapper
 import com.mensinator.app.ui.navigation.displayCutoutExcludingStatusBarsPadding
 import com.mensinator.app.ui.theme.MensinatorTheme
 import com.mensinator.app.ui.theme.isDarkMode
+import com.mensinator.app.widgets.WidgetDebugDayShift
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 private val colorCircleSize = 24.dp
@@ -94,7 +113,7 @@ fun SettingsScreen(
                 viewModel.updateIntSetting(intSetting, newNumber)
 
                 if (!viewModel.areNotificationsEnabled(context)) {
-                    Log.d("SettingsDialog", "Notifications are not enabled")
+                    Logger.d(tag = "SettingsDialog") {"Notifications are not enabled"}
                     openNotificationSettings(context)
                 }
             },
@@ -188,7 +207,7 @@ fun SettingsScreen(
         if (viewState.showFaqDialog) {
             FaqDialog(onDismissRequest = { viewModel.showFaqDialog(false) })
         }
-        
+
         if (viewState.showImportDialog) {
             ImportDialog(
                 defaultImportFilePath = viewState.defaultImportFilePath,

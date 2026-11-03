@@ -1,6 +1,6 @@
 package com.mensinator.app.business
 
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.mensinator.app.extensions.now
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -23,15 +23,14 @@ class OvulationPrediction(
 
         // No data at all in database
         if (lastOvulationDate == null || previousFirstPeriodDate == null) {
-            Log.e(
-                "TAG",
+            Logger.e(tag = "TAG") {
                 "Null values found: lastOvulationDate=$lastOvulationDate, previousFirstPeriodDate=$previousFirstPeriodDate"
-            )
+            }
             return null
         }
 
         return if (ovulationCount >= 2 && periodCount >= 2 && lastOvulationDate < previousFirstPeriodDate) {
-            Log.d("TAG", "Inside if statement")
+            Logger.d(tag = "TAG") { "Inside if statement" }
             // Get average follicleGrowth based on ovulationHistory
             // Get latest start of period, add days to that date
             val averageOvulationDay = calcHelper.averageFollicalGrowthInDays().toInt()
@@ -47,7 +46,7 @@ class OvulationPrediction(
                 "1900-01-01"
             ))
         ) {
-            Log.d("TAG", "IM ALIVE")
+            Logger.d(tag = "TAG") { "IM ALIVE" }
             val follicleGrowthDays = calcHelper.averageFollicalGrowthInDays()
             val follicleGrowthDaysLong = follicleGrowthDays.toLong()
 
@@ -58,7 +57,7 @@ class OvulationPrediction(
                 null
             }
         } else {
-            Log.d("TAG", "THERE ARE NOW OVULATIONS")
+            Logger.d(tag = "TAG") { "THERE ARE NOW OVULATIONS" }
             // Return a default value, not enough data to predict ovulation, ovulationCount < 2
             null
         }

@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
 import androidx.core.database.sqlite.transaction
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.mensinator.app.data.Setting
@@ -23,6 +22,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import java.time.YearMonth
+import co.touchlab.kermit.Logger
 
 
 typealias PeriodId = Int
@@ -251,10 +251,10 @@ class PeriodDatabaseHelper(
                     dates[date] = periodId
                 }
             } else {
-                Log.e(
-                    TAG,
+                Logger.e(tag = TAG) {
                     "Column indices are invalid: dateIndex=$dateIndex, periodIdIndex=$periodIdIndex"
-                )
+                }
+
             }
         }
 
@@ -282,9 +282,9 @@ class PeriodDatabaseHelper(
         _dbWriteTrigger.tryEmit(Unit)
 
         if (rowsDeleted > 0) {
-            Log.d(TAG, "Removed date $date from $TABLE_PERIODS")
+            Logger.d(tag = TAG) { "Removed date $date from $TABLE_PERIODS" }
         } else {
-            Log.d(TAG, "No date $date found in $TABLE_PERIODS to remove")
+            Logger.d(tag = TAG) { "No date $date found in $TABLE_PERIODS to remove" }
         }
     }
 
@@ -371,14 +371,14 @@ class PeriodDatabaseHelper(
                             // Add the date to the set of dates with active symptoms
                             dates.add(date)
                         } catch (e: Exception) {
-                            Log.e(TAG, "Failed to parse date string: $dateStr", e)
+                            Logger.withTag(TAG).e(e) { "Failed to parse date string: $dateStr" }
                         }
                     }
                 } else {
-                    Log.e(TAG, "Column index is invalid: dateIndex=$dateIndex")
+                    Logger.e(tag = TAG) { "Column index is invalid: dateIndex=$dateIndex" }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error querying for symptom dates", e)
+                Logger.withTag(TAG).e(e) { "Error querying for symptom dates" }
             } finally {
                 cursor.close()
             }
@@ -573,7 +573,7 @@ class PeriodDatabaseHelper(
         withContext(dispatcherProvider.IO) {
             val string = getSettingByKey(key)?.value
             if (string == null) {
-                Log.e("getStringSettingByKey", "key '$key' is null")
+                Logger.e(tag = "getStringSettingByKey") { "key '$key' is null" }
                 return@withContext "Unknown"
             }
             string
@@ -667,15 +667,16 @@ class PeriodDatabaseHelper(
                                 // Add the date to the set of dates
                                 dates.add(date)
                             } catch (e: Exception) {
-                                Log.e("TAG", "Failed to parse date string: $dateStr", e)
+                                Logger.withTag("TAG")
+                                    .e(e) { "Failed to parse date string: $dateStr" }
                             }
                         }
                     } else {
-                        Log.e("TAG", "Column index is invalid: dateIndex=$dateIndex")
+                        Logger.e(tag = "TAG") { "Column index is invalid: dateIndex=$dateIndex" }
                     }
                 }
             } catch (e: Exception) {
-                Log.e("TAG", "Error querying for ovulation dates", e)
+                Logger.withTag("TAG").e(e) { "Error querying for ovulation dates" }
             } finally {
             }
 
@@ -726,11 +727,11 @@ class PeriodDatabaseHelper(
                 db.execSQL(updateQuery, updateArgs)
 
                 periodId = primaryPeriodID
-                //Log.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
+                //Logger.d(TAG, "Merged periods. Reusing existing periodId $periodId for date $date")
             } else if (cursor.count == 1) {
                 cursor.moveToFirst()
                 periodId = cursor.getInt(0)
-                //Log.d(TAG, "Found existing periodId $periodId for date $date")
+                //Logger.d(TAG, "Found existing periodId $periodId for date $date")
             } else {
                 // Create a new period ID
                 val maxPeriodIdCursor =
@@ -739,7 +740,7 @@ class PeriodDatabaseHelper(
                     val maxPeriodId =
                         if (maxPeriodIdCursor.moveToFirst()) maxPeriodIdCursor.getInt(0) else 0
                     periodId = maxPeriodId + 1
-                    //Log.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
+                    //Logger.d(TAG, "No existing periodId found for date $date. Created new periodId $periodId")
                 }
                 maxPeriodIdCursor.close()
             }
@@ -988,9 +989,9 @@ class PeriodDatabaseHelper(
         val whereArgs = arrayOf(symptomId.toString())
         val rowsDeleted = db.delete("symptoms", whereClause, whereArgs)
         if (rowsDeleted > 0) {
-            Log.d(TAG, "Deleted symptom from symptoms")
+            Logger.d(tag = TAG) { "Deleted symptom from symptoms" }
         } else {
-            Log.d(TAG, "No symptoms to delete")
+            Logger.d(tag = TAG) { "No symptoms to delete" }
         }
         _dbWriteTrigger.tryEmit(Unit)
     }

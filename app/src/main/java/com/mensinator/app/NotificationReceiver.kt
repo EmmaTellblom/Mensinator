@@ -4,9 +4,9 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import co.touchlab.kermit.Logger
 
 class NotificationReceiver : BroadcastReceiver() {
     companion object {
@@ -39,9 +39,9 @@ class NotificationReceiver : BroadcastReceiver() {
         val notificationManager = NotificationManagerCompat.from(context)
         try {
             notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
-            Log.d("NotificationReceiver", "Notification sent")
+            Logger.d(tag = "NotificationReceiver") { "Notification sent" }
         } catch (e: SecurityException) {
-            Log.e("NotificationReceiver", "Notification permission not available", e)
+            Logger.withTag("NotificationReceiver").e(e) { "Notification permission not available" }
         }
     }
 }

@@ -4,7 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
+import co.touchlab.kermit.Logger
 import com.mensinator.app.NotificationReceiver
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toJavaLocalDate
@@ -29,12 +29,12 @@ class AndroidNotificationScheduler(
             notificationTimeMillis,
             getPendingIntent(messageText)
         )
-        Log.d("NotificationScheduler", "Notification scheduled for $notificationDate")
+        Logger.d(tag = "NotificationScheduler") { "Notification scheduled for $notificationDate" }
     }
 
     override fun cancelScheduledNotification() {
         alarmManager.cancel(getPendingIntent(messageText = null))
-        Log.d("NotificationScheduler", "Notification cancelled")
+        Logger.d(tag = "NotificationScheduler") { "Notification cancelled" }
     }
 
     private fun getPendingIntent(messageText: String?): PendingIntent {
