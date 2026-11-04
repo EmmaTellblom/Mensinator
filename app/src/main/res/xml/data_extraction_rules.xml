@@ -1,16 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-   Sample data extraction rules file; uncomment and customize as necessary.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Backup rules for API 31+. Cloud backup only runs when the transport encrypts
+   client-side (e.g. Seedvault). Device-to-device transfer stays disabled.
    See https://developer.android.com/about/versions/12/backup-restore#xml-changes
-   for details.
 -->
 <data-extraction-rules>
-    <cloud-backup>
-        <exclude domain="root" />
-        <exclude domain="file" />
-        <exclude domain="database" />
-        <exclude domain="sharedpref" />
-        <exclude domain="external" />
-    </cloud-backup>
+    <cloud-backup disableIfNoEncryptionCapabilities="true" />
     <device-transfer>
         <exclude domain="root" />
         <exclude domain="file" />
