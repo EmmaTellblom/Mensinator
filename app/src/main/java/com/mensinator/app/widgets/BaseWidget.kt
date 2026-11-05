@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.combine
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+
+internal fun daysUntilPeriod(today: LocalDate, nextPeriod: LocalDate): Long =
+    ChronoUnit.DAYS.between(today, nextPeriod)
 
 /**
  * Shared rendering logic for the period widgets. Each on-screen design is a distinct
@@ -96,7 +100,7 @@ abstract class BaseWidget(
                 NextPeriodFormat.MediumLengthText -> "Unknown"
             }
         }
-        val daysUntilNextPeriod = WidgetDebugDayShift.today(appContext).until(date).days
+        val daysUntilNextPeriod = daysUntilPeriod(WidgetDebugDayShift.today(appContext), date)
         return when (format) {
             NextPeriodFormat.OnlyDays -> "$daysUntilNextPeriod"
             NextPeriodFormat.MediumLengthText -> "Period in $daysUntilNextPeriod days"
