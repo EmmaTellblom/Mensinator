@@ -55,6 +55,7 @@ class SettingsViewModel(
             lutealPhaseCalculationEnabled = false,
             showCycleNumbers = false,
             preventScreenshots = false,
+            showPredictionTable = false,
 
             showImportDialog = false,
             showExportDialog = false,
@@ -89,6 +90,7 @@ class SettingsViewModel(
         val lutealPhaseCalculationEnabled: Boolean,
         val showCycleNumbers: Boolean,
         val preventScreenshots: Boolean,
+        val showPredictionTable: Boolean,
 
         val showImportDialog: Boolean,
         val showExportDialog: Boolean,
@@ -138,6 +140,7 @@ class SettingsViewModel(
                     lutealPhaseCalculationEnabled = getBoolean(BooleanSetting.LUTEAL_PHASE_CALCULATION),
                     showCycleNumbers = getBoolean(BooleanSetting.SHOW_CYCLE_NUMBERS),
                     preventScreenshots = getBoolean(BooleanSetting.PREVENT_SCREENSHOTS),
+                    showPredictionTable = getBoolean(BooleanSetting.SHOW_PREDICTION_TABLE),
                 )
             }
         }
@@ -291,6 +294,7 @@ enum class BooleanSetting(val stringResId: Int, val settingDbKey: String) {
     LUTEAL_PHASE_CALCULATION(R.string.luteal_phase_calculation, "luteal_period_calculation"),
     SHOW_CYCLE_NUMBERS(R.string.cycle_numbers_show, "cycle_numbers_show"),
     PREVENT_SCREENSHOTS(R.string.screen_protection, "screen_protection"),
+    SHOW_PREDICTION_TABLE(R.string.show_prediction_table, "show_prediction_table"),
 }
 
 enum class StringSetting(val stringResId: Int, val settingDbKey: String) {

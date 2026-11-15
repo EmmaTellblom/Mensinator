@@ -52,6 +52,7 @@ object DatabaseUtils {
         databaseVersion9(db)
         databaseVersion10(db)
         databaseVersion11(db)
+        databaseVersion12(db)
     }
 
     fun createAppSettingsGroup(db: SQLiteDatabase) {
@@ -234,6 +235,17 @@ object DatabaseUtils {
         db.execSQL("""
         CREATE UNIQUE INDEX IF NOT EXISTS unique_date_ovulation ON ovulations(date);
     """)
+    }
+
+    fun databaseVersion12(db: SQLiteDatabase) {
+        // Insert the switch that controls whether the prediction table is shown in the period history
+        db.execSQL("""
+            INSERT INTO app_settings(setting_key, setting_label, setting_value, group_label_id, setting_type)
+            SELECT 'show_prediction_table', 'Show Prediction Table', '0', '3', 'SW'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM app_settings WHERE setting_key = 'show_prediction_table'
+            )
+        """)
     }
 
 

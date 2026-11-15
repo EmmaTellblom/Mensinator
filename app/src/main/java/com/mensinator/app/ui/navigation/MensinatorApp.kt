@@ -29,6 +29,7 @@ import com.mensinator.app.R
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.calendar.CalendarScreen
 import com.mensinator.app.settings.SettingsScreen
+import com.mensinator.app.statistics.PeriodHistoryScreen
 import com.mensinator.app.statistics.StatisticsScreen
 import com.mensinator.app.symptoms.ManageSymptomScreen
 import com.mensinator.app.ui.theme.UiConstants
@@ -39,6 +40,7 @@ enum class Screen(@StringRes val titleRes: Int) {
     Calendar(R.string.calendar_title),
     Symptoms(R.string.symptoms_page),
     Statistic(R.string.statistics_title),
+    PeriodHistory(R.string.period_history),
     Settings(R.string.settings_page)
 }
 
@@ -107,6 +109,12 @@ private fun MainScaffold(
     isMediumExpandedWWSC: Boolean,
     onItemClick: (NavigationItem) -> Unit
 ) {
+    val selectedScreen = if (currentScreen == Screen.PeriodHistory) {
+        Screen.Statistic
+    } else {
+        currentScreen
+    }
+
     Row {
         if (isMediumExpandedWWSC) {
             NavigationRail(
@@ -119,9 +127,9 @@ private fun MainScaffold(
                 ) {
                     navigationItems.forEach { item ->
                         NavigationRailItem(
-                            selected = currentScreen == item.screen,
+                            selected = selectedScreen == item.screen,
                             onClick = { onItemClick(item) },
-                            icon = { NavigationItemIcon(currentScreen, item) },
+                            icon = { NavigationItemIcon(selectedScreen, item) },
                         )
                     }
                 }
@@ -136,9 +144,9 @@ private fun MainScaffold(
                     ) {
                         navigationItems.forEach { item ->
                             NavigationBarItem(
-                                selected = currentScreen == item.screen,
+                                selected = selectedScreen == item.screen,
                                 onClick = { onItemClick(item) },
-                                icon = { NavigationItemIcon(currentScreen, item) }
+                                icon = { NavigationItemIcon(selectedScreen, item) }
                             )
                         }
                     }
@@ -175,7 +183,27 @@ private fun MainScaffold(
                         topBar = { MensinatorTopBar(currentScreen.titleRes) },
                         contentWindowInsets = WindowInsets(0.dp),
                     ) { topBarPadding ->
-                        StatisticsScreen(modifier = Modifier.padding(topBarPadding))
+                        StatisticsScreen(
+                            modifier = Modifier.padding(topBarPadding),
+                            onViewHistory = {
+                                navController.navigate(Screen.PeriodHistory.name) {
+                                    launchSingleTop = true
+                                }
+                            },
+                        )
+                    }
+                }
+                composable(route = Screen.PeriodHistory.name) {
+                    Scaffold(
+                        topBar = {
+                            MensinatorTopBar(
+                                titleStringId = Screen.PeriodHistory.titleRes,
+                                onBack = { navController.popBackStack() },
+                            )
+                        },
+                        contentWindowInsets = WindowInsets(0.dp),
+                    ) { topBarPadding ->
+                        PeriodHistoryScreen(modifier = Modifier.padding(topBarPadding))
                     }
                 }
                 composable(route = Screen.Symptoms.name) {

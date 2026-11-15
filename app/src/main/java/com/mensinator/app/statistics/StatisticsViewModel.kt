@@ -10,6 +10,7 @@ import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.extensions.formatToOneDecimalPoint
+import com.mensinator.app.settings.BooleanSetting
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -50,18 +51,26 @@ class StatisticsViewModel(
         val ovulationCount: String? = null,
         val completedPeriods: PersistentList<PeriodHistoryRow> = persistentListOf(),
         val predictedPeriods: PersistentList<LocalDate> = persistentListOf(),
+        val showPredictionTable: Boolean = false,
     )
 
     fun refreshData() {
         viewModelScope.launch(Dispatchers.IO) {
             val completedPeriods = periodDatabaseHelper.getAllPeriodSummaries()
                 .toCompletedPeriodRows(LocalDate.now())
+            val showPredictionTable = periodDatabaseHelper
+                .getSettingByKey(BooleanSetting.SHOW_PREDICTION_TABLE.settingDbKey)
+                ?.value == "1"
             val predictedPeriodDate = periodPrediction.getPredictedPeriodDate()
             val averageCycleLength = calcHelper.averageCycleLength()
-            val predictedPeriods = predictedPeriodStarts(
-                firstPredictedDate = predictedPeriodDate,
-                averageCycleLengthDays = averageCycleLength,
-            )
+            val predictedPeriods = if (showPredictionTable) {
+                predictedPeriodStarts(
+                    firstPredictedDate = predictedPeriodDate,
+                    averageCycleLengthDays = averageCycleLength,
+                )
+            } else {
+                emptyList()
+            }
 
             _viewState.update {
                 it.copy(
@@ -75,6 +84,7 @@ class StatisticsViewModel(
                     ovulationCount = periodDatabaseHelper.getOvulationCount().toString(),
                     completedPeriods = completedPeriods.toPersistentList(),
                     predictedPeriods = predictedPeriods.toPersistentList(),
+                    showPredictionTable = showPredictionTable,
                 )
             }
         }
