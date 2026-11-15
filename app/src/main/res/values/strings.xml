@@ -55,7 +55,9 @@
     <string name="language">Language</string>
     <string name="change_language">Change language</string>
     <string name="cycle_numbers_show">Show Cycle Numbers</string>
+    <string name="show_prediction_table">Show Prediction Table</string>
     <string name="screen_protection">Prevent Screenshots</string>
+    <string name="back">Back</string>
     <string name="close">Close</string>
     <string name="save">Save</string>
     <string name="warning">Warning</string>
@@ -87,6 +89,16 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Average luteal phase length: </string>
     <string name="days"> days</string>
+    <string name="period_history_past">Past</string>
+    <string name="period_history_prediction">Prediction</string>
+    <string name="period_history_start_date">Start date</string>
+    <string name="period_history_cycle_length_days">Cycle length (days)</string>
+    <string name="period_history_no_completed_periods">No completed periods yet</string>
+    <string name="period_history_not_enough_data">Not enough data to predict</string>
+    <string name="period_history_older_periods">Older periods</string>
+    <string name="period_history_newer_periods">Newer periods</string>
+    <string name="period_history_page_indicator">%1$d / %2$d</string>
+    <string name="period_history_view_full">View full history</string>
 
     <!-- Symptoms -->
     <string name="symptoms_dialog_title">Edit Symptoms</string>

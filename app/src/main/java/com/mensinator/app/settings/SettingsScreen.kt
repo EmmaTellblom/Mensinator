@@ -160,6 +160,13 @@ fun SettingsScreen(
             }
         )
         SettingSwitch(
+            text = stringResource(BooleanSetting.SHOW_PREDICTION_TABLE.stringResId),
+            checked = viewState.showPredictionTable,
+            onCheckedChange = {
+                viewModel.updateBooleanSetting(BooleanSetting.SHOW_PREDICTION_TABLE, it)
+            }
+        )
+        SettingSwitch(
             text = stringResource(BooleanSetting.PREVENT_SCREENSHOTS.stringResId),
             checked = viewState.preventScreenshots,
             onCheckedChange = { newValue ->

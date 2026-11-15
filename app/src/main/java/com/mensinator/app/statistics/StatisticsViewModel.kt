@@ -3,16 +3,24 @@ package com.mensinator.app.statistics
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.mensinator.app.R
 import com.mensinator.app.business.ICalculationsHelper
 import com.mensinator.app.business.IOvulationPrediction
 import com.mensinator.app.business.IPeriodDatabaseHelper
 import com.mensinator.app.business.IPeriodPrediction
 import com.mensinator.app.extensions.formatToOneDecimalPoint
+import com.mensinator.app.settings.BooleanSetting
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -41,20 +49,44 @@ class StatisticsViewModel(
         val ovulationPredictionDate: String? = null,
         val periodPredictionDate: String? = null,
         val ovulationCount: String? = null,
+        val completedPeriods: PersistentList<PeriodHistoryRow> = persistentListOf(),
+        val predictedPeriods: PersistentList<LocalDate> = persistentListOf(),
+        val showPredictionTable: Boolean = false,
     )
 
     fun refreshData() {
-        _viewState.update {
-            it.copy(
-                trackedPeriods = periodDatabaseHelper.getPeriodCount().toString(),
-                averageCycleLength = formatDays(calcHelper.averageCycleLength().formatToOneDecimalPoint()),
-                averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
-                averageLutealLength =formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
-                follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
-                ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
-                periodPredictionDate = periodPrediction.getPredictedPeriodDate()?.format(dateFormatter) ?: dash,
-                ovulationCount = periodDatabaseHelper.getOvulationCount().toString()
-            )
+        viewModelScope.launch(Dispatchers.IO) {
+            val completedPeriods = periodDatabaseHelper.getAllPeriodSummaries()
+                .toCompletedPeriodRows(LocalDate.now())
+            val showPredictionTable = periodDatabaseHelper
+                .getSettingByKey(BooleanSetting.SHOW_PREDICTION_TABLE.settingDbKey)
+                ?.value == "1"
+            val predictedPeriodDate = periodPrediction.getPredictedPeriodDate()
+            val averageCycleLength = calcHelper.averageCycleLength()
+            val predictedPeriods = if (showPredictionTable) {
+                predictedPeriodStarts(
+                    firstPredictedDate = predictedPeriodDate,
+                    averageCycleLengthDays = averageCycleLength,
+                )
+            } else {
+                emptyList()
+            }
+
+            _viewState.update {
+                it.copy(
+                    trackedPeriods = periodDatabaseHelper.getPeriodCount().toString(),
+                    averageCycleLength = formatDays(averageCycleLength.formatToOneDecimalPoint()),
+                    averagePeriodLength = formatDays(calcHelper.averagePeriodLength().formatToOneDecimalPoint()),
+                    averageLutealLength = formatDays(calcHelper.averageLutealLength().formatToOneDecimalPoint()),
+                    follicleGrowthDays = calcHelper.averageFollicalGrowthInDays().formatToOneDecimalPoint(),
+                    ovulationPredictionDate = ovulationPrediction.getPredictedOvulationDate()?.format(dateFormatter) ?: dash,
+                    periodPredictionDate = predictedPeriodDate?.format(dateFormatter) ?: dash,
+                    ovulationCount = periodDatabaseHelper.getOvulationCount().toString(),
+                    completedPeriods = completedPeriods.toPersistentList(),
+                    predictedPeriods = predictedPeriods.toPersistentList(),
+                    showPredictionTable = showPredictionTable,
+                )
+            }
         }
     }
 

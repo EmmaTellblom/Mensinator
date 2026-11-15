@@ -30,6 +30,9 @@ interface IPeriodDatabaseHelper {
     // Returns how many periods that are in the database
     fun getPeriodCount(): Int
 
+    // Returns every tracked period with its first date, last date and the next period's first date
+    suspend fun getAllPeriodSummaries(): List<PeriodSummary>
+
     // This function is used to remove a date from the periods table
     fun removeDateFromPeriod(date: LocalDate)
 

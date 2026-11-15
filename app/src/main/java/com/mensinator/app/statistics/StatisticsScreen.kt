@@ -1,10 +1,13 @@
 package com.mensinator.app.statistics
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -23,6 +26,7 @@ import org.koin.androidx.compose.koinViewModel
 fun StatisticsScreen(
     modifier: Modifier = Modifier,
     viewModel: StatisticsViewModel = koinViewModel(),
+    onViewHistory: () -> Unit = {},
 ) {
     val state = viewModel.viewState.collectAsStateWithLifecycle().value
 
@@ -30,13 +34,14 @@ fun StatisticsScreen(
         viewModel.refreshData()
     }
 
-    StatisticsScreenContent(modifier, state)
+    StatisticsScreenContent(modifier, state, onViewHistory)
 }
 
 @Composable
 private fun StatisticsScreenContent(
     modifier: Modifier = Modifier,
-    state: StatisticsViewModel.ViewState
+    state: StatisticsViewModel.ViewState,
+    onViewHistory: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -76,6 +81,42 @@ private fun StatisticsScreenContent(
         RowOfText(
             stringResource(id = R.string.average_luteal_length),
             state.averageLutealLength
+        )
+        ViewFullHistoryButton(
+            onClick = onViewHistory,
+            modifier = Modifier.padding(top = 16.dp),
+        )
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun ViewFullHistoryButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(52.dp),
+        shape = RoundedCornerShape(percent = 50),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
+        contentPadding = PaddingValues(horizontal = 24.dp),
+    ) {
+        Text(
+            text = stringResource(id = R.string.period_history_view_full).uppercase(),
+            style = MaterialTheme.typography.labelLarge,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.width(4.dp))
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
         )
     }
 }
