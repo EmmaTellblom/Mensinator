@@ -35,7 +35,7 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">متوسط طول المرحلة الأصفرية:</string>
     <string name="days">أيام</string>
-    <string name="symptoms_dialog_title">الأعراض لـ %1$s</string>
+    <string name="symptoms_dialog_title">تحرير الأعراض</string>
     <string name="create_new_symptom_button">إنشاء عرض جديد</string>
     <string name="save_symptoms_button">حفظ الأعراض</string>
     <string name="cancel_button">إلغاء</string>

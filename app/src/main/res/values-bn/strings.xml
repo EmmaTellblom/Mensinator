@@ -69,7 +69,7 @@
     <string name="days"> দিন</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">%1$s জন্য উপসর্গ</string>
+    <string name="symptoms_dialog_title">লক্ষণগুলি সম্পাদনা করুন</string>
     <string name="create_new_symptom_button">নতুন উপসর্গ তৈরি করুন</string>
     <string name="save_symptoms_button">উপসর্গ সংরক্ষণ করুন</string>
     <string name="cancel_button">বাতিল করুন</string>

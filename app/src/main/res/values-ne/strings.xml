@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">मेन्सिनेटर</string>
+    <string name="previous">अघिल्लो</string>
+    <string name="period_button">महिनावारी</string>
+    <string name="symptoms_button">लक्षण</string>
+    <string name="ovulation_button">ओभुलेशन</string>
+    <string name="settings_page">सेटिङ</string>
+</resources>

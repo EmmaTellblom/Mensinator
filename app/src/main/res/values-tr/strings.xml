@@ -70,7 +70,7 @@
     <string name="next_predicted_ovulation_default">-</string>
     <string name="average_luteal_length">Ortalama luteal faz uzunluğu:</string>
     <string name="days">günler</string>
-    <string name="symptoms_dialog_title">%1$s Semptomları</string>
+    <string name="symptoms_dialog_title">Semptomları düzenle</string>
     <string name="create_new_symptom_button">Yeni Semptom Oluştur</string>
     <string name="save_symptoms_button">Semptomları Kaydet</string>
     <string name="cancel_button">İptal et</string>

@@ -7,6 +7,7 @@ import java.time.Duration
 import java.time.LocalTime
 import java.time.ZonedDateTime
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.delay
 
 class MidnightWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
 
@@ -35,11 +36,18 @@ class MidnightWorker(val context: Context, params: WorkerParameters) : Coroutine
     }
 
     override suspend fun doWork(): Result {
-        MidnightTrigger.midnightTrigger.emit(Unit)
-        WidgetInstances.forEach { it.glanceAppWidget.updateAll(context) }
-        // Schedule the next update for the following midnight
-        scheduleNextMidnight(applicationContext)
-        
+        try {
+            // Wait for 1 second to ensure the worker has time to start
+            delay(1000)
+            MidnightTrigger.midnightTrigger.emit(Unit)
+            WidgetInstances.forEach { it.glanceAppWidget.updateAll(context) }
+        } catch (e: Exception) {
+            android.util.Log.e("MidnightWorker", "Failed to refresh widgets at midnight", e)
+        } finally {
+            // Always schedule the next midnight, even if this run failed,
+            // so the daily cycle keeps going.
+            scheduleNextMidnight(applicationContext)
+        }
         return Result.success()
     }
 }

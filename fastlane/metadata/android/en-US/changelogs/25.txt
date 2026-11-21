@@ -1,0 +1,13 @@
+Version 2.1 of Mensinator is finally released! This update mainly consists of a widget, import function from other period apps such as Flo and Clue and new translated languages. 
+
+Features:
+* Import from Flo/Clue available!
+* Widget for days until next period!
+
+New languages:
+* Hungarian
+* Malayalam
+* Urdu
+* Turkish
+* Portuguese
+* Farsi (Persian)

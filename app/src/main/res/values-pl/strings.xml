@@ -83,7 +83,7 @@
     <string name="days"> dni</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Objawy dla %1$s</string>
+    <string name="symptoms_dialog_title">Edytuj objawy</string>
     <string name="create_new_symptom_button">Utwórz Nowy Objaw</string>
     <string name="save_symptoms_button">Zapisz Objawy</string>
     <string name="cancel_button">Anuluj</string>

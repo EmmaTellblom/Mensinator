@@ -12,8 +12,8 @@ android {
         applicationId = "com.mensinator.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 24
-        versionName = "2.0"
+        versionCode = 25
+        versionName = "2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -43,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     androidResources {
         @Suppress("UnstableApiUsage")

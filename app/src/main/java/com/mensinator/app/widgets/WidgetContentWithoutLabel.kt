@@ -43,6 +43,7 @@ fun WidgetContentWithoutLabel(text: String, label: String, showBackground: Boole
         modifier = cornerRadiusModifier
             .then(bgModifier)
             .appWidgetBackground()
+            .fillMaxSize()
             .clickable(actionStartActivity<MainActivity>()),
     ) {
         Box(
@@ -55,20 +56,20 @@ fun WidgetContentWithoutLabel(text: String, label: String, showBackground: Boole
                 style = TextStyle(
                     color = textColor,
                     fontWeight = FontWeight.Bold,
-                    //fontSize = 18.sp,
+                    fontSize = 24.sp,
                     textAlign = TextAlign.Center
                 ),
             )
         }
         Box(
-            modifier = GlanceModifier.padding(end = 8.dp, bottom = 8.dp).fillMaxSize(),
+            modifier = GlanceModifier.padding(end = 6.dp, bottom = 6.dp).fillMaxSize(),
             contentAlignment = Alignment.BottomEnd
         ) {
             Text(
                 text = label,
                 style = TextStyle(
                     color = textColor,
-                    fontSize = 12.sp,
+                    fontSize = 11.sp,
                 ),
             )
         }

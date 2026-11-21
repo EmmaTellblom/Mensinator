@@ -1,4 +1,5 @@
 package com.mensinator.app.business
+import com.mensinator.app.widgets.PeriodCalculationWidgetUpdater
 
 import android.util.Log
 import com.mensinator.app.extensions.roundToTwoDecimalPoints
@@ -59,7 +60,9 @@ class CalculationsHelper(
     }
 
     override fun nextPeriod(): Flow<LocalDate?> = dbHelper.dbWriteTrigger.map {
-        calculateNextPeriod()
+        val result = calculateNextPeriod()
+        PeriodCalculationWidgetUpdater.updateWidgetsIfPeriodChanged(result)
+        result
     }
 
     /**

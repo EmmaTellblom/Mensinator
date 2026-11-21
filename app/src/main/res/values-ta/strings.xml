@@ -71,7 +71,7 @@
     <string name="days">" நாட்கள்"</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">அறிகுறி %1$s</string>
+    <string name="symptoms_dialog_title">அறிகுறிகளைத் திருத்து</string>
     <string name="create_new_symptom_button">புதிய அறிகுறியை உருவாக்கவும்</string>
     <string name="save_symptoms_button">அறிகுறிகளைச் சேமிக்கவும்</string>
     <string name="cancel_button">ரத்து</string>

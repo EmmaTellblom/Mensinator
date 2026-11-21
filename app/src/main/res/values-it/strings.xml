@@ -74,7 +74,7 @@
     <string name="average_luteal_length">Lunghezza media della fase luteale: </string>
     <string name="days"> giorni</string>
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Sintomi per %1$s</string>
+    <string name="symptoms_dialog_title">Modifica sintomi</string>
     <string name="create_new_symptom_button">Crea un nuovo sintomo</string>
     <string name="save_symptoms_button">Salva i sintomi</string>
     <string name="cancel_button">Annulla</string>

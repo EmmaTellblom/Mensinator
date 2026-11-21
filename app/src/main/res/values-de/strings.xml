@@ -74,7 +74,7 @@
     <string name="average_luteal_length">Durchschn. Länge Lutealphase: </string>
     <string name="days"> Tage</string>
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">Symptome am %1$s</string>
+    <string name="symptoms_dialog_title">Symptome bearbeiten</string>
     <string name="create_new_symptom_button">Symptom Erstellen</string>
     <string name="save_symptoms_button">Symptome Speichern</string>
     <string name="cancel_button">Abbrechen</string>

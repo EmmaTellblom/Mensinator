@@ -55,7 +55,7 @@
     <string name="next_predicted_ovulation">تخمک‌گذاری احتمالی بعدی:</string>
     <string name="next_predicted_ovulation_default">-</string>
     <string name="days">روز</string>
-    <string name="symptoms_dialog_title">علائم برای %1$s</string>
+    <string name="symptoms_dialog_title">ویرایش علائم</string>
     <string name="create_new_symptom_button">ایجاد علامت جدید</string>
     <string name="save_symptoms_button">ذخیره علائم</string>
     <string name="cancel_button">انصراف</string>

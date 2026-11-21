@@ -70,7 +70,7 @@
     <string name="days"> दिन</string>
 
     <!-- Symptoms -->
-    <string name="symptoms_dialog_title">के लिए लक्षण %1$s</string>
+    <string name="symptoms_dialog_title">लक्षण संपादित करें</string>
     <string name="create_new_symptom_button">नया संकेत बनाएँ</string>
     <string name="save_symptoms_button">संकेत सेव करें</string>
     <string name="cancel_button">रद्द</string>
